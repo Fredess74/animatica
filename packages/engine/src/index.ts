@@ -3,7 +3,7 @@
 // Jules: Implement exports here after creating each module.
 
 // === TYPES ===
-// export type * from './types'
+export * from './types/index'
 
 // === STORE ===
 // export { useEngineStore } from './store/useEngineStore'
