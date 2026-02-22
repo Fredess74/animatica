@@ -6,7 +6,7 @@
 export * from './types/index'
 
 // === STORE ===
-// export { useEngineStore } from './store/useEngineStore'
+export { useSceneStore, getActorById, getActiveActors, getCurrentTime } from './store/sceneStore';
 
 // === COMPONENTS (R3F) ===
 // export { SceneManager } from './scene/SceneManager'
@@ -18,3 +18,6 @@ export * from './types/index'
 // export { importScript, validateScript } from './importer/scriptImporter'
 // export { getAiPrompt } from './importer/aiPromptTemplate'
 // export { ProjectSchema } from './importer/schemas/project'
+
+// === ANIMATION ===
+export * as Easing from './animation/easing';
