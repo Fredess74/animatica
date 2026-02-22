@@ -59,6 +59,30 @@ describe('interpolateKeyframes', () => {
     it('linearly interpolates numbers at exact keyframe time', () => {
         expect(interpolateKeyframes(numericKeyframes, 1)).toBe(10);
     });
+
+    it('interpolates correctly with large number of keyframes', () => {
+        const keyframes: Keyframe<number>[] = [];
+        const count = 1000;
+
+        // Generate keyframes: t=i, val=i*10
+        for (let i = 0; i < count; i++) {
+            keyframes.push({
+                time: i,
+                value: i * 10,
+                easing: 'linear',
+            });
+        }
+
+        // Test at t=500.5 -> val should be 5005
+        const result = interpolateKeyframes(keyframes, 500.5) as number;
+        expect(result).toBeCloseTo(5005);
+
+        // Test at t=0
+        expect(interpolateKeyframes(keyframes, 0)).toBe(0);
+
+        // Test at t=999
+        expect(interpolateKeyframes(keyframes, 999)).toBe(9990);
+    });
 });
 
 describe('Vector3 interpolation', () => {
