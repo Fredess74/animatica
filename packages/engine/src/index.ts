@@ -3,7 +3,7 @@
 // Jules: Implement exports here after creating each module.
 
 // === TYPES ===
-export * from './types';
+export * from './types/index'
 
 // === STORE ===
 export { useSceneStore, getActorById, getActiveActors, getCurrentTime } from './store/sceneStore';
