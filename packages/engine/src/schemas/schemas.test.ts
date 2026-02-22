@@ -107,6 +107,10 @@ describe('Primitive Schemas', () => {
         expect(UUIDSchema.safeParse('abc-123').success).toBe(true);
         expect(UUIDSchema.safeParse('').success).toBe(false);
     });
+
+    it('validates Transform', () => {
+        expect(TransformSchema.safeParse(validTransform).success).toBe(true);
+    });
 });
 
 describe('Actor Schemas', () => {
