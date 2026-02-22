@@ -1,99 +1,116 @@
-# Branding
+# Branding — Animatica
 
-> **Status:** Name "Animatica" needs rebranding. This document proposes alternatives and visual identity direction.
-
----
-
-## Naming Criteria
-
-The name must be:
-
-- **Short** (1-2 syllables ideal, max 3)
-- **Global** (works in English, Spanish, Russian, Japanese, etc.)
-- **Memorable** (easy to type, spell, and say)
-- **Domain available** (.com or .io)
-- **No negative connotations** in major languages
-- **Evocative** of creation, movement, cinema, or magic
+> **Design Philosophy:** "Retro Futurism 71" — 1970s parallel-stripe aesthetics in a modern dark interface. **Green + White + Black** only.
 
 ---
 
-## Name Proposals
+## Visual Identity
 
-| Name | Vibe | Rationale | Domain Check |
-|------|------|-----------|-------------|
-| **Frameo** | Cinema + creative | "Frame" (cinema) + "o" (friendly suffix) | frameo.io |
-| **Motionix** | Tech + animation | Motion + suffix (like Pixar-ish) | motionix.com |
-| **Scenius** | Genius + community | Brian Eno's concept of "scene genius" — collective creativity | scenius.io |
-| **Kinemo** | Cinema + movement | Kino (cinema) + emo (emotion/movement) | kinemo.io |
-| **Plotline** | Storytelling | Direct reference to narrative structure | plotline.studio |
-| **Castify** | Cast + create | "Cast" as in casting actors + broadcast | castify.io |
-| **Reelcraft** | Cinema + craft | "Reel" (film) + "craft" (making) | reelcraft.io |
-| **Animatica** | Animation + magic | Sounds premium, cinema-related (animatic = pre-vis) | animatica.io |
-| **Storyweave** | Narrative fabric | Stories woven together, community creation | storyweave.io |
-| **Renderscape** | Visual + world | Render + landscape — building visual worlds | renderscape.io |
+### Reference
 
-### Top 3 Recommendation
+Our visual language draws from 1970s graphic design — specifically the iconic parallel stripe motifs and bold geometric typography of that era. The key reference is a 1971-style poster with green gradient stripes on cream, reinterpreted for a dark, modern interface.
 
-1. **Scenius** — Unique, cerebral, community-focused. Brian Eno coined it to describe the intelligence of a creative community. Perfect for a platform where everyone creates together.
+![Reference](image/BRANDING/1771744978755.png)
 
-2. **Kinemo** — Short, punchy, global. Works phonetically in every major language. Kino is universal for cinema.
+### Core Principles
 
-3. **Animatica** — Descriptive but premium. Immediately says "animation" while sounding sophisticated. An "animatic" is an industry term for animated storyboards — exactly what the AI generates.
+1. **Monochromatic Green** — Green is the only accent color. From dark forest (#0A5C36) to bright lime (#4ADE80)
+2. **Retro Stripe Motif** — Parallel stripes in 5 green shades are our signature. Used in dividers, loading bars, and decorative elements
+3. **Dark Canvas** — Rich black backgrounds (#0A0A0A) make the green pop
+4. **Geometric Typography** — Space Grotesk for headers gives that 70s futuristic feel
+5. **Generous Rounding** — 16px radius on panels, 12px on buttons. Soft but precise
 
 ---
 
-## Visual Identity Direction
+## 🎨 Color Palette
 
-### Color Palette
+### Green Spectrum
 
-**Primary:** Deep space navy + Electric green accent
+| Token | Hex | Usage |
+|-------|-----|-------|
+| `green-950` | `#052E1A` | Deepest backgrounds |
+| `green-900` | `#0A5C36` | Dark accents, stripe |
+| `green-800` | `#0D7A48` | Medium stripe |
+| `green-700` | `#15803D` | Active states |
+| `green-600` | `#16A34A` | **⬤ PRIMARY** — buttons, links, selection |
+| `green-500` | `#22C55E` | Hover states |
+| `green-400` | `#4ADE80` | Bright stripe, success |
+| `green-300` | `#86EFAC` | Glow effects |
+| `green-200` | `#BBF7D0` | Pale highlights |
+
+### Neutrals
+
+| Token | Hex | Usage |
+|-------|-----|-------|
+| `bg-deep` | `#0A0A0A` | Root background |
+| `bg-surface` | `#1A1A1A` | Panels, cards |
+| `bg-elevated` | `#222222` | Hover, modals |
+| `text-primary` | `#F5F5F0` | Main text (warm white) |
+| `text-secondary` | `#A3A3A3` | Muted text |
+| `text-muted` | `#737373` | Disabled |
+
+### The One Exception
+
+| Token | Hex | Usage |
+|-------|-----|-------|
+| `error` | `#EF4444` | Error states only |
+
+---
+
+## ✏️ Typography
+
+| Role | Font | Weight |
+|------|------|--------|
+| Headlines | **Space Grotesk** | 600-700 |
+| Body | **Inter** | 400-500 |
+| Code/JSON | **JetBrains Mono** | 400 |
+
+---
+
+## 🌀 Retro 71 Stripe
+
+Our signature element — 5 parallel green stripes from dark to light.
 
 ```
-Background: #0a0a14 (deep space)
-Surface:    #12121f (panel)
-Accent 1:   #4ade80 (electric green — creation, growth)
-Accent 2:   #38bdf8 (sky blue — imagination)
-Accent 3:   #f59e0b (amber — energy, crypto)
-Text:       #e4e4e7 (light gray)
-Muted:      #52525b (dark gray)
+████  #0A5C36  (Dark Forest)
+████  #0D7A48  (Forest)
+████  #16A34A  (Primary Green)
+████  #22C55E  (Bright Green)
+████  #4ADE80  (Lime)
 ```
 
-### Typography
+### Where to Use
 
-- **Headers:** "Space Grotesk" or "Outfit" — geometric, modern, tech-forward
-- **Body:** "Inter" — clean, readable, professional
-- **Monospace:** "JetBrains Mono" — for code/JSON views
-
-### Logo Direction
-
-- **Mark:** Abstract film frame or play button morphing into a creative spark
-- **Style:** Minimal, geometric, works at 16px favicon size
-- **Animation:** Logo should have a subtle animation (rotation, morph, or particle effect) for loading states
-
-### Tone of Voice
-
-- **Empowering:** "Your story, animated"
-- **Playful:** "Lights, camera, create!"
-- **Inclusive:** "No skills required. Just imagination."
-- **Bold:** "The YouTube of animation"
+- ✅ Section dividers (thin horizontal stripe)
+- ✅ Loading/progress indicators
+- ✅ Active sidebar item left-border
+- ✅ Empty state decorations
+- ✅ Header accent under logo
+- ❌ Never as full background fill
+- ❌ Never in text
 
 ---
 
-## Tagline Options
+## 💬 Tone of Voice
 
 | Tagline | Vibe |
 |---------|------|
-| "Stories in motion" | Classic, clean |
-| "Imagine. Animate. Earn." | Action-oriented |
-| "Your story, rendered" | Tech-creative |
-| "Cinema for everyone" | Democratic |
-| "From fanfic to film" | Direct, relatable |
-| "Create worlds, earn globally" | Ambitious |
+| **"Your story, animated"** | Clean, empowering |
+| **"Cinema for everyone"** | Democratic |
+| **"Imagine. Animate. Earn."** | Action-oriented |
 
 ---
 
-## Next Steps
+## Logo Direction
 
-1. **Founder picks top 3 names** → check domain availability
-2. **Design sprint:** Logo + color palette + UI mockup
-3. **User testing:** Show 5 name options to 20 target users → pick winner
+- **Font:** Space Grotesk Bold, all lowercase "animatica"
+- **Mark:** Abstract play button or film frame in green
+- **Accent:** Retro stripe underneath the wordmark
+- **Favicon:** Green "A" on black, 16px
+
+---
+
+## Implementation
+
+- **Design tokens:** See [DESIGN_TOKENS.md](DESIGN_TOKENS.md)
+- **CSS variables:** `packages/editor/src/styles/design-tokens.css`
