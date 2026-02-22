@@ -1,61 +1,64 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { useSceneStore, getActorById, getActiveActors, getCurrentTime } from './sceneStore';
-import { Actor } from '../types';
+import { PrimitiveActor } from '../types';
 
 describe('sceneStore', () => {
   beforeEach(() => {
     useSceneStore.setState({
       actors: [],
-      environment: { id: 'default-env', name: 'Default Environment' },
-      timeline: { currentTime: 0, duration: 10, isPlaying: false, frameRate: 24 },
+      environment: {
+        ambientLight: { intensity: 0.5, color: '#ffffff' },
+        sun: { position: [5, 10, 5], intensity: 1.0, color: '#ffffff' },
+        skyColor: '#87ceeb',
+        fog: { color: '#87ceeb', near: 10, far: 50 },
+        weather: { type: 'none', intensity: 0 },
+      },
+      timeline: {
+        currentTime: 0,
+        duration: 10,
+        isPlaying: false,
+        frameRate: 30,
+        cameraTrack: [],
+        animationTracks: [],
+      },
     });
   });
 
-  it('should add an actor', () => {
-    const actor: Actor = {
-      id: '1',
-      name: 'Test Actor',
-      type: 'mesh',
-      transform: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 }, scale: { x: 1, y: 1, z: 1 } },
-      isActive: true,
-    };
+  const mockActor: PrimitiveActor = {
+    id: '1',
+    name: 'Test Actor',
+    type: 'primitive',
+    transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
+    visible: true,
+    properties: {
+      shape: 'box',
+      color: '#ffffff',
+      roughness: 0.5,
+      metalness: 0.5,
+    },
+  };
 
-    useSceneStore.getState().addActor(actor);
+  it('should add an actor', () => {
+    useSceneStore.getState().addActor(mockActor);
     expect(useSceneStore.getState().actors).toHaveLength(1);
-    expect(useSceneStore.getState().actors[0]).toEqual(actor);
+    expect(useSceneStore.getState().actors[0]).toEqual(mockActor);
   });
 
   it('should remove an actor', () => {
-    const actor: Actor = {
-      id: '1',
-      name: 'Test Actor',
-      type: 'mesh',
-      transform: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 }, scale: { x: 1, y: 1, z: 1 } },
-      isActive: true,
-    };
-
-    useSceneStore.getState().addActor(actor);
+    useSceneStore.getState().addActor(mockActor);
     useSceneStore.getState().removeActor('1');
     expect(useSceneStore.getState().actors).toHaveLength(0);
   });
 
   it('should update an actor', () => {
-    const actor: Actor = {
-      id: '1',
-      name: 'Test Actor',
-      type: 'mesh',
-      transform: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 }, scale: { x: 1, y: 1, z: 1 } },
-      isActive: true,
-    };
-
-    useSceneStore.getState().addActor(actor);
+    useSceneStore.getState().addActor(mockActor);
     useSceneStore.getState().updateActor('1', { name: 'Updated Actor' });
     expect(useSceneStore.getState().actors[0].name).toBe('Updated Actor');
   });
 
   it('should set environment', () => {
-    useSceneStore.getState().setEnvironment({ name: 'New Environment' });
-    expect(useSceneStore.getState().environment.name).toBe('New Environment');
+    useSceneStore.getState().setEnvironment({ skyColor: '#0000ff' });
+    expect(useSceneStore.getState().environment.skyColor).toBe('#0000ff');
   });
 
   it('should set timeline', () => {
@@ -64,36 +67,17 @@ describe('sceneStore', () => {
   });
 
   it('should get actor by id selector', () => {
-     const actor: Actor = {
-      id: '1',
-      name: 'Test Actor',
-      type: 'mesh',
-      transform: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 }, scale: { x: 1, y: 1, z: 1 } },
-      isActive: true,
-    };
-    useSceneStore.getState().addActor(actor);
-
+    useSceneStore.getState().addActor(mockActor);
     const result = getActorById('1')(useSceneStore.getState());
-    expect(result).toEqual(actor);
+    expect(result).toEqual(mockActor);
   });
 
   it('should get active actors selector', () => {
-     const actor1: Actor = {
-      id: '1',
-      name: 'Active Actor',
-      type: 'mesh',
-      transform: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 }, scale: { x: 1, y: 1, z: 1 } },
-      isActive: true,
-    };
-     const actor2: Actor = {
-      id: '2',
-      name: 'Inactive Actor',
-      type: 'mesh',
-      transform: { position: { x: 0, y: 0, z: 0 }, rotation: { x: 0, y: 0, z: 0 }, scale: { x: 1, y: 1, z: 1 } },
-      isActive: false,
-    };
-    useSceneStore.getState().addActor(actor1);
-    useSceneStore.getState().addActor(actor2);
+    const activeActor = { ...mockActor, id: '1', visible: true };
+    const inactiveActor = { ...mockActor, id: '2', visible: false };
+
+    useSceneStore.getState().addActor(activeActor);
+    useSceneStore.getState().addActor(inactiveActor);
 
     const result = getActiveActors(useSceneStore.getState());
     expect(result).toHaveLength(1);

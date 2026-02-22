@@ -12,9 +12,28 @@ interface SceneStoreState extends ProjectState {
 }
 
 const initialState: ProjectState = {
+  meta: {
+    title: 'Untitled Project',
+    version: '0.0.1',
+    author: 'User',
+  },
   actors: [],
-  environment: { id: 'default-env', name: 'Default Environment' },
-  timeline: { currentTime: 0, duration: 10, isPlaying: false, frameRate: 24 },
+  environment: {
+    ambientLight: { intensity: 0.5, color: '#ffffff' },
+    sun: { position: [5, 10, 5], intensity: 1.0, color: '#ffffff' },
+    skyColor: '#87ceeb',
+    fog: { color: '#87ceeb', near: 10, far: 50 },
+    weather: { type: 'none', intensity: 0 },
+  },
+  timeline: {
+    currentTime: 0,
+    duration: 10,
+    isPlaying: false,
+    frameRate: 30,
+    cameraTrack: [],
+    animationTracks: [],
+  },
+  library: { clips: [] },
 };
 
 export const useSceneStore = create<SceneStoreState>()(
@@ -56,7 +75,7 @@ export const getActorById = (id: string) => (state: SceneStoreState) =>
   state.actors.find((a) => a.id === id);
 
 export const getActiveActors = (state: SceneStoreState) =>
-  state.actors.filter((a) => a.isActive);
+  state.actors.filter((a) => a.visible);
 
 export const getCurrentTime = (state: SceneStoreState) =>
   state.timeline.currentTime;
