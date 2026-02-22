@@ -1,13 +1,14 @@
 import { describe, it } from 'vitest';
 import { interpolateKeyframes } from '../animation/interpolate';
 import { ProjectStateSchema } from '../schemas';
-import { useSceneStore } from '../store/sceneStore';
-import type { Keyframe, ProjectState, Actor, PrimitiveActor } from '../types';
+import { useEngineStore } from '../store/useEngineStore';
+import type { Keyframe, Actor, PrimitiveActor } from '../types';
 
 function measure(name: string, fn: () => void) {
     const start = performance.now();
     fn();
     const end = performance.now();
+    // eslint-disable-next-line no-console
     console.log(`${name}: ${(end - start).toFixed(2)}ms`);
 }
 
@@ -25,6 +26,7 @@ describe('Engine Benchmarks', () => {
 
         measure('Interpolation Speed (10k ops)', () => {
             for (let i = 0; i < 10000; i++) {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 const t = Math.random() * 10000;
                 interpolateKeyframes(keyframes, t);
             }
@@ -57,7 +59,8 @@ describe('Engine Benchmarks', () => {
             actors.push(actor);
         }
 
-        const projectState: ProjectState = {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const projectState: any = {
             meta: {
                 title: 'Benchmark Project',
                 version: '1.0.0',
@@ -85,7 +88,7 @@ describe('Engine Benchmarks', () => {
 
     it('Store Update Throughput (10k ops)', () => {
         // Setup: Reset store
-        const { setState, getState } = useSceneStore;
+        const { setState, getState } = useEngineStore;
 
         setState({
             meta: { title: 'Reset', version: '1.0.0' },
