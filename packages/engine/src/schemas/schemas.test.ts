@@ -17,13 +17,14 @@ import {
     ProjectStateSchema,
     ProjectMetaSchema,
 } from './scene.schema';
+import type { Vector3 } from '../types';
 
 // ---- Valid test data ----
 
 const validTransform = {
-    position: [0, 1, 0] as [number, number, number],
-    rotation: [0, 0, 0] as [number, number, number],
-    scale: [1, 1, 1] as [number, number, number],
+    position: [0, 1, 0] as Vector3,
+    rotation: [0, 0, 0] as Vector3,
+    scale: [1, 1, 1] as Vector3,
 };
 
 const validCharacter = {
@@ -34,7 +35,7 @@ const validCharacter = {
     visible: true,
     animation: 'idle' as const,
     morphTargets: { mouthSmile: 0.5 },
-    bodyPose: { head: [0, 0, 0] as [number, number, number] },
+    bodyPose: { head: [0, 0, 0] as Vector3 },
     clothing: { head: [], torso: [] },
 };
 

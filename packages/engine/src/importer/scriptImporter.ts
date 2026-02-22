@@ -7,6 +7,15 @@
 import { ProjectStateSchema } from '../schemas/scene.schema';
 import type { ProjectState, ValidationResult } from '../types';
 
+function isWrappedProject(data: unknown): data is { project: unknown } {
+    return (
+        typeof data === 'object' &&
+        data !== null &&
+        'project' in data &&
+        !('meta' in data)
+    );
+}
+
 /**
  * Validate a raw JSON string against the ProjectState schema.
  * Returns a ValidationResult with parsed data or detailed error messages.
@@ -17,20 +26,16 @@ export function validateScript(jsonString: string): ValidationResult {
     try {
         parsed = JSON.parse(jsonString);
     } catch (e) {
+        const msg = e instanceof Error ? e.message : String(e);
         return {
             success: false,
-            errors: [`Invalid JSON: ${(e as Error).message}`],
+            errors: [`Invalid JSON: ${msg}`],
         };
     }
 
     // Step 2: Check for nested "project" wrapper (common AI output format)
-    if (
-        typeof parsed === 'object' &&
-        parsed !== null &&
-        'project' in parsed &&
-        !('meta' in parsed)
-    ) {
-        parsed = (parsed as Record<string, unknown>).project;
+    if (isWrappedProject(parsed)) {
+        parsed = parsed.project;
     }
 
     // Step 3: Validate against Zod schema

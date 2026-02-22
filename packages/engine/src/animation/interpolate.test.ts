@@ -63,19 +63,21 @@ describe('interpolateKeyframes', () => {
 
 describe('Vector3 interpolation', () => {
     it('interpolates Vec3 at midpoint', () => {
-        const result = interpolateKeyframes(vec3Keyframes, 1) as Vector3;
+        const result = interpolateKeyframes(vec3Keyframes, 1);
+        expect(result).toBeDefined();
+        if (!result) return; // TS guard
         expect(result[0]).toBe(5);
         expect(result[1]).toBe(10);
         expect(result[2]).toBe(15);
     });
 
     it('returns start value at t=0', () => {
-        const result = interpolateKeyframes(vec3Keyframes, 0) as Vector3;
+        const result = interpolateKeyframes(vec3Keyframes, 0);
         expect(result).toEqual([0, 0, 0]);
     });
 
     it('returns end value at t=end', () => {
-        const result = interpolateKeyframes(vec3Keyframes, 2) as Vector3;
+        const result = interpolateKeyframes(vec3Keyframes, 2);
         expect(result).toEqual([10, 20, 30]);
     });
 });
@@ -135,7 +137,9 @@ describe('Easing integration', () => {
             { time: 0, value: 0 },
             { time: 1, value: 100, easing: 'easeIn' },
         ];
-        const at25 = interpolateKeyframes(kf, 0.25) as number;
+        const at25 = interpolateKeyframes(kf, 0.25);
+        expect(at25).toBeDefined();
+        if (at25 === undefined) return;
         // easeIn(0.25) = 0.0625, so value ≈ 6.25
         expect(at25).toBeCloseTo(6.25, 1);
     });
