@@ -12,6 +12,8 @@ export { useSceneStore, getActorById, getActiveActors, getCurrentTime } from './
 
 // === COMPONENTS (R3F) ===
 export { PrimitiveRenderer } from './scene/renderers/PrimitiveRenderer'
+export { LightRenderer } from './scene/renderers/LightRenderer'
+export { CameraRenderer } from './scene/renderers/CameraRenderer'
 // export { SceneManager } from './scene/SceneManager'
 // export { PlaybackController } from './playback/PlaybackController'
 
