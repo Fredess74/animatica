@@ -4,7 +4,7 @@
  *
  * @module @animatica/engine/importer
  */
-import { ProjectStateSchema } from '../schemas/scene.schema';
+import { ProjectStateSchema } from './schemas';
 import type { ProjectState, ValidationResult } from '../types';
 
 /**

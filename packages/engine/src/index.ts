@@ -5,7 +5,7 @@
 export * from './types/index'
 
 // === SCHEMAS (Zod validation) ===
-export * from './schemas/index'
+export * from './importer/schemas/index'
 
 // === STORE ===
 export { useSceneStore, getActorById, getActiveActors, getCurrentTime } from './store/sceneStore';
