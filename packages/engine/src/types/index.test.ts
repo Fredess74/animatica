@@ -17,7 +17,9 @@ describe('Types', () => {
         shape: 'box',
         color: '#ff0000',
         roughness: 0.5,
-        metalness: 0.5
+        metalness: 0.5,
+        opacity: 1,
+        wireframe: false
       },
       // UX Enhancements
       locked: true,
