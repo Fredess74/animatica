@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { validateScript, importScript, tryImportScript } from './scriptImporter';
+import { validateScript, importScript, tryImportScript, MAX_SCRIPT_SIZE } from './scriptImporter';
 
 // ---- Valid project data ----
 
@@ -95,6 +95,14 @@ describe('validateScript', () => {
     it('detects missing required fields', () => {
         const result = validateScript(JSON.stringify({ meta: { title: 'X' } }));
         expect(result.success).toBe(false);
+    });
+
+    it('rejects scripts exceeding the size limit', () => {
+        // Create a string slightly larger than MAX_SCRIPT_SIZE
+        const largeString = ' '.repeat(MAX_SCRIPT_SIZE + 1);
+        const result = validateScript(largeString);
+        expect(result.success).toBe(false);
+        expect(result.errors[0]).toContain('Script too large');
     });
 });
 

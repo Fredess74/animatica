@@ -7,11 +7,21 @@
 import { ProjectStateSchema } from '../schemas/scene.schema';
 import type { ProjectState, ValidationResult } from '../types';
 
+export const MAX_SCRIPT_SIZE = 10 * 1024 * 1024; // 10MB
+
 /**
  * Validate a raw JSON string against the ProjectState schema.
  * Returns a ValidationResult with parsed data or detailed error messages.
  */
 export function validateScript(jsonString: string): ValidationResult {
+    // Step 0: Check size limit to prevent DoS
+    if (jsonString.length > MAX_SCRIPT_SIZE) {
+        return {
+            success: false,
+            errors: [`Script too large (max ${MAX_SCRIPT_SIZE / 1024 / 1024}MB)`],
+        };
+    }
+
     // Step 1: Parse JSON
     let parsed: unknown;
     try {
