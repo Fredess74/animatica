@@ -3,6 +3,7 @@ import * as THREE from 'three'
 import { ThreeEvent } from '@react-three/fiber'
 import { Edges } from '@react-three/drei'
 import { PrimitiveActor } from '../../types'
+import { DesignTokens } from '../../design/tokens'
 
 interface PrimitiveRendererProps {
   actor: PrimitiveActor
@@ -62,7 +63,7 @@ export const PrimitiveRenderer: React.FC<PrimitiveRendererProps> = ({
         transparent={opacity < 1}
         wireframe={wireframe}
       />
-      {isSelected && <Edges color="yellow" threshold={15} />}
+      {isSelected && <Edges color={DesignTokens.color.primary} threshold={15} />}
     </mesh>
   )
 }

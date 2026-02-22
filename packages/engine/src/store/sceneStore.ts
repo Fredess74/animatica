@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { Actor, Environment, Timeline, ProjectState, ProjectMeta } from '../types';
+import { DesignTokens } from '../design/tokens';
 
 interface PlaybackState {
   currentTime: number;
@@ -29,7 +30,7 @@ const initialMeta: ProjectMeta = {
 const initialEnvironment: Environment = {
   ambientLight: { intensity: 0.5, color: '#ffffff' },
   sun: { position: [10, 10, 10], intensity: 1, color: '#ffffff' },
-  skyColor: '#87CEEB',
+  skyColor: DesignTokens.bg.deep,
 };
 
 const initialTimeline: Timeline = {

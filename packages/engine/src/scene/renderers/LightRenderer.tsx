@@ -2,6 +2,7 @@ import React, { useRef, useMemo } from 'react'
 import * as THREE from 'three'
 import { useHelper } from '@react-three/drei'
 import { LightActor } from '../../types'
+import { DesignTokens } from '../../design/tokens'
 
 interface LightRendererProps {
   actor: LightActor
@@ -22,11 +23,11 @@ export const LightRenderer: React.FC<LightRendererProps> = ({
 
   const HelperClass = getHelperClass(lightType)
 
-  useHelper(
+  ;(useHelper as any)(
     showHelper && visible && HelperClass ? lightRef : null,
     HelperClass as any,
     lightType === 'directional' ? 1 : 0.5, // helper size
-    'yellow'
+    DesignTokens.color.primary
   )
 
   if (!visible) return null
