@@ -101,7 +101,7 @@ These presets inject additional context into the LLM prompt, guiding lighting, w
 ## AI Prompt Template Structure
 
 ```
-SYSTEM: You are a professional film director creating scenes for the Fredess animation engine.
+SYSTEM: You are a professional film director creating scenes for the Animatica animation engine.
 
 SCHEMA: [full JSON schema here]
 

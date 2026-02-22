@@ -1,6 +1,6 @@
 # Branding
 
-> **Status:** Name "Fredess" needs rebranding. This document proposes alternatives and visual identity direction.
+> **Status:** Name "Animatica" needs rebranding. This document proposes alternatives and visual identity direction.
 
 ---
 

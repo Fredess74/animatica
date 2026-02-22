@@ -1,12 +1,12 @@
 # Jules Guide — AI Agent Instructions
 
-> **You are Jules, Google's AI coding agent.** This document tells you everything you need to know about the Fredess project, how to write code for it, and in what order.
+> **You are Jules, Google's AI coding agent.** This document tells you everything you need to know about the Animatica project, how to write code for it, and in what order.
 
 ---
 
 ## Project Summary
 
-Fredess is a web-based animation platform. Users write text → AI generates animated scenes → users publish and earn money via crypto donations.
+Animatica is a web-based animation platform. Users write text → AI generates animated scenes → users publish and earn money via crypto donations.
 
 **Your job:** Build the codebase module by module, following the task sequence below. Each task = one PR. Each PR touches one package only.
 

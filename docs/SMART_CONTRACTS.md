@@ -151,7 +151,7 @@ contract CreatorFund is Ownable, ReentrancyGuard {
 
 ---
 
-## Contract 3: FredessTreasury.sol
+## Contract 3: AnimaticaTreasury.sol
 
 Platform treasury — receives 10%.
 
@@ -161,7 +161,7 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract FredessTreasury is Ownable {
+contract AnimaticaTreasury is Ownable {
     event Withdrawn(address indexed to, uint256 amount);
 
     constructor() Ownable(msg.sender) {}
@@ -252,7 +252,7 @@ import { ethers } from "hardhat";
 
 async function main() {
   // 1. Deploy Treasury
-  const Treasury = await ethers.getContractFactory("FredessTreasury");
+  const Treasury = await ethers.getContractFactory("AnimaticaTreasury");
   const treasury = await Treasury.deploy();
 
   // 2. Deploy Creator Fund

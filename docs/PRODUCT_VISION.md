@@ -4,7 +4,7 @@
 
 People write fanfiction even though they don't read books. The same revolution is coming to video. Millions of people have stories in their heads — characters, worlds, dramas — but zero tools to bring them to life. Professional animation requires years of training and expensive software.
 
-**Fredess exists to close this gap.**
+**Animatica exists to close this gap.**
 
 We help people take their creative vision from idea to finished animated film — with AI assistance, intuitive game-like tools, and a platform where every creator can earn money regardless of where they live.
 
@@ -96,7 +96,7 @@ Features that would drive users away:
                   Easy to Use
                       ↑
                       |
-         Animaker     |     FREDESS ★
+         Animaker     |     Animatica ★
          Plotagon     |
                       |
   Low Quality --------+-------→ High Quality

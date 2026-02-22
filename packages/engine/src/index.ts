@@ -1,4 +1,4 @@
-// @fredess/engine — Public API
+// @Animatica/engine — Public API
 // This file will re-export all public types, components, and utilities.
 // Jules: Implement exports here after creating each module.
 

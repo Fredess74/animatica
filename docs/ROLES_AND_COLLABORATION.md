@@ -2,7 +2,7 @@
 
 ## Creator Roles
 
-Every film on Fredess can have multiple creators with different roles. Roles determine what parts of the editor are emphasized.
+Every film on Animatica can have multiple creators with different roles. Roles determine what parts of the editor are emphasized.
 
 ### Available Roles
 

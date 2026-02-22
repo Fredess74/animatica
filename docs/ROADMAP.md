@@ -138,7 +138,7 @@ Each phase has clear deliverables and can be validated independently.
 |------|-------|-------------|
 | DonationPool.sol | Jules | Deploy + test on testnet |
 | CreatorFund.sol | Jules | Weight updates + claim |
-| FredessTreasury.sol | Jules | Withdrawal by owner |
+| AnimaticaTreasury.sol | Jules | Withdrawal by owner |
 | AssetMarketplace.sol | Jules | On-chain asset purchases |
 | Wallet connect (wagmi) | Jules | RainbowKit modal in app |
 | Donate button | Jules | One-click donation flow |

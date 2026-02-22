@@ -1,12 +1,12 @@
-# Contributing to Fredess
+# Contributing to Animatica
 
 Thank you for your interest in contributing! This guide covers the development workflow.
 
 ## Setup
 
 ```bash
-git clone https://github.com/YOUR_ORG/fredess.git
-cd fredess
+git clone https://github.com/YOUR_ORG/Animatica.git
+cd Animatica
 npm install
 ```
 

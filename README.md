@@ -1,4 +1,4 @@
-# 🎬 Fredess — The Animation Platform for Everyone
+# 🎬 Animatica — The Animation Platform for Everyone
 
 > **Create. Animate. Earn.** — A web-based platform where anyone can turn ideas into animated films and get paid globally via crypto.
 
@@ -7,9 +7,9 @@
 
 ---
 
-## What is Fredess?
+## What is Animatica?
 
-Fredess is an open-source platform that democratizes animation. People write fanfiction even though they don't read books — the same revolution is coming to video. Fredess gives everyone the power to:
+Animatica is an open-source platform that democratizes animation. People write fanfiction even though they don't read books — the same revolution is coming to video. Animatica gives everyone the power to:
 
 1. **Create** — Turn text into 2D/3D animated scenes using AI and an intuitive editor
 2. **Collaborate** — Work together in real-time with roles: Director, Writer, Animator, Producer
@@ -34,7 +34,7 @@ Fredess is an open-source platform that democratizes animation. People write fan
 ## Architecture
 
 ```
-fredess/
+Animatica/
 ├── packages/
 │   ├── engine/       # 🎮 Core animation engine (Three.js + PixiJS)
 │   ├── editor/       # 🖥️ Editor UI (React)
@@ -51,8 +51,8 @@ fredess/
 
 ```bash
 # Clone
-git clone https://github.com/YOUR_ORG/fredess.git
-cd fredess
+git clone https://github.com/YOUR_ORG/Animatica.git
+cd Animatica
 
 # Install
 npm install

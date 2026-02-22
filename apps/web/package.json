@@ -1,5 +1,5 @@
 {
-    "name": "@fredess/web",
+    "name": "@Animatica/web",
     "version": "0.1.0",
     "private": true,
     "scripts": {
@@ -10,9 +10,9 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "@fredess/engine": "workspace:*",
-        "@fredess/editor": "workspace:*",
-        "@fredess/platform": "workspace:*",
+        "@Animatica/engine": "workspace:*",
+        "@Animatica/editor": "workspace:*",
+        "@Animatica/platform": "workspace:*",
         "next": "^15.0.0",
         "react": "^19.2.0",
         "react-dom": "^19.2.0"

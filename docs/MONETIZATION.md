@@ -2,7 +2,7 @@
 
 ## Overview
 
-Fredess uses a **transparent donation pool** model. Viewers donate to films they love. Donations are split automatically by smart contracts. No subscriptions, no ads, no paywall.
+Animatica uses a **transparent donation pool** model. Viewers donate to films they love. Donations are split automatically by smart contracts. No subscriptions, no ads, no paywall.
 
 ---
 

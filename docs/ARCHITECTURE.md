@@ -2,10 +2,10 @@
 
 ## Overview
 
-Fredess is a **Turborepo monorepo** with 4 packages and 1 app. Each package has strict boundaries and communicates through published interfaces only.
+Animatica is a **Turborepo monorepo** with 4 packages and 1 app. Each package has strict boundaries and communicates through published interfaces only.
 
 ```
-fredess/
+Animatica/
 ├── package.json              # Root workspace config
 ├── turbo.json                # Build pipeline
 ├── tsconfig.base.json        # Shared TS config
@@ -53,7 +53,7 @@ fredess/
 
 ## Package Details
 
-### `@fredess/engine`
+### `@Animatica/engine`
 
 The core animation engine. **No UI components** — only 3D/2D rendering, animation logic, and data structures.
 
@@ -132,9 +132,9 @@ export { ProjectSchema } from './importer/schemas/project'
 export type * from './types'
 ```
 
-### `@fredess/editor`
+### `@Animatica/editor`
 
-UI panels and modals. **Only imports from `@fredess/engine` public API.** No direct Three.js usage.
+UI panels and modals. **Only imports from `@Animatica/engine` public API.** No direct Three.js usage.
 
 ```
 packages/editor/src/
@@ -166,7 +166,7 @@ packages/editor/src/
     └── useCollaboration.ts       # Yjs integration
 ```
 
-### `@fredess/platform`
+### `@Animatica/platform`
 
 Social platform — **standalone package** with its own API layer. Does NOT import engine.
 
@@ -193,7 +193,7 @@ packages/platform/src/
     └── analytics.ts              # Views, retention, etc.
 ```
 
-### `@fredess/contracts`
+### `@Animatica/contracts`
 
 Solidity smart contracts with Hardhat.
 
@@ -202,7 +202,7 @@ packages/contracts/
 ├── contracts/
 │   ├── DonationPool.sol          # 70/20/10 split
 │   ├── CreatorFund.sol           # Weight-based distribution
-│   ├── FredessTreasury.sol       # Platform treasury
+│   ├── AnimaticaTreasury.sol       # Platform treasury
 │   ├── AssetMarketplace.sol      # Buy/sell/rent assets
 │   └── FilmRegistry.sol          # On-chain film metadata
 ├── test/
@@ -219,17 +219,17 @@ packages/contracts/
 ## Dependency Graph
 
 ```
-@fredess/contracts  (standalone — no JS dependencies)
+@Animatica/contracts  (standalone — no JS dependencies)
         ↑
         │ (ABI imports only)
         │
-@fredess/engine  ←── @fredess/editor
+@Animatica/engine  ←── @Animatica/editor
         ↑                    ↑
         │                    │
         └────── apps/web ────┘
                     ↑
                     │
-            @fredess/platform
+            @Animatica/platform
 ```
 
 **Rules:**
