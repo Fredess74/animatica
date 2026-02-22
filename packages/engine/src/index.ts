@@ -18,3 +18,6 @@
 // export { importScript, validateScript } from './importer/scriptImporter'
 // export { getAiPrompt } from './importer/aiPromptTemplate'
 // export { ProjectSchema } from './importer/schemas/project'
+
+// === ANIMATION ===
+export * as Easing from './animation/easing';
