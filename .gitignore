@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+dist/
+.next/
+out/
+
+# Turbo
+.turbo/
+
+# Testing
+coverage/
+
+# Env
+.env
+.env.local
+.env.production.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Hardhat
+artifacts/
+cache/
+typechain-types/
+
+# Logs
+*.log
+npm-debug.log*
