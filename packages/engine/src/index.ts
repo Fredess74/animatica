@@ -3,10 +3,10 @@
 // Jules: Implement exports here after creating each module.
 
 // === TYPES ===
-// export type * from './types'
+export * from './types';
 
 // === STORE ===
-// export { useEngineStore } from './store/useEngineStore'
+export { useSceneStore, getActorById, getActiveActors, getCurrentTime } from './store/sceneStore';
 
 // === COMPONENTS (R3F) ===
 // export { SceneManager } from './scene/SceneManager'
