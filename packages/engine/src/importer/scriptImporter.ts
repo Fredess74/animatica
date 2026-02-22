@@ -30,7 +30,8 @@ export function validateScript(jsonString: string): ValidationResult {
         'project' in parsed &&
         !('meta' in parsed)
     ) {
-        parsed = (parsed as Record<string, unknown>).project;
+        // Narrow type safely
+        parsed = (parsed as { project: unknown }).project;
     }
 
     // Step 3: Validate against Zod schema
@@ -62,12 +63,12 @@ export function validateScript(jsonString: string): ValidationResult {
  */
 export function importScript(jsonString: string): ProjectState {
     const result = validateScript(jsonString);
-    if (!result.success) {
+    if (!result.success || !result.data) {
         throw new Error(
             `Scene import failed:\n${result.errors.map((e) => `  • ${e}`).join('\n')}`,
         );
     }
-    return result.data!;
+    return result.data;
 }
 
 /**
@@ -77,8 +78,8 @@ export function tryImportScript(
     jsonString: string,
 ): { ok: true; data: ProjectState } | { ok: false; errors: string[] } {
     const result = validateScript(jsonString);
-    if (result.success) {
-        return { ok: true, data: result.data! };
+    if (result.success && result.data) {
+        return { ok: true, data: result.data };
     }
     return { ok: false, errors: result.errors };
 }
