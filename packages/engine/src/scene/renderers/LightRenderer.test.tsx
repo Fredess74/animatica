@@ -55,12 +55,16 @@ describe('LightRenderer', () => {
     const target = children.find((c: any) => c.type === 'primitive')
     expect(target).toBeDefined()
 
-    // Second child is the light
-    const light = children.find((c: any) => c.type === 'pointLight')
-    expect(light).toBeDefined()
-    expect((light as any).props.intensity).toBe(2)
-    expect((light as any).props.color).toBe('#ff0000')
-    expect((light as any).props.castShadow).toBe(true)
+    // Second child is the LightSource component
+    const lightSource = children.find((c: any) => typeof c.type === 'function')
+    expect(lightSource).toBeDefined()
+
+    // Manually render LightSource to inspect the actual light
+    const light = (lightSource as any).type((lightSource as any).props)
+    expect(light.type).toBe('pointLight')
+    expect(light.props.intensity).toBe(2)
+    expect(light.props.color).toBe('#ff0000')
+    expect(light.props.castShadow).toBe(true)
   })
 
   it('renders a directional light with target', () => {
@@ -85,10 +89,13 @@ describe('LightRenderer', () => {
     const result = LightRenderer({ actor }) as unknown as { type: string, props: any }
     const children = React.Children.toArray(result.props.children)
 
-    const light = children.find((c: any) => c.type === 'directionalLight')
-    expect(light).toBeDefined()
+    const lightSource = children.find((c: any) => typeof c.type === 'function')
+    expect(lightSource).toBeDefined()
+
+    const light = (lightSource as any).type((lightSource as any).props)
+    expect(light.type).toBe('directionalLight')
     // Verify target prop is passed (it will be the mocked ref object)
-    expect((light as any).props.target).toBeDefined()
+    expect(light.props.target).toBeDefined()
   })
 
   it('renders nothing when visible is false', () => {

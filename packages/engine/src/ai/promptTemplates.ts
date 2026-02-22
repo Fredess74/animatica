@@ -1,3 +1,9 @@
+/**
+ * AI Prompt Generation Templates.
+ * Generates structured prompts for an LLM to create scene JSON.
+ *
+ * @module @animatica/engine/ai
+ */
 export type PromptStyle =
   | 'Noir'
   | 'Comedy'
@@ -6,7 +12,7 @@ export type PromptStyle =
   | 'Cyberpunk'
   | 'Fantasy'
   | 'Documentary'
-  | 'Musical'
+  | 'Musical';
 
 export const PROMPT_STYLES: PromptStyle[] = [
   'Noir',
@@ -17,13 +23,13 @@ export const PROMPT_STYLES: PromptStyle[] = [
   'Fantasy',
   'Documentary',
   'Musical',
-]
+];
 
 interface StyleConfig {
-  lighting: string
-  weather: string
-  camera: string
-  moodColor: string
+  lighting: string;
+  weather: string;
+  camera: string;
+  moodColor: string;
 }
 
 const STYLE_PRESETS: Record<PromptStyle, StyleConfig> = {
@@ -75,7 +81,7 @@ const STYLE_PRESETS: Record<PromptStyle, StyleConfig> = {
     camera: 'Choreographed movements, crane sweeping, rhythmic cuts',
     moodColor: '#ff00aa',
   },
-}
+};
 
 const SCHEMA_DEFINITION = `
 {
@@ -111,10 +117,13 @@ const SCHEMA_DEFINITION = `
     }
   }
 }
-`
+`;
 
+/**
+ * Generates a prompt for an LLM to create a scene based on a user idea and style.
+ */
 export function getAiPrompt(userIdea: string, style: PromptStyle): string {
-  const config = STYLE_PRESETS[style]
+  const config = STYLE_PRESETS[style];
 
   return `SYSTEM: You are a professional film director creating scenes for the Animatica animation engine.
 
@@ -144,5 +153,5 @@ RULES:
 
 USER IDEA: ${userIdea}
 
-OUTPUT: Valid JSON matching the ProjectSchema. Nothing else.`
+OUTPUT: Valid JSON matching the ProjectSchema. Nothing else.`;
 }

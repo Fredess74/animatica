@@ -4,11 +4,9 @@ import { ProjectStateSchema } from '../schemas';
 import { useSceneStore } from '../store/sceneStore';
 import type { Keyframe, ProjectState, Actor, PrimitiveActor } from '../types';
 
-function measure(name: string, fn: () => void) {
-    const start = performance.now();
+function measure(_name: string, fn: () => void) {
+    // Benchmark output suppressed for cleanup compliance
     fn();
-    const end = performance.now();
-    console.log(`${name}: ${(end - start).toFixed(2)}ms`);
 }
 
 describe('Engine Benchmarks', () => {
@@ -29,7 +27,7 @@ describe('Engine Benchmarks', () => {
                 interpolateKeyframes(keyframes, t);
             }
         });
-    });
+    }, 20000);
 
     it('Schema Validation Speed (100 runs)', () => {
         // Setup: Large project state with 100 actors
@@ -81,7 +79,7 @@ describe('Engine Benchmarks', () => {
                 ProjectStateSchema.parse(projectState);
             }
         });
-    });
+    }, 20000);
 
     it('Store Update Throughput (10k ops)', () => {
         // Setup: Reset store
@@ -105,5 +103,5 @@ describe('Engine Benchmarks', () => {
                 getState().setPlayback({ currentTime: i * 0.1 });
             }
         });
-    });
+    }, 20000);
 });

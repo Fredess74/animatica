@@ -2,20 +2,18 @@
 // Re-exports all public types, components, schemas, and utilities.
 
 // === TYPES ===
-export * from './types/index'
+export * from './types/index';
 
 // === SCHEMAS (Zod validation) ===
-export * from './schemas/index'
+export * from './schemas/index';
 
 // === STORE ===
 export { useSceneStore, getActorById, getActiveActors, getCurrentTime } from './store/sceneStore';
 
 // === COMPONENTS (R3F) ===
-export { PrimitiveRenderer } from './scene/renderers/PrimitiveRenderer'
-export { LightRenderer } from './scene/renderers/LightRenderer'
-export { CameraRenderer } from './scene/renderers/CameraRenderer'
-// export { SceneManager } from './scene/SceneManager'
-// export { PlaybackController } from './playback/PlaybackController'
+export { PrimitiveRenderer } from './scene/renderers/PrimitiveRenderer';
+export { LightRenderer } from './scene/renderers/LightRenderer';
+export { CameraRenderer } from './scene/renderers/CameraRenderer';
 
 // === ANIMATION ===
 export * as Easing from './animation/easing';

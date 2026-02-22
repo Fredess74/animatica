@@ -1,35 +1,37 @@
-import React, { useRef, useMemo } from 'react'
-import * as THREE from 'three'
-import { useHelper } from '@react-three/drei'
-import { LightActor } from '../../types'
+import React, { useRef, useMemo } from 'react';
+import * as THREE from 'three';
+import { useHelper } from '@react-three/drei';
+import { LightActor } from '../../types';
 
 interface LightRendererProps {
-  actor: LightActor
-  showHelper?: boolean
+  actor: LightActor;
+  showHelper?: boolean;
 }
 
+/**
+ * Renders a light actor (Point, Spot, Directional) with an optional helper gizmo.
+ * Handles target positioning for directional/spot lights.
+ */
 export const LightRenderer: React.FC<LightRendererProps> = ({
   actor,
   showHelper = false,
 }) => {
-  const lightRef = useRef<THREE.Light>(null)
-  // We use a dedicated target object for Spot and Directional lights
-  // Placed at (0,0,-1) in local space, so rotating the parent group aims the light.
-  const target = useMemo(() => new THREE.Object3D(), [])
+  const lightRef = useRef<THREE.Light>(null);
+  const target = useMemo(() => new THREE.Object3D(), []);
 
-  const { transform, visible, properties } = actor
-  const { lightType, intensity, color, castShadow } = properties
+  const { transform, visible, properties } = actor;
+  const { lightType } = properties;
 
-  const HelperClass = getHelperClass(lightType)
+  const HelperClass = getHelperClass(lightType);
 
-  useHelper(
-    showHelper && visible && HelperClass ? lightRef : null,
-    HelperClass as any,
-    lightType === 'directional' ? 1 : 0.5, // helper size
+  (useHelper as any)(
+    (showHelper && visible && HelperClass ? lightRef : null) as React.MutableRefObject<THREE.Object3D>,
+    HelperClass,
+    lightType === 'directional' ? 1 : 0.5,
     'yellow'
-  )
+  );
 
-  if (!visible) return null
+  if (!visible) return null;
 
   return (
     <group
@@ -38,47 +40,45 @@ export const LightRenderer: React.FC<LightRendererProps> = ({
       scale={transform.scale}
     >
       <primitive object={target} position={[0, 0, -1]} />
-
-      {lightType === 'point' && (
-        <pointLight
-          ref={lightRef as any}
-          intensity={intensity}
-          color={color}
-          castShadow={castShadow}
-        />
-      )}
-      {lightType === 'spot' && (
-        <spotLight
-          ref={lightRef as any}
-          intensity={intensity}
-          color={color}
-          castShadow={castShadow}
-          angle={Math.PI / 6}
-          target={target}
-        />
-      )}
-      {lightType === 'directional' && (
-        <directionalLight
-          ref={lightRef as any}
-          intensity={intensity}
-          color={color}
-          castShadow={castShadow}
-          target={target}
-        />
-      )}
+      <LightSource
+        properties={properties}
+        lightRef={lightRef}
+        target={target}
+      />
     </group>
-  )
+  );
+};
+
+interface LightSourceProps {
+  properties: LightActor['properties'];
+  lightRef: React.RefObject<THREE.Light | null>;
+  target: THREE.Object3D;
 }
+
+const LightSource: React.FC<LightSourceProps> = ({ properties, lightRef, target }) => {
+  const { lightType, intensity, color, castShadow } = properties;
+
+  switch (lightType) {
+    case 'point':
+      return <pointLight ref={lightRef as any} intensity={intensity} color={color} castShadow={castShadow} />;
+    case 'spot':
+      return <spotLight ref={lightRef as any} intensity={intensity} color={color} castShadow={castShadow} angle={Math.PI / 6} target={target} />;
+    case 'directional':
+      return <directionalLight ref={lightRef as any} intensity={intensity} color={color} castShadow={castShadow} target={target} />;
+    default:
+      return null;
+  }
+};
 
 function getHelperClass(type: string) {
   switch (type) {
     case 'point':
-      return THREE.PointLightHelper
+      return THREE.PointLightHelper;
     case 'spot':
-      return THREE.SpotLightHelper
+      return THREE.SpotLightHelper;
     case 'directional':
-      return THREE.DirectionalLightHelper
+      return THREE.DirectionalLightHelper;
     default:
-      return null
+      return null;
   }
 }

@@ -1,30 +1,34 @@
-import React, { useRef } from 'react'
-import * as THREE from 'three'
-import { PerspectiveCamera, useHelper } from '@react-three/drei'
-import { CameraActor } from '../../types'
+import React, { useRef } from 'react';
+import * as THREE from 'three';
+import { PerspectiveCamera, useHelper } from '@react-three/drei';
+import { CameraActor } from '../../types';
 
 interface CameraRendererProps {
-  actor: CameraActor
-  isActive?: boolean
-  showHelper?: boolean
+  actor: CameraActor;
+  isActive?: boolean;
+  showHelper?: boolean;
 }
 
+/**
+ * Renders a camera actor with an optional helper gizmo.
+ * Manages the active camera state via R3F's PerspectiveCamera.
+ */
 export const CameraRenderer: React.FC<CameraRendererProps> = ({
   actor,
   isActive = false,
   showHelper = true,
 }) => {
-  const camRef = useRef<THREE.PerspectiveCamera>(null)
-  const { transform, visible, properties } = actor
-  const { fov, near, far } = properties
+  const camRef = useRef<THREE.PerspectiveCamera>(null);
+  const { transform, visible, properties } = actor;
+  const { fov, near, far } = properties;
 
   // Show helper only if visible, helper is requested, AND it's NOT the active camera
-  useHelper(
-    showHelper && visible && !isActive ? camRef : null,
+  (useHelper as any)(
+    (showHelper && visible && !isActive ? camRef : null) as React.MutableRefObject<THREE.Object3D>,
     THREE.CameraHelper as any
-  )
+  );
 
-  if (!visible) return null
+  if (!visible) return null;
 
   return (
     <PerspectiveCamera
@@ -37,5 +41,5 @@ export const CameraRenderer: React.FC<CameraRendererProps> = ({
       near={near}
       far={far}
     />
-  )
-}
+  );
+};

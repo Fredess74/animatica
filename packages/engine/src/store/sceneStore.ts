@@ -1,3 +1,10 @@
+/**
+ * Global Zustand store for managing the scene state.
+ * Handles actors, timeline, environment, and playback state.
+ * Uses Immer for immutable updates.
+ *
+ * @module @animatica/engine/store
+ */
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { Actor, Environment, Timeline, ProjectState, ProjectMeta } from '../types';
@@ -47,6 +54,9 @@ const initialState: ProjectState & { playback: PlaybackState } = {
   playback: { currentTime: 0, isPlaying: false, frameRate: 24 },
 };
 
+/**
+ * Hook to access and modify the scene store.
+ */
 export const useSceneStore = create<SceneStoreState>()(
   immer((set) => ({
     ...initialState,
