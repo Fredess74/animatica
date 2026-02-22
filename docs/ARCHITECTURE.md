@@ -62,14 +62,12 @@ packages/engine/src/
 ├── index.ts                    # Public API (re-exports)
 ├── types/
 │   └── index.ts                # All TypeScript interfaces
+├── schemas/                    # Zod validation schemas
+│   ├── index.ts
+│   ├── actor.schema.ts
+│   └── scene.schema.ts
 ├── store/
-│   ├── useEngineStore.ts       # Main Zustand store
-│   ├── types.ts                # Store state shape
-│   └── slices/
-│       ├── actorsSlice.ts      # Actor CRUD
-│       ├── timelineSlice.ts    # Keyframes, tracks
-│       ├── environmentSlice.ts # Weather, fog, lighting
-│       └── playbackSlice.ts    # Play/pause/seek
+│   └── sceneStore.ts           # Main Zustand store (Immer)
 ├── scene/
 │   ├── SceneManager.tsx        # Root scene graph
 │   ├── SceneObject.tsx         # Actor → renderer dispatcher
@@ -80,8 +78,10 @@ packages/engine/src/
 │       └── CameraRenderer.tsx
 ├── animation/
 │   ├── PlaybackController.tsx  # requestAnimationFrame loop
-│   ├── KeyframeEngine.ts       # Interpolation logic
-│   └── EasingFunctions.ts      # easeIn/Out/InOut/step
+│   ├── interpolate.ts          # Interpolation logic
+│   └── easing.ts               # Easing functions
+├── ai/
+│   └── promptTemplates.ts      # Static prompt for LLM
 ├── characters/
 │   ├── Humanoid.tsx            # GLB-based character
 │   ├── BoneController.ts       # Per-bone rotation
@@ -98,15 +98,7 @@ packages/engine/src/
 ├── export/
 │   └── VideoExporter.tsx       # WebCodecs → MP4
 ├── importer/
-│   ├── scriptImporter.ts       # JSON → project state
-│   ├── aiPromptTemplate.ts     # Static prompt for LLM
-│   └── schemas/
-│       ├── project.ts
-│       ├── actor.ts
-│       ├── character.ts
-│       ├── timeline.ts
-│       ├── environment.ts
-│       └── common.ts
+│   └── scriptImporter.ts       # JSON → project state
 └── assets/
     └── assetLoader.ts          # GLB/FBX/image loader
 ```
@@ -115,21 +107,28 @@ packages/engine/src/
 
 ```typescript
 // Components (for R3F Canvas)
-export { SceneManager } from './scene/SceneManager'
-export { PlaybackController } from './animation/PlaybackController'
-export { AudioEngine } from './audio/AudioEngine'
-export { VideoExporter } from './export/VideoExporter'
+export { PrimitiveRenderer } from './scene/renderers/PrimitiveRenderer'
+// export { SceneManager } from './scene/SceneManager'
+// export { PlaybackController } from './animation/PlaybackController'
+// export { AudioEngine } from './audio/AudioEngine'
+// export { VideoExporter } from './export/VideoExporter'
 
 // Store
-export { useEngineStore } from './store/useEngineStore'
+export { useSceneStore, getActorById, getActiveActors, getCurrentTime } from './store/sceneStore';
 
 // Utils
-export { importScript, validateScript } from './importer/scriptImporter'
-export { getAiPrompt } from './importer/aiPromptTemplate'
-export { ProjectSchema } from './importer/schemas/project'
+export { importScript, validateScript, tryImportScript } from './importer/scriptImporter'
+export { getAiPrompt, PROMPT_STYLES } from './ai/promptTemplates'
+
+// Animation
+export * as Easing from './animation/easing';
+export { interpolateKeyframes, evaluateTracksAtTime } from './animation/interpolate';
+
+// Schemas
+export * from './schemas/index'
 
 // Types
-export type * from './types'
+export * from './types/index'
 ```
 
 ### `@Animatica/editor`
