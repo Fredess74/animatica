@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { getAiPrompt, PROMPT_STYLES, PromptStyle } from './promptTemplates'
+import { getAiPrompt, PROMPT_STYLES } from './promptTemplates'
 
 describe('AI Prompt Templates', () => {
   it('should return a non-empty string', () => {
