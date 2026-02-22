@@ -4,10 +4,22 @@ import { useHelper } from '@react-three/drei'
 import { LightActor } from '../../types'
 
 interface LightRendererProps {
+  /** The light actor data containing transform, visibility, and properties. */
   actor: LightActor
+  /** Whether to show the visual helper (gizmo) for the light source. */
   showHelper?: boolean
 }
 
+/**
+ * Renders a light source (point, spot, or directional) with optional debug helpers.
+ * Handles target positioning for directional and spot lights.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <LightRenderer actor={myLightActor} showHelper={true} />
+ * ```
+ */
 export const LightRenderer: React.FC<LightRendererProps> = ({
   actor,
   showHelper = false,

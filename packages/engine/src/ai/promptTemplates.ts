@@ -1,3 +1,12 @@
+/**
+ * AI Prompt Generation Module.
+ * Defines style presets and generates structured prompts for LLMs to create scene scripts.
+ * @module @animatica/engine/ai
+ */
+
+/**
+ * Available cinematic style presets.
+ */
 export type PromptStyle =
   | 'Noir'
   | 'Comedy'
@@ -8,6 +17,9 @@ export type PromptStyle =
   | 'Documentary'
   | 'Musical'
 
+/**
+ * List of all available prompt styles.
+ */
 export const PROMPT_STYLES: PromptStyle[] = [
   'Noir',
   'Comedy',
@@ -113,6 +125,14 @@ const SCHEMA_DEFINITION = `
 }
 `
 
+/**
+ * Generates a system prompt for an LLM to create a scene script.
+ * Combines the user's idea with a specific cinematic style and the required JSON schema.
+ *
+ * @param userIdea The user's text description of the scene.
+ * @param style The cinematic style to apply.
+ * @returns A complete prompt string ready to be sent to an LLM.
+ */
 export function getAiPrompt(userIdea: string, style: PromptStyle): string {
   const config = STYLE_PRESETS[style]
 

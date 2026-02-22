@@ -4,7 +4,7 @@
  *
  * Supports: number, Vector3 ([x,y,z]), Color (hex string), boolean (step).
  *
- * @module @animatica/engine/animation
+ * @module @animatica/engine/animation/interpolate
  */
 import type { Keyframe, EasingType, Vector3 } from '../types';
 import * as Easing from './easing';
@@ -39,11 +39,23 @@ function isColor(value: unknown): value is string {
 
 // ---- Color interpolation ----
 
+/**
+ * Converts a hex color string to RGB tuple.
+ * @param hex Hex string (e.g., "#ff00aa").
+ * @returns [r, g, b] with values 0-255.
+ */
 function hexToRgb(hex: string): [number, number, number] {
     const n = parseInt(hex.slice(1), 16);
     return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
 }
 
+/**
+ * Converts RGB tuple to hex color string.
+ * @param r Red (0-255).
+ * @param g Green (0-255).
+ * @param b Blue (0-255).
+ * @returns Hex string (e.g., "#ff00aa").
+ */
 function rgbToHex(r: number, g: number, b: number): string {
     return (
         '#' +
@@ -53,6 +65,13 @@ function rgbToHex(r: number, g: number, b: number): string {
     );
 }
 
+/**
+ * Linearly interpolates between two hex colors.
+ * @param a Start color.
+ * @param b End color.
+ * @param t Interpolation factor (0-1).
+ * @returns Interpolated color string.
+ */
 function lerpColor(a: string, b: string, t: number): string {
     const [r1, g1, b1] = hexToRgb(a);
     const [r2, g2, b2] = hexToRgb(b);
@@ -65,6 +84,13 @@ function lerpColor(a: string, b: string, t: number): string {
 
 // ---- Vector3 interpolation ----
 
+/**
+ * Linearly interpolates between two Vector3s.
+ * @param a Start vector.
+ * @param b End vector.
+ * @param t Interpolation factor (0-1).
+ * @returns Interpolated vector.
+ */
 function lerpVector3(a: Vector3, b: Vector3, t: number): Vector3 {
     return [
         a[0] + (b[0] - a[0]) * t,
@@ -75,6 +101,13 @@ function lerpVector3(a: Vector3, b: Vector3, t: number): Vector3 {
 
 // ---- Number interpolation ----
 
+/**
+ * Linearly interpolates between two numbers.
+ * @param a Start value.
+ * @param b End value.
+ * @param t Interpolation factor (0-1).
+ * @returns Interpolated value.
+ */
 function lerpNumber(a: number, b: number, t: number): number {
     return a + (b - a) * t;
 }
@@ -110,6 +143,11 @@ function interpolateValue(a: unknown, b: unknown, t: number): unknown {
  * - Time before first keyframe → returns first value
  * - Time after last keyframe → returns last value (hold)
  * - Time between keyframes → interpolated with easing
+ *
+ * @template T Type of value to interpolate.
+ * @param keyframes Array of keyframes (will be sorted by time).
+ * @param time Target time in seconds.
+ * @returns Interpolated value or undefined if no keyframes.
  */
 export function interpolateKeyframes<T = unknown>(
     keyframes: Keyframe<T>[],
@@ -154,6 +192,10 @@ export function interpolateKeyframes<T = unknown>(
 /**
  * Evaluate all tracks at a given time and return a map of
  * targetId → property → interpolated value.
+ *
+ * @param tracks List of animation tracks to evaluate.
+ * @param time Target time in seconds.
+ * @returns Nested map: Map<TargetId, Map<PropertyPath, Value>>
  */
 export function evaluateTracksAtTime(
     tracks: { targetId: string; property: string; keyframes: Keyframe[] }[],
