@@ -30,6 +30,10 @@ export interface BaseActor {
   name: string
   transform: Transform
   visible: boolean
+
+  // UX Enhancements:
+  locked?: boolean      // Prevents accidental selection/edits in editor
+  description?: string  // For organization and accessibility/screen readers
 }
 
 // ---- Character ----
