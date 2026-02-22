@@ -7,6 +7,8 @@
 
 The project is currently in **Phase 1: Engine Core**.
 
+For a detailed list of all open tasks, acceptance criteria, and future backlog items, please refer to **[docs/BACKLOG.md](../docs/BACKLOG.md)**.
+
 ### Completed Tasks
 - **Task 1: Types & Interfaces** (`packages/engine/src/types/index.ts`)
 - **Task 3: Easing Functions** (`packages/engine/src/animation/easing.ts`)
@@ -18,13 +20,15 @@ The project is currently in **Phase 1: Engine Core**.
 ### Tasks In Progress / Needs Attention
 - **Task 2: Zod Schemas** (`packages/engine/src/schemas/`)
   - **Status:** Partially implemented but misplaced.
-  - **Action:** Move to `packages/engine/src/importer/schemas/` to match `JULES_GUIDE.md`.
+  - **Action:** See `docs/BACKLOG.md` for refactor details.
 
 ### Missing / Pending Tasks (Batch 2)
-- **Task 7: Light Renderer** (`packages/engine/src/scene/renderers/LightRenderer.tsx`) - **Next Priority**
-- **Task 8: Camera Renderer** (`packages/engine/src/scene/renderers/CameraRenderer.tsx`)
-- **Task 9: Scene Manager** (`packages/engine/src/scene/SceneManager.tsx`)
-- **Task 10: Playback Controller** (`packages/engine/src/animation/PlaybackController.tsx`)
+- **Task 7: Light Renderer** - **Next Priority**
+- **Task 8: Camera Renderer**
+- **Task 9: Scene Manager**
+- **Task 10: Playback Controller**
+
+(See `docs/BACKLOG.md` for detailed acceptance criteria for these items.)
 
 ## Blockers & Risks
 1. **Sequence Deviation:** Task 21 was implemented before critical rendering components (Tasks 7-10), potentially complicating integration.
@@ -32,7 +36,8 @@ The project is currently in **Phase 1: Engine Core**.
 3. **Missing Core Components:** Light and Camera renderers are absent, preventing full scene visualization as per Phase 1 goals.
 
 ## Next Steps
-1.  **Refactor Task 2:** Move Zod schemas to `src/importer/schemas/`.
+Please refer to `docs/BACKLOG.md` for the prioritized task list.
+1.  **Refactor Task 2:** Move Zod schemas.
 2.  **Implement Task 7:** Create `LightRenderer` component.
 3.  **Implement Task 8:** Create `CameraRenderer` component.
 4.  **Implement Task 9:** Create `SceneManager`.
