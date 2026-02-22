@@ -34,57 +34,47 @@ describe('Easing Functions', () => {
 
   it('easeInOut', () => {
     expect(Easing.easeInOut(0)).toBe(0);
-    expect(Easing.easeInOut(0.25)).toBe(0.125);
+    expect(Easing.easeInOut(0.25)).toBe(0.125); // < 0.5
     expect(Easing.easeInOut(0.5)).toBe(0.5);
-    expect(Easing.easeInOut(0.75)).toBe(0.875);
+    expect(Easing.easeInOut(0.75)).toBe(0.875); // >= 0.5
     expect(Easing.easeInOut(1)).toBe(1);
   });
 
   it('bounce', () => {
     expect(Easing.bounce(0)).toBe(0);
-    // At t=1, it should be 1. Note: due to float precision, use toBeCloseTo
     expect(Easing.bounce(1)).toBeCloseTo(1);
-    // Check intermediate value to ensure curve logic is hit
-    // t=0.1: n1 * 0.1^2 = 7.5625 * 0.01 = 0.075625
-    expect(Easing.bounce(0.1)).toBeCloseTo(0.075625);
+
+    // Branch 1: t < 1/2.75 (~0.3636)
+    expect(Easing.bounce(0.1)).toBeCloseTo(7.5625 * 0.1 * 0.1);
+
+    // Branch 2: t < 2/2.75 (~0.7272)
+    const t2 = 0.5;
+    let t_calc2 = t2 - 1.5 / 2.75;
+    expect(Easing.bounce(t2)).toBeCloseTo(7.5625 * t_calc2 * t_calc2 + 0.75);
+
+    // Branch 3: t < 2.5/2.75 (~0.9090)
+    const t3 = 0.8;
+    let t_calc3 = t3 - 2.25 / 2.75;
+    expect(Easing.bounce(t3)).toBeCloseTo(7.5625 * t_calc3 * t_calc3 + 0.9375);
+
+    // Branch 4: t >= 2.5/2.75
+    const t4 = 0.95;
+    let t_calc4 = t4 - 2.625 / 2.75;
+    expect(Easing.bounce(t4)).toBeCloseTo(7.5625 * t_calc4 * t_calc4 + 0.984375);
   });
 
   it('elastic', () => {
     expect(Easing.elastic(0)).toBe(0);
     expect(Easing.elastic(1)).toBe(1);
-    // Check intermediate value
-    // t=0.5: 2^(-5) * sin((5 - 0.75) * c4) + 1
-    // c4 = 2pi/3. (4.25) * 2pi/3 = 8.5pi/3 = 2.833pi.
-    // sin(2.833pi) is positive.
-    const val = Easing.elastic(0.5);
-    expect(val).toBeGreaterThan(0);
-    expect(val).toBeLessThan(2); // Should be somewhat reasonable
+    // Check value
+    const t = 0.5;
+    expect(Easing.elastic(t)).toBeCloseTo(Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * ((2 * Math.PI) / 3)) + 1);
   });
 
   it('step', () => {
     expect(Easing.step(0)).toBe(0);
-    expect(Easing.step(0.99)).toBe(0);
+    expect(Easing.step(0.5)).toBe(0);
+    expect(Easing.step(0.999)).toBe(0);
     expect(Easing.step(1)).toBe(1);
-    expect(Easing.step(1.5)).toBe(1);
-  });
-});
-
-describe('Additional Coverage', () => {
-  it('bounce branches', () => {
-    // t = 0.5 (between 1/2.75 ~0.36 and 2/2.75 ~0.72)
-    // 2nd branch
-    const d1 = 2.75;
-    const n1 = 7.5625;
-    let t = 0.5;
-    t -= 1.5 / d1;
-    const expected = n1 * t * t + 0.75;
-    expect(Easing.bounce(0.5)).toBeCloseTo(expected);
-
-    // t = 0.8 (between 2/2.75 ~0.72 and 2.5/2.75 ~0.90)
-    // 3rd branch
-    t = 0.8;
-    t -= 2.25 / d1;
-    const expected2 = n1 * t * t + 0.9375;
-    expect(Easing.bounce(0.8)).toBeCloseTo(expected2);
   });
 });

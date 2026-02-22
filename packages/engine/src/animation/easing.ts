@@ -1,6 +1,7 @@
 /**
  * Easing functions library.
- * All functions accept a time value t (usually between 0 and 1) and return a value (usually between 0 and 1).
+ * All functions accept a normalized time 't' (0 to 1) and return an eased value.
+ * While 't' is typically 0-1, it can be outside this range (e.g. for elastic/bounce).
  */
 
 export const linear = (t: number): number => t;
@@ -34,7 +35,6 @@ export const bounce = (t: number): number => {
 
 export const elastic = (t: number): number => {
   const c4 = (2 * Math.PI) / 3;
-
   return t === 0
     ? 0
     : t === 1
@@ -42,4 +42,6 @@ export const elastic = (t: number): number => {
     : Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
 };
 
-export const step = (t: number): number => (t >= 1 ? 1 : 0);
+export const step = (t: number): number => {
+  return t < 1 ? 0 : 1;
+};
