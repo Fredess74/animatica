@@ -87,11 +87,11 @@ export const useSceneStore = create<SceneStoreState>()(
 );
 
 // Selectors
-export const getActorById = (id: string) => (state: SceneStoreState) =>
+export const getActorById = (id: string) => (state: SceneStoreState): Actor | undefined =>
   state.actors.find((a) => a.id === id);
 
-export const getActiveActors = (state: SceneStoreState) =>
+export const getActiveActors = (state: SceneStoreState): Actor[] =>
   state.actors.filter((a) => a.visible);
 
-export const getCurrentTime = (state: SceneStoreState) =>
+export const getCurrentTime = (state: SceneStoreState): number =>
   state.playback.currentTime;

@@ -81,6 +81,10 @@ function lerpNumber(a: number, b: number, t: number): number {
 
 // ---- Generic interpolation ----
 
+function interpolateValue(a: number, b: number, t: number): number;
+function interpolateValue(a: Vector3, b: Vector3, t: number): Vector3;
+function interpolateValue(a: string, b: string, t: number): string;
+function interpolateValue<T>(a: T, b: T, t: number): T;
 function interpolateValue(a: unknown, b: unknown, t: number): unknown {
     if (typeof a === 'number' && typeof b === 'number') {
         return lerpNumber(a, b, t);
@@ -139,7 +143,7 @@ export function interpolateKeyframes<T = unknown>(
             const easingFn = resolveEasing(kf1.easing);
             const easedT = easingFn(linearT);
 
-            return interpolateValue(kf0.value, kf1.value, easedT) as T;
+            return interpolateValue(kf0.value, kf1.value, easedT);
         }
     }
 

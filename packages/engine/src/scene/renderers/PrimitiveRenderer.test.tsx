@@ -45,7 +45,7 @@ describe('PrimitiveRenderer', () => {
 
     // Call the component as a function to inspect returned JSX
     // Since we mocked useRef, it won't throw "Invalid hook call"
-    const result = PrimitiveRenderer({ actor }) as unknown as { type: string, props: any }
+    const result = PrimitiveRenderer({ actor }) as React.ReactElement<{ [key: string]: any }>
 
     // Verify mesh properties
     expect(result.type).toBe('mesh')
@@ -54,21 +54,21 @@ describe('PrimitiveRenderer', () => {
     expect(result.props.scale).toEqual([2, 2, 2])
 
     // Verify children (geometry and material)
-    const children = React.Children.toArray(result.props.children)
+    const children = React.Children.toArray(result.props.children) as React.ReactElement<{ [key: string]: any }>[]
 
     // Check geometry
-    const geometry = children.find((child: any) => child.type === 'boxGeometry')
+    const geometry = children.find((child) => child.type === 'boxGeometry')
     expect(geometry).toBeDefined()
 
     // Check material
-    const material = children.find((child: any) => child.type === 'meshStandardMaterial')
+    const material = children.find((child) => child.type === 'meshStandardMaterial')
     expect(material).toBeDefined()
-    expect((material as any).props.color).toBe('#ff0000')
-    expect((material as any).props.roughness).toBe(0.5)
-    expect((material as any).props.metalness).toBe(0.3)
-    expect((material as any).props.opacity).toBe(0.8)
-    expect((material as any).props.transparent).toBe(true)
-    expect((material as any).props.wireframe).toBe(true)
+    expect(material?.props.color).toBe('#ff0000')
+    expect(material?.props.roughness).toBe(0.5)
+    expect(material?.props.metalness).toBe(0.3)
+    expect(material?.props.opacity).toBe(0.8)
+    expect(material?.props.transparent).toBe(true)
+    expect(material?.props.wireframe).toBe(true)
   })
 
   it('renders sphere geometry when shape is sphere', () => {
@@ -92,9 +92,9 @@ describe('PrimitiveRenderer', () => {
       }
     }
 
-    const result = PrimitiveRenderer({ actor }) as unknown as { type: string, props: any }
-    const children = React.Children.toArray(result.props.children)
-    const geometry = children.find((child: any) => child.type === 'sphereGeometry')
+    const result = PrimitiveRenderer({ actor }) as React.ReactElement<{ [key: string]: any }>
+    const children = React.Children.toArray(result.props.children) as React.ReactElement<{ [key: string]: any }>[]
+    const geometry = children.find((child) => child.type === 'sphereGeometry')
     expect(geometry).toBeDefined()
   })
 
