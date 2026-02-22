@@ -98,6 +98,90 @@ describe('PrimitiveRenderer', () => {
     expect(geometry).toBeDefined()
   })
 
+  it('renders cylinder geometry', () => {
+    const actor: PrimitiveActor = {
+      id: '3',
+      name: 'Cylinder',
+      type: 'primitive',
+      visible: true,
+      transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
+      properties: { shape: 'cylinder', color: '#fff', roughness: 0, metalness: 0, opacity: 1, wireframe: false }
+    }
+    const result = PrimitiveRenderer({ actor }) as React.ReactElement<{ [key: string]: any }>
+    const children = React.Children.toArray(result.props.children) as React.ReactElement<{ [key: string]: any }>[]
+    expect(children.find((child) => child.type === 'cylinderGeometry')).toBeDefined()
+  })
+
+  it('renders plane geometry', () => {
+    const actor: PrimitiveActor = {
+      id: '4',
+      name: 'Plane',
+      type: 'primitive',
+      visible: true,
+      transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
+      properties: { shape: 'plane', color: '#fff', roughness: 0, metalness: 0, opacity: 1, wireframe: false }
+    }
+    const result = PrimitiveRenderer({ actor }) as React.ReactElement<{ [key: string]: any }>
+    const children = React.Children.toArray(result.props.children) as React.ReactElement<{ [key: string]: any }>[]
+    expect(children.find((child) => child.type === 'planeGeometry')).toBeDefined()
+  })
+
+  it('renders cone geometry', () => {
+    const actor: PrimitiveActor = {
+      id: '5',
+      name: 'Cone',
+      type: 'primitive',
+      visible: true,
+      transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
+      properties: { shape: 'cone', color: '#fff', roughness: 0, metalness: 0, opacity: 1, wireframe: false }
+    }
+    const result = PrimitiveRenderer({ actor }) as React.ReactElement<{ [key: string]: any }>
+    const children = React.Children.toArray(result.props.children) as React.ReactElement<{ [key: string]: any }>[]
+    expect(children.find((child) => child.type === 'coneGeometry')).toBeDefined()
+  })
+
+  it('renders torus geometry', () => {
+    const actor: PrimitiveActor = {
+      id: '6',
+      name: 'Torus',
+      type: 'primitive',
+      visible: true,
+      transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
+      properties: { shape: 'torus', color: '#fff', roughness: 0, metalness: 0, opacity: 1, wireframe: false }
+    }
+    const result = PrimitiveRenderer({ actor }) as React.ReactElement<{ [key: string]: any }>
+    const children = React.Children.toArray(result.props.children) as React.ReactElement<{ [key: string]: any }>[]
+    expect(children.find((child) => child.type === 'torusGeometry')).toBeDefined()
+  })
+
+  it('renders capsule geometry', () => {
+    const actor: PrimitiveActor = {
+      id: '7',
+      name: 'Capsule',
+      type: 'primitive',
+      visible: true,
+      transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
+      properties: { shape: 'capsule', color: '#fff', roughness: 0, metalness: 0, opacity: 1, wireframe: false }
+    }
+    const result = PrimitiveRenderer({ actor }) as React.ReactElement<{ [key: string]: any }>
+    const children = React.Children.toArray(result.props.children) as React.ReactElement<{ [key: string]: any }>[]
+    expect(children.find((child) => child.type === 'capsuleGeometry')).toBeDefined()
+  })
+
+  it('renders box geometry as default fallback', () => {
+    const actor: PrimitiveActor = {
+      id: '8',
+      name: 'Unknown',
+      type: 'primitive',
+      visible: true,
+      transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
+      properties: { shape: 'invalid-shape' as any, color: '#fff', roughness: 0, metalness: 0, opacity: 1, wireframe: false }
+    }
+    const result = PrimitiveRenderer({ actor }) as React.ReactElement<{ [key: string]: any }>
+    const children = React.Children.toArray(result.props.children) as React.ReactElement<{ [key: string]: any }>[]
+    expect(children.find((child) => child.type === 'boxGeometry')).toBeDefined()
+  })
+
   it('renders nothing when visible is false', () => {
     const actor: PrimitiveActor = {
       id: '3',
@@ -121,5 +205,26 @@ describe('PrimitiveRenderer', () => {
 
     const result = PrimitiveRenderer({ actor })
     expect(result).toBeNull()
+  })
+
+  it('renders selection edges when isSelected is true', () => {
+    const actor: PrimitiveActor = {
+      id: '9',
+      name: 'Selected',
+      type: 'primitive',
+      visible: true,
+      transform: { position: [0,0,0], rotation: [0,0,0], scale: [1,1,1] },
+      properties: { shape: 'box', color: '#fff', roughness: 0, metalness: 0, opacity: 1, wireframe: false }
+    }
+    const result = PrimitiveRenderer({ actor, isSelected: true }) as React.ReactElement<{ [key: string]: any }>
+    const children = React.Children.toArray(result.props.children) as React.ReactElement<{ [key: string]: any }>[]
+    // We mocked Edges to return null, but it should still be in the children list as a React Element (type Edges)
+    // Wait, vi.mock('@react-three/drei', () => ({ Edges: () => null }))
+    // This means Edges is a functional component that returns null.
+    // In the children array, it will appear as an element with type equal to that mocked function.
+
+    // However, finding it by type name might be tricky if it's an anonymous function.
+    // Let's just check if there are 3 children (geometry, material, edges).
+    expect(children.length).toBe(3)
   })
 })

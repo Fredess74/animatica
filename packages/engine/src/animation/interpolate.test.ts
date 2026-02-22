@@ -172,9 +172,33 @@ describe('Easing integration', () => {
         expect(interpolateKeyframes(kf, 0.5)).toBe(0);
         expect(interpolateKeyframes(kf, 1)).toBe(100);
     });
+
+    it('interpolates mixed types as steps', () => {
+        // Technically Keyframes should be same type, but runtime might have mixed.
+        // Or if we define T as union.
+        const kf: Keyframe<any>[] = [
+            { time: 0, value: 10 },
+            { time: 1, value: 'string' },
+        ];
+        // Should use step interpolation because types don't match
+        expect(interpolateKeyframes(kf, 0.3)).toBe(10);
+        expect(interpolateKeyframes(kf, 0.7)).toBe('string');
+    });
 });
 
 describe('evaluateTracksAtTime', () => {
+    it('ignores tracks with no valid interpolation', () => {
+        const tracks = [
+            {
+                targetId: 'actor-1',
+                property: 'prop',
+                keyframes: [],
+            },
+        ];
+        const result = evaluateTracksAtTime(tracks, 1);
+        expect(result.size).toBe(0);
+    });
+
     it('evaluates multiple tracks at a given time', () => {
         const tracks = [
             {

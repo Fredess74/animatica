@@ -42,6 +42,17 @@ describe('sceneStore', () => {
     expect(useSceneStore.getState().actors[0].name).toBe('Updated Actor');
   });
 
+  it('should ignore updates for non-existent actor', () => {
+    const actor = createActor('1');
+    useSceneStore.getState().addActor(actor);
+    // Try to update an actor that doesn't exist
+    useSceneStore.getState().updateActor('999', { name: 'Ghost' });
+    // Should not affect existing actors
+    expect(useSceneStore.getState().actors[0].name).toBe('Test Actor');
+    // Should not add new actors
+    expect(useSceneStore.getState().actors).toHaveLength(1);
+  });
+
   it('should set environment', () => {
     useSceneStore.getState().setEnvironment({ skyColor: '#000000' });
     expect(useSceneStore.getState().environment.skyColor).toBe('#000000');

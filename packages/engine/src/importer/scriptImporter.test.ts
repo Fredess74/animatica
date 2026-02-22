@@ -96,6 +96,14 @@ describe('validateScript', () => {
         const result = validateScript(JSON.stringify({ meta: { title: 'X' } }));
         expect(result.success).toBe(false);
     });
+
+    it('returns error for root level schema violation (no path)', () => {
+        const result = validateScript('123'); // Parsed as number, which is not an object
+        expect(result.success).toBe(false);
+        // Error message should be the message itself since path is empty
+        // Zod issue message for root object type mismatch seems to be this:
+        expect(result.errors[0].toLowerCase()).toContain('expected object');
+    });
 });
 
 describe('importScript', () => {

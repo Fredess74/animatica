@@ -91,6 +91,56 @@ describe('LightRenderer', () => {
     expect((light as any).props.target).toBeDefined()
   })
 
+  it('renders a spot light with correct props', () => {
+    const actor: LightActor = {
+      id: 'l3',
+      name: 'Spot',
+      type: 'light',
+      visible: true,
+      transform: {
+        position: [0, 10, 0],
+        rotation: [0, 0, 0],
+        scale: [1, 1, 1]
+      },
+      properties: {
+        lightType: 'spot',
+        intensity: 5,
+        color: '#00ff00',
+        castShadow: true
+      }
+    }
+
+    const result = LightRenderer({ actor }) as unknown as { type: string, props: any }
+    const children = React.Children.toArray(result.props.children)
+
+    const light = children.find((c: any) => c.type === 'spotLight')
+    expect(light).toBeDefined()
+    expect((light as any).props.angle).toBeCloseTo(Math.PI / 6)
+    expect((light as any).props.target).toBeDefined()
+  })
+
+  it('handles invalid light type gracefully', () => {
+    const actor: LightActor = {
+      id: 'l4',
+      name: 'Invalid',
+      type: 'light',
+      visible: true,
+      transform: { position: [0,0,0], rotation: [0,0,0], scale: [1,1,1] },
+      properties: {
+        lightType: 'invalid-type' as any,
+        intensity: 1,
+        color: '#fff',
+        castShadow: false
+      }
+    }
+    const result = LightRenderer({ actor, showHelper: true }) as unknown as { type: string, props: any }
+    const children = React.Children.toArray(result.props.children)
+
+    // Should render the target primitive but no light component
+    expect(children.length).toBe(1)
+    expect((children[0] as any).type).toBe('primitive')
+  })
+
   it('renders nothing when visible is false', () => {
      const actor: LightActor = {
       id: 'l3',
