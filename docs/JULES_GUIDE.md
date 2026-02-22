@@ -38,13 +38,15 @@ Animatica is a web-based animation platform. Users write text → AI generates a
 2. **Index re-exports** — each directory has `index.ts` that re-exports public API
 3. **Imports order** — externals → package imports → relative imports → types
 
-### Git Rules
+### Git & Automation Rules
 
-1. **Branch naming** — `feat/batch-N-task-description` (e.g., `feat/batch-1-types`)
-2. **Commit messages** — `feat(engine): add keyframe interpolation engine`
-3. **One package per PR** — NEVER edit files in multiple packages
-4. **Max 5 files per PR** — keep PRs small and reviewable
-5. **Tests required** — every PR must contain at least one test file
+1. **Task Triggers** — You will be triggered by GitHub Issues labeled `jules-task`. Read the issue body fully.
+2. **Branch naming** — `feat/task-[issue-number]-description` (e.g., `feat/task-42-types`)
+3. **Commit messages** — `feat(engine): add keyframe interpolation engine (#42)`
+4. **One package per PR** — NEVER edit files in multiple packages
+5. **Max 5 files per PR** — keep PRs small and reviewable
+6. **Tests required** — every PR must contain at least one test file
+7. **CI Self-Healing** — If the CI pipeline fails (`npm run typecheck` or `test`), the GitHub Action will comment on your PR. You MUST read the error logs, fix the code, and push a new commit to the same branch. Do not wait for human intervention.
 
 ---
 

@@ -1,0 +1,38 @@
+name: Jules Task
+description: Template for assigning a task to Jules for automated development
+title: "[JULES]: "
+labels: ["jules-task"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **For Jules:** Read `docs/JULES_GUIDE.md` for coding standards before starting this task.
+
+  - type: input
+    id: package
+    attributes:
+      label: Target Package
+      description: Which package does this task affect? (e.g., @animatica/engine, @animatica/editor)
+      placeholder: "@animatica/engine"
+    validations:
+      required: true
+
+  - type: textarea
+    id: task_description
+    attributes:
+      label: Task Description
+      description: Detailed description of what Jules needs to build.
+      placeholder: Implement the primitive renderer for boxes and spheres.
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance Criteria / Dependencies
+      description: What defines this as complete? What other files does it depend on?
+      placeholder: |
+        - Must pass `npm run test`
+        - Must not exceed 200 LOC
+    validations:
+      required: true
