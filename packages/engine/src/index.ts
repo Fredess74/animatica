@@ -1,20 +1,16 @@
 // @Animatica/engine — Public API
 // This file will re-export all public types, components, and utilities.
-// Jules: Implement exports here after creating each module.
 
 // === TYPES ===
-// export type * from './types'
+export type * from './types/index.js';
 
-// === STORE ===
-// export { useEngineStore } from './store/useEngineStore'
+// === SCHEMAS ===
+export * from './importer/schemas/common.js';
+export * from './importer/schemas/actor.js';
+export * from './importer/schemas/character.js';
+export * from './importer/schemas/timeline.js';
+export * from './importer/schemas/environment.js';
+export * from './importer/schemas/project.js';
 
-// === COMPONENTS (R3F) ===
-// export { SceneManager } from './scene/SceneManager'
-// export { PlaybackController } from './animation/PlaybackController'
-// export { AudioEngine } from './audio/AudioEngine'
-// export { VideoExporter } from './export/VideoExporter'
-
-// === UTILS ===
-// export { importScript, validateScript } from './importer/scriptImporter'
-// export { getAiPrompt } from './importer/aiPromptTemplate'
-// export { ProjectSchema } from './importer/schemas/project'
+// === IMPORTER ===
+export { importScript, importScriptFromString } from './importer/scriptImporter.js';
