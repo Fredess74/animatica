@@ -54,8 +54,8 @@ export const ScriptConsole: React.FC<ScriptConsoleProps> = ({ onClose }) => {
 
     const handleBuildScene = useCallback(() => {
         try {
-            const parsed = JSON.parse(script);
-            // In production: importScript(parsed) via engine
+            JSON.parse(script); // Validate JSON format
+            // In production: const parsed = JSON.parse(script); importScript(parsed) via engine
             setStatus('valid');
             setErrors([]);
             onClose();
