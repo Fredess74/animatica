@@ -5,6 +5,7 @@
  * @module @animatica/editor/modals/ExportModal
  */
 import React, { useState, useCallback } from 'react';
+import { useToast } from '../components/ToastContext';
 
 interface ExportModalProps {
     onClose: () => void;
@@ -26,10 +27,12 @@ export const ExportModal: React.FC<ExportModalProps> = ({ onClose }) => {
     const [format, setFormat] = useState<Format>('mp4');
     const [isExporting, setIsExporting] = useState(false);
     const [progress, setProgress] = useState(0);
+    const { showToast } = useToast();
 
     const handleExport = useCallback(() => {
         setIsExporting(true);
         setProgress(0);
+        showToast(`Starting ${resolution} @ ${fps}fps export...`, 'info');
 
         // Simulate export progress
         const interval = setInterval(() => {
@@ -37,17 +40,20 @@ export const ExportModal: React.FC<ExportModalProps> = ({ onClose }) => {
                 if (prev >= 100) {
                     clearInterval(interval);
                     setIsExporting(false);
+                    showToast('Export completed successfully!', 'success');
+                    onClose(); // Close modal on success
                     return 100;
                 }
                 return prev + 2;
             });
         }, 100);
-    }, []);
+    }, [resolution, fps, showToast, onClose]);
 
     const handleCancel = useCallback(() => {
         setIsExporting(false);
         setProgress(0);
-    }, []);
+        showToast('Export cancelled', 'info');
+    }, [showToast]);
 
     const res = RESOLUTION_MAP[resolution];
 

@@ -5,6 +5,8 @@
  * @module @animatica/editor/modals/ScriptConsole
  */
 import React, { useState, useCallback } from 'react';
+import { getAiPrompt, validateScript } from '@Animatica/engine';
+import { useToast } from '../components/ToastContext';
 
 interface ScriptConsoleProps {
     onClose: () => void;
@@ -40,36 +42,62 @@ export const ScriptConsole: React.FC<ScriptConsoleProps> = ({ onClose }) => {
     const [script, setScript] = useState(EXAMPLE_SCRIPT);
     const [errors, setErrors] = useState<string[]>([]);
     const [status, setStatus] = useState<'idle' | 'valid' | 'error'>('idle');
+    const { showToast } = useToast();
 
     const handleValidate = useCallback(() => {
         try {
-            JSON.parse(script);
-            setErrors([]);
-            setStatus('valid');
+            // Validate against schema (internally checks JSON syntax too)
+            const result = validateScript(script);
+
+            if (result.success) {
+                setErrors([]);
+                setStatus('valid');
+                showToast('Script is valid!', 'success');
+            } else {
+                setErrors(result.errors || ['Unknown validation error']);
+                setStatus('error');
+                showToast('Validation failed', 'error');
+            }
         } catch (e) {
             setErrors([(e as Error).message]);
             setStatus('error');
         }
-    }, [script]);
+    }, [script, showToast]);
 
     const handleBuildScene = useCallback(() => {
         try {
-            JSON.parse(script); // Validate JSON format
-            // In production: const parsed = JSON.parse(script); importScript(parsed) via engine
-            setStatus('valid');
-            setErrors([]);
-            onClose();
+            const result = validateScript(script);
+
+            if (result.success) {
+                // In a real implementation, we would call importScript(script) here
+                // importScript(script);
+                setStatus('valid');
+                setErrors([]);
+                showToast('Scene built successfully!', 'success');
+                onClose();
+            } else {
+                setErrors(result.errors || ['Validation failed']);
+                setStatus('error');
+                showToast('Cannot build: Validation failed', 'error');
+            }
         } catch (e) {
             setErrors(['Invalid JSON: ' + (e as Error).message]);
             setStatus('error');
+            showToast('Cannot build: Invalid JSON', 'error');
         }
-    }, [script, onClose]);
+    }, [script, onClose, showToast]);
 
     const handleCopyPrompt = useCallback(() => {
-        // In production: getAiPrompt('cinematic') from engine
-        const prompt = `Generate a JSON scene for Animatica with actors, environment, and timeline.`;
-        navigator.clipboard.writeText(prompt);
-    }, []);
+        try {
+            // Default to a Cyberpunk style prompt for now
+            const prompt = getAiPrompt('A futuristic city with flying cars and neon lights', 'Cyberpunk');
+            navigator.clipboard.writeText(prompt);
+            showToast('AI Prompt copied to clipboard', 'success');
+        } catch (e) {
+            console.error(e);
+            showToast('Failed to copy prompt', 'error');
+        }
+    }, [showToast]);
 
     return (
         <div className="modal-overlay" onClick={onClose}>
