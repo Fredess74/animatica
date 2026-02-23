@@ -5,12 +5,14 @@
  * @module @animatica/editor/panels/TimelinePanel
  */
 import React, { useState, useCallback } from 'react';
+import { useTranslation } from '../i18n/useTranslation';
 
 interface TimelinePanelProps {
     selectedActorId: string | null;
 }
 
 export const TimelinePanel: React.FC<TimelinePanelProps> = ({ selectedActorId }) => {
+    const { t } = useTranslation();
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(10);
@@ -39,7 +41,7 @@ export const TimelinePanel: React.FC<TimelinePanelProps> = ({ selectedActorId })
                     <button
                         className="timeline-btn"
                         onClick={handleStop}
-                        title="Stop"
+                        title={t('timeline.stop')}
                     >
                         ⏹
                     </button>
@@ -47,7 +49,7 @@ export const TimelinePanel: React.FC<TimelinePanelProps> = ({ selectedActorId })
                         <button
                             className="timeline-btn timeline-btn--active"
                             onClick={handlePause}
-                            title="Pause"
+                            title={t('timeline.pause')}
                         >
                             ⏸
                         </button>
@@ -55,12 +57,12 @@ export const TimelinePanel: React.FC<TimelinePanelProps> = ({ selectedActorId })
                         <button
                             className="timeline-btn timeline-btn--play"
                             onClick={handlePlay}
-                            title="Play"
+                            title={t('timeline.play')}
                         >
                             ▶
                         </button>
                     )}
-                    <button className="timeline-btn" title="Add Keyframe">
+                    <button className="timeline-btn" title={t('timeline.addKeyframe')}>
                         ◇+
                     </button>
                 </div>
@@ -72,17 +74,17 @@ export const TimelinePanel: React.FC<TimelinePanelProps> = ({ selectedActorId })
                 </div>
 
                 <div className="timeline-transport__duration">
-                    <label className="prop-field__label">Duration</label>
+                    <label className="prop-field__label">{t('timeline.duration')}</label>
                     <select
                         className="timeline-select"
                         value={duration}
                         onChange={(e) => setDuration(Number(e.target.value))}
                     >
-                        <option value={5}>5s</option>
-                        <option value={10}>10s</option>
-                        <option value={15}>15s</option>
-                        <option value={30}>30s</option>
-                        <option value={60}>60s</option>
+                        <option value={5}>{t('timeline.seconds', { count: 5 })}</option>
+                        <option value={10}>{t('timeline.seconds', { count: 10 })}</option>
+                        <option value={15}>{t('timeline.seconds', { count: 15 })}</option>
+                        <option value={30}>{t('timeline.seconds', { count: 30 })}</option>
+                        <option value={60}>{t('timeline.seconds', { count: 60 })}</option>
                     </select>
                 </div>
             </div>
@@ -96,7 +98,7 @@ export const TimelinePanel: React.FC<TimelinePanelProps> = ({ selectedActorId })
                             className="timeline-ruler__mark"
                             style={{ left: `${(i / duration) * 100}%` }}
                         >
-                            {i}s
+                            {t('timeline.seconds', { count: i })}
                         </span>
                     ))}
                 </div>
@@ -121,18 +123,18 @@ export const TimelinePanel: React.FC<TimelinePanelProps> = ({ selectedActorId })
                 {selectedActorId ? (
                     <div className="timeline-track">
                         <div className="timeline-track__label">
-                            <span className="timeline-track__name">Selected Actor</span>
+                            <span className="timeline-track__name">{t('timeline.selectedActor')}</span>
                         </div>
                         <div className="timeline-track__lane">
                             {/* Keyframe diamonds would render here */}
-                            <span className="timeline-keyframe" style={{ left: '0%' }} title="0s">◆</span>
-                            <span className="timeline-keyframe" style={{ left: '50%' }} title={`${duration / 2}s`}>◆</span>
-                            <span className="timeline-keyframe" style={{ left: '100%' }} title={`${duration}s`}>◆</span>
+                            <span className="timeline-keyframe" style={{ left: '0%' }} title={t('timeline.seconds', { count: 0 })}>◆</span>
+                            <span className="timeline-keyframe" style={{ left: '50%' }} title={t('timeline.seconds', { count: duration / 2 })}>◆</span>
+                            <span className="timeline-keyframe" style={{ left: '100%' }} title={t('timeline.seconds', { count: duration })}>◆</span>
                         </div>
                     </div>
                 ) : (
                     <div className="timeline-track timeline-track--empty">
-                        <span>Select an actor to see its tracks</span>
+                        <span>{t('timeline.selectActorPrompt')}</span>
                     </div>
                 )}
             </div>
