@@ -34,7 +34,6 @@
 - [ROLE: editor-properties-dev] Wire PropertiesPanel to Zustand store (read/write actor properties)
 - [ROLE: editor-timeline-dev] Wire TimelinePanel to usePlayback hook, add real keyframe rendering
 - [ROLE: editor-viewport-dev] Create Viewport component with R3F Canvas + OrbitControls + SceneManager
-- [ROLE: editor-modal-dev] Add keyboard shortcuts (Ctrl+S save, Space play/pause, Escape close modal)
 - [ROLE: editor-style-polisher] Add CSS for all editor components matching design-tokens.css
 - [ROLE: editor-test-writer] Write tests for AssetLibrary, PropertiesPanel, TimelinePanel
 
