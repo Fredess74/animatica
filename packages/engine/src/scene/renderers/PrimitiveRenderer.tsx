@@ -5,11 +5,24 @@ import { Edges } from '@react-three/drei'
 import { PrimitiveActor } from '../../types'
 
 interface PrimitiveRendererProps {
+  /** The actor data containing transform, visibility, and properties. */
   actor: PrimitiveActor
+  /** Whether the actor is currently selected in the editor. */
   isSelected?: boolean
+  /** Callback for when the actor is clicked. */
   onClick?: (e: ThreeEvent<MouseEvent>) => void
 }
 
+/**
+ * Renders a primitive shape (box, sphere, cylinder, etc.) based on the actor's properties.
+ * Handles selection highlighting with an edges geometry.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <PrimitiveRenderer actor={myBoxActor} isSelected={true} />
+ * ```
+ */
 export const PrimitiveRenderer: React.FC<PrimitiveRendererProps> = ({
   actor,
   isSelected = false,

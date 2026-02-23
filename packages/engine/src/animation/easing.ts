@@ -1,23 +1,60 @@
 /**
- * Easing functions library.
+ * Easing functions library for animation interpolation.
  * All functions accept a normalized time 't' (0 to 1) and return an eased value.
  * While 't' is typically 0-1, it can be outside this range (e.g. for elastic/bounce).
+ *
+ * @module @animatica/engine/animation/easing
  */
 
+/**
+ * Linear interpolation (no easing).
+ * @param t Normalized time (0-1).
+ * @returns The linear value (same as t).
+ */
 export const linear = (t: number): number => t;
 
+/**
+ * Quadratic ease-in.
+ * @param t Normalized time (0-1).
+ * @returns Eased value.
+ */
 export const quad = (t: number): number => t * t;
 
+/**
+ * Cubic ease-in.
+ * @param t Normalized time (0-1).
+ * @returns Eased value.
+ */
 export const cubic = (t: number): number => t * t * t;
 
+/**
+ * Alias for quadratic ease-in.
+ * @param t Normalized time (0-1).
+ * @returns Eased value.
+ */
 export const easeIn = (t: number): number => quad(t);
 
+/**
+ * Quadratic ease-out.
+ * @param t Normalized time (0-1).
+ * @returns Eased value.
+ */
 export const easeOut = (t: number): number => 1 - Math.pow(1 - t, 2);
 
+/**
+ * Quadratic ease-in-out.
+ * @param t Normalized time (0-1).
+ * @returns Eased value.
+ */
 export const easeInOut = (t: number): number => {
   return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
 };
 
+/**
+ * Bounce effect easing.
+ * @param t Normalized time (0-1).
+ * @returns Eased value with bounce effect.
+ */
 export const bounce = (t: number): number => {
   const n1 = 7.5625;
   const d1 = 2.75;
@@ -33,6 +70,11 @@ export const bounce = (t: number): number => {
   }
 };
 
+/**
+ * Elastic effect easing.
+ * @param t Normalized time (0-1).
+ * @returns Eased value with elastic effect.
+ */
 export const elastic = (t: number): number => {
   const c4 = (2 * Math.PI) / 3;
   return t === 0
@@ -42,6 +84,12 @@ export const elastic = (t: number): number => {
     : Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
 };
 
+/**
+ * Step function (returns 0 if t < 1, else 1).
+ * Used for instant value changes without interpolation.
+ * @param t Normalized time (0-1).
+ * @returns 0 or 1.
+ */
 export const step = (t: number): number => {
   return t < 1 ? 0 : 1;
 };

@@ -9,7 +9,10 @@ import type { ProjectState, ValidationResult } from '../types';
 
 /**
  * Validate a raw JSON string against the ProjectState schema.
- * Returns a ValidationResult with parsed data or detailed error messages.
+ * Handles nested "project" wrappers commonly found in AI-generated output.
+ *
+ * @param jsonString The raw JSON string to validate.
+ * @returns A ValidationResult object containing success status, errors, and parsed data.
  */
 export function validateScript(jsonString: string): ValidationResult {
     // Step 1: Parse JSON
@@ -59,7 +62,11 @@ export function validateScript(jsonString: string): ValidationResult {
 
 /**
  * Import a scene script. Validates and returns the ProjectState.
- * Throws if validation fails.
+ * Throws an error if validation fails.
+ *
+ * @param jsonString The raw JSON string to import.
+ * @returns The validated ProjectState object.
+ * @throws Error if validation fails, with a detailed message.
  */
 export function importScript(jsonString: string): ProjectState {
     const result = validateScript(jsonString);
@@ -73,6 +80,10 @@ export function importScript(jsonString: string): ProjectState {
 
 /**
  * Try to import a script, returning the result without throwing.
+ * Useful for UI validation or optional imports.
+ *
+ * @param jsonString The raw JSON string to attempt importing.
+ * @returns An object with `ok: true` and data, or `ok: false` and errors.
  */
 export function tryImportScript(
     jsonString: string,
