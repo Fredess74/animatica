@@ -11,19 +11,26 @@
         "lint": "eslint ."
     },
     "dependencies": {
-        "@Animatica/engine": "workspace:*",
-        "lucide-react": "^0.563.0",
-        "react": "^19.2.0",
-        "react-dom": "^19.2.0",
         "clsx": "^2.1.1",
+        "lucide-react": "^0.563.0",
         "tailwind-merge": "^3.4.0"
     },
+    "peerDependencies": {
+        "@Animatica/engine": "workspace:*",
+        "react": "^19.2.0",
+        "react-dom": "^19.2.0"
+    },
     "devDependencies": {
+        "@Animatica/engine": "workspace:*",
+        "@react-three/fiber": "^9.5.0",
         "@tailwindcss/postcss": "^4.1.18",
         "@types/react": "^19.2.7",
         "@types/react-dom": "^19.2.3",
         "@vitejs/plugin-react": "^5.1.1",
+        "react": "^19.2.0",
+        "react-dom": "^19.2.0",
         "tailwindcss": "^4.1.18",
+        "three": "^0.182.0",
         "typescript": "~5.9.3",
         "vite": "^7.3.1",
         "vitest": "^4.0.18"

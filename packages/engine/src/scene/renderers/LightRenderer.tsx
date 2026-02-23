@@ -32,11 +32,11 @@ export const LightRenderer: React.FC<LightRendererProps> = ({
   const { transform, visible, properties } = actor
   const { lightType, intensity, color, castShadow } = properties
 
-  const HelperClass = getHelperClass(lightType)
+  const HelperClass = getHelperClass(lightType);
 
-  useHelper(
+  (useHelper as any)(
     showHelper && visible && HelperClass ? lightRef : null,
-    HelperClass as any,
+    HelperClass,
     lightType === 'directional' ? 1 : 0.5, // helper size
     'yellow'
   )

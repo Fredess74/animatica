@@ -26,6 +26,9 @@ importers:
       '@Animatica/platform':
         specifier: workspace:*
         version: link:../../packages/platform
+      '@react-three/fiber':
+        specifier: ^9.5.0
+        version: 9.5.0(@types/react@19.2.14)(immer@10.2.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(three@0.182.0)
       next:
         specifier: ^15.0.0
         version: 15.5.12(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -35,6 +38,9 @@ importers:
       react-dom:
         specifier: ^19.2.0
         version: 19.2.4(react@19.2.4)
+      three:
+        specifier: ^0.182.0
+        version: 0.182.0
     devDependencies:
       '@types/react':
         specifier: ^19.2.7
@@ -63,25 +69,22 @@ importers:
 
   packages/editor:
     dependencies:
-      '@Animatica/engine':
-        specifier: workspace:*
-        version: link:../engine
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
       lucide-react:
         specifier: ^0.563.0
         version: 0.563.0(react@19.2.4)
-      react:
-        specifier: ^19.2.0
-        version: 19.2.4
-      react-dom:
-        specifier: ^19.2.0
-        version: 19.2.4(react@19.2.4)
       tailwind-merge:
         specifier: ^3.4.0
         version: 3.5.0
     devDependencies:
+      '@Animatica/engine':
+        specifier: workspace:*
+        version: link:../engine
+      '@react-three/fiber':
+        specifier: ^9.5.0
+        version: 9.5.0(@types/react@19.2.14)(immer@10.2.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(three@0.182.0)
       '@tailwindcss/postcss':
         specifier: ^4.1.18
         version: 4.2.0
@@ -94,9 +97,18 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^5.1.1
         version: 5.1.4(vite@7.3.1(@types/node@25.3.0)(jiti@2.6.1)(lightningcss@1.31.1))
+      react:
+        specifier: ^19.2.0
+        version: 19.2.4
+      react-dom:
+        specifier: ^19.2.0
+        version: 19.2.4(react@19.2.4)
       tailwindcss:
         specifier: ^4.1.18
         version: 4.2.0
+      three:
+        specifier: ^0.182.0
+        version: 0.182.0
       typescript:
         specifier: ~5.9.3
         version: 5.9.3
@@ -112,21 +124,9 @@ importers:
       '@react-three/drei':
         specifier: ^10.7.7
         version: 10.7.7(@react-three/fiber@9.5.0(@types/react@19.2.14)(immer@10.2.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(three@0.182.0))(@types/react@19.2.14)(@types/three@0.182.0)(immer@10.2.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(three@0.182.0)
-      '@react-three/fiber':
-        specifier: ^9.5.0
-        version: 9.5.0(@types/react@19.2.14)(immer@10.2.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(three@0.182.0)
       immer:
         specifier: ^10.1.1
         version: 10.2.0
-      react:
-        specifier: ^19.2.0
-        version: 19.2.4
-      react-dom:
-        specifier: ^19.2.0
-        version: 19.2.4(react@19.2.4)
-      three:
-        specifier: ^0.182.0
-        version: 0.182.0
       tone:
         specifier: ^15.1.22
         version: 15.1.22
@@ -140,6 +140,9 @@ importers:
         specifier: ^5.0.11
         version: 5.0.11(@types/react@19.2.14)(immer@10.2.0)(react@19.2.4)(use-sync-external-store@1.6.0(react@19.2.4))
     devDependencies:
+      '@react-three/fiber':
+        specifier: ^9.5.0
+        version: 9.5.0(@types/react@19.2.14)(immer@10.2.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(three@0.182.0)
       '@types/react':
         specifier: ^19.2.7
         version: 19.2.14
@@ -149,6 +152,15 @@ importers:
       '@types/uuid':
         specifier: ^10.0.0
         version: 10.0.0
+      react:
+        specifier: ^19.2.0
+        version: 19.2.4
+      react-dom:
+        specifier: ^19.2.0
+        version: 19.2.4(react@19.2.4)
+      three:
+        specifier: ^0.182.0
+        version: 0.182.0
       typescript:
         specifier: ~5.9.3
         version: 5.9.3
@@ -160,13 +172,6 @@ importers:
         version: 4.0.18(@types/node@25.3.0)(jiti@2.6.1)(lightningcss@1.31.1)
 
   packages/platform:
-    dependencies:
-      react:
-        specifier: ^19.2.0
-        version: 19.2.4
-      react-dom:
-        specifier: ^19.2.0
-        version: 19.2.4(react@19.2.4)
     devDependencies:
       '@types/react':
         specifier: ^19.2.7
@@ -174,6 +179,12 @@ importers:
       '@types/react-dom':
         specifier: ^19.2.3
         version: 19.2.3(@types/react@19.2.14)
+      react:
+        specifier: ^19.2.0
+        version: 19.2.4
+      react-dom:
+        specifier: ^19.2.0
+        version: 19.2.4(react@19.2.4)
       typescript:
         specifier: ~5.9.3
         version: 5.9.3

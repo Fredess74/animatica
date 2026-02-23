@@ -13,9 +13,11 @@
         "@Animatica/engine": "workspace:*",
         "@Animatica/editor": "workspace:*",
         "@Animatica/platform": "workspace:*",
+        "@react-three/fiber": "^9.5.0",
         "next": "^15.0.0",
         "react": "^19.2.0",
-        "react-dom": "^19.2.0"
+        "react-dom": "^19.2.0",
+        "three": "^0.182.0"
     },
     "devDependencies": {
         "@types/react": "^19.2.7",
