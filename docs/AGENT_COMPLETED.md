@@ -10,4 +10,4 @@
 
 <!-- Agents append completed tasks below this line -->
 - [DONE] [engine-scene-dev] [2026-02-23] Add CharacterRenderer placeholder to packages/engine/src/scene/renderers/
-
+- [DONE] [engine-test-writer] [2026-02-23] Write tests for SceneManager and PlaybackController
