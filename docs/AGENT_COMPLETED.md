@@ -12,3 +12,4 @@
 - [DONE] [engine-scene-dev] [2026-02-23] Add CharacterRenderer placeholder to packages/engine/src/scene/renderers/
 - [DONE] [editor-style-polisher] [2026-02-23] Add CSS for editor components (panels, timeline, modals) matching design-tokens.css
 - [DONE] [editor-test-writer] [2026-02-23] Write tests for AssetLibrary, PropertiesPanel, TimelinePanel
+- [DONE] [web-api-dev] [2026-02-23] Create API routes for projects (CRUD), auth, and export with mock data and rate limiting
