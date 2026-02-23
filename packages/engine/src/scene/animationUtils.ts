@@ -30,6 +30,7 @@ export function resolveActiveCamera(sortedCuts: CameraCut[], currentTime: number
  * @param value The value to set.
  * @returns A new object (or array) with the value set.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function setDeepValue(obj: any, path: string[], value: any): any {
   if (path.length === 0) return value
 
@@ -47,7 +48,9 @@ export function setDeepValue(obj: any, path: string[], value: any): any {
       // Update non-numeric property on array (rare, but keeps behavior)
       // e.g. target['x'] on an array
       // Cast to Record to allow string indexing, and obj to any/Record to read
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ;(newArr as unknown as Record<string, any>)[head] = setDeepValue(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (obj as any)[head],
         tail,
         value

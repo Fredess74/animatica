@@ -90,7 +90,7 @@ export function usePlayback(options: PlaybackOptions = {}): PlaybackControls {
   // So the component doesn't know.
   // Unless usePlayback is used alongside useSceneStore.
   // I will remove the unused variable. If re-render is needed, the component should subscribe itself.
-  const _isPlaying = useSceneStore((s) => s.playback.isPlaying)
+  useSceneStore((s) => s.playback.isPlaying)
 
   /**
    * The core animation frame callback.

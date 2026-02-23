@@ -40,6 +40,7 @@ export const LightRenderer: React.FC<LightRendererProps> = ({ actor, showHelper 
   // useHelper expects a MutableRefObject or Object3D.
   // We cast the hook to unknown to avoid strict type checks on the helper constructor arguments
   // or ref type mismatches in some TS versions, but we try to keep it clean.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ;(useHelper as any)(
     showHelper && visible && HelperClass ? lightRef : undefined,
     HelperClass,

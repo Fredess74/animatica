@@ -33,6 +33,7 @@ export const CameraRenderer: React.FC<CameraRendererProps> = ({
   const { fov, near, far } = properties
 
   // Show helper only if visible, helper is requested, AND it's NOT the active camera
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   useHelper(showHelper && visible && !isActive ? (camRef as any) : null, THREE.CameraHelper)
 
   if (!visible) return null
