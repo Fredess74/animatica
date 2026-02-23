@@ -43,7 +43,6 @@
 
 ## Quality Tasks
 
-- [ROLE: type-auditor] Scan all .ts files for `any` type, type assertions, missing return types
 - [ROLE: lint-fixer] Run eslint --fix on all packages, fix remaining issues manually
 - [ROLE: perf-auditor] Check for unnecessary re-renders, large bundle imports, missing memoization
 - [ROLE: security-auditor] Scan for XSS vectors, unsafe innerHTML, unvalidated inputs

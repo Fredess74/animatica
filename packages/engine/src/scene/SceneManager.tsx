@@ -111,10 +111,10 @@ export const SceneManager: React.FC<SceneManagerProps> = ({
     onActorSelect,
     showHelpers = false,
 }) => {
-    const actors = useSceneStore((s: { actors: Actor[] }) => s.actors);
-    const environment = useSceneStore((s: { environment: any }) => s.environment);
-    const timeline = useSceneStore((s: { timeline: any }) => s.timeline);
-    const currentTime = useSceneStore((s: { playback: { currentTime: number } }) => s.playback.currentTime);
+    const actors = useSceneStore((s) => s.actors);
+    const environment = useSceneStore((s) => s.environment);
+    const timeline = useSceneStore((s) => s.timeline);
+    const currentTime = useSceneStore((s) => s.playback.currentTime);
 
     // Evaluate all animation tracks at the current time
     const animationValues = useMemo(
