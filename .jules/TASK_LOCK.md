@@ -2,15 +2,15 @@
 
 ## Current Lock
 
-LOCKED_BY: web-layout-dev
-LOCKED_PACKAGE: web
-LOCKED_FILES: apps/web
-STARTED: now
-EXPIRES: 25m
+LOCKED_BY: none
+LOCKED_PACKAGE: none
+LOCKED_FILES: none
+STARTED: none
+EXPIRES: none
 
 ## Rules
 
-- Before working on ANY file, check this lock
+- Before working on ANY file, check this file
 - If your target package matches LOCKED_PACKAGE, SKIP your run
 - If the lock is expired (current time > EXPIRES), you may override it
 - After starting work, update this file with YOUR agent name

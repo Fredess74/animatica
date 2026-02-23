@@ -8,7 +8,7 @@ import { Actor, Environment, Timeline, ProjectState, ProjectMeta } from '../type
 /**
  * Playback state for the scene.
  */
-interface PlaybackState {
+export interface PlaybackState {
   /** Current playback time in seconds. */
   currentTime: number;
   /** Whether the scene is currently playing. */
@@ -20,7 +20,7 @@ interface PlaybackState {
 /**
  * State and actions for the scene store.
  */
-interface SceneStoreState extends ProjectState {
+export interface SceneStoreState extends ProjectState {
   // Runtime state
   playback: PlaybackState;
   /** The ID of the currently selected actor, or null if none selected. */

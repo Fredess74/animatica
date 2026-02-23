@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 import React, { createContext, useContext, ReactNode, useMemo } from 'react';
 
 export interface FeatureFlags {
@@ -24,18 +25,17 @@ const DEFAULT_FLAGS_PROD: FeatureFlags = {
   cloud_sync: false,
 };
 
-// @ts-ignore
 export const getFeatureFlags = (
-  // @ts-ignore
   envMode: string = import.meta.env.MODE,
-  // @ts-ignore
-  env: Record<string, string> = import.meta.env as unknown as Record<string, string>
+  // Cast to Record<string, string> because ImportMetaEnv has an index signature but we want to be safe
+  env: Record<string, string | boolean | undefined> = import.meta.env as unknown as Record<string, string | boolean | undefined>
 ): FeatureFlags => {
   const isDev = envMode === 'development';
   const defaults = isDev ? DEFAULT_FLAGS_DEV : DEFAULT_FLAGS_PROD;
 
   const getEnvFlag = (key: string): boolean | undefined => {
     const envKey = `VITE_FEATURE_FLAG_${key.toUpperCase()}`;
+    // Access as string because env vars are usually strings
     const value = env[envKey];
     if (value === 'true') return true;
     if (value === 'false') return false;
@@ -52,7 +52,6 @@ export const getFeatureFlags = (
 };
 
 // Initialize context with default values based on current environment
-// @ts-ignore
 const FeatureFlagContext = createContext<FeatureFlags>(getFeatureFlags());
 
 export interface FeatureFlagProviderProps {

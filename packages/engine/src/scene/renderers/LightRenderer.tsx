@@ -24,7 +24,9 @@ export const LightRenderer: React.FC<LightRendererProps> = ({
   actor,
   showHelper = false,
 }) => {
-  const lightRef = useRef<THREE.Light>(null)
+  // Use a union type for the ref to satisfy all light types and MutableRefObject
+  const lightRef = useRef<THREE.Light | null>(null)
+
   // We use a dedicated target object for Spot and Directional lights
   // Placed at (0,0,-1) in local space, so rotating the parent group aims the light.
   const target = useMemo(() => new THREE.Object3D(), [])
@@ -33,12 +35,18 @@ export const LightRenderer: React.FC<LightRendererProps> = ({
   const { lightType, intensity, color, castShadow } = properties
 
   const HelperClass = getHelperClass(lightType);
+  // Pad args to constant length to satisfy React Hook rules (useHelper dependencies)
+  const helperArgs = lightType === 'spot'
+    ? ['yellow', undefined]
+    : [lightType === 'directional' ? 1 : 0.5, 'yellow'];
 
+  // useHelper expects a MutableRefObject or Object3D.
+  // We cast the hook to unknown to avoid strict type checks on the helper constructor arguments
+  // or ref type mismatches in some TS versions, but we try to keep it clean.
   (useHelper as any)(
-    showHelper && visible && HelperClass ? lightRef : null,
+    (showHelper && visible && HelperClass ? lightRef : undefined),
     HelperClass,
-    lightType === 'directional' ? 1 : 0.5, // helper size
-    'yellow'
+    ...helperArgs
   )
 
   if (!visible) return null
@@ -53,7 +61,7 @@ export const LightRenderer: React.FC<LightRendererProps> = ({
 
       {lightType === 'point' && (
         <pointLight
-          ref={lightRef as any}
+          ref={lightRef as React.Ref<THREE.PointLight>}
           intensity={intensity}
           color={color}
           castShadow={castShadow}
@@ -61,7 +69,7 @@ export const LightRenderer: React.FC<LightRendererProps> = ({
       )}
       {lightType === 'spot' && (
         <spotLight
-          ref={lightRef as any}
+          ref={lightRef as React.Ref<THREE.SpotLight>}
           intensity={intensity}
           color={color}
           castShadow={castShadow}
@@ -71,7 +79,7 @@ export const LightRenderer: React.FC<LightRendererProps> = ({
       )}
       {lightType === 'directional' && (
         <directionalLight
-          ref={lightRef as any}
+          ref={lightRef as React.Ref<THREE.DirectionalLight>}
           intensity={intensity}
           color={color}
           castShadow={castShadow}

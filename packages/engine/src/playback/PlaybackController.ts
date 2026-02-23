@@ -63,10 +63,10 @@ export function usePlayback(options: PlaybackOptions = {}): PlaybackControls {
     const rafIdRef = useRef<number | null>(null);
     const lastFrameTimeRef = useRef<number | null>(null);
 
-    const setPlayback = useSceneStore((s: { setPlayback: any }) => s.setPlayback);
-    const isPlaying = useSceneStore((s: { playback: { isPlaying: boolean } }) => s.playback.isPlaying);
-    const duration = useSceneStore((s: { timeline: { duration: number } }) => s.timeline.duration);
-    const frameRate = useSceneStore((s: { playback: { frameRate: number } }) => s.playback.frameRate);
+    const setPlayback = useSceneStore((s) => s.setPlayback);
+    const isPlaying = useSceneStore((s) => s.playback.isPlaying);
+    const duration = useSceneStore((s) => s.timeline.duration);
+    const frameRate = useSceneStore((s) => s.playback.frameRate);
 
     /**
      * The core animation frame callback.
