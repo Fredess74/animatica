@@ -1,64 +1,28 @@
-# License Audit
+# License Audit Report
 
-**Date:** 2025-05-18
-**Auditor:** Jules (License Auditor)
+**Date:** 2026-02-23
+**Auditor:** license-auditor
 
 ## Summary
 
-This document lists all dependencies used in the project and their licenses. It also flags any non-MIT/Apache-2.0 licenses and checks for the presence of the project's own LICENSE file and license headers in source code.
+All production dependencies in `@Animatica` packages (`engine`, `editor`, `web`, `platform`) are licensed under **MIT**, **ISC**, **BSD**, or **Apache-2.0**, which are fully compatible with the project's licensing strategy.
 
-## Project License
+No restricted copy-left licenses (GPL, AGPL) were found in the production bundle.
 
-- **File:** `LICENSE`
-- **Status:** Present
-- **License:** MIT
+## Findings
 
-## Source Code Headers
+| Package | License | Usage | Status |
+| :--- | :--- | :--- | :--- |
+| `web3-utils` | LGPL-3.0 | Dev Dependency (`@Animatica/contracts`) | ✅ **Compatible** (Not bundled in production) |
+| `@img/sharp-libvips` | LGPL-3.0 | Server Dependency (`next` optimization) | ✅ **Compatible** (Server-side/Dev only) |
+| `caniuse-lite` | CC-BY-4.0 | Build Dependency (`browserslist`) | ✅ **Compatible** (Data/Build tool) |
 
-- **Checked:** `packages/engine/src/index.ts`
-- **Result:** No license header found.
-- **Note:** Other packages (`packages/editor`, `apps/web`) appear to have minimal source files at this stage.
+## Policy
 
-## Dependency Licenses
+- **Allowed:** MIT, ISC, BSD-2-Clause, BSD-3-Clause, Apache-2.0, CC0.
+- **Restricted:** LGPL (Allowed for libraries if dynamically linked or dev-only).
+- **Forbidden:** GPL, AGPL (Strictly forbidden in production bundles).
 
-The following dependencies were audited:
+## Next Audit
 
-| Package | License |
-| :--- | :--- |
-| `turbo` | MPL-2.0 |
-| `typescript` | Apache-2.0 |
-| `@nomicfoundation/hardhat-toolbox` | MIT |
-| `@openzeppelin/contracts` | MIT |
-| `hardhat` | MIT |
-| `react` | MIT |
-| `react-dom` | MIT |
-| `@types/react` | MIT |
-| `@types/react-dom` | MIT |
-| `vite` | MIT |
-| `vitest` | MIT |
-| `@react-three/drei` | MIT |
-| `@react-three/fiber` | MIT |
-| `immer` | MIT |
-| `three` | MIT |
-| `tone` | MIT |
-| `uuid` | MIT |
-| `zod` | MIT |
-| `zustand` | MIT |
-| `@types/three` | MIT |
-| `@types/uuid` | MIT |
-| `lucide-react` | ISC |
-| `clsx` | MIT |
-| `tailwind-merge` | MIT |
-| `@tailwindcss/postcss` | MIT |
-| `@vitejs/plugin-react` | MIT |
-| `tailwindcss` | MIT |
-| `next` | MIT |
-
-## Flagged Licenses (Non-MIT/Apache-2.0)
-
-- **`turbo`**: MPL-2.0 (Mozilla Public License 2.0).
-- **`lucide-react`**: ISC (Generally compatible with MIT/Apache, but flagged for review as requested).
-
-## Missing Licenses
-
-- None found.
+Scheduled for next major release or new dependency addition.

@@ -66,7 +66,6 @@
 
 ## Cleanup Tasks
 
-- [ROLE: license-auditor] Verify all dependencies have compatible licenses
 - [ROLE: bundle-watcher] Check bundle sizes, suggest tree-shaking opportunities
 - [ROLE: release-preparer] Verify all packages have consistent versions, README is accurate
 - [ROLE: night-reporter] Create nightly summary of all agent activity
