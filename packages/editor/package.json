@@ -11,6 +11,7 @@
         "lint": "eslint ."
     },
     "dependencies": {
+        "@react-three/drei": "^10.7.7",
         "clsx": "^2.1.1",
         "lucide-react": "^0.563.0",
         "tailwind-merge": "^3.4.0"
@@ -24,9 +25,13 @@
         "@Animatica/engine": "workspace:*",
         "@react-three/fiber": "^9.5.0",
         "@tailwindcss/postcss": "^4.1.18",
+        "@testing-library/dom": "^10.4.1",
+        "@testing-library/react": "^16.3.2",
         "@types/react": "^19.2.7",
         "@types/react-dom": "^19.2.3",
+        "@types/three": "^0.182.0",
         "@vitejs/plugin-react": "^5.1.1",
+        "jsdom": "^28.1.0",
         "react": "^19.2.0",
         "react-dom": "^19.2.0",
         "tailwindcss": "^4.1.18",
