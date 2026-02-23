@@ -10,3 +10,4 @@
 
 <!-- Agents append completed tasks below this line -->
 - [DONE] [engine-scene-dev] [2026-02-23] Add CharacterRenderer placeholder to packages/engine/src/scene/renderers/
+- [DONE] [engine-store-optimizer] [2026-02-23] Optimize Zustand store selectors for performance, add computed selectors and undo/redo support

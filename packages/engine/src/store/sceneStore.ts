@@ -1,5 +1,8 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
+import { persist } from 'zustand/middleware';
+import { temporal } from 'zundo';
+import { useShallow } from 'zustand/react/shallow';
 import { Actor, Environment, Timeline, ProjectState, ProjectMeta } from '../types';
 
 /**
@@ -20,6 +23,8 @@ interface PlaybackState {
 interface SceneStoreState extends ProjectState {
   // Runtime state
   playback: PlaybackState;
+  /** The ID of the currently selected actor, or null if none selected. */
+  selectedActorId: string | null;
 
   // Actions
   /** Adds a new actor to the scene. */
@@ -34,6 +39,8 @@ interface SceneStoreState extends ProjectState {
   setTimeline: (timeline: Partial<Timeline>) => void;
   /** Updates playback state (play/pause, time, etc.). */
   setPlayback: (playback: Partial<PlaybackState>) => void;
+  /** Sets the currently selected actor. */
+  setSelectedActor: (id: string | null) => void;
 }
 
 const initialMeta: ProjectMeta = {
@@ -53,61 +60,106 @@ const initialTimeline: Timeline = {
   animationTracks: [],
 };
 
-const initialState: ProjectState & { playback: PlaybackState } = {
+const initialState: ProjectState & { playback: PlaybackState; selectedActorId: string | null } = {
   meta: initialMeta,
   environment: initialEnvironment,
   actors: [],
   timeline: initialTimeline,
   library: { clips: [] },
   playback: { currentTime: 0, isPlaying: false, frameRate: 24 },
+  selectedActorId: null,
 };
 
 /**
  * Zustand store for managing the scene state, including actors, timeline, environment, and playback.
- * Uses `immer` middleware for immutable state updates.
+ * Uses `immer` for immutable updates, `persist` for local storage, and `temporal` (zundo) for undo/redo.
  *
  * @example
  * ```tsx
- * const { actors, addActor } = useSceneStore()
+ * const { actors, addActor, undo, redo } = useSceneStore()
  * ```
  */
 export const useSceneStore = create<SceneStoreState>()(
-  immer((set) => ({
-    ...initialState,
+  temporal(
+    persist(
+      immer((set) => ({
+        ...initialState,
 
-    addActor: (actor) =>
-      set((state) => {
-        state.actors.push(actor);
+        addActor: (actor) =>
+          set((state) => {
+            state.actors.push(actor);
+          }),
+
+        removeActor: (actorId) =>
+          set((state) => {
+            state.actors = state.actors.filter((a) => a.id !== actorId);
+            if (state.selectedActorId === actorId) {
+              state.selectedActorId = null;
+            }
+          }),
+
+        updateActor: (actorId, updates) =>
+          set((state) => {
+            const actor = state.actors.find((a) => a.id === actorId);
+            if (actor) {
+              Object.assign(actor, updates);
+            }
+          }),
+
+        setEnvironment: (environment) =>
+          set((state) => {
+            Object.assign(state.environment, environment);
+          }),
+
+        setTimeline: (timeline) =>
+          set((state) => {
+            Object.assign(state.timeline, timeline);
+          }),
+
+        setPlayback: (playback) =>
+          set((state) => {
+            Object.assign(state.playback, playback);
+          }),
+
+        setSelectedActor: (id) =>
+          set((state) => {
+            state.selectedActorId = id;
+          }),
+      })),
+      {
+        name: 'animatica-scene',
+        // Only persist project state, not playback or selection
+        partialize: (state) => {
+          const { playback, selectedActorId, ...rest } = state;
+          return rest as unknown as SceneStoreState; // Typescript workaround for partialize return type
+        },
+      }
+    ),
+    {
+      // Only track undo/redo for project state
+      partialize: (state) => ({
+        actors: state.actors,
+        environment: state.environment,
+        timeline: state.timeline,
+        meta: state.meta,
+        library: state.library,
       }),
-
-    removeActor: (actorId) =>
-      set((state) => {
-        state.actors = state.actors.filter((a) => a.id !== actorId);
-      }),
-
-    updateActor: (actorId, updates) =>
-      set((state) => {
-        const actor = state.actors.find((a) => a.id === actorId);
-        if (actor) {
-          Object.assign(actor, updates);
+      equality: (a, b) => {
+        if (a === b) return true;
+        if (!a || !b) return false;
+        const aObj = a as Record<string, unknown>;
+        const bObj = b as Record<string, unknown>;
+        const keysA = Object.keys(aObj);
+        const keysB = Object.keys(bObj);
+        if (keysA.length !== keysB.length) return false;
+        for (const key of keysA) {
+          if (aObj[key] !== bObj[key]) return false;
         }
-      }),
-
-    setEnvironment: (environment) =>
-      set((state) => {
-        Object.assign(state.environment, environment);
-      }),
-
-    setTimeline: (timeline) =>
-      set((state) => {
-        Object.assign(state.timeline, timeline);
-      }),
-
-    setPlayback: (playback) =>
-      set((state) => {
-        Object.assign(state.playback, playback);
-      }),
-  }))
+        return true;
+      },
+      limit: 100, // Limit history size
+    }
+  )
 );
 
 // Selectors
@@ -119,6 +171,12 @@ export const useSceneStore = create<SceneStoreState>()(
  */
 export const getActorById = (id: string) => (state: SceneStoreState): Actor | undefined =>
   state.actors.find((a) => a.id === id);
+
+/**
+ * Hook to select a specific actor by ID.
+ * @param id The UUID of the actor.
+ */
+export const useActorById = (id: string) => useSceneStore((state) => state.actors.find((a) => a.id === id));
 
 /**
  * Selector to get all currently visible actors.
@@ -133,3 +191,23 @@ export const getActiveActors = (state: SceneStoreState): Actor[] =>
  */
 export const getCurrentTime = (state: SceneStoreState): number =>
   state.playback.currentTime;
+
+/**
+ * Hook to get the currently selected actor.
+ */
+export const useSelectedActor = () =>
+  useSceneStore((state) =>
+    state.selectedActorId ? state.actors.find((a) => a.id === state.selectedActorId) : undefined
+  );
+
+/**
+ * Hook to get all actors of a specific type.
+ * @param type The type of actor to filter by.
+ */
+export const useActorsByType = (type: Actor['type']) =>
+  useSceneStore(useShallow((state) => state.actors.filter((a) => a.type === type)));
+
+/**
+ * Hook to get the list of all actors.
+ */
+export const useActorList = () => useSceneStore((state) => state.actors);
