@@ -6,6 +6,7 @@
  */
 import { ProjectStateSchema } from '../schemas/scene.schema';
 import type { ProjectState, ValidationResult } from '../types';
+import { logError } from '../utils/errorHandler';
 
 export const MAX_SCRIPT_SIZE = 10 * 1024 * 1024; // 10MB
 
@@ -30,6 +31,7 @@ export function validateScript(jsonString: string): ValidationResult {
     try {
         parsed = JSON.parse(jsonString);
     } catch (e) {
+        logError(e, 'ScriptImporter: Invalid JSON');
         return {
             success: false,
             errors: [`Invalid JSON: ${(e as Error).message}`],

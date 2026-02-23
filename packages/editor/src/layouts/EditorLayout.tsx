@@ -15,6 +15,7 @@ import { ScriptConsole } from '../modals/ScriptConsole';
 import { ExportModal } from '../modals/ExportModal';
 import { ToastProvider, useToast } from '../components/ToastContext';
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
+import { ErrorBoundary } from '../components/ErrorBoundary';
 
 interface EditorLayoutProps {
     /** The R3F Canvas viewport to render in the center */
@@ -106,31 +107,43 @@ const EditorContent: React.FC<EditorLayoutProps> = ({ viewport }) => {
             <div className="editor-main">
                 {/* Left Sidebar — Asset Library */}
                 <aside className="editor-sidebar editor-sidebar--left">
-                    <AssetLibrary onActorCreated={(id) => setSelectedActorId(id)} />
+                    <ErrorBoundary scope="Asset Library">
+                        <AssetLibrary onActorCreated={(id) => setSelectedActorId(id)} />
+                    </ErrorBoundary>
                 </aside>
 
                 {/* Center — Viewport */}
                 <main className="editor-viewport">
-                    {viewport}
+                    <ErrorBoundary scope="Viewport">
+                        {viewport}
+                    </ErrorBoundary>
                 </main>
 
                 {/* Right Sidebar — Properties */}
                 <aside className="editor-sidebar editor-sidebar--right">
-                    <PropertiesPanel selectedActorId={selectedActorId} />
+                    <ErrorBoundary scope="Properties">
+                        <PropertiesPanel selectedActorId={selectedActorId} />
+                    </ErrorBoundary>
                 </aside>
             </div>
 
             {/* Bottom — Timeline */}
             <div className="editor-timeline">
-                <TimelinePanel selectedActorId={selectedActorId} />
+                <ErrorBoundary scope="Timeline">
+                    <TimelinePanel selectedActorId={selectedActorId} />
+                </ErrorBoundary>
             </div>
 
             {/* Modals */}
             {showScriptConsole && (
-                <ScriptConsole onClose={() => setShowScriptConsole(false)} />
+                <ErrorBoundary scope="Script Console">
+                    <ScriptConsole onClose={() => setShowScriptConsole(false)} />
+                </ErrorBoundary>
             )}
             {showExportModal && (
-                <ExportModal onClose={() => setShowExportModal(false)} />
+                <ErrorBoundary scope="Export Modal">
+                    <ExportModal onClose={() => setShowExportModal(false)} />
+                </ErrorBoundary>
             )}
         </div>
     );

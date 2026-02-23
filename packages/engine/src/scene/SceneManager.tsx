@@ -12,6 +12,7 @@ import { PrimitiveRenderer } from './renderers/PrimitiveRenderer';
 import { LightRenderer } from './renderers/LightRenderer';
 import { CameraRenderer } from './renderers/CameraRenderer';
 import { CharacterRenderer } from './renderers/CharacterRenderer';
+import { SceneErrorBoundary } from './SceneErrorBoundary';
 import type {
     Actor,
     PrimitiveActor,
@@ -161,53 +162,61 @@ export const SceneManager: React.FC<SceneManagerProps> = ({
 
             {/* === Actors === */}
             {animatedActors.map((actor: Actor) => {
+                let content: React.ReactNode = null;
+
                 switch (actor.type) {
                     case 'primitive':
-                        return (
+                        content = (
                             <PrimitiveRenderer
-                                key={actor.id}
                                 actor={actor as PrimitiveActor}
                                 isSelected={actor.id === selectedActorId}
                                 onClick={() => onActorSelect?.(actor.id)}
                             />
                         );
+                        break;
 
                     case 'light':
-                        return (
+                        content = (
                             <LightRenderer
-                                key={actor.id}
                                 actor={actor as LightActor}
                                 showHelper={showHelpers || actor.id === selectedActorId}
                             />
                         );
+                        break;
 
                     case 'camera':
-                        return (
+                        content = (
                             <CameraRenderer
-                                key={actor.id}
                                 actor={actor as CameraActor}
                                 isActive={actor.id === activeCameraId}
                                 showHelper={showHelpers || actor.id === selectedActorId}
                             />
                         );
+                        break;
 
                     case 'character':
-                        return (
+                        content = (
                             <CharacterRenderer
-                                key={actor.id}
                                 actor={actor as CharacterActor}
                                 isSelected={actor.id === selectedActorId}
                                 onClick={() => onActorSelect?.(actor.id)}
                             />
                         );
+                        break;
 
                     case 'speaker':
                         // TODO: SpeakerRenderer not yet implemented
-                        return null;
-
-                    default:
-                        return null;
+                        content = null;
+                        break;
                 }
+
+                if (!content) return null;
+
+                return (
+                    <SceneErrorBoundary key={actor.id} actorId={actor.id}>
+                        {content}
+                    </SceneErrorBoundary>
+                );
             })}
         </>
     );

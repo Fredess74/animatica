@@ -2,10 +2,10 @@
 
 ## Current Lock
 
-LOCKED_BY: none
-LOCKED_PACKAGE: none
+LOCKED_BY: error-boundary-agent
+LOCKED_PACKAGE: engine
 LOCKED_FILES: none
-STARTED: none
+STARTED: now
 EXPIRES: none
 
 ## Rules
