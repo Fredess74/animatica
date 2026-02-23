@@ -1,9 +1,10 @@
-import { describe, it, expect, vi, afterEach } from 'vitest'
-import React from 'react'
-import { CameraRenderer } from './CameraRenderer'
-import { CameraActor } from '../../types'
 import { PerspectiveCamera } from '@react-three/drei'
+import React from 'react'
 import * as THREE from 'three'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+
+import { CameraActor } from '../../types'
+import { CameraRenderer } from './CameraRenderer'
 
 // Mock react
 vi.mock('react', async () => {
@@ -17,7 +18,8 @@ vi.mock('react', async () => {
 // Mock three components used inside CameraRenderer
 vi.mock('@react-three/drei', () => ({
   // Mock PerspectiveCamera as a simple functional component that returns a 'perspectiveCamera' element
-  PerspectiveCamera: ({ children, ...props }: any) => React.createElement('perspectiveCamera', props, children),
+  PerspectiveCamera: ({ children, ...props }: any) =>
+    React.createElement('perspectiveCamera', props, children),
   useHelper: vi.fn(),
 }))
 
@@ -35,16 +37,19 @@ describe('CameraRenderer', () => {
       transform: {
         position: [0, 10, 20],
         rotation: [0, 0, 0],
-        scale: [1, 1, 1]
+        scale: [1, 1, 1],
       },
       properties: {
         fov: 75,
         near: 0.1,
-        far: 1000
-      }
+        far: 1000,
+      },
     }
 
-    const result = CameraRenderer({ actor, isActive: false }) as unknown as { type: string, props: any }
+    const result = CameraRenderer({ actor, isActive: false }) as unknown as {
+      type: string
+      props: any
+    }
 
     // Check perspectiveCamera mock
     expect(result.type).toBe(PerspectiveCamera)
@@ -61,11 +66,14 @@ describe('CameraRenderer', () => {
       name: 'Cam2',
       type: 'camera',
       visible: true,
-      transform: { position: [0,0,0], rotation: [0,0,0], scale: [1,1,1] },
-      properties: { fov: 60, near: 0.1, far: 100 }
+      transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
+      properties: { fov: 60, near: 0.1, far: 100 },
     }
 
-    const result = CameraRenderer({ actor, isActive: true }) as unknown as { type: string, props: any }
+    const result = CameraRenderer({ actor, isActive: true }) as unknown as {
+      type: string
+      props: any
+    }
     expect(result.props.makeDefault).toBe(true)
   })
 
@@ -75,8 +83,8 @@ describe('CameraRenderer', () => {
       name: 'HiddenCam',
       type: 'camera',
       visible: false,
-      transform: { position: [0,0,0], rotation: [0,0,0], scale: [1,1,1] },
-      properties: { fov: 60, near: 0.1, far: 100 }
+      transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
+      properties: { fov: 60, near: 0.1, far: 100 },
     }
     const result = CameraRenderer({ actor })
     expect(result).toBeNull()

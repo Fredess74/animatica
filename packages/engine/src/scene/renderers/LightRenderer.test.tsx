@@ -1,8 +1,9 @@
-import { describe, it, expect, vi, afterEach } from 'vitest'
 import React from 'react'
-import { LightRenderer } from './LightRenderer'
-import { LightActor } from '../../types'
 import * as THREE from 'three'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+
+import { LightActor } from '../../types'
+import { LightRenderer } from './LightRenderer'
 
 // Mock react to bypass hooks checks
 vi.mock('react', async () => {
@@ -34,17 +35,17 @@ describe('LightRenderer', () => {
       transform: {
         position: [0, 5, 0],
         rotation: [0, 0, 0],
-        scale: [1, 1, 1]
+        scale: [1, 1, 1],
       },
       properties: {
         lightType: 'point',
         intensity: 2,
         color: '#ff0000',
-        castShadow: true
-      }
+        castShadow: true,
+      },
     }
 
-    const result = LightRenderer({ actor }) as unknown as { type: string, props: any }
+    const result = LightRenderer({ actor }) as unknown as { type: string; props: any }
 
     // It returns a group
     expect(result.type).toBe('group')
@@ -72,17 +73,17 @@ describe('LightRenderer', () => {
       transform: {
         position: [10, 10, 10],
         rotation: [0, 0, 0],
-        scale: [1, 1, 1]
+        scale: [1, 1, 1],
       },
       properties: {
         lightType: 'directional',
         intensity: 1,
         color: '#ffffff',
-        castShadow: false
-      }
+        castShadow: false,
+      },
     }
 
-    const result = LightRenderer({ actor }) as unknown as { type: string, props: any }
+    const result = LightRenderer({ actor }) as unknown as { type: string; props: any }
     const children = React.Children.toArray(result.props.children)
 
     const light = children.find((c: any) => c.type === 'directionalLight')
@@ -92,18 +93,18 @@ describe('LightRenderer', () => {
   })
 
   it('renders nothing when visible is false', () => {
-     const actor: LightActor = {
+    const actor: LightActor = {
       id: 'l3',
       name: 'Hidden',
       type: 'light',
       visible: false,
-      transform: { position: [0,0,0], rotation: [0,0,0], scale: [1,1,1] },
+      transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
       properties: {
         lightType: 'point',
         intensity: 1,
         color: '#fff',
-        castShadow: false
-      }
+        castShadow: false,
+      },
     }
     const result = LightRenderer({ actor })
     expect(result).toBeNull()

@@ -1,4 +1,4 @@
-import { Actor, CameraCut } from '../types';
+import { Actor, CameraCut } from '../types'
 
 /**
  * Resolves which camera should be active at a given time based on the camera track.
@@ -8,20 +8,17 @@ import { Actor, CameraCut } from '../types';
  * @param currentTime The current playback time in seconds.
  * @returns The ID of the active camera, or null if no cuts exist or time is before first cut.
  */
-export function resolveActiveCamera(
-    sortedCuts: CameraCut[],
-    currentTime: number,
-): string | null {
-    if (sortedCuts.length === 0) return null;
+export function resolveActiveCamera(sortedCuts: CameraCut[], currentTime: number): string | null {
+  if (sortedCuts.length === 0) return null
 
-    // Optimization: Loop backwards since we often want the latest active cut
-    for (let i = sortedCuts.length - 1; i >= 0; i--) {
-        if (sortedCuts[i].time <= currentTime) {
-            return sortedCuts[i].cameraId;
-        }
+  // Optimization: Loop backwards since we often want the latest active cut
+  for (let i = sortedCuts.length - 1; i >= 0; i--) {
+    if (sortedCuts[i].time <= currentTime) {
+      return sortedCuts[i].cameraId
     }
+  }
 
-    return null;
+  return null
 }
 
 /**
@@ -34,35 +31,39 @@ export function resolveActiveCamera(
  * @returns A new object (or array) with the value set.
  */
 export function setDeepValue(obj: any, path: string[], value: any): any {
-    if (path.length === 0) return value;
+  if (path.length === 0) return value
 
-    const [head, ...tail] = path;
+  const [head, ...tail] = path
 
-    // Handle arrays specifically to preserve Array type
-    if (Array.isArray(obj)) {
-        const newArr = [...obj];
-        const index = Number(head);
+  // Handle arrays specifically to preserve Array type
+  if (Array.isArray(obj)) {
+    const newArr = [...obj]
+    const index = Number(head)
 
-        if (!isNaN(index)) {
-            // Update numeric index
-            newArr[index] = setDeepValue(obj[index], tail, value);
-        } else {
-            // Update non-numeric property on array (rare, but keeps behavior)
-            // e.g. target['x'] on an array
-            // Cast to Record to allow string indexing, and obj to any/Record to read
-            (newArr as unknown as Record<string, any>)[head] = setDeepValue((obj as any)[head], tail, value);
-        }
-        return newArr;
+    if (!isNaN(index)) {
+      // Update numeric index
+      newArr[index] = setDeepValue(obj[index], tail, value)
+    } else {
+      // Update non-numeric property on array (rare, but keeps behavior)
+      // e.g. target['x'] on an array
+      // Cast to Record to allow string indexing, and obj to any/Record to read
+      ;(newArr as unknown as Record<string, any>)[head] = setDeepValue(
+        (obj as any)[head],
+        tail,
+        value
+      )
     }
+    return newArr
+  }
 
-    // Handle object (default)
-    // If obj is undefined/null, create a new object
-    const currentVal = obj ? obj[head] : undefined;
+  // Handle object (default)
+  // If obj is undefined/null, create a new object
+  const currentVal = obj ? obj[head] : undefined
 
-    return {
-        ...obj,
-        [head]: setDeepValue(currentVal, tail, value)
-    };
+  return {
+    ...obj,
+    [head]: setDeepValue(currentVal, tail, value),
+  }
 }
 
 /**
@@ -77,17 +78,17 @@ export function setDeepValue(obj: any, path: string[], value: any): any {
  * @returns The actor with updated properties.
  */
 export function applyAnimationToActor(
-    actor: Actor,
-    animatedProps: Map<string, unknown> | undefined,
+  actor: Actor,
+  animatedProps: Map<string, unknown> | undefined
 ): Actor {
-    if (!animatedProps || animatedProps.size === 0) return actor;
+  if (!animatedProps || animatedProps.size === 0) return actor
 
-    let newActor = actor;
+  let newActor = actor
 
-    for (const [property, value] of animatedProps) {
-        const parts = property.split('.');
-        newActor = setDeepValue(newActor, parts, value);
-    }
+  for (const [property, value] of animatedProps) {
+    const parts = property.split('.')
+    newActor = setDeepValue(newActor, parts, value)
+  }
 
-    return newActor;
+  return newActor
 }

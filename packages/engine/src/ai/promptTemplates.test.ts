@@ -1,4 +1,5 @@
-import { describe, it, expect } from 'vitest'
+import { describe, expect, it } from 'vitest'
+
 import { getAiPrompt, PROMPT_STYLES } from './promptTemplates'
 
 describe('AI Prompt Templates', () => {

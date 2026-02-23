@@ -9,7 +9,7 @@
         "build": "tsc -b && vite build",
         "test": "vitest",
         "typecheck": "tsc --noEmit",
-        "lint": "eslint ."
+        "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
     },
     "dependencies": {
         "@react-three/drei": "^10.7.7",

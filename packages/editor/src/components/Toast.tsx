@@ -1,36 +1,36 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'
 
 export interface ToastMessage {
-  id: string;
-  message: string;
-  type: 'success' | 'error' | 'info';
-  duration?: number;
+  id: string
+  message: string
+  type: 'success' | 'error' | 'info'
+  duration?: number
 }
 
 interface ToastProps {
-  toast: ToastMessage;
-  onClose: (id: string) => void;
+  toast: ToastMessage
+  onClose: (id: string) => void
 }
 
 export const Toast: React.FC<ToastProps> = ({ toast, onClose }) => {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(true)
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setIsVisible(false);
+      setIsVisible(false)
       // Wait for animation to finish before removing
-      setTimeout(() => onClose(toast.id), 300);
-    }, toast.duration || 3000);
+      setTimeout(() => onClose(toast.id), 300)
+    }, toast.duration || 3000)
 
-    return () => clearTimeout(timer);
-  }, [toast.id, toast.duration, onClose]);
+    return () => clearTimeout(timer)
+  }, [toast.id, toast.duration, onClose])
 
   const bgColor =
     toast.type === 'success'
       ? 'var(--color-success)'
       : toast.type === 'error'
-      ? 'var(--color-error)'
-      : 'var(--color-primary)';
+        ? 'var(--color-error)'
+        : 'var(--color-primary)'
 
   const style: React.CSSProperties = {
     backgroundColor: 'var(--bg-elevated)',
@@ -48,7 +48,7 @@ export const Toast: React.FC<ToastProps> = ({ toast, onClose }) => {
     transform: isVisible ? 'translateX(0)' : 'translateX(100%)',
     transition: 'opacity 0.3s ease, transform 0.3s ease',
     pointerEvents: 'auto',
-  };
+  }
 
   return (
     <div style={style}>
@@ -57,5 +57,5 @@ export const Toast: React.FC<ToastProps> = ({ toast, onClose }) => {
       </span>
       <span>{toast.message}</span>
     </div>
-  );
-};
+  )
+}

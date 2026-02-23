@@ -1,27 +1,34 @@
-import React from 'react';
-import './globals.css';
-import { Navbar } from '../components/Navbar';
-import Link from 'next/link';
+import './globals.css'
+
+import Link from 'next/link'
+import React from 'react'
+
+import { Navbar } from '../components/Navbar'
 
 export const metadata = {
   title: 'Animatica',
   description: 'The Animation Platform for Everyone',
-};
+}
 
 function Footer() {
   return (
-    <footer style={{
-      borderTop: '1px solid var(--border-subtle)',
-      backgroundColor: 'var(--bg-deep)',
-      padding: '2rem 0',
-      marginTop: 'auto'
-    }}>
-      <div className="container" style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: '1rem'
-      }}>
+    <footer
+      style={{
+        borderTop: '1px solid var(--border-subtle)',
+        backgroundColor: 'var(--bg-deep)',
+        padding: '2rem 0',
+        marginTop: 'auto',
+      }}
+    >
+      <div
+        className="container"
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '1rem',
+        }}
+      >
         <div style={{ display: 'flex', gap: '2rem', color: 'var(--text-muted)' }}>
           <Link href="/about">About</Link>
           <Link href="/terms">Terms</Link>
@@ -32,23 +39,17 @@ function Footer() {
         </p>
       </div>
     </footer>
-  );
+  )
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <Navbar />
-        <main style={{ flex: 1 }}>
-          {children}
-        </main>
+        <main style={{ flex: 1 }}>{children}</main>
         <Footer />
       </body>
     </html>
-  );
+  )
 }

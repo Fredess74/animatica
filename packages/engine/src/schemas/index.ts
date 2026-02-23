@@ -3,48 +3,47 @@
  * @module @animatica/engine/schemas
  */
 export {
-    // Primitives
-    Vector3Schema,
-    ColorSchema,
-    UUIDSchema,
-    TransformSchema,
-    // Character
-    AnimationStateSchema,
-    MorphTargetsSchema,
-    BodyPoseSchema,
-    ClothingItemSchema,
-    ClothingSlotsSchema,
-    CharacterActorSchema,
-    // Primitive
-    PrimitiveShapeSchema,
-    PrimitiveActorSchema,
-    // Light
-    LightTypeSchema,
-    LightActorSchema,
-    // Camera
-    CameraActorSchema,
-    // Speaker
-    SpeakerActorSchema,
-    // Union
-    ActorSchema,
-    // Base
-    BaseActorSchema,
-} from './actor.schema';
-
+  // Union
+  ActorSchema,
+  // Character
+  AnimationStateSchema,
+  // Base
+  BaseActorSchema,
+  BodyPoseSchema,
+  // Camera
+  CameraActorSchema,
+  CharacterActorSchema,
+  ClothingItemSchema,
+  ClothingSlotsSchema,
+  ColorSchema,
+  LightActorSchema,
+  // Light
+  LightTypeSchema,
+  MorphTargetsSchema,
+  PrimitiveActorSchema,
+  // Primitive
+  PrimitiveShapeSchema,
+  // Speaker
+  SpeakerActorSchema,
+  TransformSchema,
+  UUIDSchema,
+  // Primitives
+  Vector3Schema,
+} from './actor.schema'
 export {
-    // Timeline
-    EasingTypeSchema,
-    KeyframeSchema,
-    AnimationTrackSchema,
-    TransitionTypeSchema,
-    CameraCutSchema,
-    TimelineSchema,
-    // Environment
-    WeatherTypeSchema,
-    WeatherSchema,
-    FogSchema,
-    EnvironmentSchema,
-    // Project
-    ProjectMetaSchema,
-    ProjectStateSchema,
-} from './scene.schema';
+  AnimationTrackSchema,
+  CameraCutSchema,
+  // Timeline
+  EasingTypeSchema,
+  EnvironmentSchema,
+  FogSchema,
+  KeyframeSchema,
+  // Project
+  ProjectMetaSchema,
+  ProjectStateSchema,
+  TimelineSchema,
+  TransitionTypeSchema,
+  WeatherSchema,
+  // Environment
+  WeatherTypeSchema,
+} from './scene.schema'

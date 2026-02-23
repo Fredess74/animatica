@@ -1,8 +1,9 @@
-import { describe, it, expect, vi, afterEach } from 'vitest'
 import React from 'react'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+
+import { CharacterActor } from '../../types'
 // @ts-ignore
 import { CharacterRenderer } from './CharacterRenderer'
-import { CharacterActor } from '../../types'
 
 // Mock react to bypass hooks checks when calling component directly
 vi.mock('react', async () => {
@@ -15,7 +16,7 @@ vi.mock('react', async () => {
 
 // Mock the Edges component from @react-three/drei
 vi.mock('@react-three/drei', () => ({
-  Edges: () => null
+  Edges: () => null,
 }))
 
 describe('CharacterRenderer', () => {
@@ -31,12 +32,12 @@ describe('CharacterRenderer', () => {
     transform: {
       position: [10, 0, 5],
       rotation: [0, Math.PI, 0],
-      scale: [1, 1, 1]
+      scale: [1, 1, 1],
     },
     animation: 'idle',
     morphTargets: {},
     bodyPose: {},
-    clothing: {}
+    clothing: {},
   }
 
   it('renders a group containing capsule mesh with correct transform', () => {
@@ -87,7 +88,7 @@ describe('CharacterRenderer', () => {
   })
 
   it('renders face direction indicator', () => {
-     // @ts-ignore
+    // @ts-ignore
     const result = CharacterRenderer.render({ actor: mockActor }, null) as React.ReactElement
     const props = result.props as any
     const children = React.Children.toArray(props.children) as React.ReactElement[]

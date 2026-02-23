@@ -1,7 +1,8 @@
-import { describe, it, expect, vi, afterEach } from 'vitest'
 import React from 'react'
-import { PrimitiveRenderer } from './PrimitiveRenderer'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+
 import { PrimitiveActor } from '../../types'
+import { PrimitiveRenderer } from './PrimitiveRenderer'
 
 // Mock react to bypass hooks checks when calling component directly
 vi.mock('react', async () => {
@@ -14,7 +15,7 @@ vi.mock('react', async () => {
 
 // Mock the Edges component from @react-three/drei
 vi.mock('@react-three/drei', () => ({
-  Edges: () => null
+  Edges: () => null,
 }))
 
 describe('PrimitiveRenderer', () => {
@@ -31,7 +32,7 @@ describe('PrimitiveRenderer', () => {
       transform: {
         position: [10, 20, 30],
         rotation: [0, 1, 0],
-        scale: [2, 2, 2]
+        scale: [2, 2, 2],
       },
       properties: {
         shape: 'box',
@@ -39,8 +40,8 @@ describe('PrimitiveRenderer', () => {
         roughness: 0.5,
         metalness: 0.3,
         opacity: 0.8,
-        wireframe: true
-      }
+        wireframe: true,
+      },
     }
 
     // Call the component as a function to inspect returned JSX
@@ -54,7 +55,9 @@ describe('PrimitiveRenderer', () => {
     expect(result.props.scale).toEqual([2, 2, 2])
 
     // Verify children (geometry and material)
-    const children = React.Children.toArray(result.props.children) as React.ReactElement<{ [key: string]: any }>[]
+    const children = React.Children.toArray(result.props.children) as React.ReactElement<{
+      [key: string]: any
+    }>[]
 
     // Check geometry
     const geometry = children.find((child) => child.type === 'boxGeometry')
@@ -80,7 +83,7 @@ describe('PrimitiveRenderer', () => {
       transform: {
         position: [0, 0, 0],
         rotation: [0, 0, 0],
-        scale: [1, 1, 1]
+        scale: [1, 1, 1],
       },
       properties: {
         shape: 'sphere',
@@ -88,12 +91,14 @@ describe('PrimitiveRenderer', () => {
         roughness: 0,
         metalness: 0,
         opacity: 1,
-        wireframe: false
-      }
+        wireframe: false,
+      },
     }
 
     const result = PrimitiveRenderer({ actor }) as React.ReactElement<{ [key: string]: any }>
-    const children = React.Children.toArray(result.props.children) as React.ReactElement<{ [key: string]: any }>[]
+    const children = React.Children.toArray(result.props.children) as React.ReactElement<{
+      [key: string]: any
+    }>[]
     const geometry = children.find((child) => child.type === 'sphereGeometry')
     expect(geometry).toBeDefined()
   })
@@ -107,7 +112,7 @@ describe('PrimitiveRenderer', () => {
       transform: {
         position: [0, 0, 0],
         rotation: [0, 0, 0],
-        scale: [1, 1, 1]
+        scale: [1, 1, 1],
       },
       properties: {
         shape: 'box',
@@ -115,8 +120,8 @@ describe('PrimitiveRenderer', () => {
         roughness: 0,
         metalness: 0,
         opacity: 1,
-        wireframe: false
-      }
+        wireframe: false,
+      },
     }
 
     const result = PrimitiveRenderer({ actor })

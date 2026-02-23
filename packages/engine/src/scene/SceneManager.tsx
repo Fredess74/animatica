@@ -5,29 +5,24 @@
  *
  * @module @animatica/engine/scene/SceneManager
  */
-import React, { useMemo } from 'react';
-import { useSceneStore } from '../store/sceneStore';
-import { evaluateTracksAtTime } from '../animation/interpolate';
-import { applyAnimationToActor, resolveActiveCamera } from './animationUtils';
-import { PrimitiveRenderer } from './renderers/PrimitiveRenderer';
-import { LightRenderer } from './renderers/LightRenderer';
-import { CameraRenderer } from './renderers/CameraRenderer';
-import { CharacterRenderer } from './renderers/CharacterRenderer';
-import type {
-    Actor,
-    PrimitiveActor,
-    LightActor,
-    CameraActor,
-    CharacterActor,
-} from '../types';
+import React, { useMemo } from 'react'
+
+import { evaluateTracksAtTime } from '../animation/interpolate'
+import { useSceneStore } from '../store/sceneStore'
+import type { Actor, CameraActor, CharacterActor, LightActor, PrimitiveActor } from '../types'
+import { applyAnimationToActor, resolveActiveCamera } from './animationUtils'
+import { CameraRenderer } from './renderers/CameraRenderer'
+import { CharacterRenderer } from './renderers/CharacterRenderer'
+import { LightRenderer } from './renderers/LightRenderer'
+import { PrimitiveRenderer } from './renderers/PrimitiveRenderer'
 
 interface SceneManagerProps {
-    /** ID of the currently selected actor in the editor. */
-    selectedActorId?: string;
-    /** Callback when an actor is clicked. */
-    onActorSelect?: (actorId: string) => void;
-    /** Whether to show debug helpers (light gizmos, camera frustums). */
-    showHelpers?: boolean;
+  /** ID of the currently selected actor in the editor. */
+  selectedActorId?: string
+  /** Callback when an actor is clicked. */
+  onActorSelect?: (actorId: string) => void
+  /** Whether to show debug helpers (light gizmos, camera frustums). */
+  showHelpers?: boolean
 }
 
 /**
@@ -48,114 +43,111 @@ interface SceneManagerProps {
  * ```
  */
 export const SceneManager: React.FC<SceneManagerProps> = ({
-    selectedActorId,
-    onActorSelect,
-    showHelpers = false,
+  selectedActorId,
+  onActorSelect,
+  showHelpers = false,
 }) => {
-    const actors = useSceneStore((s) => s.actors);
-    const environment = useSceneStore((s) => s.environment);
-    const timeline = useSceneStore((s) => s.timeline);
-    const currentTime = useSceneStore((s) => s.playback.currentTime);
+  const actors = useSceneStore((s) => s.actors)
+  const environment = useSceneStore((s) => s.environment)
+  const timeline = useSceneStore((s) => s.timeline)
+  const currentTime = useSceneStore((s) => s.playback.currentTime)
 
-    // Evaluate all animation tracks at the current time
-    const animationValues = useMemo(
-        () => evaluateTracksAtTime(timeline.animationTracks, currentTime),
-        [timeline.animationTracks, currentTime],
-    );
+  // Evaluate all animation tracks at the current time
+  const animationValues = useMemo(
+    () => evaluateTracksAtTime(timeline.animationTracks, currentTime),
+    [timeline.animationTracks, currentTime]
+  )
 
-    // Sort camera cuts only when the track changes, not every frame
-    const sortedCameraCuts = useMemo(
-        () => [...timeline.cameraTrack].sort((a, b) => a.time - b.time),
-        [timeline.cameraTrack]
-    );
+  // Sort camera cuts only when the track changes, not every frame
+  const sortedCameraCuts = useMemo(
+    () => [...timeline.cameraTrack].sort((a, b) => a.time - b.time),
+    [timeline.cameraTrack]
+  )
 
-    // Determine the active camera from the sorted camera cuts
-    const activeCameraId = useMemo(
-        () => resolveActiveCamera(sortedCameraCuts, currentTime),
-        [sortedCameraCuts, currentTime],
-    );
+  // Determine the active camera from the sorted camera cuts
+  const activeCameraId = useMemo(
+    () => resolveActiveCamera(sortedCameraCuts, currentTime),
+    [sortedCameraCuts, currentTime]
+  )
 
-    // Apply animation values to actors
-    const animatedActors = useMemo(
-        () =>
-            actors.map((actor: Actor) =>
-                applyAnimationToActor(actor, animationValues.get(actor.id)),
-            ),
-        [actors, animationValues],
-    );
+  // Apply animation values to actors
+  const animatedActors = useMemo(
+    () => actors.map((actor: Actor) => applyAnimationToActor(actor, animationValues.get(actor.id))),
+    [actors, animationValues]
+  )
 
-    return (
-        <>
-            {/* === Environment === */}
-            <ambientLight
-                intensity={environment.ambientLight.intensity}
-                color={environment.ambientLight.color}
-            />
-            <directionalLight
-                position={environment.sun.position as unknown as [number, number, number]}
-                intensity={environment.sun.intensity}
-                color={environment.sun.color}
-                castShadow
-            />
-            <color attach="background" args={[environment.skyColor]} />
+  return (
+    <>
+      {/* === Environment === */}
+      <ambientLight
+        intensity={environment.ambientLight.intensity}
+        color={environment.ambientLight.color}
+      />
+      <directionalLight
+        position={environment.sun.position as unknown as [number, number, number]}
+        intensity={environment.sun.intensity}
+        color={environment.sun.color}
+        castShadow
+      />
+      <color attach="background" args={[environment.skyColor]} />
 
-            {environment.fog && (
-                <fog
-                    attach="fog"
-                    args={[environment.fog.color, environment.fog.near, environment.fog.far]}
-                />
-            )}
+      {environment.fog && (
+        <fog
+          attach="fog"
+          args={[environment.fog.color, environment.fog.near, environment.fog.far]}
+        />
+      )}
 
-            {/* === Actors === */}
-            {animatedActors.map((actor: Actor) => {
-                switch (actor.type) {
-                    case 'primitive':
-                        return (
-                            <PrimitiveRenderer
-                                key={actor.id}
-                                actor={actor as PrimitiveActor}
-                                isSelected={actor.id === selectedActorId}
-                                onClick={() => onActorSelect?.(actor.id)}
-                            />
-                        );
+      {/* === Actors === */}
+      {animatedActors.map((actor: Actor) => {
+        switch (actor.type) {
+          case 'primitive':
+            return (
+              <PrimitiveRenderer
+                key={actor.id}
+                actor={actor as PrimitiveActor}
+                isSelected={actor.id === selectedActorId}
+                onClick={() => onActorSelect?.(actor.id)}
+              />
+            )
 
-                    case 'light':
-                        return (
-                            <LightRenderer
-                                key={actor.id}
-                                actor={actor as LightActor}
-                                showHelper={showHelpers || actor.id === selectedActorId}
-                            />
-                        );
+          case 'light':
+            return (
+              <LightRenderer
+                key={actor.id}
+                actor={actor as LightActor}
+                showHelper={showHelpers || actor.id === selectedActorId}
+              />
+            )
 
-                    case 'camera':
-                        return (
-                            <CameraRenderer
-                                key={actor.id}
-                                actor={actor as CameraActor}
-                                isActive={actor.id === activeCameraId}
-                                showHelper={showHelpers || actor.id === selectedActorId}
-                            />
-                        );
+          case 'camera':
+            return (
+              <CameraRenderer
+                key={actor.id}
+                actor={actor as CameraActor}
+                isActive={actor.id === activeCameraId}
+                showHelper={showHelpers || actor.id === selectedActorId}
+              />
+            )
 
-                    case 'character':
-                        return (
-                            <CharacterRenderer
-                                key={actor.id}
-                                actor={actor as CharacterActor}
-                                isSelected={actor.id === selectedActorId}
-                                onClick={() => onActorSelect?.(actor.id)}
-                            />
-                        );
+          case 'character':
+            return (
+              <CharacterRenderer
+                key={actor.id}
+                actor={actor as CharacterActor}
+                isSelected={actor.id === selectedActorId}
+                onClick={() => onActorSelect?.(actor.id)}
+              />
+            )
 
-                    case 'speaker':
-                        // TODO: SpeakerRenderer not yet implemented
-                        return null;
+          case 'speaker':
+            // TODO: SpeakerRenderer not yet implemented
+            return null
 
-                    default:
-                        return null;
-                }
-            })}
-        </>
-    );
-};
+          default:
+            return null
+        }
+      })}
+    </>
+  )
+}

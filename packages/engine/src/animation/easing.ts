@@ -11,35 +11,35 @@
  * @param t Normalized time (0-1).
  * @returns The linear value (same as t).
  */
-export const linear = (t: number): number => t;
+export const linear = (t: number): number => t
 
 /**
  * Quadratic ease-in.
  * @param t Normalized time (0-1).
  * @returns Eased value.
  */
-export const quad = (t: number): number => t * t;
+export const quad = (t: number): number => t * t
 
 /**
  * Cubic ease-in.
  * @param t Normalized time (0-1).
  * @returns Eased value.
  */
-export const cubic = (t: number): number => t * t * t;
+export const cubic = (t: number): number => t * t * t
 
 /**
  * Alias for quadratic ease-in.
  * @param t Normalized time (0-1).
  * @returns Eased value.
  */
-export const easeIn = (t: number): number => quad(t);
+export const easeIn = (t: number): number => quad(t)
 
 /**
  * Quadratic ease-out.
  * @param t Normalized time (0-1).
  * @returns Eased value.
  */
-export const easeOut = (t: number): number => 1 - Math.pow(1 - t, 2);
+export const easeOut = (t: number): number => 1 - Math.pow(1 - t, 2)
 
 /**
  * Quadratic ease-in-out.
@@ -47,8 +47,8 @@ export const easeOut = (t: number): number => 1 - Math.pow(1 - t, 2);
  * @returns Eased value.
  */
 export const easeInOut = (t: number): number => {
-  return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-};
+  return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2
+}
 
 /**
  * Bounce effect easing.
@@ -56,19 +56,19 @@ export const easeInOut = (t: number): number => {
  * @returns Eased value with bounce effect.
  */
 export const bounce = (t: number): number => {
-  const n1 = 7.5625;
-  const d1 = 2.75;
+  const n1 = 7.5625
+  const d1 = 2.75
 
   if (t < 1 / d1) {
-    return n1 * t * t;
+    return n1 * t * t
   } else if (t < 2 / d1) {
-    return n1 * (t -= 1.5 / d1) * t + 0.75;
+    return n1 * (t -= 1.5 / d1) * t + 0.75
   } else if (t < 2.5 / d1) {
-    return n1 * (t -= 2.25 / d1) * t + 0.9375;
+    return n1 * (t -= 2.25 / d1) * t + 0.9375
   } else {
-    return n1 * (t -= 2.625 / d1) * t + 0.984375;
+    return n1 * (t -= 2.625 / d1) * t + 0.984375
   }
-};
+}
 
 /**
  * Elastic effect easing.
@@ -76,13 +76,9 @@ export const bounce = (t: number): number => {
  * @returns Eased value with elastic effect.
  */
 export const elastic = (t: number): number => {
-  const c4 = (2 * Math.PI) / 3;
-  return t === 0
-    ? 0
-    : t === 1
-    ? 1
-    : Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
-};
+  const c4 = (2 * Math.PI) / 3
+  return t === 0 ? 0 : t === 1 ? 1 : Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1
+}
 
 /**
  * Step function (returns 0 if t < 1, else 1).
@@ -91,5 +87,5 @@ export const elastic = (t: number): number => {
  * @returns 0 or 1.
  */
 export const step = (t: number): number => {
-  return t < 1 ? 0 : 1;
-};
+  return t < 1 ? 0 : 1
+}

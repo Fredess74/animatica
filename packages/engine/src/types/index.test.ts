@@ -1,4 +1,5 @@
-import { describe, it, expect } from 'vitest'
+import { describe, expect, it } from 'vitest'
+
 import { PrimitiveActor } from './index'
 
 describe('Types', () => {
@@ -10,7 +11,7 @@ describe('Types', () => {
       transform: {
         position: [0, 0, 0],
         rotation: [0, 0, 0],
-        scale: [1, 1, 1]
+        scale: [1, 1, 1],
       },
       visible: true,
       properties: {
@@ -19,11 +20,11 @@ describe('Types', () => {
         roughness: 0.5,
         metalness: 0.5,
         opacity: 1,
-        wireframe: false
+        wireframe: false,
       },
       // UX Enhancements
       locked: true,
-      description: 'A locked test actor'
+      description: 'A locked test actor',
     }
 
     expect(actor.locked).toBe(true)

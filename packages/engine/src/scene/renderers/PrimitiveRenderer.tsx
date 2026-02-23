@@ -1,7 +1,8 @@
+import { Edges } from '@react-three/drei'
+import { ThreeEvent } from '@react-three/fiber'
 import React, { useRef } from 'react'
 import * as THREE from 'three'
-import { ThreeEvent } from '@react-three/fiber'
-import { Edges } from '@react-three/drei'
+
 import { PrimitiveActor } from '../../types'
 
 interface PrimitiveRendererProps {

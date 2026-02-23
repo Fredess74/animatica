@@ -8,7 +8,7 @@
         "build": "tsc -b && vite build",
         "test": "vitest",
         "typecheck": "tsc --noEmit",
-        "lint": "eslint ."
+        "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
     },
     "dependencies": {
         "clsx": "^2.1.1",
