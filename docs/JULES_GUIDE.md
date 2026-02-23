@@ -46,7 +46,10 @@ Animatica is a web-based animation platform. Users write text → AI generates a
 4. **One package per PR** — NEVER edit files in multiple packages
 5. **Max 5 files per PR** — keep PRs small and reviewable
 6. **Tests required** — every PR must contain at least one test file
-7. **CI Self-Healing** — If the CI pipeline fails (`npm run typecheck` or `test`), the GitHub Action will comment on your PR. You MUST read the error logs, fix the code, and push a new commit to the same branch. Do not wait for human intervention.
+7. **CI Self-Healing** — If the CI pipeline fails (`pnpm run typecheck` or `test`), the GitHub Action will comment on your PR. You MUST read the error logs, fix the code, and push a new commit to the same branch. Do not wait for human intervention.
+8. **Check for existing PRs** — Before creating a new PR, check if another agent already has an open PR touching the same files. If so, wait or pick a different task.
+9. **Issue Tracking Workaround** — You may not have direct GitHub Issues API access. If you cannot read/create GitHub Issues, use `docs/BACKLOG.md` as your local issue tracker. Reference GitHub Issue numbers (e.g., `#14`) in your commit messages and PR descriptions. The human maintainer will sync `BACKLOG.md` with GitHub Issues periodically.
+10. **Package Manager** — This project uses `pnpm`, NOT `npm`. Always use `pnpm install`, `pnpm run test`, `pnpm run typecheck`, etc.
 
 ---
 
