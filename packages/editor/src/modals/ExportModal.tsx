@@ -60,41 +60,45 @@ export const ExportModal: React.FC<ExportModalProps> = ({ onClose }) => {
     const res = RESOLUTION_MAP[resolution];
 
     return (
-        <div className="modal-overlay" onClick={onClose}>
+        <div className="modal-overlay" onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="export-modal-title">
             <div className="modal export-modal" onClick={(e) => e.stopPropagation()}>
                 <div className="modal__header">
-                    <h2 className="modal__title">🎬 {t('export.title')}</h2>
-                    <button className="modal__close" onClick={onClose}>✕</button>
+                    <h2 id="export-modal-title" className="modal__title">🎬 {t('export.title')}</h2>
+                    <button className="modal__close" onClick={onClose} aria-label={t('export.close')}>✕</button>
                 </div>
                 <div className="retro-stripe retro-stripe--thin" />
 
                 <div className="export-modal__body">
                     {/* Resolution */}
-                    <div className="export-field">
-                        <label className="export-field__label">{t('export.resolution')}</label>
+                    <div className="export-field" role="radiogroup" aria-labelledby="res-label">
+                        <label id="res-label" className="export-field__label">{t('export.resolution')}</label>
                         <div className="export-field__options">
                             {(['720p', '1080p', '4K'] as Resolution[]).map((r) => (
                                 <button
                                     key={r}
                                     className={`export-option ${resolution === r ? 'export-option--active' : ''}`}
                                     onClick={() => setResolution(r)}
+                                    role="radio"
+                                    aria-checked={resolution === r}
                                 >
                                     {r}
                                 </button>
                             ))}
                         </div>
-                        <span className="export-field__detail">{res.width} × {res.height}</span>
+                        <span className="export-field__detail" aria-live="polite">{res.width} × {res.height}</span>
                     </div>
 
                     {/* FPS */}
-                    <div className="export-field">
-                        <label className="export-field__label">{t('export.frameRate')}</label>
+                    <div className="export-field" role="radiogroup" aria-labelledby="fps-label">
+                        <label id="fps-label" className="export-field__label">{t('export.frameRate')}</label>
                         <div className="export-field__options">
                             {([24, 30, 60] as FPS[]).map((f) => (
                                 <button
                                     key={f}
                                     className={`export-option ${fps === f ? 'export-option--active' : ''}`}
                                     onClick={() => setFps(f)}
+                                    role="radio"
+                                    aria-checked={fps === f}
                                 >
                                     {t('export.fpsSuffix', { count: f })}
                                 </button>
@@ -103,14 +107,16 @@ export const ExportModal: React.FC<ExportModalProps> = ({ onClose }) => {
                     </div>
 
                     {/* Format */}
-                    <div className="export-field">
-                        <label className="export-field__label">{t('export.format')}</label>
+                    <div className="export-field" role="radiogroup" aria-labelledby="format-label">
+                        <label id="format-label" className="export-field__label">{t('export.format')}</label>
                         <div className="export-field__options">
                             {(['mp4', 'webm'] as Format[]).map((f) => (
                                 <button
                                     key={f}
                                     className={`export-option ${format === f ? 'export-option--active' : ''}`}
                                     onClick={() => setFormat(f)}
+                                    role="radio"
+                                    aria-checked={format === f}
                                 >
                                     .{f}
                                 </button>
@@ -120,7 +126,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({ onClose }) => {
 
                     {/* Progress Bar */}
                     {isExporting && (
-                        <div className="export-progress">
+                        <div className="export-progress" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100}>
                             <div className="export-progress__bar">
                                 <div
                                     className="export-progress__fill"

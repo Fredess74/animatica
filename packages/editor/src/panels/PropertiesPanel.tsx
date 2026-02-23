@@ -17,12 +17,12 @@ interface Vector3InputProps {
 }
 
 const Vector3Input: React.FC<Vector3InputProps> = ({ label, value, onChange }) => (
-    <div className="prop-field">
-        <label className="prop-field__label">{label}</label>
+    <div className="prop-field" role="group" aria-label={label}>
+        <div className="prop-field__label" aria-hidden="true">{label}</div>
         <div className="prop-field__vector3">
             {(['X', 'Y', 'Z'] as const).map((axis, i) => (
                 <div key={axis} className="prop-field__axis">
-                    <span className={`prop-field__axis-label prop-field__axis-label--${axis.toLowerCase()}`}>
+                    <span className={`prop-field__axis-label prop-field__axis-label--${axis.toLowerCase()}`} aria-hidden="true">
                         {axis}
                     </span>
                     <input
@@ -35,6 +35,7 @@ const Vector3Input: React.FC<Vector3InputProps> = ({ label, value, onChange }) =
                             onChange(newVal);
                         }}
                         step={0.1}
+                        aria-label={`${label} ${axis}`}
                     />
                 </div>
             ))}
@@ -50,8 +51,13 @@ const ColorInput: React.FC<{ label: string; value: string; onChange: (v: string)
     <div className="prop-field">
         <label className="prop-field__label">{label}</label>
         <div className="prop-field__color">
-            <input type="color" value={value} onChange={(e) => onChange(e.target.value)} />
-            <span className="prop-field__color-hex">{value}</span>
+            <input
+                type="color"
+                value={value}
+                onChange={(e) => onChange(e.target.value)}
+                aria-label={label}
+            />
+            <span className="prop-field__color-hex" aria-hidden="true">{value}</span>
         </div>
     </div>
 );
@@ -67,7 +73,7 @@ const SliderInput: React.FC<{
     <div className="prop-field">
         <label className="prop-field__label">
             {label}
-            <span className="prop-field__value">{value.toFixed(2)}</span>
+            <span className="prop-field__value" aria-hidden="true">{value.toFixed(2)}</span>
         </label>
         <input
             type="range"
@@ -77,6 +83,10 @@ const SliderInput: React.FC<{
             max={max}
             step={step}
             onChange={(e) => onChange(parseFloat(e.target.value))}
+            aria-label={label}
+            aria-valuemin={min}
+            aria-valuemax={max}
+            aria-valuenow={value}
         />
     </div>
 );

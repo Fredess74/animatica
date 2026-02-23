@@ -42,6 +42,7 @@ export const TimelinePanel: React.FC<TimelinePanelProps> = ({ selectedActorId })
                         className="timeline-btn"
                         onClick={handleStop}
                         title={t('timeline.stop')}
+                        aria-label={t('timeline.stop')}
                     >
                         ⏹
                     </button>
@@ -50,6 +51,7 @@ export const TimelinePanel: React.FC<TimelinePanelProps> = ({ selectedActorId })
                             className="timeline-btn timeline-btn--active"
                             onClick={handlePause}
                             title={t('timeline.pause')}
+                            aria-label={t('timeline.pause')}
                         >
                             ⏸
                         </button>
@@ -58,11 +60,16 @@ export const TimelinePanel: React.FC<TimelinePanelProps> = ({ selectedActorId })
                             className="timeline-btn timeline-btn--play"
                             onClick={handlePlay}
                             title={t('timeline.play')}
+                            aria-label={t('timeline.play')}
                         >
                             ▶
                         </button>
                     )}
-                    <button className="timeline-btn" title={t('timeline.addKeyframe')}>
+                    <button
+                        className="timeline-btn"
+                        title={t('timeline.addKeyframe')}
+                        aria-label={t('timeline.addKeyframe')}
+                    >
                         ◇+
                     </button>
                 </div>
@@ -74,11 +81,13 @@ export const TimelinePanel: React.FC<TimelinePanelProps> = ({ selectedActorId })
                 </div>
 
                 <div className="timeline-transport__duration">
-                    <label className="prop-field__label">{t('timeline.duration')}</label>
+                    <label htmlFor="timeline-duration" className="prop-field__label">{t('timeline.duration')}</label>
                     <select
+                        id="timeline-duration"
                         className="timeline-select"
                         value={duration}
                         onChange={(e) => setDuration(Number(e.target.value))}
+                        aria-label={t('timeline.duration')}
                     >
                         <option value={5}>{t('timeline.seconds', { count: 5 })}</option>
                         <option value={10}>{t('timeline.seconds', { count: 10 })}</option>
@@ -111,6 +120,7 @@ export const TimelinePanel: React.FC<TimelinePanelProps> = ({ selectedActorId })
                     step={1 / 30}
                     value={currentTime}
                     onChange={(e) => setCurrentTime(parseFloat(e.target.value))}
+                    aria-label={t('timeline.scrubber') || "Time Scrubber"}
                 />
                 <div
                     className="timeline-scrubber__progress"

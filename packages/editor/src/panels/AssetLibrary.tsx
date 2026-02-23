@@ -60,24 +60,27 @@ export const AssetLibrary: React.FC<AssetLibraryProps> = ({ onActorCreated }) =>
                         onClick={() =>
                             setExpandedCategory(expandedCategory === category ? '' : category)
                         }
+                        aria-expanded={expandedCategory === category}
+                        aria-controls={`category-${category}`}
                     >
-                        <span className="asset-category__arrow">
+                        <span className="asset-category__arrow" aria-hidden="true">
                             {expandedCategory === category ? '▼' : '▶'}
                         </span>
                         <span>{category}</span>
-                        <span className="asset-category__count">{items.length}</span>
+                        <span className="asset-category__count" aria-label={`${items.length} items`}>{items.length}</span>
                     </button>
 
                     {expandedCategory === category && (
-                        <div className="asset-category__items">
+                        <div className="asset-category__items" id={`category-${category}`}>
                             {items.map((item) => (
                                 <button
                                     key={item.name}
                                     className="asset-item"
                                     onClick={() => handleAddActor(item)}
                                     title={`Add ${item.name}`}
+                                    aria-label={`Add ${item.name} ${item.type}`}
                                 >
-                                    <span className="asset-item__icon">{item.icon}</span>
+                                    <span className="asset-item__icon" aria-hidden="true">{item.icon}</span>
                                     <span className="asset-item__name">{item.name}</span>
                                 </button>
                             ))}
