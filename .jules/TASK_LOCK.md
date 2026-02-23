@@ -2,11 +2,11 @@
 
 ## Current Lock
 
-LOCKED_BY: none
-LOCKED_PACKAGE: none
-LOCKED_FILES: none
-STARTED: none
-EXPIRES: none
+LOCKED_BY: editor-viewport-dev
+LOCKED_PACKAGE: editor
+LOCKED_FILES: packages/editor/src/viewport/Viewport.tsx
+STARTED: 2024-05-22
+EXPIRES: 2024-05-22T23:59:59Z
 
 ## Rules
 
