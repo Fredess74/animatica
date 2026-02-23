@@ -1,0 +1,9 @@
+/**
+ * Animatica Editor Styles
+ * Main entry point for the editor package styles.
+ */
+
+@import './design-tokens.css';
+@import './panels.css';
+@import './timeline.css';
+@import './modals.css';

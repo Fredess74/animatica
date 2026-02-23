@@ -1,0 +1,390 @@
+/* ============================================
+   Editor Layout & Panels
+   ============================================ */
+
+/* ---- Editor Layout ---- */
+.editor-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--bg-deep);
+  color: var(--text-primary);
+  overflow: hidden;
+}
+
+.editor-main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  height: calc(100vh - 60px - 200px); /* Subtract header and timeline */
+}
+
+.editor-viewport {
+  flex: 1;
+  position: relative;
+  background-color: var(--bg-deep);
+  overflow: hidden;
+}
+
+/* ---- Toolbar ---- */
+.editor-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  padding: 0 var(--space-md);
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.editor-toolbar__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.editor-toolbar__logo {
+  font-size: var(--text-xl);
+  color: var(--green-500);
+}
+
+.editor-toolbar__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--text-lg);
+  letter-spacing: -0.02em;
+}
+
+.editor-toolbar__actions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+/* ---- Sidebars ---- */
+.editor-sidebar {
+  background-color: var(--bg-base);
+  border-right: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.editor-sidebar--left {
+  width: 280px;
+  border-right: 1px solid var(--border-subtle);
+}
+
+.editor-sidebar--right {
+  width: 320px;
+  border-left: 1px solid var(--border-subtle);
+  border-right: none;
+}
+
+/* ---- Generic Panel ---- */
+.panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.panel__title {
+  padding: var(--space-md);
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  font-weight: 600;
+  background-color: var(--bg-surface);
+  position: relative;
+}
+
+/* Ensure retro stripe is visible if present */
+.panel__title + .retro-stripe {
+  margin-bottom: var(--space-sm);
+}
+
+.panel__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  color: var(--text-muted);
+  gap: var(--space-md);
+  text-align: center;
+  padding: var(--space-xl);
+}
+
+.panel__empty-icon {
+  font-size: var(--text-3xl);
+  opacity: 0.5;
+}
+
+/* ---- Buttons ---- */
+.editor-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  border: 1px solid transparent;
+}
+
+.editor-btn--ghost {
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.editor-btn--ghost:hover {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+.editor-btn--primary {
+  background: var(--green-600);
+  color: white;
+  box-shadow: var(--shadow-sm);
+}
+
+.editor-btn--primary:hover {
+  background: var(--green-500);
+  box-shadow: var(--shadow-glow);
+}
+
+/* ---- Asset Library ---- */
+.asset-library {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.asset-category {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.asset-category__header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.asset-category__header:hover {
+  background-color: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+.asset-category__header--active {
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.asset-category__arrow {
+  margin-right: var(--space-sm);
+  font-size: 10px;
+  width: 12px;
+}
+
+.asset-category__count {
+  margin-left: auto;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  background: var(--bg-elevated);
+  padding: 2px 6px;
+  border-radius: var(--radius-full);
+}
+
+.asset-category__items {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-xs);
+  padding: var(--space-sm);
+  background-color: var(--bg-deep);
+}
+
+.asset-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-md);
+  background-color: var(--bg-base);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  color: var(--text-secondary);
+}
+
+.asset-item:hover {
+  border-color: var(--green-600);
+  background-color: var(--bg-elevated);
+  color: var(--text-primary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.asset-item__icon {
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-xs);
+}
+
+.asset-item__name {
+  font-size: var(--text-xs);
+  text-align: center;
+}
+
+/* ---- Properties Panel ---- */
+.properties-panel {
+  overflow-y: auto;
+  padding-bottom: var(--space-xl);
+}
+
+.prop-section {
+  padding: var(--space-md);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.prop-section__title {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  color: var(--green-400);
+  margin-bottom: var(--space-md);
+  letter-spacing: 0.05em;
+}
+
+.prop-field {
+  margin-bottom: var(--space-md);
+}
+
+.prop-field:last-child {
+  margin-bottom: 0;
+}
+
+.prop-field__label {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-xs);
+}
+
+.prop-field__value {
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+}
+
+/* Vector3 Input */
+.prop-field__vector3 {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.prop-field__axis {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background-color: var(--bg-deep);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.prop-field__axis:focus-within {
+  border-color: var(--border-focus);
+}
+
+.prop-field__axis-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 100%;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-inverse);
+  cursor: ew-resize; /* Suggests drag capability */
+}
+
+/* Using palette-compliant colors for axes */
+.prop-field__axis-label--x { background-color: var(--color-error); } /* Red */
+.prop-field__axis-label--y { background-color: var(--green-500); } /* Green */
+.prop-field__axis-label--z { background-color: var(--text-primary); color: var(--text-inverse); } /* White/Gray */
+
+.prop-field__input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  padding: 4px;
+  outline: none;
+}
+
+/* Color Input */
+.prop-field__color {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  background-color: var(--bg-deep);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 4px;
+}
+
+.prop-field__color input[type="color"] {
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.prop-field__color-hex {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}
+
+/* Slider Input */
+.prop-field__slider {
+  width: 100%;
+  height: 4px;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-full);
+  appearance: none;
+  outline: none;
+}
+
+.prop-field__slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--green-500);
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+}
+
+.prop-field__slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.prop-field__slider:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 0 4px var(--color-primary-glow);
+}
