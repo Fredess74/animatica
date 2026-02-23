@@ -1,0 +1,10 @@
+{
+  "Number Interpolation (10k ops)": "480.77ms",
+  "Vector3 Interpolation (10k ops)": "488.61ms",
+  "Color Interpolation (10k ops)": "521.50ms",
+  "Schema Validation Speed (100 runs)": "163.29ms",
+  "Store Playback Updates (10k ops)": "355.71ms",
+  "Store Add Actor (1k ops)": "281.71ms",
+  "Store Update Actor (1k ops)": "1371.98ms",
+  "Store Remove Actor (1k ops)": "1048.13ms"
+}
