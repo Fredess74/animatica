@@ -93,6 +93,19 @@ fredess/
 - `LightRenderer.tsx` — renders point, spot, directional lights
 - `CameraRenderer.tsx` — renders perspective camera using @react-three/drei
 
+### SceneManager (scene/SceneManager.tsx — NEW)
+
+- Orchestrates all renderers based on Zustand store state
+- Applies animation interpolation to actors each frame
+- Resolves active camera from camera track timeline
+- Renders environment (ambient light, sun, sky, fog)
+
+### PlaybackController (playback/PlaybackController.ts — NEW)
+
+- `usePlayback()` hook using requestAnimationFrame
+- Controls: play(), pause(), stop(), seek(), toggle(), setSpeed()
+- Frame-rate quantization, looping support, auto-pause at end
+
 ### AI (ai/promptTemplates.ts)
 
 - `getAiPrompt(style)` — generates structured prompts for AI scene generation
@@ -104,24 +117,26 @@ fredess/
 
 ### What Works
 
+- **Phase 1 Engine Core: 100% COMPLETE** (10/10 components)
 - 73 tests passing, 0 failing
 - Types, schemas, store, importer, animation engine all functional
-- Scene renderers exist (Primitive, Light, Camera)
+- All scene renderers exist (Primitive, Light, Camera)
+- SceneManager orchestrates everything
+- PlaybackController drives animation playback
+- CI pipeline working (triggers on main, uses pnpm)
 - 23 documentation files covering architecture, branding, roadmap
 
-### What's Missing/Broken
+### What's Missing
 
-- **CI is broken**: `.github/workflows/ci.yml` triggers on `master` branch but repo uses `main`
-- **CI uses npm**: should use pnpm (the project's package manager)
 - **Editor is empty**: only `index.ts` with `export {}` and `design-tokens.css`
-- **No SceneManager**: commented out in index.ts
-- **No PlaybackController**: commented out in index.ts
 - **No web app**: apps/web is minimal scaffold
-- **9 conflicting PRs**: agents created overlapping code changes
+- **No CharacterRenderer**: TODO in SceneManager
+- **No SpeakerRenderer**: TODO in SceneManager
+- **All 9 conflicting PRs closed** — agents will create fresh ones
 
 ### Progress Tracking
 
-- Phase 1 (Engine Core): ~60-70% complete (Day 1!)
+- Phase 1 (Engine Core): 100% complete
 - Phase 2-10: 0% (Characters, Editor, Export, AI, Platform, Marketplace, Crypto, Collab, 2D)
 
 ---
