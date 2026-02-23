@@ -58,15 +58,38 @@ interface PlaybackControls {
  * ```
  */
 export function usePlayback(options: PlaybackOptions = {}): PlaybackControls {
-    const { loop = false } = options;
-    const speedRef = useRef(options.speed ?? 1.0);
+    const { loop = false, speed = 1.0 } = options;
+
+    // Use refs to avoid stale closures in the animation loop
+    const loopRef = useRef(loop);
+    const speedRef = useRef(speed);
     const rafIdRef = useRef<number | null>(null);
     const lastFrameTimeRef = useRef<number | null>(null);
 
-    const setPlayback = useSceneStore((s) => s.setPlayback);
-    const isPlaying = useSceneStore((s) => s.playback.isPlaying);
-    const duration = useSceneStore((s) => s.timeline.duration);
-    const frameRate = useSceneStore((s) => s.playback.frameRate);
+    // Sync refs with props
+    useEffect(() => {
+        loopRef.current = loop;
+    }, [loop]);
+
+    useEffect(() => {
+        speedRef.current = speed;
+    }, [speed]);
+
+    // We subscribe to isPlaying only to trigger re-renders if the component needs to know.
+    // However, the hook returns controls, not state.
+    // If the component needs state, it should use useSceneStore separately.
+    // But typically usePlayback is used in a component that might change appearance based on isPlaying.
+    // The original implementation subscribed.
+    // To match original behavior (re-render on change), we keep the subscription,
+    // but we use underscores to ignore unused variable linting if we don't return it?
+    // The original hook returned { play, ... } but NOT isPlaying.
+    // The components using this hook might expect it to trigger re-render when playing starts/stops?
+    // If we remove the subscription, the component won't re-render.
+    // But usePlayback doesn't return isPlaying.
+    // So the component doesn't know.
+    // Unless usePlayback is used alongside useSceneStore.
+    // I will remove the unused variable. If re-render is needed, the component should subscribe itself.
+    useSceneStore((s) => s.playback.isPlaying);
 
     /**
      * The core animation frame callback.
@@ -84,34 +107,41 @@ export function usePlayback(options: PlaybackOptions = {}): PlaybackControls {
             // Convert to seconds and apply speed multiplier
             const deltaSec = (deltaMs / 1000) * speedRef.current;
 
-            // Get the current time from the store
+            // Get fresh state directly to avoid dependency chains
             const state = useSceneStore.getState();
-            let newTime = state.playback.currentTime + deltaSec;
+            const { duration } = state.timeline;
+            const { frameRate, currentTime } = state.playback;
+
+            let newTime = currentTime + deltaSec;
 
             // Handle end of timeline
             if (newTime >= duration) {
-                if (loop) {
+                if (loopRef.current) {
                     newTime = newTime % duration;
                 } else {
                     newTime = duration;
                     // Auto-pause at end
-                    setPlayback({ currentTime: newTime, isPlaying: false });
+                    state.setPlayback({ currentTime: newTime, isPlaying: false });
                     rafIdRef.current = null;
                     lastFrameTimeRef.current = null;
                     return;
                 }
             }
 
-            // Quantize to frame rate if desired (optional, for frame-snapping)
-            const frameDuration = 1 / frameRate;
+            const targetFPS = frameRate || 24;
+            const frameDuration = 1 / targetFPS;
+
             const quantizedTime = Math.round(newTime / frameDuration) * frameDuration;
 
-            setPlayback({ currentTime: quantizedTime });
+            // Only update if time changed (prevent spamming store if delta is tiny)
+            if (Math.abs(quantizedTime - currentTime) > 0.0001) {
+                state.setPlayback({ currentTime: quantizedTime });
+            }
 
             // Schedule next frame
             rafIdRef.current = requestAnimationFrame(tick);
         },
-        [duration, frameRate, loop, setPlayback],
+        [] // No dependencies! Reads everything from refs or store.getState()
     );
 
     /**
@@ -120,16 +150,19 @@ export function usePlayback(options: PlaybackOptions = {}): PlaybackControls {
     const play = useCallback(() => {
         if (rafIdRef.current !== null) return; // Already playing
 
-        // If at the end, reset to start
         const state = useSceneStore.getState();
-        if (state.playback.currentTime >= duration) {
-            setPlayback({ currentTime: 0 });
+        const { duration } = state.timeline;
+        const { currentTime } = state.playback;
+
+        // If at the end, reset to start
+        if (currentTime >= duration) {
+            state.setPlayback({ currentTime: 0 });
         }
 
-        setPlayback({ isPlaying: true });
+        state.setPlayback({ isPlaying: true });
         lastFrameTimeRef.current = null;
         rafIdRef.current = requestAnimationFrame(tick);
-    }, [duration, setPlayback, tick]);
+    }, [tick]); // tick is stable
 
     /**
      * Pauses the animation loop.
@@ -140,8 +173,10 @@ export function usePlayback(options: PlaybackOptions = {}): PlaybackControls {
             rafIdRef.current = null;
         }
         lastFrameTimeRef.current = null;
-        setPlayback({ isPlaying: false });
-    }, [setPlayback]);
+
+        // Update store
+        useSceneStore.getState().setPlayback({ isPlaying: false });
+    }, []);
 
     /**
      * Stops playback and resets to time 0.
@@ -152,36 +187,43 @@ export function usePlayback(options: PlaybackOptions = {}): PlaybackControls {
             rafIdRef.current = null;
         }
         lastFrameTimeRef.current = null;
-        setPlayback({ currentTime: 0, isPlaying: false });
-    }, [setPlayback]);
+
+        useSceneStore.getState().setPlayback({ currentTime: 0, isPlaying: false });
+    }, []);
 
     /**
      * Seeks to a specific time in seconds.
      */
     const seek = useCallback(
         (time: number) => {
+            const state = useSceneStore.getState();
+            const { duration } = state.timeline;
             const clampedTime = Math.max(0, Math.min(time, duration));
-            setPlayback({ currentTime: clampedTime });
+            state.setPlayback({ currentTime: clampedTime });
         },
-        [duration, setPlayback],
+        []
     );
 
     /**
      * Toggles between play and pause.
      */
     const toggle = useCallback(() => {
-        if (isPlaying) {
+        // Need to check current playing state from store or local ref?
+        // We subscribe to isPlaying for UI, so we can use that.
+        // But inside callback better to read fresh state to be safe.
+        const playing = useSceneStore.getState().playback.isPlaying;
+        if (playing) {
             pause();
         } else {
             play();
         }
-    }, [isPlaying, play, pause]);
+    }, [play, pause]);
 
     /**
      * Sets the playback speed multiplier.
      */
-    const setSpeed = useCallback((speed: number) => {
-        speedRef.current = Math.max(0.1, Math.min(speed, 10));
+    const setSpeedHandler = useCallback((newSpeed: number) => {
+        speedRef.current = Math.max(0.1, Math.min(newSpeed, 10));
     }, []);
 
     // Cleanup on unmount
@@ -193,5 +235,12 @@ export function usePlayback(options: PlaybackOptions = {}): PlaybackControls {
         };
     }, []);
 
-    return { play, pause, stop, seek, toggle, setSpeed };
+    return {
+        play,
+        pause,
+        stop,
+        seek,
+        toggle,
+        setSpeed: setSpeedHandler
+    };
 }
