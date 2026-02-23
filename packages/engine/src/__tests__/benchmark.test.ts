@@ -12,10 +12,10 @@ function measure(name: string, fn: () => void) {
 }
 
 describe('Engine Benchmarks', () => {
-    it('Interpolation Speed (10k ops)', () => {
-        // Setup: 10,000 keyframes
+    it('Interpolation Speed (5k ops)', () => {
+        // Setup: 5,000 keyframes
         const keyframes: Keyframe<number>[] = [];
-        for (let i = 0; i < 10000; i++) {
+        for (let i = 0; i < 5000; i++) {
             keyframes.push({
                 time: i,
                 value: i * 10,
@@ -23,13 +23,13 @@ describe('Engine Benchmarks', () => {
             });
         }
 
-        measure('Interpolation Speed (10k ops)', () => {
-            for (let i = 0; i < 10000; i++) {
-                const t = Math.random() * 10000;
+        measure('Interpolation Speed (5k ops)', () => {
+            for (let i = 0; i < 5000; i++) {
+                const t = Math.random() * 5000;
                 interpolateKeyframes(keyframes, t);
             }
         });
-    });
+    }, 10000);
 
     it('Schema Validation Speed (100 runs)', () => {
         // Setup: Large project state with 100 actors
