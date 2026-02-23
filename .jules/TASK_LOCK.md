@@ -2,11 +2,11 @@
 
 ## Current Lock
 
-LOCKED_BY: none
-LOCKED_PACKAGE: none
-LOCKED_FILES: none
-STARTED: none
-EXPIRES: none
+LOCKED_BY: web-layout-dev
+LOCKED_PACKAGE: web
+LOCKED_FILES: apps/web
+STARTED: now
+EXPIRES: 25m
 
 ## Rules
 
