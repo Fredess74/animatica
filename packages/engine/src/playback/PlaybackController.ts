@@ -79,8 +79,6 @@ export function usePlayback(options: PlaybackOptions = {}): PlaybackControls {
     const isPlaying = useSceneStore((s) => s.playback.isPlaying);
     const duration = useSceneStore((s) => s.timeline.duration);
     const frameRate = useSceneStore((s) => s.playback.frameRate);
-    const loopMode = useSceneStore((s) => s.playback.loopMode);
-    const markers = useSceneStore((s) => s.timeline.markers);
 
     // Initialize loopMode if provided
     useEffect(() => {

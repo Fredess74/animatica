@@ -72,6 +72,7 @@ describe('Engine Benchmarks', () => {
                 duration: 60,
                 cameraTrack: [],
                 animationTracks: [], // Could add tracks here for more load
+                markers: [],
             },
             library: { clips: [] },
         };
@@ -95,9 +96,9 @@ describe('Engine Benchmarks', () => {
                 skyColor: '#87CEEB',
             },
             actors: [],
-            timeline: { duration: 10, cameraTrack: [], animationTracks: [] },
+            timeline: { duration: 10, cameraTrack: [], animationTracks: [], markers: [] },
             library: { clips: [] },
-            playback: { currentTime: 0, isPlaying: false, frameRate: 24 },
+            playback: { currentTime: 0, isPlaying: false, frameRate: 24, loopMode: 'none' },
         });
 
         measure('Store Update Throughput (10k ops)', () => {

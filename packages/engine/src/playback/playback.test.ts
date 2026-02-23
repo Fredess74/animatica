@@ -3,10 +3,10 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { renderHook, act, cleanup } from '@testing-library/react';
 import { usePlayback } from './PlaybackController';
 import { useSceneStore } from '../store/sceneStore';
-import { LoopMode, Marker } from '../types';
+import { Marker } from '../types';
 
 // Mock requestAnimationFrame and cancelAnimationFrame
-const requestAnimationFrameMock = vi.fn((cb) => {
+const requestAnimationFrameMock = vi.fn(() => {
     // Return a dummy ID
     return 123;
 });
