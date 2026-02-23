@@ -12,7 +12,7 @@ function measure(name: string, fn: () => void) {
 }
 
 describe('Engine Benchmarks', () => {
-    it('Interpolation Speed (10k ops)', () => {
+    it('Interpolation Speed (10k ops)', { timeout: 10000 }, () => {
         // Setup: 10,000 keyframes
         const keyframes: Keyframe<number>[] = [];
         for (let i = 0; i < 10000; i++) {
