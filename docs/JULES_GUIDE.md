@@ -245,8 +245,8 @@ See [ROADMAP.md](ROADMAP.md) for tasks beyond the core editor: platform, marketp
 3. Create branch: `feat/batch-N-task-name`
 4. Write the code following all coding standards
 5. Write tests (co-located in same directory)
-6. Ensure `tsc --noEmit` passes
-7. Ensure `npm run test` passes
+6. Ensure `pnpm run typecheck` passes
+7. Ensure `pnpm run test` passes
 8. PR title: `feat(engine): task description`
 9. PR body: reference this guide's task number
 

@@ -12,8 +12,8 @@ This document tracks all open tasks, issues, and feature requests for the Animat
   - [ ] `packages/engine/src/importer/schemas/` directory exists.
   - [ ] All schema files are moved to the new location.
   - [ ] All imports in the codebase are updated to the new path.
-  - [ ] `npm run test` passes without errors.
-  - [ ] `npm run typecheck` passes without errors.
+  - [ ] `pnpm run test` passes without errors.
+  - [ ] `pnpm run typecheck` passes without errors.
 
 ## Status: Backlog
 

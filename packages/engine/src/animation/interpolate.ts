@@ -155,8 +155,16 @@ export function interpolateKeyframes<T = unknown>(
 ): T | undefined {
     if (keyframes.length === 0) return undefined;
 
-    // Sort by time (defensive copy)
-    const sorted = [...keyframes].sort((a, b) => a.time - b.time);
+    // Check if sorting is needed (O(n) check is better than O(n log n) sort)
+    let isSorted = true;
+    for (let i = 0; i < keyframes.length - 1; i++) {
+        if (keyframes[i + 1].time < keyframes[i].time) {
+            isSorted = false;
+            break;
+        }
+    }
+
+    const sorted = isSorted ? keyframes : [...keyframes].sort((a, b) => a.time - b.time);
 
     // Before first keyframe
     if (time <= sorted[0].time) {
@@ -168,22 +176,34 @@ export function interpolateKeyframes<T = unknown>(
         return sorted[sorted.length - 1].value;
     }
 
-    // Find the two surrounding keyframes
-    for (let i = 0; i < sorted.length - 1; i++) {
-        const kf0 = sorted[i];
-        const kf1 = sorted[i + 1];
+    // Find the two surrounding keyframes using binary search for performance on large arrays
+    let low = 0;
+    let high = sorted.length - 2;
+    let index = 0;
 
-        if (time >= kf0.time && time <= kf1.time) {
-            const duration = kf1.time - kf0.time;
-            if (duration === 0) return kf0.value;
-
-            const linearT = (time - kf0.time) / duration;
-            const easingFn = resolveEasing(kf1.easing);
-            const easedT = easingFn(linearT);
-
-            return interpolateValue(kf0.value, kf1.value, easedT);
+    while (low <= high) {
+        const mid = Math.floor((low + high) / 2);
+        if (time >= sorted[mid].time && time <= sorted[mid + 1].time) {
+            index = mid;
+            break;
+        } else if (time < sorted[mid].time) {
+            high = mid - 1;
+        } else {
+            low = mid + 1;
         }
     }
+
+    const kf0 = sorted[index];
+    const kf1 = sorted[index + 1];
+
+    const duration = kf1.time - kf0.time;
+    if (duration === 0) return kf0.value;
+
+    const linearT = (time - kf0.time) / duration;
+    const easingFn = resolveEasing(kf1.easing);
+    const easedT = easingFn(linearT);
+
+    return interpolateValue(kf0.value, kf1.value, easedT);
 
     // Fallback (shouldn't reach here)
     return sorted[sorted.length - 1].value;
