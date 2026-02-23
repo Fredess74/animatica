@@ -83,6 +83,16 @@ describe('interpolateKeyframes', () => {
         // Test at t=999
         expect(interpolateKeyframes(keyframes, 999)).toBe(9990);
     });
+
+    it('handles unsorted keyframes by sorting them internally', () => {
+        const kf: Keyframe<number>[] = [
+            { time: 2, value: 20 },
+            { time: 0, value: 0 },
+            { time: 1, value: 10, easing: 'linear' },
+        ];
+        expect(interpolateKeyframes(kf, 0.5)).toBe(5);
+        expect(interpolateKeyframes(kf, 1.5)).toBe(15);
+    });
 });
 
 describe('Vector3 interpolation', () => {

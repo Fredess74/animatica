@@ -155,8 +155,15 @@ export function interpolateKeyframes<T = unknown>(
 ): T | undefined {
     if (keyframes.length === 0) return undefined;
 
-    // Sort by time (defensive copy)
-    const sorted = [...keyframes].sort((a, b) => a.time - b.time);
+    // Optimization: check if already sorted to avoid O(N log N) sort
+    let isSorted = true;
+    for (let i = 0; i < keyframes.length - 1; i++) {
+        if (keyframes[i].time > keyframes[i + 1].time) {
+            isSorted = false;
+            break;
+        }
+    }
+    const sorted = isSorted ? keyframes : [...keyframes].sort((a, b) => a.time - b.time);
 
     // Before first keyframe
     if (time <= sorted[0].time) {
@@ -168,10 +175,13 @@ export function interpolateKeyframes<T = unknown>(
         return sorted[sorted.length - 1].value;
     }
 
-    // Find the two surrounding keyframes
-    for (let i = 0; i < sorted.length - 1; i++) {
-        const kf0 = sorted[i];
-        const kf1 = sorted[i + 1];
+    // Binary search for the two surrounding keyframes
+    let low = 0;
+    let high = sorted.length - 2;
+    while (low <= high) {
+        const mid = (low + high) >> 1;
+        const kf0 = sorted[mid];
+        const kf1 = sorted[mid + 1];
 
         if (time >= kf0.time && time <= kf1.time) {
             const duration = kf1.time - kf0.time;
@@ -182,6 +192,12 @@ export function interpolateKeyframes<T = unknown>(
             const easedT = easingFn(linearT);
 
             return interpolateValue(kf0.value, kf1.value, easedT);
+        }
+
+        if (time < kf0.time) {
+            high = mid - 1;
+        } else {
+            low = mid + 1;
         }
     }
 
