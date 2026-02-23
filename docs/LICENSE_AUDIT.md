@@ -1,6 +1,6 @@
 # License Audit
 
-**Date:** 2025-05-18
+**Date:** 2026-02-23
 **Auditor:** Jules (License Auditor)
 
 ## Summary
@@ -23,41 +23,46 @@ This document lists all dependencies used in the project and their licenses. It 
 
 The following dependencies were audited:
 
-| Package | License |
-| :--- | :--- |
-| `turbo` | MPL-2.0 |
-| `typescript` | Apache-2.0 |
-| `@nomicfoundation/hardhat-toolbox` | MIT |
-| `@openzeppelin/contracts` | MIT |
-| `hardhat` | MIT |
-| `react` | MIT |
-| `react-dom` | MIT |
-| `@types/react` | MIT |
-| `@types/react-dom` | MIT |
-| `vite` | MIT |
-| `vitest` | MIT |
-| `@react-three/drei` | MIT |
-| `@react-three/fiber` | MIT |
-| `immer` | MIT |
-| `three` | MIT |
-| `tone` | MIT |
-| `uuid` | MIT |
-| `zod` | MIT |
-| `zustand` | MIT |
-| `@types/three` | MIT |
-| `@types/uuid` | MIT |
-| `lucide-react` | ISC |
-| `clsx` | MIT |
-| `tailwind-merge` | MIT |
-| `@tailwindcss/postcss` | MIT |
-| `@vitejs/plugin-react` | MIT |
-| `tailwindcss` | MIT |
-| `next` | MIT |
+| Dependency | License | Flag | Used In |
+| --- | --- | --- | --- |
+| @nomicfoundation/hardhat-toolbox | MIT |  | @Animatica/contracts |
+| @openzeppelin/contracts | MIT |  | @Animatica/contracts |
+| @react-three/drei | MIT |  | @Animatica/engine |
+| @react-three/fiber | MIT |  | @Animatica/editor, @Animatica/engine, @Animatica/web |
+| @tailwindcss/postcss | MIT |  | @Animatica/editor |
+| @testing-library/dom | MIT |  | @Animatica/web |
+| @testing-library/react | MIT |  | @Animatica/editor, @Animatica/engine, @Animatica/web |
+| @types/react | MIT |  | @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web |
+| @types/react-dom | MIT |  | @Animatica/editor, @Animatica/platform, @Animatica/web |
+| @types/three | MIT |  | @Animatica/engine |
+| @types/uuid | MIT |  | @Animatica/engine |
+| @vitejs/plugin-react | MIT |  | @Animatica/editor |
+| clsx | MIT |  | @Animatica/editor |
+| hardhat | MIT |  | @Animatica/contracts |
+| immer | MIT |  | @Animatica/engine |
+| jsdom | MIT |  | @Animatica/editor, @Animatica/engine, @Animatica/web |
+| lucide-react | ISC | ⚠️ Non-MIT | @Animatica/editor, @Animatica/web |
+| next | MIT |  | @Animatica/web |
+| react | MIT |  | @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web |
+| react-dom | MIT |  | @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web |
+| tailwind-merge | MIT |  | @Animatica/editor |
+| tailwindcss | MIT |  | @Animatica/editor |
+| three | MIT |  | @Animatica/editor, @Animatica/engine, @Animatica/web |
+| tone | MIT |  | @Animatica/engine |
+| turbo | MIT |  | Animatica |
+| typescript | Apache-2.0 | ⚠️ Non-MIT | @Animatica/contracts, @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web, Animatica |
+| uuid | MIT |  | @Animatica/engine |
+| vite | MIT |  | @Animatica/editor, @Animatica/engine, @Animatica/platform |
+| vitest | MIT |  | @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web |
+| zod | MIT |  | @Animatica/engine |
+| zundo | MIT |  | @Animatica/engine |
+| zustand | MIT |  | @Animatica/engine |
+
 
 ## Flagged Licenses (Non-MIT/Apache-2.0)
 
-- **`turbo`**: MPL-2.0 (Mozilla Public License 2.0).
-- **`lucide-react`**: ISC (Generally compatible with MIT/Apache, but flagged for review as requested).
+- **`lucide-react`**: ISC
+- **`typescript`**: Apache-2.0
 
 ## Missing Licenses
 
