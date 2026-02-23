@@ -29,3 +29,7 @@ export { importScript, validateScript, tryImportScript } from './importer/script
 
 // === AI ===
 export { getAiPrompt, PROMPT_STYLES } from './ai/promptTemplates';
+
+// === CONFIG ===
+export { FeatureFlagProvider, useFeatureFlag, getFeatureFlags } from './config/featureFlags';
+export type { FeatureFlags } from './config/featureFlags';

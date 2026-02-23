@@ -55,7 +55,6 @@
 - [ROLE: ci-guardian] Verify CI pipeline runs correctly, add caching for pnpm
 - [ROLE: dependency-updater] Check for outdated dependencies, update minor/patch versions
 - [ROLE: supabase-guardian] Verify database schema matches TypeScript types
-- [ROLE: feature-flag-manager] Create feature flag system in `packages/engine/src/config/featureFlags.ts`
 
 ## Documentation Tasks
 
