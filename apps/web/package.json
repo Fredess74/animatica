@@ -6,22 +6,28 @@
         "dev": "next dev",
         "build": "next build",
         "start": "next start",
+        "test": "vitest run --environment jsdom",
         "lint": "next lint",
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "@Animatica/engine": "workspace:*",
         "@Animatica/editor": "workspace:*",
+        "@Animatica/engine": "workspace:*",
         "@Animatica/platform": "workspace:*",
         "@react-three/fiber": "^9.5.0",
+        "lucide-react": "^0.563.0",
         "next": "^15.0.0",
         "react": "^19.2.0",
         "react-dom": "^19.2.0",
         "three": "^0.182.0"
     },
     "devDependencies": {
+        "@testing-library/dom": "^10.4.1",
+        "@testing-library/react": "^16.3.2",
         "@types/react": "^19.2.7",
         "@types/react-dom": "^19.2.3",
-        "typescript": "~5.9.3"
+        "jsdom": "^28.1.0",
+        "typescript": "~5.9.3",
+        "vitest": "^4.0.18"
     }
 }
