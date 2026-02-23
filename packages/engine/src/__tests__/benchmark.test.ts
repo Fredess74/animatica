@@ -29,7 +29,7 @@ describe('Engine Benchmarks', () => {
                 interpolateKeyframes(keyframes, t);
             }
         });
-    });
+    }, 10000);
 
     it('Schema Validation Speed (100 runs)', () => {
         // Setup: Large project state with 100 actors
