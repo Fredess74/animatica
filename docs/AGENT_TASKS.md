@@ -67,7 +67,6 @@
 
 ## Cleanup Tasks
 
-- [ROLE: i18n-preparer] Extract hardcoded strings to translation keys
 - [ROLE: license-auditor] Verify all dependencies have compatible licenses
 - [ROLE: bundle-watcher] Check bundle sizes, suggest tree-shaking opportunities
 - [ROLE: release-preparer] Verify all packages have consistent versions, README is accurate

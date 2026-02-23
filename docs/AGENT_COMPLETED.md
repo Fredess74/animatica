@@ -12,3 +12,4 @@
 - [DONE] [engine-scene-dev] [2026-02-23] Add CharacterRenderer placeholder to packages/engine/src/scene/renderers/
 - [DONE] [editor-style-polisher] [2026-02-23] Add CSS for editor components (panels, timeline, modals) matching design-tokens.css
 - [DONE] [editor-test-writer] [2026-02-23] Write tests for AssetLibrary, PropertiesPanel, TimelinePanel
+- [DONE] [i18n-preparer] [2026-02-23] Extract hardcoded strings to translation keys in editor package

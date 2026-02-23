@@ -1,0 +1,25 @@
+{
+  "timeline": {
+    "stop": "Stop",
+    "pause": "Pause",
+    "play": "Play",
+    "addKeyframe": "Add Keyframe",
+    "duration": "Duration",
+    "selectedActor": "Selected Actor",
+    "selectActorPrompt": "Select an actor to see its tracks",
+    "seconds": "{{count}}s"
+  },
+  "export": {
+    "title": "Export Video",
+    "resolution": "Resolution",
+    "frameRate": "Frame Rate",
+    "format": "Format",
+    "success": "Export completed successfully!",
+    "cancelled": "Export cancelled",
+    "cancel": "Cancel",
+    "close": "Close",
+    "startExport": "Export {{format}}",
+    "starting": "Starting {{resolution}} @ {{fps}}fps export...",
+    "fpsSuffix": "{{count}} fps"
+  }
+}
