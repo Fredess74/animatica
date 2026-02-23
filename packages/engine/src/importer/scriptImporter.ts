@@ -7,6 +7,9 @@
 import { ProjectStateSchema } from '../schemas/scene.schema';
 import type { ProjectState, ValidationResult } from '../types';
 
+/**
+ * Maximum allowed size for a script file (10MB).
+ */
 export const MAX_SCRIPT_SIZE = 10 * 1024 * 1024; // 10MB
 
 /**

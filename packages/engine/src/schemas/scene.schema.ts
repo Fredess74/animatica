@@ -13,24 +13,39 @@ import {
 
 // ---- Timeline ----
 
+/**
+ * Zod schema for easing function types.
+ */
 export const EasingTypeSchema = z.enum([
     'linear', 'easeIn', 'easeOut', 'easeInOut', 'step',
 ]);
 
+/**
+ * Zod schema for a single animation keyframe.
+ */
 export const KeyframeSchema = z.object({
     time: z.number().min(0),
     value: z.unknown(),
     easing: EasingTypeSchema.optional(),
 });
 
+/**
+ * Zod schema for an animation track targeting an actor property.
+ */
 export const AnimationTrackSchema = z.object({
     targetId: UUIDSchema,
     property: z.string().min(1),
     keyframes: z.array(KeyframeSchema).min(1),
 });
 
+/**
+ * Zod schema for camera transition types.
+ */
 export const TransitionTypeSchema = z.enum(['cut', 'dissolve', 'fade']);
 
+/**
+ * Zod schema for a camera cut event.
+ */
 export const CameraCutSchema = z.object({
     id: UUIDSchema,
     time: z.number().min(0),
@@ -39,6 +54,9 @@ export const CameraCutSchema = z.object({
     transitionDuration: z.number().min(0),
 });
 
+/**
+ * Zod schema for the complete scene timeline.
+ */
 export const TimelineSchema = z.object({
     duration: z.number().positive(),
     cameraTrack: z.array(CameraCutSchema),
@@ -47,19 +65,31 @@ export const TimelineSchema = z.object({
 
 // ---- Environment ----
 
+/**
+ * Zod schema for weather types.
+ */
 export const WeatherTypeSchema = z.enum(['none', 'rain', 'snow', 'dust']);
 
+/**
+ * Zod schema for weather configuration.
+ */
 export const WeatherSchema = z.object({
     type: WeatherTypeSchema,
     intensity: z.number().min(0).max(1),
 });
 
+/**
+ * Zod schema for fog configuration.
+ */
 export const FogSchema = z.object({
     color: ColorSchema,
     near: z.number().min(0),
     far: z.number().positive(),
 });
 
+/**
+ * Zod schema for the scene environment settings.
+ */
 export const EnvironmentSchema = z.object({
     ambientLight: z.object({
         intensity: z.number().min(0),
@@ -77,6 +107,9 @@ export const EnvironmentSchema = z.object({
 
 // ---- Project ----
 
+/**
+ * Zod schema for project metadata.
+ */
 export const ProjectMetaSchema = z.object({
     title: z.string().min(1),
     description: z.string().optional(),
@@ -84,6 +117,10 @@ export const ProjectMetaSchema = z.object({
     author: z.string().optional(),
 });
 
+/**
+ * Zod schema for the complete ProjectState.
+ * Can be used to validate an entire scene file.
+ */
 export const ProjectStateSchema = z.object({
     meta: ProjectMetaSchema,
     environment: EnvironmentSchema,

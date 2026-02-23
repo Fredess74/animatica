@@ -3,7 +3,7 @@
  * Provides a React hook that manages the animation loop, time tracking,
  * and camera cuts for the scene.
  *
- * @module @animatica/engine/playback/PlaybackController
+ * @module @animatica/engine/playback
  */
 import { useCallback, useEffect, useRef } from 'react';
 import { useSceneStore } from '../store/sceneStore';
@@ -157,6 +157,7 @@ export function usePlayback(options: PlaybackOptions = {}): PlaybackControls {
 
     /**
      * Seeks to a specific time in seconds.
+     * @param time The time in seconds to seek to.
      */
     const seek = useCallback(
         (time: number) => {
@@ -179,6 +180,7 @@ export function usePlayback(options: PlaybackOptions = {}): PlaybackControls {
 
     /**
      * Sets the playback speed multiplier.
+     * @param speed Speed multiplier (e.g. 1.0 for normal speed).
      */
     const setSpeed = useCallback((speed: number) => {
         speedRef.current = Math.max(0.1, Math.min(speed, 10));

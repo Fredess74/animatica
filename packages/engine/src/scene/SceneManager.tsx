@@ -3,7 +3,7 @@
  * Reads actors from the store and delegates rendering to the appropriate component.
  * Handles environment setup (ambient light, sun, sky, fog).
  *
- * @module @animatica/engine/scene/SceneManager
+ * @module @animatica/engine/scene
  */
 import React, { useMemo } from 'react';
 import { useSceneStore } from '../store/sceneStore';
@@ -21,6 +21,9 @@ import type {
     CameraCut,
 } from '../types';
 
+/**
+ * Props for the SceneManager component.
+ */
 interface SceneManagerProps {
     /** ID of the currently selected actor in the editor. */
     selectedActorId?: string;
@@ -95,6 +98,7 @@ function applyAnimationToActor(
  * and renders everything using the appropriate renderer components.
  *
  * @component
+ * @param props {@link SceneManagerProps}
  * @example
  * ```tsx
  * <Canvas>

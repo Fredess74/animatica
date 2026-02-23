@@ -132,6 +132,11 @@ const SCHEMA_DEFINITION = `
  * @param userIdea The user's text description of the scene.
  * @param style The cinematic style to apply.
  * @returns A complete prompt string ready to be sent to an LLM.
+ *
+ * @example
+ * ```ts
+ * const prompt = getAiPrompt("A cowboy duel at high noon", "Western");
+ * ```
  */
 export function getAiPrompt(userIdea: string, style: PromptStyle): string {
   const config = STYLE_PRESETS[style]

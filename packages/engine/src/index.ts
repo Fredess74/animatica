@@ -1,5 +1,11 @@
-// @Animatica/engine — Public API
-// Re-exports all public types, components, schemas, and utilities.
+/**
+ * @Animatica/engine — Public API
+ *
+ * The core engine package for the Animatica animation platform.
+ * Provides types, state management, R3F renderers, and animation utilities.
+ *
+ * @module @animatica/engine
+ */
 
 // === TYPES ===
 export * from './types/index'
@@ -8,16 +14,16 @@ export * from './types/index'
 export * from './schemas/index'
 
 // === STORE ===
-export { useSceneStore, getActorById, getActiveActors, getCurrentTime } from './store/sceneStore';
+export { useSceneStore, getActorById, getActiveActors, getCurrentTime, useActorById, useSelectedActor, useActorsByType, useActorList } from './store/sceneStore';
 
 // === COMPONENTS (R3F) ===
 export { PrimitiveRenderer } from './scene/renderers/PrimitiveRenderer'
 export { LightRenderer } from './scene/renderers/LightRenderer'
 export { CameraRenderer } from './scene/renderers/CameraRenderer'
 export { CharacterRenderer } from './scene/renderers/CharacterRenderer'
-// export { SceneManager } from './scene/SceneManager'
 export { SceneManager } from './scene/SceneManager'
-// export { PlaybackController } from './playback/PlaybackController'
+
+// === PLAYBACK ===
 export { usePlayback } from './playback/PlaybackController'
 
 // === ANIMATION ===
