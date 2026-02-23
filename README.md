@@ -4,6 +4,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![Node](https://img.shields.io/badge/Node-20%2B-green.svg)](package.json)
+[![pnpm](https://img.shields.io/badge/pnpm-10.28.0-orange.svg)](package.json)
 
 ---
 
@@ -21,15 +23,27 @@ Animatica is an open-source platform that democratizes animation. People write f
 | Feature | Description |
 |---------|------------|
 | 🎮 **3D/2D Animation Engine** | Browser-based engine with Three.js (3D) and PixiJS (2D) — PBR, cel-shading, pixel art |
-| 🤖 **AI Scene Generation** | Describe your scene in text → AI generates complete animated scenes |
+| 🤖 **AI Scene Generation** | Describe your scene in text → AI generates complete animated scenes using JSON-based prompts |
 | 🎭 **Character System** | Humanoid characters with skeletal animation, facial expressions, clothing, IK |
 | 📹 **Camera & Timeline** | Professional keyframe animation, multi-camera system, easing curves |
 | 🌍 **Environment Builder** | Create any environment — cities, forests, space, interiors |
+| 🛠️ **Visual Editor** | Comprehensive editor with Asset Library, Properties Panel, and Timeline |
+| ⚡ **State Management** | High-performance state syncing using Zustand and Immer |
 | 🎵 **Audio** | TTS voice acting, AI music, spatial SFX, lip-sync |
 | 🤝 **Real-time Collaboration** | Google Docs-style sync with role-based permissions |
 | 🏪 **Asset Marketplace** | Buy, sell, or rent 3D/2D assets — earn royalties per view |
 | 💰 **Crypto Monetization** | Donation pool → 70% creator, 20% creator fund, 10% platform |
 | 🌐 **Global Payments** | Any currency (crypto + fiat), anyone, anywhere |
+
+## Tech Stack
+
+| Layer | Technologies |
+|-------|--------------|
+| **Frontend** | [Next.js 15](https://nextjs.org/), [React 19](https://react.dev/), [Tailwind CSS](https://tailwindcss.com/) |
+| **3D Engine** | [Three.js](https://threejs.org/), [React Three Fiber](https://docs.pmnd.rs/react-three-fiber/), [Drei](https://github.com/pmndrs/drei) |
+| **State** | [Zustand](https://github.com/pmndrs/zustand), [Immer](https://immerjs.github.io/immer/), [Zod](https://zod.dev/) |
+| **Build** | [Vite](https://vitejs.dev/), [Turbo](https://turbo.build/), [pnpm](https://pnpm.io/) |
+| **Backend** | [Supabase](https://supabase.com/) (PostgreSQL), [Node.js](https://nodejs.org/) |
 
 ## Architecture
 
@@ -54,14 +68,14 @@ Animatica/
 git clone https://github.com/YOUR_ORG/Animatica.git
 cd Animatica
 
-# Install
-npm install
+# Install (using pnpm)
+pnpm install
 
-# Run editor
-npm run dev --workspace=packages/editor
+# Run editor (isolated workspace)
+pnpm --filter @Animatica/editor dev
 
 # Run full app
-npm run dev --workspace=apps/web
+pnpm dev
 ```
 
 ## Documentation
