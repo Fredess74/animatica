@@ -15,3 +15,4 @@
 - [DONE] [editor-test-writer] [2026-02-23] Write tests for AssetLibrary, PropertiesPanel, TimelinePanel
 - [DONE] [i18n-preparer] [2026-02-23] Extract hardcoded strings to translation keys in editor package
 - [DONE] [type-auditor] [2026-02-23] Scan all .ts files for any type, type assertions, missing return types in packages/engine
+- [DONE] [changelog-writer] [2026-02-23] Update CHANGELOG.md with recent changes
