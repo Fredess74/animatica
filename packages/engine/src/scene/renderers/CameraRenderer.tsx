@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import * as THREE from 'three'
+import { CameraHelper, PerspectiveCamera as ThreePerspectiveCamera } from 'three'
 import { PerspectiveCamera, useHelper } from '@react-three/drei'
 import { CameraActor } from '../../types'
 
@@ -27,14 +27,14 @@ export const CameraRenderer: React.FC<CameraRendererProps> = ({
   isActive = false,
   showHelper = true,
 }) => {
-  const camRef = useRef<THREE.PerspectiveCamera>(null)
+  const camRef = useRef<ThreePerspectiveCamera>(null)
   const { transform, visible, properties } = actor
   const { fov, near, far } = properties
 
   // Show helper only if visible, helper is requested, AND it's NOT the active camera
   useHelper(
     showHelper && visible && !isActive ? (camRef as any) : null,
-    THREE.CameraHelper
+    CameraHelper
   )
 
   if (!visible) return null

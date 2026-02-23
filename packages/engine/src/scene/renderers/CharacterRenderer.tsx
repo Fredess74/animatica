@@ -1,5 +1,5 @@
 import { forwardRef } from 'react'
-import * as THREE from 'three'
+import { Group } from 'three'
 import { ThreeEvent } from '@react-three/fiber'
 import { Edges } from '@react-three/drei'
 import { CharacterActor } from '../../types'
@@ -24,7 +24,7 @@ interface CharacterRendererProps {
  * <CharacterRenderer actor={myCharacterActor} isSelected={true} />
  * ```
  */
-export const CharacterRenderer = forwardRef<THREE.Group, CharacterRendererProps>(({
+export const CharacterRenderer = forwardRef<Group, CharacterRendererProps>(({
   actor,
   isSelected = false,
   onClick,

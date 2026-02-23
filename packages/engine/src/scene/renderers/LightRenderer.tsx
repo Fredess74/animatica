@@ -1,5 +1,14 @@
 import React, { useRef, useMemo } from 'react'
-import * as THREE from 'three'
+import {
+  Object3D,
+  PointLightHelper,
+  SpotLightHelper,
+  DirectionalLightHelper,
+  Light,
+  PointLight,
+  SpotLight,
+  DirectionalLight,
+} from 'three'
 import { useHelper } from '@react-three/drei'
 import { LightActor } from '../../types'
 
@@ -25,11 +34,11 @@ export const LightRenderer: React.FC<LightRendererProps> = ({
   showHelper = false,
 }) => {
   // Use a union type for the ref to satisfy all light types and MutableRefObject
-  const lightRef = useRef<THREE.Light | null>(null)
+  const lightRef = useRef<Light | null>(null)
 
   // We use a dedicated target object for Spot and Directional lights
   // Placed at (0,0,-1) in local space, so rotating the parent group aims the light.
-  const target = useMemo(() => new THREE.Object3D(), [])
+  const target = useMemo(() => new Object3D(), [])
 
   const { transform, visible, properties } = actor
   const { lightType, intensity, color, castShadow } = properties
@@ -61,7 +70,7 @@ export const LightRenderer: React.FC<LightRendererProps> = ({
 
       {lightType === 'point' && (
         <pointLight
-          ref={lightRef as React.Ref<THREE.PointLight>}
+          ref={lightRef as React.Ref<PointLight>}
           intensity={intensity}
           color={color}
           castShadow={castShadow}
@@ -69,7 +78,7 @@ export const LightRenderer: React.FC<LightRendererProps> = ({
       )}
       {lightType === 'spot' && (
         <spotLight
-          ref={lightRef as React.Ref<THREE.SpotLight>}
+          ref={lightRef as React.Ref<SpotLight>}
           intensity={intensity}
           color={color}
           castShadow={castShadow}
@@ -79,7 +88,7 @@ export const LightRenderer: React.FC<LightRendererProps> = ({
       )}
       {lightType === 'directional' && (
         <directionalLight
-          ref={lightRef as React.Ref<THREE.DirectionalLight>}
+          ref={lightRef as React.Ref<DirectionalLight>}
           intensity={intensity}
           color={color}
           castShadow={castShadow}
@@ -93,11 +102,11 @@ export const LightRenderer: React.FC<LightRendererProps> = ({
 function getHelperClass(type: string) {
   switch (type) {
     case 'point':
-      return THREE.PointLightHelper
+      return PointLightHelper
     case 'spot':
-      return THREE.SpotLightHelper
+      return SpotLightHelper
     case 'directional':
-      return THREE.DirectionalLightHelper
+      return DirectionalLightHelper
     default:
       return null
   }
