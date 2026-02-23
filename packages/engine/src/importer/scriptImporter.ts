@@ -4,7 +4,7 @@
  *
  * @module @animatica/engine/importer
  */
-import { ProjectStateSchema } from '../schemas/scene.schema';
+import { ProjectStateSchema } from './schemas/project';
 import type { ProjectState, ValidationResult } from '../types';
 
 export const MAX_SCRIPT_SIZE = 10 * 1024 * 1024; // 10MB

@@ -1,6 +1,6 @@
 import { describe, it } from 'vitest';
 import { interpolateKeyframes } from '../animation/interpolate';
-import { ProjectStateSchema } from '../schemas';
+import { ProjectStateSchema } from '../importer/schemas';
 import { useSceneStore } from '../store/sceneStore';
 import type { Keyframe, ProjectState, Actor, PrimitiveActor } from '../types';
 
