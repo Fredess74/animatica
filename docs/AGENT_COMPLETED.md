@@ -9,3 +9,4 @@
 ## Completed Log
 
 <!-- Agents append completed tasks below this line -->
+- [DONE] [engine-scene-dev] [2026-02-23] Add CharacterRenderer placeholder to packages/engine/src/scene/renderers/

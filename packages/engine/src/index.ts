@@ -14,6 +14,7 @@ export { useSceneStore, getActorById, getActiveActors, getCurrentTime } from './
 export { PrimitiveRenderer } from './scene/renderers/PrimitiveRenderer'
 export { LightRenderer } from './scene/renderers/LightRenderer'
 export { CameraRenderer } from './scene/renderers/CameraRenderer'
+export { CharacterRenderer } from './scene/renderers/CharacterRenderer'
 // export { SceneManager } from './scene/SceneManager'
 export { SceneManager } from './scene/SceneManager'
 // export { PlaybackController } from './playback/PlaybackController'

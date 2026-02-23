@@ -11,11 +11,13 @@ import { evaluateTracksAtTime } from '../animation/interpolate';
 import { PrimitiveRenderer } from './renderers/PrimitiveRenderer';
 import { LightRenderer } from './renderers/LightRenderer';
 import { CameraRenderer } from './renderers/CameraRenderer';
+import { CharacterRenderer } from './renderers/CharacterRenderer';
 import type {
     Actor,
     PrimitiveActor,
     LightActor,
     CameraActor,
+    CharacterActor,
     CameraCut,
 } from '../types';
 
@@ -153,9 +155,7 @@ export const SceneManager: React.FC<SceneManagerProps> = ({
             {environment.fog && (
                 <fog
                     attach="fog"
-                    color={environment.fog.color}
-                    near={environment.fog.near}
-                    far={environment.fog.far}
+                    args={[environment.fog.color, environment.fog.near, environment.fog.far]}
                 />
             )}
 
@@ -192,8 +192,14 @@ export const SceneManager: React.FC<SceneManagerProps> = ({
                         );
 
                     case 'character':
-                        // TODO: CharacterRenderer not yet implemented
-                        return null;
+                        return (
+                            <CharacterRenderer
+                                key={actor.id}
+                                actor={actor as CharacterActor}
+                                isSelected={actor.id === selectedActorId}
+                                onClick={() => onActorSelect?.(actor.id)}
+                            />
+                        );
 
                     case 'speaker':
                         // TODO: SpeakerRenderer not yet implemented
