@@ -15,7 +15,9 @@ export { PrimitiveRenderer } from './scene/renderers/PrimitiveRenderer'
 export { LightRenderer } from './scene/renderers/LightRenderer'
 export { CameraRenderer } from './scene/renderers/CameraRenderer'
 // export { SceneManager } from './scene/SceneManager'
+export { SceneManager } from './scene/SceneManager'
 // export { PlaybackController } from './playback/PlaybackController'
+export { usePlayback } from './playback/PlaybackController'
 
 // === ANIMATION ===
 export * as Easing from './animation/easing';
