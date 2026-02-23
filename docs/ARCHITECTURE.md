@@ -11,7 +11,7 @@ Animatica/
 ├── tsconfig.base.json        # Shared TS config
 │
 ├── packages/
-│   ├── engine/               # 🎮 Animation engine (Three.js + future PixiJS)
+│   ├── engine/               # 🎮 Animation engine (Three.js)
 │   ├── editor/               # 🖥️ Editor UI (React components)
 │   ├── platform/             # 🌐 Social platform (feeds, profiles, video)
 │   └── contracts/            # 💰 Solidity smart contracts
@@ -32,7 +32,6 @@ Animatica/
 | **Framework** | Next.js 15 (App Router) | SSR, API routes, edge functions |
 | **UI** | React 19 + TypeScript 5.9 | Strict mode, concurrent features |
 | **3D Engine** | Three.js 0.182 + React Three Fiber 9 | Mature, huge ecosystem |
-| **2D Engine** | PixiJS 8 (Phase 3) | Best browser 2D renderer |
 | **State** | Zustand 5 + Immer | Immutable, sliced, testable |
 | **Validation** | Zod 4 | Runtime type safety for JSON |
 | **Styling** | Tailwind CSS v4 | Utility-first, consistent |
@@ -45,9 +44,6 @@ Animatica/
 | **CDN/Video** | Cloudflare Stream or Mux | Adaptive bitrate, global CDN |
 | **Hosting** | Vercel | Next.js-native, edge functions |
 | **CI/CD** | GitHub Actions | PR checks, deploy previews |
-| **Blockchain** | Base (Coinbase L2) or Avalanche C-Chain | Low gas, EVM-compatible |
-| **Wallet** | wagmi 2 + RainbowKit | Best-in-class wallet UX |
-| **Fiat** | Stripe + MoonPay | Cards + crypto on-ramp |
 
 ---
 
@@ -67,7 +63,7 @@ packages/engine/src/
 │   ├── actor.schema.ts
 │   └── scene.schema.ts
 ├── store/
-│   └── sceneStore.ts           # Main Zustand store (Immer)
+│   └── sceneStore.ts           # Main Zustand store (Immer + Persist + Zundo)
 ├── scene/
 │   ├── SceneManager.tsx        # Root scene graph
 │   ├── SceneObject.tsx         # Actor → renderer dispatcher
@@ -77,30 +73,16 @@ packages/engine/src/
 │       ├── LightRenderer.tsx
 │       └── CameraRenderer.tsx
 ├── animation/
-│   ├── PlaybackController.tsx  # requestAnimationFrame loop
 │   ├── interpolate.ts          # Interpolation logic
 │   └── easing.ts               # Easing functions
+├── playback/
+│   └── PlaybackController.ts   # requestAnimationFrame loop
 ├── ai/
 │   └── promptTemplates.ts      # Static prompt for LLM
-├── characters/
-│   ├── Humanoid.tsx            # GLB-based character
-│   ├── BoneController.ts       # Per-bone rotation
-│   ├── MorphTargets.ts         # Facial expressions
-│   └── ClothingSystem.ts       # Procedural clothing
-├── physics/
-│   └── PhysicsEngine.ts        # Basic gravity + collisions (Rapier)
-├── effects/
-│   ├── WeatherEffects.tsx      # Rain, snow, dust
-│   ├── ParticleSystem.tsx      # Fire, smoke, magic
-│   └── PostProcessing.tsx      # Bloom, vignette, DOF
-├── audio/
-│   └── AudioEngine.tsx         # Tone.js spatial audio
-├── export/
-│   └── VideoExporter.tsx       # WebCodecs → MP4
-├── importer/
-│   └── scriptImporter.ts       # JSON → project state
-└── assets/
-    └── assetLoader.ts          # GLB/FBX/image loader
+├── config/
+│   └── featureFlags.ts         # Feature flag system
+└── importer/
+    └── scriptImporter.ts       # JSON → project state
 ```
 
 **Public API:**
@@ -108,13 +90,15 @@ packages/engine/src/
 ```typescript
 // Components (for R3F Canvas)
 export { PrimitiveRenderer } from './scene/renderers/PrimitiveRenderer'
-// export { SceneManager } from './scene/SceneManager'
-// export { PlaybackController } from './animation/PlaybackController'
-// export { AudioEngine } from './audio/AudioEngine'
-// export { VideoExporter } from './export/VideoExporter'
+export { LightRenderer } from './scene/renderers/LightRenderer'
+export { CameraRenderer } from './scene/renderers/CameraRenderer'
+export { CharacterRenderer } from './scene/renderers/CharacterRenderer'
+export { SceneManager } from './scene/SceneManager'
 
-// Store
+// Hooks
+export { usePlayback } from './playback/PlaybackController'
 export { useSceneStore, getActorById, getActiveActors, getCurrentTime } from './store/sceneStore';
+export { useFeatureFlag, FeatureFlagProvider } from './config/featureFlags';
 
 // Utils
 export { importScript, validateScript, tryImportScript } from './importer/scriptImporter'
@@ -144,25 +128,30 @@ packages/editor/src/
 │   ├── AssetLibrary.tsx          # Left: add actors/props
 │   ├── PropertiesPanel.tsx       # Right: transform, materials
 │   ├── TimelinePanel.tsx         # Bottom: keyframes + tracks
-│   ├── ViewportPanel.tsx         # Center: Canvas wrapper
-│   └── CollaboratorsPanel.tsx    # Floating: who's editing
 ├── modals/
 │   ├── ScriptConsole.tsx         # JSON import + AI prompt
 │   ├── ExportModal.tsx           # Export settings
-│   └── AssetBrowser.tsx          # Browse marketplace assets
-├── toolbar/
-│   ├── ModeSelector.tsx          # Director/Writer/Animator mode
-│   ├── ViewToggle.tsx            # Editor/Camera/Preview view
-│   └── Header.tsx                # Top bar
-├── shared/
-│   ├── Button.tsx
-│   ├── Slider.tsx
-│   ├── ColorPicker.tsx
-│   ├── Tooltip.tsx
-│   └── ErrorBoundary.tsx
+├── components/
+│   ├── Toast.tsx                 # Toast notifications
+│   └── ToastContext.tsx          # Context provider
 └── hooks/
-    ├── useKeyboardShortcuts.ts
-    └── useCollaboration.ts       # Yjs integration
+    └── useKeyboardShortcuts.ts   # Hotkey manager
+```
+
+**Public API:**
+
+```typescript
+// Layouts
+export { EditorLayout } from './layouts/EditorLayout';
+
+// Panels
+export { AssetLibrary } from './panels/AssetLibrary';
+export { PropertiesPanel } from './panels/PropertiesPanel';
+export { TimelinePanel } from './panels/TimelinePanel';
+
+// Modals
+export { ScriptConsole } from './modals/ScriptConsole';
+export { ExportModal } from './modals/ExportModal';
 ```
 
 ### `@Animatica/platform`
@@ -211,6 +200,77 @@ packages/contracts/
 ├── scripts/
 │   └── deploy.ts
 └── hardhat.config.ts
+```
+
+---
+
+## Component Diagrams
+
+### Engine Data Flow
+
+The Engine uses a strict unidirectional data flow where the Store is the single source of truth.
+
+```mermaid
+graph TD
+    Store[Zustand Store] -->|State| SM[SceneManager]
+    SM -->|Map Actors| SO[SceneObject]
+    SO -->|Dispatch| PR[PrimitiveRenderer]
+    SO -->|Dispatch| LR[LightRenderer]
+    SO -->|Dispatch| CR[CameraRenderer]
+    SO -->|Dispatch| CH[CharacterRenderer]
+
+    subgraph Renderers
+    PR
+    LR
+    CR
+    CH
+    end
+```
+
+### Editor-Engine Relationship
+
+Editor panels read state from the Store and dispatch actions to update it. They do not communicate directly with the Canvas or Renderers.
+
+```mermaid
+graph LR
+    subgraph Editor
+    AL[AssetLibrary]
+    PP[PropertiesPanel]
+    TP[TimelinePanel]
+    end
+
+    subgraph Engine
+    Store[SceneStore]
+    end
+
+    AL -->|addActor| Store
+    PP -->|updateActor| Store
+    TP -->|setTimeline| Store
+
+    Store -.->|useSceneStore| AL
+    Store -.->|useSelectedActor| PP
+    Store -.->|useSceneStore| TP
+```
+
+### Playback Loop
+
+The playback system runs on `requestAnimationFrame` via `useFrame` to ensure smooth animation independent of React render cycles.
+
+```mermaid
+sequenceDiagram
+    participant RAF as requestAnimationFrame
+    participant PC as PlaybackController
+    participant KE as KeyframeEngine
+    participant Store as SceneStore
+
+    loop Every Frame
+        RAF->>PC: tick(delta)
+        PC->>PC: advanceTime(delta)
+        PC->>KE: evaluateTracksAtTime(time)
+        KE-->>PC: Animated Values
+        PC->>Store: updateActor(id, values)
+        Note over Store: Transient update (no history)
+    end
 ```
 
 ---
