@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react'
+import { forwardRef } from 'react'
 import * as THREE from 'three'
 import { ThreeEvent } from '@react-three/fiber'
 import { Edges } from '@react-three/drei'
@@ -29,7 +29,7 @@ export const CharacterRenderer = forwardRef<THREE.Group, CharacterRendererProps>
   isSelected = false,
   onClick,
 }, ref) => {
-  const { transform, visible, clothing } = actor
+  const { transform, visible } = actor
 
   if (!visible) return null
 

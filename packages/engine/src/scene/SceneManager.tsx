@@ -155,9 +155,7 @@ export const SceneManager: React.FC<SceneManagerProps> = ({
             {environment.fog && (
                 <fog
                     attach="fog"
-                    color={environment.fog.color}
-                    near={environment.fog.near}
-                    far={environment.fog.far}
+                    args={[environment.fog.color, environment.fog.near, environment.fog.far]}
                 />
             )}
 

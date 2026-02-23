@@ -59,19 +59,24 @@ describe('CharacterRenderer', () => {
     const mainMesh = children[0]
     expect(mainMesh.type).toBe('mesh')
 
-    const meshChildren = React.Children.toArray(mainMesh.props.children) as React.ReactElement[]
+    const mainMeshProps = mainMesh.props as any
+    const meshChildren = React.Children.toArray(mainMeshProps.children) as React.ReactElement[]
 
     // Check geometry
     const geometry = meshChildren.find((child) => child.type === 'capsuleGeometry')
     expect(geometry).toBeDefined()
+
+    const geometryProps = geometry?.props as any
     // Check args: radius 0.5, length 1.8
-    expect(geometry?.props.args?.[0]).toBe(0.5)
-    expect(geometry?.props.args?.[1]).toBe(1.8)
+    expect(geometryProps?.args?.[0]).toBe(0.5)
+    expect(geometryProps?.args?.[1]).toBe(1.8)
 
     // Check material
     const material = meshChildren.find((child) => child.type === 'meshStandardMaterial')
     expect(material).toBeDefined()
-    expect(material?.props.color).toBe('#ff00aa') // The placeholder color
+
+    const materialProps = material?.props as any
+    expect(materialProps?.color).toBe('#ff00aa') // The placeholder color
   })
 
   it('renders nothing when visible is false', () => {
@@ -90,6 +95,7 @@ describe('CharacterRenderer', () => {
     // Second child should be the face mesh
     const faceMesh = children[1]
     expect(faceMesh.type).toBe('mesh')
-    expect(faceMesh.props.position?.[2]).toBe(0.4)
+    const faceMeshProps = faceMesh.props as any
+    expect(faceMeshProps?.position?.[2]).toBe(0.4)
   })
 })
