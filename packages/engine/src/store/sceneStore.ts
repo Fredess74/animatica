@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
-import { Actor, Environment, Timeline, ProjectState, ProjectMeta } from '../types';
+import { Actor, Environment, Timeline, ProjectState, ProjectMeta, LoopMode } from '../types';
 
 /**
  * Playback state for the scene.
@@ -12,6 +12,8 @@ interface PlaybackState {
   isPlaying: boolean;
   /** Frame rate for playback (e.g., 24, 30, 60). */
   frameRate: number;
+  /** Playback loop mode. */
+  loopMode: LoopMode;
 }
 
 /**
@@ -51,6 +53,7 @@ const initialTimeline: Timeline = {
   duration: 10,
   cameraTrack: [],
   animationTracks: [],
+  markers: [],
 };
 
 const initialState: ProjectState & { playback: PlaybackState } = {
@@ -59,7 +62,7 @@ const initialState: ProjectState & { playback: PlaybackState } = {
   actors: [],
   timeline: initialTimeline,
   library: { clips: [] },
-  playback: { currentTime: 0, isPlaying: false, frameRate: 24 },
+  playback: { currentTime: 0, isPlaying: false, frameRate: 24, loopMode: 'none' },
 };
 
 /**

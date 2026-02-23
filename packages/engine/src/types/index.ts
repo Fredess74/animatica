@@ -257,6 +257,25 @@ export type Actor = CharacterActor | PrimitiveActor | LightActor | CameraActor |
 // ---- Timeline ----
 
 /**
+ * Supported loop modes for playback.
+ */
+export type LoopMode = 'none' | 'loop' | 'pingpong'
+
+/**
+ * A marker on the timeline.
+ */
+export interface Marker {
+  /** Unique ID for the marker. */
+  id: UUID
+  /** Time of the marker in seconds. */
+  time: number
+  /** Label text for the marker. */
+  label: string
+  /** Color of the marker (hex string). */
+  color?: Color
+}
+
+/**
  * Supported easing functions for animation interpolation.
  */
 export type EasingType = 'linear' | 'easeIn' | 'easeOut' | 'easeInOut' | 'step'
@@ -317,6 +336,8 @@ export interface Timeline {
   cameraTrack: CameraCut[]
   /** Collection of animation tracks for actors. */
   animationTracks: AnimationTrack[]
+  /** List of timeline markers. */
+  markers: Marker[]
 }
 
 // ---- Environment ----

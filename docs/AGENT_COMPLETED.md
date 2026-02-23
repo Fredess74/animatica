@@ -9,3 +9,4 @@
 ## Completed Log
 
 <!-- Agents append completed tasks below this line -->
+- [DONE] [engine-playback-dev] [2026-02-23] Add speed controls and loop modes to PlaybackController
