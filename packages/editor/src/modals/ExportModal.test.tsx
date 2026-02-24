@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+// @ts-ignore
 import React from 'react';
 import { render, screen, fireEvent, act, cleanup } from '@testing-library/react';
 import { ExportModal } from './ExportModal';

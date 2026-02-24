@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+// @ts-ignore
 import React from 'react';
 import { render, screen, act } from '@testing-library/react';
 import { Toast, ToastMessage } from './Toast';

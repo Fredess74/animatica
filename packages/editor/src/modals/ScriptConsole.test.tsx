@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
+// @ts-ignore
 import React from 'react';
-import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react';
+import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import { ScriptConsole } from './ScriptConsole';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 

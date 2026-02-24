@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
+// @ts-ignore
 import React from 'react';
-import { render, screen, fireEvent, cleanup, act } from '@testing-library/react';
+import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import { EditorLayout } from './EditorLayout';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
