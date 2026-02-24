@@ -1,29 +1,46 @@
-# Bundle Size Report - 2025-02-22
+# Bundle Size Report - 2025-05-27
 
-## Package Sizes
+## Overview
+This report analyzes the bundle sizes of the Animatica monorepo packages and applications, identifying areas for optimization.
 
-| Package | Size | Comparison | Notes |
-| :--- | :--- | :--- | :--- |
-| **@Animatica/web** | N/A | N/A | Build Failed (Missing Source Code) |
-| **@Animatica/engine** | 48K | N/A | Initial Audit |
-| **@Animatica/editor** | 12K | N/A | Initial Audit |
-| **@Animatica/platform** | 12K | N/A | Initial Audit |
-| **@Animatica/contracts** | 8K | N/A | Cache Size |
+## Current Bundle Sizes
 
-## Total Size
-**72K** (excluding web)
+### Libraries (Production Build - ESM)
+- **@Animatica/engine**: 41.48 kB (gzip: ~12.57 kB)
+- **@Animatica/editor**: 45.91 kB (gzip: ~10.25 kB)
 
-## Largest Dependencies
-### @Animatica/engine (48K)
-- `dist/index.js`: 24K
-- `dist/index.cjs`: 19K
+### Applications (Next.js Production Build)
+- **@Animatica/web**: 102 kB (First Load JS)
 
-## Changes
-- Initial audit.
-- Fixed build configuration for `packages/editor`, `packages/platform`, and `packages/contracts`.
-- `apps/web` failed to build due to missing source code (`app/` or `pages/`).
+## Analysis
 
-## Suggestions
-- **@Animatica/engine**: Currently very small (48K). Ensure tree-shaking is enabled in consuming apps.
-- **@Animatica/web**: Needs source code to be measurable.
-- **@Animatica/editor** & **@Animatica/platform**: Currently minimal/empty. Monitor size as features are added.
+### 1. Three.js Imports (`packages/engine`)
+We identified several files using `import * as THREE from 'three'`, which can prevent tree-shaking in consumer applications if not handled correctly by bundlers.
+
+**Files using `import * as THREE`:**
+- `src/scene/renderers/LightRenderer.tsx` (Values & Types)
+- `src/scene/renderers/CameraRenderer.tsx` (Values & Types)
+- `src/scene/renderers/PrimitiveRenderer.tsx` (Types only)
+- `src/scene/renderers/CharacterRenderer.tsx` (Types only)
+- `src/scene/renderers/SpeakerRenderer.tsx` (Types only)
+- Test files: `LightRenderer.test.tsx`, `CameraRenderer.test.tsx`
+
+**Optimization Strategy:**
+Replace namespace imports with named imports.
+Example: `import { Object3D, PointLight } from 'three'` instead of `import * as THREE`.
+
+### 2. Tone.js Imports (`packages/engine`)
+Tone.js is a large library. While current usage seems minimal, care must be taken to import only necessary modules. No `import * as Tone` was found, but general usage should be monitored.
+
+### 3. Barrel Exports
+`packages/engine/src/index.ts` uses `export * from './types/index'` and `export * from './schemas/index'`. While convenient, this can obscure dependency graphs.
+Recommend switching to named exports or specific file exports in the future if bundle size increases.
+
+## Action Plan
+1.  **Immediate Fix:** Refactor `import * as THREE` in `LightRenderer.tsx` and `CameraRenderer.tsx` to use named imports.
+2.  **Follow-up:** Refactor `PrimitiveRenderer.tsx`, `CharacterRenderer.tsx`, and `SpeakerRenderer.tsx` similarly.
+3.  **Monitor:** Continue monitoring bundle sizes as features are added.
+
+## Changes in this PR
+- Created this report.
+- Optimized `LightRenderer.tsx` imports.
