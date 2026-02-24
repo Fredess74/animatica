@@ -3,7 +3,7 @@ import { immer } from 'zustand/middleware/immer';
 import { persist } from 'zustand/middleware';
 import { temporal } from 'zundo';
 import { useShallow } from 'zustand/react/shallow';
-import { Actor, Environment, Timeline, ProjectState, ProjectMeta } from '../types';
+import { Actor, Environment, Timeline, ProjectState, ProjectMeta, LoopMode } from '../types';
 
 /**
  * Playback state for the scene.
@@ -15,6 +15,10 @@ export interface PlaybackState {
   isPlaying: boolean;
   /** Frame rate for playback (e.g., 24, 30, 60). */
   frameRate: number;
+  /** Playback speed multiplier (default 1). */
+  speed: number;
+  /** Loop mode for playback. */
+  loopMode: LoopMode;
 }
 
 /**
@@ -58,6 +62,7 @@ const initialTimeline: Timeline = {
   duration: 10,
   cameraTrack: [],
   animationTracks: [],
+  markers: [],
 };
 
 const initialState: ProjectState & { playback: PlaybackState; selectedActorId: string | null } = {
@@ -66,7 +71,7 @@ const initialState: ProjectState & { playback: PlaybackState; selectedActorId: s
   actors: [],
   timeline: initialTimeline,
   library: { clips: [] },
-  playback: { currentTime: 0, isPlaying: false, frameRate: 24 },
+  playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1, loopMode: 'none' },
   selectedActorId: null,
 };
 

@@ -7,15 +7,13 @@
  */
 import { useCallback, useEffect, useRef } from 'react';
 import { useSceneStore } from '../store/sceneStore';
+import { LoopMode } from '../types';
 
 /**
  * Options for customizing playback behavior.
  */
 interface PlaybackOptions {
-    /** Whether to loop the animation when it reaches the end. Default: false. */
-    loop?: boolean;
-    /** Playback speed multiplier (1.0 = normal). Default: 1.0. */
-    speed?: number;
+    // Legacy options deprecated in favor of store state
 }
 
 /**
@@ -34,6 +32,16 @@ interface PlaybackControls {
     toggle: () => void;
     /** Set playback speed multiplier. */
     setSpeed: (speed: number) => void;
+    /** Set the loop mode. */
+    setLoopMode: (mode: LoopMode) => void;
+    /** Step forward by one frame. */
+    stepForward: () => void;
+    /** Step backward by one frame. */
+    stepBackward: () => void;
+    /** Seek to the next marker. */
+    seekToNextMarker: () => void;
+    /** Seek to the previous marker. */
+    seekToPrevMarker: () => void;
 }
 
 /**
@@ -58,37 +66,11 @@ interface PlaybackControls {
  * ```
  */
 export function usePlayback(options: PlaybackOptions = {}): PlaybackControls {
-    const { loop = false, speed = 1.0 } = options;
-
-    // Use refs to avoid stale closures in the animation loop
-    const loopRef = useRef(loop);
-    const speedRef = useRef(speed);
     const rafIdRef = useRef<number | null>(null);
     const lastFrameTimeRef = useRef<number | null>(null);
+    const directionRef = useRef<1 | -1>(1); // 1 = forward, -1 = backward (for pingpong)
 
-    // Sync refs with props
-    useEffect(() => {
-        loopRef.current = loop;
-    }, [loop]);
-
-    useEffect(() => {
-        speedRef.current = speed;
-    }, [speed]);
-
-    // We subscribe to isPlaying only to trigger re-renders if the component needs to know.
-    // However, the hook returns controls, not state.
-    // If the component needs state, it should use useSceneStore separately.
-    // But typically usePlayback is used in a component that might change appearance based on isPlaying.
-    // The original implementation subscribed.
-    // To match original behavior (re-render on change), we keep the subscription,
-    // but we use underscores to ignore unused variable linting if we don't return it?
-    // The original hook returned { play, ... } but NOT isPlaying.
-    // The components using this hook might expect it to trigger re-render when playing starts/stops?
-    // If we remove the subscription, the component won't re-render.
-    // But usePlayback doesn't return isPlaying.
-    // So the component doesn't know.
-    // Unless usePlayback is used alongside useSceneStore.
-    // I will remove the unused variable. If re-render is needed, the component should subscribe itself.
+    // Subscribe to store updates if needed, though we read getState in tick
     useSceneStore((s) => s.playback.isPlaying);
 
     /**
@@ -104,20 +86,23 @@ export function usePlayback(options: PlaybackOptions = {}): PlaybackControls {
             const deltaMs = timestamp - lastFrameTimeRef.current;
             lastFrameTimeRef.current = timestamp;
 
-            // Convert to seconds and apply speed multiplier
-            const deltaSec = (deltaMs / 1000) * speedRef.current;
-
-            // Get fresh state directly to avoid dependency chains
             const state = useSceneStore.getState();
             const { duration } = state.timeline;
-            const { frameRate, currentTime } = state.playback;
+            const { frameRate, currentTime, speed, loopMode } = state.playback;
+
+            // Convert to seconds and apply speed multiplier
+            // directionRef is used for pingpong logic
+            const deltaSec = (deltaMs / 1000) * speed * directionRef.current;
 
             let newTime = currentTime + deltaSec;
 
             // Handle end of timeline
             if (newTime >= duration) {
-                if (loopRef.current) {
+                if (loopMode === 'loop') {
                     newTime = newTime % duration;
+                } else if (loopMode === 'pingpong') {
+                    newTime = duration;
+                    directionRef.current = -1;
                 } else {
                     newTime = duration;
                     // Auto-pause at end
@@ -125,6 +110,22 @@ export function usePlayback(options: PlaybackOptions = {}): PlaybackControls {
                     rafIdRef.current = null;
                     lastFrameTimeRef.current = null;
                     return;
+                }
+            } else if (newTime <= 0) {
+                 if (loopMode === 'pingpong') {
+                    newTime = 0;
+                    directionRef.current = 1;
+                } else if (loopMode === 'loop') {
+                    newTime = duration;
+                } else {
+                    newTime = 0;
+                    // If playing backward and hit 0, stop
+                    if (directionRef.current === -1) {
+                        state.setPlayback({ currentTime: newTime, isPlaying: false });
+                        rafIdRef.current = null;
+                        lastFrameTimeRef.current = null;
+                        return;
+                    }
                 }
             }
 
@@ -157,6 +158,9 @@ export function usePlayback(options: PlaybackOptions = {}): PlaybackControls {
         // If at the end, reset to start
         if (currentTime >= duration) {
             state.setPlayback({ currentTime: 0 });
+            directionRef.current = 1;
+        } else if (currentTime <= 0) {
+            directionRef.current = 1;
         }
 
         state.setPlayback({ isPlaying: true });
@@ -187,6 +191,7 @@ export function usePlayback(options: PlaybackOptions = {}): PlaybackControls {
             rafIdRef.current = null;
         }
         lastFrameTimeRef.current = null;
+        directionRef.current = 1;
 
         useSceneStore.getState().setPlayback({ currentTime: 0, isPlaying: false });
     }, []);
@@ -223,7 +228,77 @@ export function usePlayback(options: PlaybackOptions = {}): PlaybackControls {
      * Sets the playback speed multiplier.
      */
     const setSpeedHandler = useCallback((newSpeed: number) => {
-        speedRef.current = Math.max(0.1, Math.min(newSpeed, 10));
+        useSceneStore.getState().setPlayback({ speed: Math.max(0.1, Math.min(newSpeed, 10)) });
+    }, []);
+
+    /**
+     * Sets the loop mode.
+     */
+    const setLoopModeHandler = useCallback((mode: LoopMode) => {
+        useSceneStore.getState().setPlayback({ loopMode: mode });
+    }, []);
+
+    /**
+     * Steps forward by one frame.
+     */
+    const stepForward = useCallback(() => {
+        pause();
+        const state = useSceneStore.getState();
+        const { currentTime, frameRate } = state.playback;
+        const { duration } = state.timeline;
+        const frameTime = 1 / (frameRate || 24);
+        const newTime = Math.min(currentTime + frameTime, duration);
+        state.setPlayback({ currentTime: newTime });
+    }, [pause]);
+
+    /**
+     * Steps backward by one frame.
+     */
+    const stepBackward = useCallback(() => {
+        pause();
+        const state = useSceneStore.getState();
+        const { currentTime, frameRate } = state.playback;
+        const frameTime = 1 / (frameRate || 24);
+        const newTime = Math.max(currentTime - frameTime, 0);
+        state.setPlayback({ currentTime: newTime });
+    }, [pause]);
+
+    /**
+     * Seeks to the next marker on the timeline.
+     */
+    const seekToNextMarker = useCallback(() => {
+        const state = useSceneStore.getState();
+        const { currentTime } = state.playback;
+        const { markers, duration } = state.timeline;
+
+        const nextMarker = markers
+            .filter((m) => m.time > currentTime + 0.001)
+            .sort((a, b) => a.time - b.time)[0];
+
+        if (nextMarker) {
+            state.setPlayback({ currentTime: nextMarker.time });
+        } else {
+            state.setPlayback({ currentTime: duration });
+        }
+    }, []);
+
+    /**
+     * Seeks to the previous marker on the timeline.
+     */
+    const seekToPrevMarker = useCallback(() => {
+        const state = useSceneStore.getState();
+        const { currentTime } = state.playback;
+        const { markers } = state.timeline;
+
+        const prevMarker = markers
+            .filter((m) => m.time < currentTime - 0.001)
+            .sort((a, b) => b.time - a.time)[0];
+
+        if (prevMarker) {
+            state.setPlayback({ currentTime: prevMarker.time });
+        } else {
+            state.setPlayback({ currentTime: 0 });
+        }
     }, []);
 
     // Cleanup on unmount
@@ -241,6 +316,11 @@ export function usePlayback(options: PlaybackOptions = {}): PlaybackControls {
         stop,
         seek,
         toggle,
-        setSpeed: setSpeedHandler
+        setSpeed: setSpeedHandler,
+        setLoopMode: setLoopModeHandler,
+        stepForward,
+        stepBackward,
+        seekToNextMarker,
+        seekToPrevMarker,
     };
 }

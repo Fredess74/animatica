@@ -38,6 +38,7 @@ export {
     AnimationTrackSchema,
     TransitionTypeSchema,
     CameraCutSchema,
+    MarkerSchema,
     TimelineSchema,
     // Environment
     WeatherTypeSchema,
