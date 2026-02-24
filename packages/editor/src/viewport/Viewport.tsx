@@ -4,7 +4,7 @@ import { OrbitControls, TransformControls, Grid } from '@react-three/drei';
 import { SceneManager, useSceneStore } from '@Animatica/engine';
 import * as THREE from 'three';
 import { clsx } from 'clsx';
-import { Box, Move, RotateCw, Scaling, Video, Monitor, LayoutGrid, Square } from 'lucide-react';
+import { Move, RotateCw, Scaling, Video, Monitor, LayoutGrid, Square } from 'lucide-react';
 
 type TransformMode = 'translate' | 'rotate' | 'scale';
 type CameraView = 'PERSPECTIVE' | 'TOP' | 'FRONT' | 'SIDE';
@@ -13,7 +13,7 @@ type CameraView = 'PERSPECTIVE' | 'TOP' | 'FRONT' | 'SIDE';
  * Helper component to handle camera positioning based on selected view.
  */
 const CameraController: React.FC<{ view: CameraView }> = ({ view }) => {
-  const { camera, gl } = useThree();
+  const { camera } = useThree();
   const controlsRef = useRef<any>(null);
 
   useEffect(() => {
@@ -41,7 +41,7 @@ const CameraController: React.FC<{ view: CameraView }> = ({ view }) => {
     }
   }, [view, camera]);
 
-  return <OrbitControls ref={controlsRef} makeDefault args={[camera, gl.domElement]} />;
+  return <OrbitControls ref={controlsRef} makeDefault />;
 };
 
 /**
@@ -71,7 +71,7 @@ const SelectionGizmo: React.FC<{ mode: TransformMode }> = ({ mode }) => {
   return (
     <>
       <TransformControls
-        object={dummyRef}
+        object={dummyRef as React.MutableRefObject<THREE.Object3D>}
         mode={mode}
         onMouseDown={() => setIsDragging(true)}
         onMouseUp={() => setIsDragging(false)}
