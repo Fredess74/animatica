@@ -1,6 +1,5 @@
 // @vitest-environment jsdom
-import React from 'react';
-import { render, screen, cleanup, fireEvent } from '@testing-library/react';
+import { render, screen, cleanup } from '@testing-library/react';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { AssetLibrary } from './panels/AssetLibrary';
 import { TimelinePanel } from './panels/TimelinePanel';
@@ -22,7 +21,7 @@ vi.mock('./components/ToastContext', () => ({
 
 vi.mock('@Animatica/engine', () => {
     return {
-        useSceneStore: (selector: any) => {
+        useSceneStore: (_selector: any) => {
             // Minimal mock for components that might use it (AssetLibrary in production uses it, but here we don't test that interaction deeply)
             return { actors: [], updateActor: vi.fn() };
         },
