@@ -8,6 +8,9 @@ export const EDITOR_VERSION = '0.1.0';
 // === LAYOUTS ===
 export { EditorLayout } from './layouts/EditorLayout';
 
+// === VIEWPORT ===
+export { Viewport } from './viewport/Viewport';
+
 // === PANELS ===
 export { AssetLibrary } from './panels/AssetLibrary';
 export { PropertiesPanel } from './panels/PropertiesPanel';

@@ -32,7 +32,6 @@
 - [ROLE: editor-components-dev] Create shared Button, Input, Select components using design tokens
 - [ROLE: editor-properties-dev] Wire PropertiesPanel to Zustand store (read/write actor properties)
 - [ROLE: editor-timeline-dev] Wire TimelinePanel to usePlayback hook, add real keyframe rendering
-- [ROLE: editor-viewport-dev] Create Viewport component with R3F Canvas + OrbitControls + SceneManager
 
 ## Web App Tasks
 
