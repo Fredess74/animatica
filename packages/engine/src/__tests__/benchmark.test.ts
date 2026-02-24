@@ -1,5 +1,13 @@
-import { describe, it, afterAll } from 'vitest';
-import { interpolateKeyframes } from '../animation/interpolate';
+import { describe, it, afterAll, vi } from 'vitest';
+import { interpolateKeyframes, evaluateTracksAtTime } from '../animation/interpolate';
+
+// Mock localStorage for Zustand persist middleware to suppress warnings in Node environment
+vi.stubGlobal('localStorage', {
+    getItem: vi.fn(() => null),
+    setItem: vi.fn(),
+    removeItem: vi.fn(),
+    clear: vi.fn(),
+});
 import { ProjectStateSchema } from '../schemas';
 import { useSceneStore } from '../store/sceneStore';
 import type { Keyframe, ProjectState, Actor, PrimitiveActor, Vector3 } from '../types';
@@ -31,6 +39,32 @@ describe('Engine Benchmarks', () => {
             path.join(reportDir, 'baseline_metrics.json'),
             JSON.stringify(results, null, 2)
         );
+    });
+
+    describe('Timeline Evaluation Performance', () => {
+        it('evaluateTracksAtTime (1k tracks, 100 actors, 10 keyframes each)', () => {
+            const tracks: { targetId: string; property: string; keyframes: Keyframe[] }[] = [];
+            for (let i = 0; i < 1000; i++) {
+                const actorId = `actor-${i % 100}`;
+                const property = i % 2 === 0 ? 'transform.position' : 'transform.rotation';
+                const keyframes: Keyframe<Vector3>[] = [];
+                for (let k = 0; k < 10; k++) {
+                    keyframes.push({
+                        time: k * 10,
+                        value: [k, k, k] as Vector3,
+                        easing: 'easeInOut',
+                    });
+                }
+                tracks.push({ targetId: actorId, property, keyframes: keyframes as Keyframe[] });
+            }
+
+            measure('Timeline Evaluation (1k tracks, 100 runs)', () => {
+                for (let i = 0; i < 100; i++) {
+                    const t = Math.random() * 100;
+                    evaluateTracksAtTime(tracks, t);
+                }
+            });
+        });
     });
 
     describe('Interpolation Performance', () => {
@@ -170,20 +204,37 @@ describe('Engine Benchmarks', () => {
             const { setState, getState } = useSceneStore;
 
             setState({
+                meta: { title: 'Benchmark', version: '1.0.0' },
+                environment: {
+                    ambientLight: { intensity: 0.5, color: '#ffffff' },
+                    sun: { position: [10, 10, 10], intensity: 1, color: '#ffffff' },
+                    skyColor: '#87CEEB',
+                },
+                timeline: { duration: 10, cameraTrack: [], animationTracks: [] },
+                library: { clips: [] },
                 actors: [],
                 playback: { currentTime: 0, isPlaying: false, frameRate: 24 },
-            } as any);
+                selectedActorId: null,
+            });
 
             measure('Store Add Actor (1k ops)', () => {
                 for (let i = 0; i < 1000; i++) {
-                    getState().addActor({
+                    const actor: PrimitiveActor = {
                         id: `bench-${i}`,
                         name: `Actor ${i}`,
                         type: 'primitive',
                         transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
                         visible: true,
-                        properties: { shape: 'box', color: '#ff0000', roughness: 0.5, metalness: 0.5, opacity: 1, wireframe: false }
-                    } as PrimitiveActor);
+                        properties: {
+                            shape: 'box',
+                            color: '#ff0000',
+                            roughness: 0.5,
+                            metalness: 0.5,
+                            opacity: 1,
+                            wireframe: false
+                        }
+                    };
+                    getState().addActor(actor);
                 }
             });
 
