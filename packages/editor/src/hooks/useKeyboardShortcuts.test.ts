@@ -52,18 +52,25 @@ describe('useKeyboardShortcuts', () => {
     expect(handlers.onEscape).toHaveBeenCalled();
   });
 
-  it('does not trigger shortcuts (except Ctrl+S) when inside input', () => {
+  it('does not trigger shortcuts (except Ctrl+S and Escape) when inside input', () => {
     renderHook(() => useKeyboardShortcuts(handlers));
     const input = document.createElement('input');
     document.body.appendChild(input);
     input.focus();
 
-    // Mock event target
-    const event = new KeyboardEvent('keydown', { key: ' ' });
-    Object.defineProperty(event, 'target', { value: input });
-    window.dispatchEvent(event);
+    // Mock event target for Space (should NOT trigger)
+    const spaceEvent = new KeyboardEvent('keydown', { key: ' ' });
+    Object.defineProperty(spaceEvent, 'target', { value: input });
+    window.dispatchEvent(spaceEvent);
 
     expect(handlers.onPlayPause).not.toHaveBeenCalled();
+
+    // Mock event target for Escape (SHOULD trigger)
+    const escapeEvent = new KeyboardEvent('keydown', { key: 'Escape' });
+    Object.defineProperty(escapeEvent, 'target', { value: input });
+    window.dispatchEvent(escapeEvent);
+
+    expect(handlers.onEscape).toHaveBeenCalled();
 
     document.body.removeChild(input);
   });

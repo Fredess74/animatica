@@ -5,6 +5,7 @@
  * @module @animatica/editor/modals/ScriptConsole
  */
 import React, { useState, useCallback } from 'react';
+import { Play, Check, Copy, Trash2, X, Sparkles, Terminal } from 'lucide-react';
 import { getAiPrompt, validateScript } from '@Animatica/engine';
 import { useToast } from '../components/ToastContext';
 
@@ -99,12 +100,38 @@ export const ScriptConsole: React.FC<ScriptConsoleProps> = ({ onClose }) => {
         }
     }, [showToast]);
 
+    const handleClear = useCallback(() => {
+        if (window.confirm('Are you sure you want to clear the script?')) {
+            setScript('');
+            setErrors([]);
+            setStatus('idle');
+            showToast('Script cleared', 'info');
+        }
+    }, [showToast]);
+
+    const handleCopyScript = useCallback(() => {
+        navigator.clipboard.writeText(script);
+        showToast('Script copied to clipboard', 'success');
+    }, [script, showToast]);
+
+    const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+        if (e.ctrlKey && e.key === 'Enter') {
+            e.preventDefault();
+            handleBuildScene();
+        }
+    }, [handleBuildScene]);
+
     return (
         <div className="modal-overlay" onClick={onClose}>
             <div className="modal script-console-modal" onClick={(e) => e.stopPropagation()}>
                 <div className="modal__header">
-                    <h2 className="modal__title">📜 Script Console</h2>
-                    <button className="modal__close" onClick={onClose}>✕</button>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)' }}>
+                        <Terminal size={20} />
+                        <h2 className="modal__title">Script Console</h2>
+                    </div>
+                    <button className="modal__close" onClick={onClose}>
+                        <X size={20} />
+                    </button>
                 </div>
                 <div className="retro-stripe retro-stripe--thin" />
 
@@ -116,6 +143,7 @@ export const ScriptConsole: React.FC<ScriptConsoleProps> = ({ onClose }) => {
                             setScript(e.target.value);
                             setStatus('idle');
                         }}
+                        onKeyDown={handleKeyDown}
                         spellCheck={false}
                         placeholder="Paste your JSON scene script here..."
                     />
@@ -123,25 +151,38 @@ export const ScriptConsole: React.FC<ScriptConsoleProps> = ({ onClose }) => {
                     {errors.length > 0 && (
                         <div className="script-console__errors">
                             {errors.map((err, i) => (
-                                <p key={i} className="script-console__error">⚠ {err}</p>
+                                <p key={i} className="script-console__error">
+                                    <X size={14} /> {err}
+                                </p>
                             ))}
                         </div>
                     )}
 
                     {status === 'valid' && (
-                        <p className="script-console__success">✅ Valid JSON</p>
+                        <div className="script-console__success" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <Check size={14} /> Valid JSON
+                        </div>
                     )}
                 </div>
 
                 <div className="modal__footer">
-                    <button className="editor-btn editor-btn--ghost" onClick={handleCopyPrompt}>
-                        📋 Copy AI Prompt
+                    <div style={{ flex: 1, display: 'flex', gap: 'var(--space-sm)' }}>
+                        <button className="editor-btn editor-btn--ghost" onClick={handleClear} title="Clear Script">
+                            <Trash2 size={16} />
+                        </button>
+                        <button className="editor-btn editor-btn--ghost" onClick={handleCopyScript} title="Copy Script">
+                            <Copy size={16} />
+                        </button>
+                    </div>
+
+                    <button className="editor-btn editor-btn--ghost" onClick={handleCopyPrompt} title="Copy AI Prompt">
+                        <Sparkles size={16} /> Copy AI Prompt
                     </button>
                     <button className="editor-btn editor-btn--ghost" onClick={handleValidate}>
-                        ✓ Validate
+                        <Check size={16} /> Validate
                     </button>
-                    <button className="editor-btn editor-btn--primary" onClick={handleBuildScene}>
-                        🏗️ Build Scene
+                    <button className="editor-btn editor-btn--primary" onClick={handleBuildScene} title="Build Scene (Ctrl+Enter)">
+                        <Play size={16} /> Build Scene
                     </button>
                 </div>
             </div>

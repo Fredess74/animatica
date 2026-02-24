@@ -5,6 +5,7 @@
  * @module @animatica/editor/modals/ExportModal
  */
 import React, { useState, useCallback } from 'react';
+import { Film, X, Download, Maximize2, Clock, FileVideo } from 'lucide-react';
 import { useToast } from '../components/ToastContext';
 import { useTranslation } from '../i18n/useTranslation';
 
@@ -63,15 +64,22 @@ export const ExportModal: React.FC<ExportModalProps> = ({ onClose }) => {
         <div className="modal-overlay" onClick={onClose}>
             <div className="modal export-modal" onClick={(e) => e.stopPropagation()}>
                 <div className="modal__header">
-                    <h2 className="modal__title">🎬 {t('export.title')}</h2>
-                    <button className="modal__close" onClick={onClose}>✕</button>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)' }}>
+                        <Film size={20} />
+                        <h2 className="modal__title">{t('export.title')}</h2>
+                    </div>
+                    <button className="modal__close" onClick={onClose}>
+                        <X size={20} />
+                    </button>
                 </div>
                 <div className="retro-stripe retro-stripe--thin" />
 
                 <div className="export-modal__body">
                     {/* Resolution */}
                     <div className="export-field">
-                        <label className="export-field__label">{t('export.resolution')}</label>
+                        <label className="export-field__label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <Maximize2 size={14} /> {t('export.resolution')}
+                        </label>
                         <div className="export-field__options">
                             {(['720p', '1080p', '4K'] as Resolution[]).map((r) => (
                                 <button
@@ -88,7 +96,9 @@ export const ExportModal: React.FC<ExportModalProps> = ({ onClose }) => {
 
                     {/* FPS */}
                     <div className="export-field">
-                        <label className="export-field__label">{t('export.frameRate')}</label>
+                        <label className="export-field__label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <Clock size={14} /> {t('export.frameRate')}
+                        </label>
                         <div className="export-field__options">
                             {([24, 30, 60] as FPS[]).map((f) => (
                                 <button
@@ -104,7 +114,9 @@ export const ExportModal: React.FC<ExportModalProps> = ({ onClose }) => {
 
                     {/* Format */}
                     <div className="export-field">
-                        <label className="export-field__label">{t('export.format')}</label>
+                        <label className="export-field__label" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <FileVideo size={14} /> {t('export.format')}
+                        </label>
                         <div className="export-field__options">
                             {(['mp4', 'webm'] as Format[]).map((f) => (
                                 <button
@@ -135,15 +147,15 @@ export const ExportModal: React.FC<ExportModalProps> = ({ onClose }) => {
                 <div className="modal__footer">
                     {isExporting ? (
                         <button className="editor-btn editor-btn--ghost" onClick={handleCancel}>
-                            {t('export.cancel')}
+                            <X size={16} /> {t('export.cancel')}
                         </button>
                     ) : (
                         <>
                             <button className="editor-btn editor-btn--ghost" onClick={onClose}>
-                                {t('export.close')}
+                                <X size={16} /> {t('export.close')}
                             </button>
                             <button className="editor-btn editor-btn--primary" onClick={handleExport}>
-                                {t('export.startExport', { format: format.toUpperCase() })}
+                                <Download size={16} /> {t('export.startExport', { format: format.toUpperCase() })}
                             </button>
                         </>
                     )}

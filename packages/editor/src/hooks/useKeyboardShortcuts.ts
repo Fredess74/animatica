@@ -42,6 +42,12 @@ export const useKeyboardShortcuts = (handlers: ShortcutHandlers) => {
         return;
       }
 
+      // Escape should work even in inputs (to close modals/deselect)
+      if (event.key === 'Escape') {
+        currentHandlers.onEscape?.();
+        return;
+      }
+
       // If in input, ignore other shortcuts
       if (isInput) return;
 
@@ -54,9 +60,6 @@ export const useKeyboardShortcuts = (handlers: ShortcutHandlers) => {
         case 'Delete':
         case 'Backspace':
           currentHandlers.onDelete?.();
-          break;
-        case 'Escape':
-          currentHandlers.onEscape?.();
           break;
       }
     };
