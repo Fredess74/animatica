@@ -75,13 +75,17 @@ packages/engine/src/
 │       ├── PrimitiveRenderer.tsx
 │       ├── CharacterRenderer.tsx
 │       ├── LightRenderer.tsx
-│       └── CameraRenderer.tsx
+│       ├── CameraRenderer.tsx
+│       └── SpeakerRenderer.tsx # Audio source + visualizer
 ├── animation/
-│   ├── PlaybackController.tsx  # requestAnimationFrame loop
 │   ├── interpolate.ts          # Interpolation logic
 │   └── easing.ts               # Easing functions
+├── playback/
+│   └── PlaybackController.ts   # usePlayback hook + loop logic
 ├── ai/
 │   └── promptTemplates.ts      # Static prompt for LLM
+├── config/
+│   └── featureFlags.tsx        # Feature flag provider + hooks
 ├── characters/
 │   ├── Humanoid.tsx            # GLB-based character
 │   ├── BoneController.ts       # Per-bone rotation
@@ -108,10 +112,15 @@ packages/engine/src/
 ```typescript
 // Components (for R3F Canvas)
 export { PrimitiveRenderer } from './scene/renderers/PrimitiveRenderer'
-// export { SceneManager } from './scene/SceneManager'
-// export { PlaybackController } from './animation/PlaybackController'
-// export { AudioEngine } from './audio/AudioEngine'
-// export { VideoExporter } from './export/VideoExporter'
+export { LightRenderer } from './scene/renderers/LightRenderer'
+export { CameraRenderer } from './scene/renderers/CameraRenderer'
+export { CharacterRenderer } from './scene/renderers/CharacterRenderer'
+export { SpeakerRenderer } from './scene/renderers/SpeakerRenderer'
+export { SceneManager } from './scene/SceneManager'
+
+// Hooks
+export { usePlayback } from './playback/PlaybackController'
+export { useFeatureFlag, FeatureFlagProvider } from './config/featureFlags'
 
 // Store
 export { useSceneStore, getActorById, getActiveActors, getCurrentTime } from './store/sceneStore';
@@ -139,7 +148,7 @@ UI panels and modals. **Only imports from `@Animatica/engine` public API.** No d
 packages/editor/src/
 ├── index.ts
 ├── layouts/
-│   └── EditorLayout.tsx          # 3-panel layout shell
+│   └── EditorLayout.tsx          # 3-panel layout shell (injects viewport)
 ├── panels/
 │   ├── AssetLibrary.tsx          # Left: add actors/props
 │   ├── PropertiesPanel.tsx       # Right: transform, materials
@@ -160,6 +169,8 @@ packages/editor/src/
 │   ├── ColorPicker.tsx
 │   ├── Tooltip.tsx
 │   └── ErrorBoundary.tsx
+├── components/
+│   └── ToastContext.tsx          # Toast notifications provider
 └── hooks/
     ├── useKeyboardShortcuts.ts
     └── useCollaboration.ts       # Yjs integration
@@ -203,7 +214,7 @@ packages/contracts/
 │   ├── CreatorFund.sol           # Weight-based distribution
 │   ├── AnimaticaTreasury.sol       # Platform treasury
 │   ├── AssetMarketplace.sol      # Buy/sell/rent assets
-│   └── FilmRegistry.sol          # On-chain film metadata
+│   ├── FilmRegistry.sol          # On-chain film metadata
 ├── test/
 │   ├── DonationPool.test.ts
 │   ├── CreatorFund.test.ts
@@ -215,20 +226,82 @@ packages/contracts/
 
 ---
 
+## Core Flows
+
+### 1. Script Import to Animation
+
+How a JSON script becomes a visible 3D scene.
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Editor (UI)
+    participant Importer (Engine)
+    participant Store (Zustand)
+    participant SceneManager (Engine)
+    participant Renderer (R3F)
+
+    User->>Editor: Paste JSON Script
+    Editor->>Importer: validateScript(json)
+    Importer-->>Editor: ValidationResult (success/errors)
+
+    alt valid
+        Editor->>Importer: importScript(json)
+        Importer->>Store: setProject(state)
+        Store-->>SceneManager: update actors[]
+        SceneManager->>Renderer: Render <PrimitiveRenderer />, <CharacterRenderer />
+        Renderer-->>User: Visual Scene Update
+    else invalid
+        Editor-->>User: Show Syntax Errors
+    end
+```
+
+### 2. Playback Loop
+
+How the animation timeline drives the scene updates.
+
+```mermaid
+sequenceDiagram
+    participant RAF (Browser)
+    participant usePlayback (Hook)
+    participant Store (Zustand)
+    participant SceneManager (Engine)
+    participant Interpolator (Engine)
+
+    RAF->>usePlayback: tick(timestamp)
+    usePlayback->>Store: setPlayback({ currentTime })
+    Store-->>SceneManager: update currentTime
+    SceneManager->>Interpolator: evaluateTracksAtTime(tracks, currentTime)
+    Interpolator-->>SceneManager: Map<ActorID, Transform>
+    SceneManager->>SceneManager: Update Actor Props
+    SceneManager->>RAF: Request Next Frame
+```
+
+---
+
 ## Dependency Graph
 
-```
-@Animatica/contracts  (standalone — no JS dependencies)
-        ↑
-        │ (ABI imports only)
-        │
-@Animatica/engine  ←── @Animatica/editor
-        ↑                    ↑
-        │                    │
-        └────── apps/web ────┘
-                    ↑
-                    │
-            @Animatica/platform
+```mermaid
+graph TD
+    subgraph Core
+        Engine[@Animatica/engine]
+        Editor[@Animatica/editor]
+    end
+
+    subgraph App
+        Web[apps/web]
+    end
+
+    subgraph Services
+        Platform[@Animatica/platform]
+        Contracts[@Animatica/contracts]
+    end
+
+    Editor -->|imports| Engine
+    Web -->|imports| Editor
+    Web -->|imports| Engine
+    Web -->|imports| Platform
+    Web -->|interacts| Contracts
 ```
 
 **Rules:**
