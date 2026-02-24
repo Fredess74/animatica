@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import React from 'react'
-// @ts-expect-error - Import might fail in test environment or due to type issues
 import { CharacterRenderer } from './CharacterRenderer'
 import { CharacterActor } from '../../types'
 
