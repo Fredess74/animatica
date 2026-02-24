@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react'
+import { forwardRef } from 'react'
 import { SpeakerActor } from '../../types'
 import { PositionalAudio } from '@react-three/drei'
 import * as THREE from 'three'
