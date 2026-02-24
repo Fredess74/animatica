@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+#### Engine
+- **SpeakerRenderer**: Added component for spatial audio rendering and tests.
+- **SceneManager**: Added unit tests.
+- **CharacterRenderer**: Added initial placeholder component.
+- **Feature Flags**: Implemented feature flag system in `src/config/featureFlags.ts`.
+
+#### Editor
+- **Styling**: Added CSS for editor components (panels, timeline, modals) aligned with design tokens.
+- **Tests**: Added unit tests for `AssetLibrary`, `PropertiesPanel`, and `TimelinePanel`.
+
+### Changed
+
+#### Editor
+- **PropertiesPanel**: Wired panel to `useSceneStore` for reading/writing actor properties.
+- **Internationalization**: Extracted hardcoded UI strings to translation keys.
+
+### Fixed/Improved
+
+#### Engine
+- **Type Safety**: Audited and improved TypeScript definitions, return types, and removed `any` usage.
+- **Performance**: Audited components for unnecessary re-renders and bundle size optimizations.
+
 ## [0.1.0] - 2026-02-22
 
 ### Added
