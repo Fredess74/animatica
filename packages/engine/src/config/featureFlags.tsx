@@ -25,10 +25,20 @@ const DEFAULT_FLAGS_PROD: FeatureFlags = {
   cloud_sync: false,
 };
 
+// Helper to safely access import.meta.env (Vite) or fallback (Next.js/Node)
+const getMetaEnv = () => {
+  try {
+    // @ts-ignore
+    return import.meta.env || { MODE: 'development' };
+  } catch {
+    return { MODE: 'development' };
+  }
+};
+
 export const getFeatureFlags = (
-  envMode: string = import.meta.env.MODE,
+  envMode: string = getMetaEnv().MODE,
   // Cast to Record<string, string> because ImportMetaEnv has an index signature but we want to be safe
-  env: Record<string, string | boolean | undefined> = import.meta.env as unknown as Record<string, string | boolean | undefined>
+  env: Record<string, string | boolean | undefined> = getMetaEnv() as unknown as Record<string, string | boolean | undefined>
 ): FeatureFlags => {
   const isDev = envMode === 'development';
   const defaults = isDev ? DEFAULT_FLAGS_DEV : DEFAULT_FLAGS_PROD;

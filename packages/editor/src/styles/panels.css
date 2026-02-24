@@ -2,6 +2,11 @@
    Editor Layout & Panels
    ============================================ */
 
+:root {
+  --left-sidebar-width: 280px;
+  --right-sidebar-width: 320px;
+}
+
 /* ---- Editor Layout ---- */
 .editor-layout {
   display: flex;
@@ -71,14 +76,49 @@
 }
 
 .editor-sidebar--left {
-  width: 280px;
+  width: var(--left-sidebar-width);
   border-right: 1px solid var(--border-subtle);
 }
 
 .editor-sidebar--right {
-  width: 320px;
+  width: var(--right-sidebar-width);
   border-left: 1px solid var(--border-subtle);
   border-right: none;
+}
+
+.editor-sidebar--collapsed {
+  width: 40px !important; /* Minimal width for icons */
+}
+
+/* Hide content when collapsed */
+.editor-sidebar--collapsed .panel__title,
+.editor-sidebar--collapsed .asset-category__header,
+.editor-sidebar--collapsed .prop-section,
+.editor-sidebar--collapsed .asset-item__name,
+.editor-sidebar--collapsed .asset-category__items,
+.editor-sidebar--collapsed .asset-library,
+.editor-sidebar--collapsed .properties-panel {
+  display: none;
+}
+
+.editor-sidebar--collapsed .asset-item {
+  border: none;
+  background: transparent;
+}
+
+/* ---- Resizer ---- */
+.editor-resizer {
+  width: 4px;
+  background-color: var(--bg-deep);
+  cursor: col-resize;
+  transition: background-color var(--transition-fast);
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.editor-resizer:hover,
+.editor-resizer:active {
+  background-color: var(--green-500);
 }
 
 /* ---- Generic Panel ---- */
@@ -87,6 +127,15 @@
   flex-direction: column;
   height: 100%;
   overflow: hidden;
+}
+
+.panel__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-md);
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .panel__title {
@@ -98,6 +147,20 @@
   font-weight: 600;
   background-color: var(--bg-surface);
   position: relative;
+}
+
+.panel__toggle {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: var(--radius-sm);
+}
+
+.panel__toggle:hover {
+  background-color: var(--bg-elevated);
+  color: var(--text-primary);
 }
 
 /* Ensure retro stripe is visible if present */
@@ -387,4 +450,35 @@
 
 .prop-field__slider:focus::-webkit-slider-thumb {
   box-shadow: 0 0 0 4px var(--color-primary-glow);
+}
+
+/* Responsive Media Query */
+@media (max-width: 768px) {
+  .editor-main {
+    flex-direction: column;
+    height: auto;
+    overflow-y: auto;
+  }
+
+  .editor-sidebar {
+    width: 100% !important;
+    border-right: none;
+    border-bottom: 1px solid var(--border-subtle);
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  .editor-resizer {
+    display: none;
+  }
+
+  .editor-viewport {
+    height: 50vh;
+    min-height: 300px;
+  }
+
+  .editor-timeline {
+    height: auto;
+    max-height: 200px;
+  }
 }
