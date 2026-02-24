@@ -10,13 +10,6 @@ import { useSceneStore } from '../store/sceneStore';
 import { LoopMode } from '../types';
 
 /**
- * Options for customizing playback behavior.
- */
-interface PlaybackOptions {
-    // Legacy options deprecated in favor of store state
-}
-
-/**
  * Return type of the usePlayback hook.
  */
 interface PlaybackControls {
@@ -48,13 +41,12 @@ interface PlaybackControls {
  * React hook that provides playback controls for the scene animation.
  * Uses requestAnimationFrame for smooth, frame-accurate playback.
  *
- * @param options Optional playback configuration.
  * @returns PlaybackControls object with play, pause, stop, seek, toggle, setSpeed.
  *
  * @example
  * ```tsx
  * function ControlBar() {
- *   const { play, pause, stop, seek, toggle } = usePlayback({ loop: true });
+ *   const { play, pause, stop, seek, toggle } = usePlayback();
  *   return (
  *     <div>
  *       <button onClick={toggle}>Play/Pause</button>
@@ -65,7 +57,7 @@ interface PlaybackControls {
  * }
  * ```
  */
-export function usePlayback(options: PlaybackOptions = {}): PlaybackControls {
+export function usePlayback(): PlaybackControls {
     const rafIdRef = useRef<number | null>(null);
     const lastFrameTimeRef = useRef<number | null>(null);
     const directionRef = useRef<1 | -1>(1); // 1 = forward, -1 = backward (for pingpong)
