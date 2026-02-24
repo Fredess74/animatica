@@ -1,11 +1,26 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import en from './en.json';
+import ru from './ru.json';
+import ja from './ja.json';
 
 export type Language = 'en' | 'ru' | 'ja';
 
+const translations: Record<Language, any> = {
+    en,
+    ru,
+    ja
+};
+
 // Module-level variable to store current language
-// In a real application, this would likely be in a Context or Store
 let currentLanguage: Language = 'en';
+
+// Event listeners to sync language across all hook instances
+const listeners = new Set<(lang: Language) => void>();
+
+const setGlobalLanguage = (lang: Language) => {
+    currentLanguage = lang;
+    listeners.forEach((listener) => listener(lang));
+};
 
 // Helper to access nested keys safely
 function getNestedValue(obj: any, path: string): string | undefined {
@@ -15,19 +30,27 @@ function getNestedValue(obj: any, path: string): string | undefined {
 export const useTranslation = () => {
     const [language, setLanguage] = useState<Language>(currentLanguage);
 
+    useEffect(() => {
+        const handler = (lang: Language) => setLanguage(lang);
+        listeners.add(handler);
+        return () => {
+            listeners.delete(handler);
+        };
+    }, []);
+
     const changeLanguage = useCallback((lang: Language) => {
-        currentLanguage = lang;
-        setLanguage(lang);
+        setGlobalLanguage(lang);
     }, []);
 
     const t = useCallback(
         (key: string, params?: Record<string, string | number>) => {
-            // Placeholder for multi-language support.
-            // Currently, we only have 'en' loaded directly.
-            // In the future, this would select from a map of loaded languages.
-            const translations = en;
+            const currentTranslations = translations[language];
+            let value = getNestedValue(currentTranslations, key);
 
-            let value = getNestedValue(translations, key);
+            // Fallback to English if translation is missing
+            if (value === undefined && language !== 'en') {
+                value = getNestedValue(translations['en'], key);
+            }
 
             if (typeof value !== 'string') {
                 // If the key is missing or points to an object, return the key

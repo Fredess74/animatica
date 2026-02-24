@@ -1,0 +1,114 @@
+{
+  "timeline": {
+    "stop": "Стоп",
+    "pause": "Пауза",
+    "play": "Играть",
+    "addKeyframe": "Добавить кадр",
+    "duration": "Длительность",
+    "selectedActor": "Выбранный актер",
+    "selectActorPrompt": "Выберите актера чтобы увидеть треки",
+    "seconds": "{{count}}с"
+  },
+  "export": {
+    "title": "Экспорт видео",
+    "resolution": "Разрешение",
+    "frameRate": "Частота кадров",
+    "format": "Формат",
+    "success": "Экспорт завершен успешно!",
+    "cancelled": "Экспорт отменен",
+    "cancel": "Отмена",
+    "close": "Закрыть",
+    "startExport": "Экспорт {{format}}",
+    "starting": "Начинаем экспорт {{resolution}} @ {{fps}}fps...",
+    "fpsSuffix": "{{count}} fps"
+  },
+  "properties": {
+    "title": "Свойства",
+    "empty": "Выберите актера для редактирования свойств",
+    "general": "Общие",
+    "name": "Имя",
+    "transform": "Трансформация",
+    "position": "Позиция",
+    "rotation": "Вращение",
+    "scale": "Масштаб",
+    "material": "Материал",
+    "shape": "Форма",
+    "color": "Цвет",
+    "roughness": "Шероховатость",
+    "metalness": "Металличность",
+    "opacity": "Непрозрачность",
+    "wireframe": "Каркас",
+    "light": "Настройки света",
+    "type": "Тип",
+    "intensity": "Интенсивность",
+    "castShadow": "Тень",
+    "camera": "Настройки камеры",
+    "fov": "Угол обзора",
+    "near": "Ближняя плоскость",
+    "far": "Дальняя плоскость",
+    "character": "Настройки персонажа",
+    "animation": "Анимация",
+    "speed": "Скорость анимации",
+    "shapes": {
+      "box": "Куб",
+      "sphere": "Сфера",
+      "cylinder": "Цилиндр",
+      "plane": "Плоскость",
+      "cone": "Конус",
+      "torus": "Тор",
+      "capsule": "Капсула"
+    },
+    "lights": {
+      "point": "Точечный",
+      "spot": "Прожектор",
+      "directional": "Направленный"
+    },
+    "animations": {
+      "idle": "Покой",
+      "walk": "Ходьба",
+      "run": "Бег",
+      "wave": "Махать",
+      "talk": "Разговор",
+      "dance": "Танец",
+      "sit": "Сидеть",
+      "jump": "Прыжок"
+    }
+  },
+  "assets": {
+    "title": "Ассеты",
+    "categories": {
+      "primitives": "Примитивы",
+      "lights": "Свет",
+      "cameras": "Камеры",
+      "characters": "Персонажи"
+    },
+    "items": {
+      "box": "Куб",
+      "sphere": "Сфера",
+      "cylinder": "Цилиндр",
+      "cone": "Конус",
+      "torus": "Тор",
+      "plane": "Плоскость",
+      "pointLight": "Точечный свет",
+      "spotLight": "Прожектор",
+      "directional": "Направленный свет",
+      "camera": "Камера",
+      "humanoid": "Гуманоид"
+    }
+  },
+  "console": {
+    "title": "Консоль скриптов",
+    "placeholder": "Вставьте ваш JSON сценарий сюда...",
+    "valid": "JSON валиден",
+    "validate": "Проверить",
+    "build": "Создать сцену",
+    "copyPrompt": "Скопировать AI промпт",
+    "success": "Сцена создана успешно!",
+    "validSuccess": "Скрипт валиден!",
+    "validationFailed": "Ошибка валидации",
+    "buildFailed": "Не удалось создать: Ошибка валидации",
+    "invalidJson": "Не удалось создать: Неверный JSON",
+    "copySuccess": "AI промпт скопирован в буфер обмена",
+    "copyFailed": "Не удалось скопировать промпт"
+  }
+}

@@ -21,5 +21,94 @@
     "startExport": "Export {{format}}",
     "starting": "Starting {{resolution}} @ {{fps}}fps export...",
     "fpsSuffix": "{{count}} fps"
+  },
+  "properties": {
+    "title": "Properties",
+    "empty": "Select an actor to edit its properties",
+    "general": "General",
+    "name": "Name",
+    "transform": "Transform",
+    "position": "Position",
+    "rotation": "Rotation",
+    "scale": "Scale",
+    "material": "Material",
+    "shape": "Shape",
+    "color": "Color",
+    "roughness": "Roughness",
+    "metalness": "Metalness",
+    "opacity": "Opacity",
+    "wireframe": "Wireframe",
+    "light": "Light Settings",
+    "type": "Type",
+    "intensity": "Intensity",
+    "castShadow": "Cast Shadow",
+    "camera": "Camera Settings",
+    "fov": "Field of View",
+    "near": "Near Plane",
+    "far": "Far Plane",
+    "character": "Character Settings",
+    "animation": "Animation",
+    "speed": "Animation Speed",
+    "shapes": {
+      "box": "Box",
+      "sphere": "Sphere",
+      "cylinder": "Cylinder",
+      "plane": "Plane",
+      "cone": "Cone",
+      "torus": "Torus",
+      "capsule": "Capsule"
+    },
+    "lights": {
+      "point": "Point",
+      "spot": "Spot",
+      "directional": "Directional"
+    },
+    "animations": {
+      "idle": "Idle",
+      "walk": "Walk",
+      "run": "Run",
+      "wave": "Wave",
+      "talk": "Talk",
+      "dance": "Dance",
+      "sit": "Sit",
+      "jump": "Jump"
+    }
+  },
+  "assets": {
+    "title": "Assets",
+    "categories": {
+      "primitives": "Primitives",
+      "lights": "Lights",
+      "cameras": "Cameras",
+      "characters": "Characters"
+    },
+    "items": {
+      "box": "Box",
+      "sphere": "Sphere",
+      "cylinder": "Cylinder",
+      "cone": "Cone",
+      "torus": "Torus",
+      "plane": "Plane",
+      "pointLight": "Point Light",
+      "spotLight": "Spot Light",
+      "directional": "Directional",
+      "camera": "Camera",
+      "humanoid": "Humanoid"
+    }
+  },
+  "console": {
+    "title": "Script Console",
+    "placeholder": "Paste your JSON scene script here...",
+    "valid": "Valid JSON",
+    "validate": "Validate",
+    "build": "Build Scene",
+    "copyPrompt": "Copy AI Prompt",
+    "success": "Scene built successfully!",
+    "validSuccess": "Script is valid!",
+    "validationFailed": "Validation failed",
+    "buildFailed": "Cannot build: Validation failed",
+    "invalidJson": "Cannot build: Invalid JSON",
+    "copySuccess": "AI Prompt copied to clipboard",
+    "copyFailed": "Failed to copy prompt"
   }
 }

@@ -1,0 +1,114 @@
+{
+  "timeline": {
+    "stop": "停止",
+    "pause": "一時停止",
+    "play": "再生",
+    "addKeyframe": "キーフレーム追加",
+    "duration": "期間",
+    "selectedActor": "選択中のアクター",
+    "selectActorPrompt": "アクターを選択してトラックを表示",
+    "seconds": "{{count}}秒"
+  },
+  "export": {
+    "title": "ビデオ出力",
+    "resolution": "解像度",
+    "frameRate": "フレームレート",
+    "format": "フォーマット",
+    "success": "出力が完了しました！",
+    "cancelled": "出力がキャンセルされました",
+    "cancel": "キャンセル",
+    "close": "閉じる",
+    "startExport": "{{format}} で出力",
+    "starting": "{{resolution}} @ {{fps}}fps で出力中...",
+    "fpsSuffix": "{{count}} fps"
+  },
+  "properties": {
+    "title": "プロパティ",
+    "empty": "編集するアクターを選択してください",
+    "general": "一般",
+    "name": "名前",
+    "transform": "トランスフォーム",
+    "position": "位置",
+    "rotation": "回転",
+    "scale": "スケール",
+    "material": "マテリアル",
+    "shape": "形状",
+    "color": "色",
+    "roughness": "粗さ",
+    "metalness": "メタリック",
+    "opacity": "不透明度",
+    "wireframe": "ワイヤーフレーム",
+    "light": "ライト設定",
+    "type": "タイプ",
+    "intensity": "強度",
+    "castShadow": "影を落とす",
+    "camera": "カメラ設定",
+    "fov": "視野角 (FOV)",
+    "near": "近方クリップ面",
+    "far": "遠方クリップ面",
+    "character": "キャラクター設定",
+    "animation": "アニメーション",
+    "speed": "再生速度",
+    "shapes": {
+      "box": "ボックス",
+      "sphere": "球体",
+      "cylinder": "円柱",
+      "plane": "平面",
+      "cone": "円錐",
+      "torus": "トーラス",
+      "capsule": "カプセル"
+    },
+    "lights": {
+      "point": "ポイント",
+      "spot": "スポット",
+      "directional": "ディレクショナル"
+    },
+    "animations": {
+      "idle": "待機",
+      "walk": "歩く",
+      "run": "走る",
+      "wave": "手を振る",
+      "talk": "話す",
+      "dance": "踊る",
+      "sit": "座る",
+      "jump": "ジャンプ"
+    }
+  },
+  "assets": {
+    "title": "アセット",
+    "categories": {
+      "primitives": "プリミティブ",
+      "lights": "ライト",
+      "cameras": "カメラ",
+      "characters": "キャラクター"
+    },
+    "items": {
+      "box": "ボックス",
+      "sphere": "球体",
+      "cylinder": "円柱",
+      "cone": "円錐",
+      "torus": "トーラス",
+      "plane": "平面",
+      "pointLight": "ポイントライト",
+      "spotLight": "スポットライト",
+      "directional": "ディレクショナルライト",
+      "camera": "カメラ",
+      "humanoid": "ヒューマノイド"
+    }
+  },
+  "console": {
+    "title": "スクリプトコンソール",
+    "placeholder": "JSONシーンスクリプトをここに貼り付けてください...",
+    "valid": "有効なJSON",
+    "validate": "検証",
+    "build": "シーン構築",
+    "copyPrompt": "AIプロンプトをコピー",
+    "success": "シーンが正常に構築されました！",
+    "validSuccess": "スクリプトは有効です！",
+    "validationFailed": "検証失敗",
+    "buildFailed": "構築できません: 検証失敗",
+    "invalidJson": "構築できません: 無効なJSON",
+    "copySuccess": "AIプロンプトをクリップボードにコピーしました",
+    "copyFailed": "プロンプトのコピーに失敗しました"
+  }
+}
