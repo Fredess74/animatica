@@ -1,0 +1,128 @@
+
+> Animatica@0.1.0 lint /app
+> turbo run lint
+
+• turbo 2.8.10
+• Packages in scope: @Animatica/contracts, @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web
+• Running lint in 5 packages
+• Remote caching disabled
+@Animatica/engine:lint: cache miss, executing 5a459cd91b8992e9
+@Animatica/web:lint: cache hit, replaying logs 9600ab2b5a1ebd7c
+@Animatica/web:lint:
+@Animatica/web:lint: > @Animatica/web@0.1.0 lint /app/apps/web
+@Animatica/web:lint: > next lint
+@Animatica/web:lint:
+@Animatica/web:lint: `next lint` is deprecated and will be removed in Next.js 16.
+@Animatica/web:lint: For new projects, use create-next-app to choose your preferred linter.
+@Animatica/web:lint: For existing projects, migrate to the ESLint CLI:
+@Animatica/web:lint: npx @next/codemod@canary next-lint-to-eslint-cli .
+@Animatica/web:lint:
+@Animatica/web:lint:
+@Animatica/web:lint:  ⚠ The Next.js plugin was not detected in your ESLint configuration. See https://nextjs.org/docs/app/api-reference/config/eslint#migrating-existing-config
+@Animatica/web:lint: Attention: Next.js now collects completely anonymous telemetry regarding usage.
+@Animatica/web:lint: This information is used to shape Next.js' roadmap and prioritize features.
+@Animatica/web:lint: You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+@Animatica/web:lint: https://nextjs.org/telemetry
+@Animatica/web:lint:
+@Animatica/web:lint: ✔ No ESLint warnings or errors
+@Animatica/platform:lint: cache hit, replaying logs 245e4a726412a539
+@Animatica/platform:lint:
+@Animatica/platform:lint: > @Animatica/platform@0.1.0 lint /app/packages/platform
+@Animatica/platform:lint: > eslint .
+@Animatica/platform:lint:
+@Animatica/editor:lint: cache hit, replaying logs 8949cf2b31488ffc
+@Animatica/editor:lint:
+@Animatica/editor:lint: > @Animatica/editor@0.1.0 lint /app/packages/editor
+@Animatica/editor:lint: > eslint .
+@Animatica/editor:lint:
+@Animatica/editor:lint:
+@Animatica/editor:lint: /app/packages/editor/src/i18n/useTranslation.ts
+@Animatica/editor:lint:   11:30  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/editor:lint:
+@Animatica/editor:lint: /app/packages/editor/src/panels/PropertiesPanel.tsx
+@Animatica/editor:lint:    22:51   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/editor:lint:    22:61   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/editor:lint:   321:113  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/editor:lint:   394:113  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/editor:lint:   476:90   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/editor:lint:
+@Animatica/editor:lint: ✖ 6 problems (0 errors, 6 warnings)
+@Animatica/editor:lint:
+@Animatica/engine:lint:
+@Animatica/engine:lint: > @Animatica/engine@0.1.0 lint /app/packages/engine
+@Animatica/engine:lint: > eslint .
+@Animatica/engine:lint:
+@Animatica/engine:lint:
+@Animatica/engine:lint: /app/packages/engine/src/__tests__/benchmark.test.ts
+@Animatica/engine:lint:   175:18  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:
+@Animatica/engine:lint: /app/packages/engine/src/scene/SceneManager.test.tsx
+@Animatica/engine:lint:    48:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:    48:59  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:    70:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:    70:59  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:    86:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:    86:59  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:   102:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:   102:59  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:   118:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:   118:59  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:   134:24  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:   134:59  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:
+@Animatica/engine:lint: /app/packages/engine/src/scene/animationUtils.ts
+@Animatica/engine:lint:   36:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:   36:63  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:   36:69  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:   53:50  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:   53:85  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:
+@Animatica/engine:lint: /app/packages/engine/src/scene/renderers/CameraRenderer.test.tsx
+@Animatica/engine:lint:   20:47   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:   47:100  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:   68:99   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:
+@Animatica/engine:lint: /app/packages/engine/src/scene/renderers/CameraRenderer.tsx
+@Animatica/engine:lint:   36:53  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:
+@Animatica/engine:lint: /app/packages/engine/src/scene/renderers/CharacterRenderer.test.tsx
+@Animatica/engine:lint:   50:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:   62:45  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:   69:46  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:   78:46  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:   92:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:   98:45  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:
+@Animatica/engine:lint: /app/packages/engine/src/scene/renderers/LightRenderer.test.tsx
+@Animatica/engine:lint:   14:19  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:   47:82  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:   55:38  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:   59:37  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:   61:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:   62:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:   63:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:   85:82  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:   88:37  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:   91:22  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:
+@Animatica/engine:lint: /app/packages/engine/src/scene/renderers/LightRenderer.tsx
+@Animatica/engine:lint:   46:17  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:
+@Animatica/engine:lint: /app/packages/engine/src/scene/renderers/PrimitiveRenderer.test.tsx
+@Animatica/engine:lint:   48:88   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:   57:107  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:   95:88   warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:   96:107  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:
+@Animatica/engine:lint: /app/packages/engine/src/scene/renderers/SpeakerRenderer.test.tsx
+@Animatica/engine:lint:   69:33  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:
+@Animatica/engine:lint: /app/packages/engine/src/store/sceneStore.test.ts
+@Animatica/engine:lint:   154:20  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+@Animatica/engine:lint:
+@Animatica/engine:lint: ✖ 45 problems (0 errors, 45 warnings)
+@Animatica/engine:lint:
+
+ Tasks:    4 successful, 4 total
+Cached:    3 cached, 4 total
+  Time:    2.628s
