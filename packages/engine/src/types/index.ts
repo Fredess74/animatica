@@ -4,6 +4,10 @@
  * @module @animatica/engine/types
  */
 
+import { JSONValue } from './utils'
+
+export * from './utils'
+
 /**
  * A 3D vector represented as a tuple of three numbers [x, y, z].
  */
@@ -24,11 +28,11 @@ export type UUID = string
  */
 export interface Transform {
   /** The position of the object as [x, y, z]. */
-  position: Vector3
+  readonly position: Vector3
   /** The rotation of the object as Euler angles in radians [x, y, z]. */
-  rotation: Vector3
+  readonly rotation: Vector3
   /** The scale of the object as [x, y, z]. */
-  scale: Vector3
+  readonly scale: Vector3
 }
 
 /**
@@ -265,7 +269,7 @@ export type EasingType = 'linear' | 'easeIn' | 'easeOut' | 'easeInOut' | 'step'
  * A single keyframe in an animation track.
  * @template T The type of value being animated.
  */
-export interface Keyframe<T = unknown> {
+export interface Keyframe<T = JSONValue> {
   /** Time of the keyframe in seconds. */
   time: number
   /** Value at this keyframe. */
@@ -381,6 +385,12 @@ export interface ProjectMeta {
 }
 
 /**
+ * Represents a media clip in the library.
+ * Currently weakly typed until the clip system is fully designed.
+ */
+export type Clip = unknown
+
+/**
  * The complete state of a project, including all actors, timeline, and environment settings.
  */
 export interface ProjectState {
@@ -392,8 +402,8 @@ export interface ProjectState {
   actors: Actor[]
   /** Animation and camera timeline. */
   timeline: Timeline
-  /** Asset library (unused currently). */
-  library: { clips: unknown[] }
+  /** Asset library. */
+  library: { clips: Clip[] }
 }
 
 /**
