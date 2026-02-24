@@ -1,12 +1,10 @@
 // @vitest-environment jsdom
-import React from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import { TimelinePanel } from './TimelinePanel';
-import { Actor } from '@Animatica/engine';
 
 // Define mocks using vi.hoisted to avoid hoisting issues
-const { mockUseSceneStore, mockUsePlayback, mockState, mockSetTimeline, mockSetPlayback, mockPlay, mockPause, mockStop, mockSeek } = vi.hoisted(() => {
+const { mockUseSceneStore, mockUsePlayback, mockState, mockSetTimeline, mockPlay, mockPause, mockStop, mockSeek } = vi.hoisted(() => {
     const setTimeline = vi.fn();
     const setPlayback = vi.fn();
     const play = vi.fn();
@@ -56,7 +54,7 @@ vi.mock('@Animatica/engine', () => ({
 
 // Mock translation
 vi.mock('../i18n/useTranslation', () => ({
-    useTranslation: () => ({ t: (key: string, opts?: any) => key }),
+    useTranslation: () => ({ t: (key: string) => key }),
 }));
 
 describe('TimelinePanel', () => {
