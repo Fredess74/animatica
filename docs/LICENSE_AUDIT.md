@@ -1,6 +1,6 @@
 # License Audit
 
-**Date:** 2026-02-23
+**Date:** 2026-02-24
 **Auditor:** Jules (License Auditor)
 
 ## Summary
@@ -32,6 +32,7 @@ The following dependencies were audited:
 | @tailwindcss/postcss | MIT |  | @Animatica/editor |
 | @testing-library/dom | MIT |  | @Animatica/web |
 | @testing-library/react | MIT |  | @Animatica/editor, @Animatica/engine, @Animatica/web |
+| @types/node | MIT |  | @Animatica/engine |
 | @types/react | MIT |  | @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web |
 | @types/react-dom | MIT |  | @Animatica/editor, @Animatica/platform, @Animatica/web |
 | @types/three | MIT |  | @Animatica/engine |
