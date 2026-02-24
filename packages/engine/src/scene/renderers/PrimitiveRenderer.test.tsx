@@ -45,7 +45,7 @@ describe('PrimitiveRenderer', () => {
 
     // Call the component as a function to inspect returned JSX
     // Since we mocked useRef, it won't throw "Invalid hook call"
-    const result = PrimitiveRenderer({ actor }) as React.ReactElement<{ [key: string]: any }>
+    const result = PrimitiveRenderer({ actor }) as React.ReactElement<Record<string, unknown>>
 
     // Verify mesh properties
     expect(result.type).toBe('mesh')
@@ -54,14 +54,16 @@ describe('PrimitiveRenderer', () => {
     expect(result.props.scale).toEqual([2, 2, 2])
 
     // Verify children (geometry and material)
-    const children = React.Children.toArray(result.props.children) as React.ReactElement<{ [key: string]: any }>[]
+    const children = React.Children.toArray(result.props.children as React.ReactNode) as React.ReactElement<
+      Record<string, unknown>
+    >[]
 
     // Check geometry
     const geometry = children.find((child) => child.type === 'boxGeometry')
     expect(geometry).toBeDefined()
 
     // Check material
-    const material = children.find((child) => child.type === 'meshStandardMaterial')
+    const material = children.find((child) => child.type === 'meshStandardMaterial') as React.ReactElement<Record<string, unknown>> | undefined
     expect(material).toBeDefined()
     expect(material?.props.color).toBe('#ff0000')
     expect(material?.props.roughness).toBe(0.5)
@@ -92,8 +94,10 @@ describe('PrimitiveRenderer', () => {
       }
     }
 
-    const result = PrimitiveRenderer({ actor }) as React.ReactElement<{ [key: string]: any }>
-    const children = React.Children.toArray(result.props.children) as React.ReactElement<{ [key: string]: any }>[]
+    const result = PrimitiveRenderer({ actor }) as React.ReactElement<Record<string, unknown>>
+    const children = React.Children.toArray(result.props.children as React.ReactNode) as React.ReactElement<
+      Record<string, unknown>
+    >[]
     const geometry = children.find((child) => child.type === 'sphereGeometry')
     expect(geometry).toBeDefined()
   })

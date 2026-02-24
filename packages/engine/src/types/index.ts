@@ -20,6 +20,36 @@ export type Color = string
 export type UUID = string
 
 /**
+ * Primitive JSON value.
+ */
+export type JSONValue = string | number | boolean | null | JSONObject | JSONArray
+
+/**
+ * JSON object interface.
+ */
+export interface JSONObject {
+  [key: string]: JSONValue
+}
+
+/**
+ * JSON array interface.
+ */
+export interface JSONArray extends Array<JSONValue> {}
+
+/**
+ * Deep partial type.
+ */
+export type DeepPartial<T> = {
+  [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P]
+}
+
+/**
+ * Represents a generic clip in the library.
+ * This is a placeholder for future asset types.
+ */
+export interface Clip extends Record<string, unknown> {}
+
+/**
  * Represents the transformation properties of an object in 3D space.
  */
 export interface Transform {
@@ -393,7 +423,7 @@ export interface ProjectState {
   /** Animation and camera timeline. */
   timeline: Timeline
   /** Asset library (unused currently). */
-  library: { clips: unknown[] }
+  library: { clips: Clip[] }
 }
 
 /**

@@ -33,8 +33,8 @@ export function resolveActiveCamera(
  * @param value The value to set.
  * @returns A new object (or array) with the value set.
  */
-export function setDeepValue(obj: any, path: string[], value: any): any {
-    if (path.length === 0) return value;
+export function setDeepValue<T>(obj: T, path: string[], value: unknown): T {
+    if (path.length === 0) return value as T;
 
     const [head, ...tail] = path;
 
@@ -45,24 +45,28 @@ export function setDeepValue(obj: any, path: string[], value: any): any {
 
         if (!isNaN(index)) {
             // Update numeric index
-            newArr[index] = setDeepValue(obj[index], tail, value);
+            (newArr as unknown[])[index] = setDeepValue((obj as unknown[])[index], tail, value);
         } else {
             // Update non-numeric property on array (rare, but keeps behavior)
             // e.g. target['x'] on an array
-            // Cast to Record to allow string indexing, and obj to any/Record to read
-            (newArr as unknown as Record<string, any>)[head] = setDeepValue((obj as any)[head], tail, value);
+            (newArr as unknown as Record<string, unknown>)[head] = setDeepValue(
+                (obj as unknown as Record<string, unknown>)[head],
+                tail,
+                value
+            );
         }
-        return newArr;
+        return newArr as unknown as T;
     }
 
     // Handle object (default)
     // If obj is undefined/null, create a new object
-    const currentVal = obj ? obj[head] : undefined;
+    const objRecord = obj as Record<string, unknown> | undefined | null;
+    const currentVal = objRecord ? objRecord[head] : undefined;
 
     return {
-        ...obj,
+        ...(objRecord || {}),
         [head]: setDeepValue(currentVal, tail, value)
-    };
+    } as unknown as T;
 }
 
 /**

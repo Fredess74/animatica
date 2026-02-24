@@ -17,7 +17,8 @@ vi.mock('react', async () => {
 // Mock three components used inside CameraRenderer
 vi.mock('@react-three/drei', () => ({
   // Mock PerspectiveCamera as a simple functional component that returns a 'perspectiveCamera' element
-  PerspectiveCamera: ({ children, ...props }: any) => React.createElement('perspectiveCamera', props, children),
+  PerspectiveCamera: ({ children, ...props }: React.PropsWithChildren<Record<string, unknown>>) =>
+    React.createElement('perspectiveCamera', props, children),
   useHelper: vi.fn(),
 }))
 
@@ -44,7 +45,7 @@ describe('CameraRenderer', () => {
       }
     }
 
-    const result = CameraRenderer({ actor, isActive: false }) as unknown as { type: string, props: any }
+    const result = CameraRenderer({ actor, isActive: false }) as React.ReactElement<Record<string, unknown>>
 
     // Check perspectiveCamera mock
     expect(result.type).toBe(PerspectiveCamera)
@@ -65,7 +66,7 @@ describe('CameraRenderer', () => {
       properties: { fov: 60, near: 0.1, far: 100 }
     }
 
-    const result = CameraRenderer({ actor, isActive: true }) as unknown as { type: string, props: any }
+    const result = CameraRenderer({ actor, isActive: true }) as React.ReactElement<Record<string, unknown>>
     expect(result.props.makeDefault).toBe(true)
   })
 

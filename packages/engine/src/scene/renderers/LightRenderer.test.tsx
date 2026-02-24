@@ -11,7 +11,7 @@ vi.mock('react', async () => {
     ...actual,
     useRef: () => ({ current: new THREE.Object3D() }),
     useLayoutEffect: () => {}, // mock useLayoutEffect
-    useMemo: (fn: any) => fn(), // mock useMemo to just run the function
+    useMemo: (fn: () => unknown) => fn(), // mock useMemo to just run the function
   }
 })
 
@@ -44,23 +44,25 @@ describe('LightRenderer', () => {
       }
     }
 
-    const result = LightRenderer({ actor }) as unknown as { type: string, props: any }
+    const result = LightRenderer({ actor }) as React.ReactElement<Record<string, unknown>>
 
     // It returns a group
     expect(result.type).toBe('group')
     expect(result.props.position).toEqual([0, 5, 0])
 
-    const children = React.Children.toArray(result.props.children)
+    const children = React.Children.toArray(result.props.children as React.ReactNode) as React.ReactElement<
+      Record<string, unknown>
+    >[]
     // First child is primitive (target)
-    const target = children.find((c: any) => c.type === 'primitive')
+    const target = children.find((c) => c.type === 'primitive')
     expect(target).toBeDefined()
 
     // Second child is the light
-    const light = children.find((c: any) => c.type === 'pointLight')
+    const light = children.find((c) => c.type === 'pointLight') as React.ReactElement<Record<string, unknown>> | undefined
     expect(light).toBeDefined()
-    expect((light as any).props.intensity).toBe(2)
-    expect((light as any).props.color).toBe('#ff0000')
-    expect((light as any).props.castShadow).toBe(true)
+    expect(light?.props.intensity).toBe(2)
+    expect(light?.props.color).toBe('#ff0000')
+    expect(light?.props.castShadow).toBe(true)
   })
 
   it('renders a directional light with target', () => {
@@ -82,13 +84,17 @@ describe('LightRenderer', () => {
       }
     }
 
-    const result = LightRenderer({ actor }) as unknown as { type: string, props: any }
-    const children = React.Children.toArray(result.props.children)
+    const result = LightRenderer({ actor }) as React.ReactElement<Record<string, unknown>>
+    const children = React.Children.toArray(result.props.children as React.ReactNode) as React.ReactElement<
+      Record<string, unknown>
+    >[]
 
-    const light = children.find((c: any) => c.type === 'directionalLight')
+    const light = children.find((c) => c.type === 'directionalLight') as React.ReactElement<
+      Record<string, unknown>
+    > | undefined
     expect(light).toBeDefined()
     // Verify target prop is passed (it will be the mocked ref object)
-    expect((light as any).props.target).toBeDefined()
+    expect(light?.props.target).toBeDefined()
   })
 
   it('renders nothing when visible is false', () => {
