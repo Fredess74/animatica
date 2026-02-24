@@ -1,6 +1,6 @@
 # License Audit
 
-**Date:** 2026-02-23
+**Date:** 2025-05-23
 **Auditor:** Jules (License Auditor)
 
 ## Summary
@@ -32,6 +32,7 @@ The following dependencies were audited:
 | @tailwindcss/postcss | MIT |  | @Animatica/editor |
 | @testing-library/dom | MIT |  | @Animatica/web |
 | @testing-library/react | MIT |  | @Animatica/editor, @Animatica/engine, @Animatica/web |
+| @types/node | MIT |  | @Animatica/engine |
 | @types/react | MIT |  | @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web |
 | @types/react-dom | MIT |  | @Animatica/editor, @Animatica/platform, @Animatica/web |
 | @types/three | MIT |  | @Animatica/engine |
@@ -61,8 +62,8 @@ The following dependencies were audited:
 
 ## Flagged Licenses (Non-MIT/Apache-2.0)
 
-- **`lucide-react`**: ISC
-- **`typescript`**: Apache-2.0
+- **`lucide-react`**: ISC (Compatible with MIT)
+- **`typescript`**: Apache-2.0 (Compatible with MIT)
 
 ## Missing Licenses
 
