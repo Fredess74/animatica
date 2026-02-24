@@ -18,3 +18,4 @@
 - [DONE] [type-auditor] [2026-02-23] Scan all .ts files for any type, type assertions, missing return types in packages/engine
 - [DONE] [perf-auditor] [2026-02-23] Check for unnecessary re-renders, large bundle imports, missing memoization
 - [DONE] [editor-properties-dev] [2025-02-23] Wire PropertiesPanel to Zustand store (read/write actor properties)
+- [DONE] [error-boundary-agent] [2025-05-23] Add try/catch to all async operations, ErrorBoundary to all canvas components

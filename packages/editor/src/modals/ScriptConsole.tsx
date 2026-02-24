@@ -5,7 +5,7 @@
  * @module @animatica/editor/modals/ScriptConsole
  */
 import React, { useState, useCallback } from 'react';
-import { getAiPrompt, validateScript } from '@Animatica/engine';
+import { getAiPrompt, validateScript, handleError } from '@Animatica/engine';
 import { useToast } from '../components/ToastContext';
 
 interface ScriptConsoleProps {
@@ -87,14 +87,17 @@ export const ScriptConsole: React.FC<ScriptConsoleProps> = ({ onClose }) => {
         }
     }, [script, onClose, showToast]);
 
-    const handleCopyPrompt = useCallback(() => {
+    const handleCopyPrompt = useCallback(async () => {
         try {
             // Default to a Cyberpunk style prompt for now
             const prompt = getAiPrompt('A futuristic city with flying cars and neon lights', 'Cyberpunk');
-            navigator.clipboard.writeText(prompt);
+            await navigator.clipboard.writeText(prompt);
             showToast('AI Prompt copied to clipboard', 'success');
         } catch (e) {
-            console.error(e);
+            handleError(e, {
+                component: 'ScriptConsole',
+                action: 'copyPrompt'
+            });
             showToast('Failed to copy prompt', 'error');
         }
     }, [showToast]);

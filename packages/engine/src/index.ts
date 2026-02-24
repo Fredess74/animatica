@@ -33,3 +33,7 @@ export { getAiPrompt, PROMPT_STYLES } from './ai/promptTemplates';
 // === CONFIG ===
 export { FeatureFlagProvider, useFeatureFlag, getFeatureFlags } from './config/featureFlags';
 export type { FeatureFlags } from './config/featureFlags';
+
+// === UTILS ===
+export { handleError } from './utils/errorHandler';
+export type { ErrorContext } from './utils/errorHandler';
