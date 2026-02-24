@@ -33,9 +33,7 @@ export function Navbar() {
         </Link>
 
         {/* Desktop Nav */}
-        <div className="desktop-nav" style={{ display: 'none', gap: '2rem', alignItems: 'center' }}>
-          {/* Using a media query in JS or CSS is better, but for inline styles we rely on classes defined in globals or here */}
-          {/* I will add a style block for media queries since I can't use CSS modules easily without extra files */}
+        <div className="desktop-nav" data-testid="desktop-nav" style={{ display: 'none', gap: '2rem', alignItems: 'center' }}>
           <Link href="/explore" className="nav-link">Explore</Link>
           <Link href="/pricing" className="nav-link">Pricing</Link>
           <div style={{ width: '1px', height: '24px', backgroundColor: 'var(--border-default)' }} />
@@ -46,6 +44,7 @@ export function Navbar() {
         {/* Mobile Menu Button */}
         <button
           className="mobile-toggle"
+          data-testid="mobile-toggle"
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle menu"
           style={{ color: 'var(--text-primary)' }}
@@ -56,7 +55,7 @@ export function Navbar() {
 
       {/* Mobile Nav Dropdown */}
       {isOpen && (
-        <div className="mobile-menu" style={{
+        <div className="mobile-menu" data-testid="mobile-menu" style={{
           position: 'absolute',
           top: '64px',
           left: 0,
@@ -66,7 +65,8 @@ export function Navbar() {
           padding: '1rem',
           display: 'flex',
           flexDirection: 'column',
-          gap: '1rem'
+          gap: '1rem',
+          zIndex: 49
         }}>
           <Link href="/explore" onClick={() => setIsOpen(false)}>Explore</Link>
           <Link href="/pricing" onClick={() => setIsOpen(false)}>Pricing</Link>
@@ -93,7 +93,19 @@ export function Navbar() {
             display: block !important;
           }
         }
+        .nav-link {
+          color: var(--text-primary);
+          transition: color 0.2s;
+        }
         .nav-link:hover {
+          color: var(--color-primary);
+        }
+        .mobile-menu a {
+          color: var(--text-primary);
+          padding: 0.5rem 0;
+          text-decoration: none;
+        }
+        .mobile-menu a:hover {
           color: var(--color-primary);
         }
       `}</style>

@@ -35,7 +35,7 @@
 
 ## Web App Tasks
 
-- [ROLE: web-layout-dev] Create Next.js app layout with navigation, auth placeholder
+- [ROLE: web-layout-dev] Create auth placeholder pages (/login, /signup)
 - [ROLE: web-pages-dev] Create landing page, /create route with editor, /explore route
 - [ROLE: web-api-dev] Create API routes for project CRUD operations
 - [ROLE: web-test-writer] Write E2E tests for main user flows

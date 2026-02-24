@@ -1,6 +1,6 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import { render, screen, cleanup } from '@testing-library/react';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import RootLayout from './layout';
 
 // Mock next/link
@@ -18,13 +18,23 @@ vi.mock('lucide-react', () => ({
   X: () => <div data-testid="x-icon">X</div>,
 }));
 
+afterEach(() => {
+  cleanup();
+});
+
 describe('RootLayout', () => {
   it('renders navbar and footer', () => {
+    // We suppress console.error for the expected hydration warning in tests due to <html> inside <div>
+    const originalError = console.error;
+    console.error = vi.fn();
+
     render(
       <RootLayout>
         <div data-testid="child-content">Child Content</div>
       </RootLayout>
     );
+
+    console.error = originalError;
 
     // Check for Navbar elements
     expect(screen.getByText('Animatica')).toBeDefined();
