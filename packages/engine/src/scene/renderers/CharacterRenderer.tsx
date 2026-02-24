@@ -3,6 +3,7 @@ import * as THREE from 'three'
 import { ThreeEvent } from '@react-three/fiber'
 import { Edges } from '@react-three/drei'
 import { CharacterActor } from '../../types'
+import { Humanoid } from '../../characters/Humanoid'
 
 interface CharacterRendererProps {
   /** The actor data containing transform, visibility, and properties. */
@@ -13,10 +14,12 @@ interface CharacterRendererProps {
   onClick?: (e: ThreeEvent<MouseEvent>) => void
 }
 
+/** Default ReadyPlayerMe model URL to use if none is specified in the actor. */
+const DEFAULT_MODEL_URL = 'https://models.readyplayer.me/6585bb73602f9e42152862a9.glb';
+
 /**
- * Renders a character actor.
- * Currently a placeholder rendering a capsule to represent the character.
- * Handles selection highlighting with an edges geometry.
+ * Renders a character actor using the Humanoid component.
+ * Handles model loading from URL, animations, and selection highlighting.
  *
  * @component
  * @example
@@ -29,13 +32,9 @@ export const CharacterRenderer = forwardRef<THREE.Group, CharacterRendererProps>
   isSelected = false,
   onClick,
 }, ref) => {
-  const { transform, visible } = actor
+  const { transform, visible, animation, animationSpeed, modelUrl, morphTargets, bodyPose } = actor
 
   if (!visible) return null
-
-  // Use a distinct color for characters, or derive from clothing if available
-  // For placeholder, we use a standard color
-  const color = '#ff00aa' // Hot pink for visibility
 
   return (
     <group
@@ -45,21 +44,20 @@ export const CharacterRenderer = forwardRef<THREE.Group, CharacterRendererProps>
       scale={transform.scale}
       onClick={onClick}
     >
-      <mesh castShadow receiveShadow>
-        <capsuleGeometry args={[0.5, 1.8, 4, 8]} />
-        <meshStandardMaterial
-          color={color}
-          roughness={0.7}
-          metalness={0.1}
-        />
-        {isSelected && <Edges color="yellow" threshold={15} />}
-      </mesh>
-
-      {/* Direction indicator (face) */}
-      <mesh position={[0, 0.5, 0.4]} rotation={[0, 0, 0]}>
-         <boxGeometry args={[0.2, 0.2, 0.2]} />
-         <meshStandardMaterial color="white" />
-      </mesh>
+      <Humanoid
+        url={modelUrl || DEFAULT_MODEL_URL}
+        animation={animation}
+        animationSpeed={animationSpeed}
+        morphTargets={morphTargets}
+        bodyPose={bodyPose}
+      />
+      {isSelected && (
+        <mesh>
+          <capsuleGeometry args={[0.5, 1.8, 4, 8]} />
+          <meshStandardMaterial transparent opacity={0} />
+          <Edges color="yellow" threshold={15} />
+        </mesh>
+      )}
     </group>
   )
 })

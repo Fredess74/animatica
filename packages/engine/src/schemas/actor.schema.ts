@@ -76,6 +76,7 @@ export const ClothingSlotsSchema = z.object({
 
 export const CharacterActorSchema = BaseActorSchema.extend({
     type: z.literal('character'),
+    modelUrl: z.string().url().optional(),
     animation: AnimationStateSchema,
     animationSpeed: z.number().positive().optional(),
     morphTargets: MorphTargetsSchema,
