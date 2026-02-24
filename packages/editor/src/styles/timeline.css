@@ -50,6 +50,10 @@
   border-color: var(--border-subtle);
 }
 
+.timeline-btn:active {
+  transform: scale(0.90);
+}
+
 .timeline-btn--active {
   background-color: var(--bg-elevated);
   color: var(--green-400);

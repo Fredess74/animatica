@@ -47,7 +47,8 @@
   justify-content: space-between;
   padding: var(--space-md) var(--space-lg);
   background-color: var(--bg-elevated);
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: 2px solid;
+  border-image: var(--gradient-stripe) 1;
 }
 
 .modal__title {
@@ -63,13 +64,18 @@
   color: var(--text-muted);
   font-size: var(--text-lg);
   cursor: pointer;
-  transition: color var(--transition-fast);
+  transition: all var(--transition-fast);
   padding: var(--space-xs);
   line-height: 1;
 }
 
 .modal__close:hover {
   color: var(--text-primary);
+  transform: rotate(90deg) scale(1.1);
+}
+
+.modal__close:active {
+  transform: rotate(90deg) scale(0.95);
 }
 
 .modal__footer {

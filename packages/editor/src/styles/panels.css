@@ -98,6 +98,8 @@
   font-weight: 600;
   background-color: var(--bg-surface);
   position: relative;
+  border-bottom: 2px solid;
+  border-image: var(--gradient-stripe) 1;
 }
 
 /* Ensure retro stripe is visible if present */
@@ -135,6 +137,10 @@
   cursor: pointer;
   transition: var(--transition-fast);
   border: 1px solid transparent;
+}
+
+.editor-btn:active {
+  transform: scale(0.96);
 }
 
 .editor-btn--ghost {
@@ -235,6 +241,11 @@
   color: var(--text-primary);
   transform: translateY(-1px);
   box-shadow: var(--shadow-sm);
+}
+
+.asset-item:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: none;
 }
 
 .asset-item__icon {
