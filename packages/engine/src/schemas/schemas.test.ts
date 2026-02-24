@@ -1,4 +1,5 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, expectTypeOf } from 'vitest';
+import { z } from 'zod';
 import {
     Vector3Schema,
     ColorSchema,
@@ -10,13 +11,64 @@ import {
     CameraActorSchema,
     SpeakerActorSchema,
     ActorSchema,
+    ValidationResultSchema,
 } from './index';
 import {
     TimelineSchema,
     EnvironmentSchema,
     ProjectStateSchema,
     ProjectMetaSchema,
-} from './scene.schema';
+    AnimationStateSchema,
+    MorphTargetsSchema,
+    BodyPoseSchema,
+    ClothingItemSchema,
+    ClothingSlotsSchema,
+    PrimitiveShapeSchema,
+    LightTypeSchema,
+    EasingTypeSchema,
+    KeyframeSchema,
+    AnimationTrackSchema,
+    TransitionTypeSchema,
+    CameraCutSchema,
+    WeatherTypeSchema,
+    WeatherSchema,
+    FogSchema,
+    BaseActorSchema,
+} from './index';
+
+import type {
+    Vector3,
+    Color,
+    UUID,
+    Transform,
+    BaseActor,
+    AnimationState,
+    MorphTargets,
+    BodyPose,
+    ClothingItem,
+    ClothingSlots,
+    CharacterActor,
+    PrimitiveShape,
+    PrimitiveActor,
+    LightType,
+    LightActor,
+    CameraActor,
+    SpeakerActor,
+    Actor,
+    Timeline,
+    Environment,
+    ProjectMeta,
+    ProjectState,
+    ValidationResult,
+    EasingType,
+    Keyframe,
+    AnimationTrack,
+    TransitionType,
+    CameraCut,
+    WeatherType,
+    Weather,
+    Fog,
+} from '../types';
 
 // ---- Valid test data ----
 
@@ -214,5 +266,60 @@ describe('Scene Schemas', () => {
             library: { clips: [] },
         };
         expect(ProjectStateSchema.safeParse(project).success).toBe(true);
+    });
+});
+
+describe('Type Equivalence', () => {
+    it('matches TypeScript interfaces exactly', () => {
+        // Primitives
+        expectTypeOf<z.infer<typeof Vector3Schema>>().toEqualTypeOf<Vector3>();
+        expectTypeOf<z.infer<typeof ColorSchema>>().toEqualTypeOf<Color>();
+        expectTypeOf<z.infer<typeof UUIDSchema>>().toEqualTypeOf<UUID>();
+        expectTypeOf<z.infer<typeof TransformSchema>>().toEqualTypeOf<Transform>();
+        expectTypeOf<z.infer<typeof BaseActorSchema>>().toEqualTypeOf<BaseActor>();
+
+        // Character
+        expectTypeOf<z.infer<typeof AnimationStateSchema>>().toEqualTypeOf<AnimationState>();
+        expectTypeOf<z.infer<typeof MorphTargetsSchema>>().toEqualTypeOf<MorphTargets>();
+        expectTypeOf<z.infer<typeof BodyPoseSchema>>().toEqualTypeOf<BodyPose>();
+        expectTypeOf<z.infer<typeof ClothingItemSchema>>().toEqualTypeOf<ClothingItem>();
+        expectTypeOf<z.infer<typeof ClothingSlotsSchema>>().toEqualTypeOf<ClothingSlots>();
+        expectTypeOf<z.infer<typeof CharacterActorSchema>>().toEqualTypeOf<CharacterActor>();
+
+        // Primitives
+        expectTypeOf<z.infer<typeof PrimitiveShapeSchema>>().toEqualTypeOf<PrimitiveShape>();
+        expectTypeOf<z.infer<typeof PrimitiveActorSchema>>().toEqualTypeOf<PrimitiveActor>();
+
+        // Light
+        expectTypeOf<z.infer<typeof LightTypeSchema>>().toEqualTypeOf<LightType>();
+        expectTypeOf<z.infer<typeof LightActorSchema>>().toEqualTypeOf<LightActor>();
+
+        // Camera
+        expectTypeOf<z.infer<typeof CameraActorSchema>>().toEqualTypeOf<CameraActor>();
+
+        // Speaker
+        expectTypeOf<z.infer<typeof SpeakerActorSchema>>().toEqualTypeOf<SpeakerActor>();
+
+        // Union
+        expectTypeOf<z.infer<typeof ActorSchema>>().toEqualTypeOf<Actor>();
+
+        // Timeline
+        expectTypeOf<z.infer<typeof EasingTypeSchema>>().toEqualTypeOf<EasingType>();
+        expectTypeOf<z.infer<typeof KeyframeSchema>>().toEqualTypeOf<Keyframe>();
+        expectTypeOf<z.infer<typeof AnimationTrackSchema>>().toEqualTypeOf<AnimationTrack>();
+        expectTypeOf<z.infer<typeof TransitionTypeSchema>>().toEqualTypeOf<TransitionType>();
+        expectTypeOf<z.infer<typeof CameraCutSchema>>().toEqualTypeOf<CameraCut>();
+        expectTypeOf<z.infer<typeof TimelineSchema>>().toEqualTypeOf<Timeline>();
+
+        // Environment
+        expectTypeOf<z.infer<typeof WeatherTypeSchema>>().toEqualTypeOf<WeatherType>();
+        expectTypeOf<z.infer<typeof WeatherSchema>>().toEqualTypeOf<Weather>();
+        expectTypeOf<z.infer<typeof FogSchema>>().toEqualTypeOf<Fog>();
+        expectTypeOf<z.infer<typeof EnvironmentSchema>>().toEqualTypeOf<Environment>();
+
+        // Project
+        expectTypeOf<z.infer<typeof ProjectMetaSchema>>().toEqualTypeOf<ProjectMeta>();
+        expectTypeOf<z.infer<typeof ProjectStateSchema>>().toEqualTypeOf<ProjectState>();
+        expectTypeOf<z.infer<typeof ValidationResultSchema>>().toEqualTypeOf<ValidationResult>();
     });
 });

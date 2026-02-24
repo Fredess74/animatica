@@ -47,4 +47,5 @@ export {
     // Project
     ProjectMetaSchema,
     ProjectStateSchema,
+    ValidationResultSchema,
 } from './scene.schema';

@@ -93,3 +93,9 @@ export const ProjectStateSchema = z.object({
         clips: z.array(z.unknown()),
     }),
 });
+
+export const ValidationResultSchema = z.object({
+    success: z.boolean(),
+    errors: z.array(z.string()),
+    data: ProjectStateSchema.optional(),
+});
