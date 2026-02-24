@@ -17,6 +17,16 @@ const EASING_MAP: Record<EasingType, (t: number) => number> = {
     easeOut: Easing.easeOut,
     easeInOut: Easing.easeInOut,
     step: Easing.step,
+    backIn: Easing.backIn,
+    backOut: Easing.backOut,
+    backInOut: Easing.backInOut,
+    elasticIn: Easing.elasticIn,
+    elasticOut: Easing.elasticOut,
+    elasticInOut: Easing.elasticInOut,
+    bounceIn: Easing.bounceIn,
+    bounceOut: Easing.bounceOut,
+    bounceInOut: Easing.bounceInOut,
+    spring: Easing.spring,
 };
 
 function resolveEasing(type?: EasingType): (t: number) => number {
@@ -96,6 +106,38 @@ function lerpVector3(a: Vector3, b: Vector3, t: number): Vector3 {
         a[0] + (b[0] - a[0]) * t,
         a[1] + (b[1] - a[1]) * t,
         a[2] + (b[2] - a[2]) * t,
+    ];
+}
+
+// ---- Bezier Path Interpolation ----
+
+/**
+ * Cubic Bezier interpolation for a 3D path.
+ * Useful for smooth camera or actor movement along a curve.
+ *
+ * @param p0 Start point.
+ * @param p1 Control point 1.
+ * @param p2 Control point 2.
+ * @param p3 End point.
+ * @param t Normalized time (0-1).
+ * @returns Point on the curve at time t.
+ */
+export function interpolateBezier(p0: Vector3, p1: Vector3, p2: Vector3, p3: Vector3, t: number): Vector3 {
+    const t2 = t * t;
+    const t3 = t2 * t;
+    const mt = 1 - t;
+    const mt2 = mt * mt;
+    const mt3 = mt2 * mt;
+
+    const f0 = mt3;
+    const f1 = 3 * mt2 * t;
+    const f2 = 3 * mt * t2;
+    const f3 = t3;
+
+    return [
+        f0 * p0[0] + f1 * p1[0] + f2 * p2[0] + f3 * p3[0],
+        f0 * p0[1] + f1 * p1[1] + f2 * p2[1] + f3 * p3[1],
+        f0 * p0[2] + f1 * p1[2] + f2 * p2[2] + f3 * p3[2],
     ];
 }
 

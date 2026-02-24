@@ -21,7 +21,6 @@
 
 - [ROLE: engine-type-hardener] Review all type definitions in `packages/engine/src/types/index.ts`, remove any `any` usage, add missing interfaces
 - [ROLE: engine-schema-validator] Ensure all Zod schemas in `packages/engine/src/schemas/` match TypeScript interfaces exactly
-- [ROLE: engine-animation-dev] Add missing easing functions (bounce, elastic, back) to `packages/engine/src/animation/easing.ts`
 - [ROLE: engine-playback-dev] Add speed controls and loop modes to PlaybackController
 - [ROLE: engine-test-writer] Write tests for SceneManager and PlaybackController
 - [ROLE: engine-api-docs] Add JSDoc comments to all exported functions in `packages/engine/src/index.ts`
