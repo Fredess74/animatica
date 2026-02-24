@@ -42,6 +42,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        {/* Security: CSP to prevent XSS while allowing R3F (unsafe-eval) and Next.js (unsafe-inline) */}
+        <meta
+          httpEquiv="Content-Security-Policy"
+          content="default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; font-src 'self'; connect-src 'self' https:;"
+        />
+      </head>
       <body style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <Navbar />
         <main style={{ flex: 1 }}>
