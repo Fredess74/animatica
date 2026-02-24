@@ -15,6 +15,10 @@ export interface PlaybackState {
   isPlaying: boolean;
   /** Frame rate for playback (e.g., 24, 30, 60). */
   frameRate: number;
+  /** Playback speed multiplier (1.0 = normal). */
+  speed: number;
+  /** Whether to loop the animation when it reaches the end. */
+  loop: boolean;
 }
 
 /**
@@ -66,7 +70,7 @@ const initialState: ProjectState & { playback: PlaybackState; selectedActorId: s
   actors: [],
   timeline: initialTimeline,
   library: { clips: [] },
-  playback: { currentTime: 0, isPlaying: false, frameRate: 24 },
+  playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, loop: false },
   selectedActorId: null,
 };
 

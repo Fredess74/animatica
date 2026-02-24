@@ -156,7 +156,7 @@ describe('Engine Benchmarks', () => {
                 actors: [],
                 timeline: { duration: 10, cameraTrack: [], animationTracks: [] },
                 library: { clips: [] },
-                playback: { currentTime: 0, isPlaying: false, frameRate: 24 },
+                playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, loop: false },
             });
 
             measure('Store Playback Updates (10k ops)', () => {
@@ -171,7 +171,7 @@ describe('Engine Benchmarks', () => {
 
             setState({
                 actors: [],
-                playback: { currentTime: 0, isPlaying: false, frameRate: 24 },
+                playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, loop: false },
             } as any);
 
             measure('Store Add Actor (1k ops)', () => {

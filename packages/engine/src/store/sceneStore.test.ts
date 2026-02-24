@@ -13,7 +13,7 @@ describe('sceneStore', () => {
           sun: { position: [10, 10, 10], intensity: 1, color: '#ffffff' },
           skyColor: '#87CEEB',
       },
-      playback: { currentTime: 0, isPlaying: false, frameRate: 24 },
+      playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, loop: false },
     });
 
     // Clear undo history

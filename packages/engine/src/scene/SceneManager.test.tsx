@@ -35,6 +35,11 @@ vi.mock('./animationUtils', () => ({
   resolveActiveCamera: vi.fn(() => 'camera-1'),
 }))
 
+// Mock PlaybackSystem to avoid R3F/useFrame errors
+vi.mock('../playback/PlaybackSystem', () => ({
+  PlaybackSystem: () => null,
+}))
+
 // Mock Three.js intrinsic elements to avoid React warnings in JSDOM
 // We can't easily mock intrinsic elements like <ambientLight> globally without affecting other tests
 // or modifying the environment. But typically R3F components in JSDOM just render as custom elements (e.g. <ambientlight>).

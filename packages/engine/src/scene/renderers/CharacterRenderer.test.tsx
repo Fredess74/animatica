@@ -42,7 +42,8 @@ describe('CharacterRenderer', () => {
   it('renders a group containing capsule mesh with correct transform', () => {
     // Call the forwardRef component's render function directly
     // @ts-ignore
-    const result = CharacterRenderer.render({ actor: mockActor }, null) as React.ReactElement
+    const Component = (CharacterRenderer as any).type;
+    const result = Component.render({ actor: mockActor }, null) as React.ReactElement
 
     expect(result).not.toBeNull()
     expect(result.type).toBe('group')
@@ -82,13 +83,15 @@ describe('CharacterRenderer', () => {
   it('renders nothing when visible is false', () => {
     const invisibleActor = { ...mockActor, visible: false }
     // @ts-ignore
-    const result = CharacterRenderer.render({ actor: invisibleActor }, null)
+    const Component = (CharacterRenderer as any).type;
+    const result = Component.render({ actor: invisibleActor }, null)
     expect(result).toBeNull()
   })
 
   it('renders face direction indicator', () => {
      // @ts-ignore
-    const result = CharacterRenderer.render({ actor: mockActor }, null) as React.ReactElement
+    const Component = (CharacterRenderer as any).type;
+    const result = Component.render({ actor: mockActor }, null) as React.ReactElement
     const props = result.props as any
     const children = React.Children.toArray(props.children) as React.ReactElement[]
 

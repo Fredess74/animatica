@@ -8,6 +8,7 @@
 import React, { useMemo } from 'react';
 import { useSceneStore } from '../store/sceneStore';
 import { evaluateTracksAtTime } from '../animation/interpolate';
+import { PlaybackSystem } from '../playback/PlaybackSystem';
 import { applyAnimationToActor, resolveActiveCamera } from './animationUtils';
 import { PrimitiveRenderer } from './renderers/PrimitiveRenderer';
 import { LightRenderer } from './renderers/LightRenderer';
@@ -88,6 +89,7 @@ export const SceneManager: React.FC<SceneManagerProps> = ({
 
     return (
         <>
+            <PlaybackSystem />
             {/* === Environment === */}
             <ambientLight
                 intensity={environment.ambientLight.intensity}

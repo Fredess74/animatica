@@ -23,7 +23,7 @@ interface PrimitiveRendererProps {
  * <PrimitiveRenderer actor={myBoxActor} isSelected={true} />
  * ```
  */
-export const PrimitiveRenderer: React.FC<PrimitiveRendererProps> = ({
+export const PrimitiveRenderer: React.FC<PrimitiveRendererProps> = React.memo(({
   actor,
   isSelected = false,
   onClick,
@@ -78,4 +78,4 @@ export const PrimitiveRenderer: React.FC<PrimitiveRendererProps> = ({
       {isSelected && <Edges color="yellow" threshold={15} />}
     </mesh>
   )
-}
+})

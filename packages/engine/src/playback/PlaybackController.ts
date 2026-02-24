@@ -1,20 +1,20 @@
 /**
- * PlaybackController — Drives animation playback via requestAnimationFrame.
- * Provides a React hook that manages the animation loop, time tracking,
- * and camera cuts for the scene.
+ * PlaybackController — Provides controls for animation playback.
+ * This hook manages the playback state in the store.
+ * The actual animation loop is driven by the PlaybackSystem component.
  *
  * @module @animatica/engine/playback/PlaybackController
  */
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useSceneStore } from '../store/sceneStore';
 
 /**
  * Options for customizing playback behavior.
  */
 interface PlaybackOptions {
-    /** Whether to loop the animation when it reaches the end. Default: false. */
+    /** Whether to loop the animation when it reaches the end. */
     loop?: boolean;
-    /** Playback speed multiplier (1.0 = normal). Default: 1.0. */
+    /** Playback speed multiplier (1.0 = normal). */
     speed?: number;
 }
 
@@ -38,158 +38,55 @@ interface PlaybackControls {
 
 /**
  * React hook that provides playback controls for the scene animation.
- * Uses requestAnimationFrame for smooth, frame-accurate playback.
+ * Note: This hook does NOT run the animation loop. Ensure <PlaybackSystem /> is mounted in the scene.
  *
- * @param options Optional playback configuration.
- * @returns PlaybackControls object with play, pause, stop, seek, toggle, setSpeed.
- *
- * @example
- * ```tsx
- * function ControlBar() {
- *   const { play, pause, stop, seek, toggle } = usePlayback({ loop: true });
- *   return (
- *     <div>
- *       <button onClick={toggle}>Play/Pause</button>
- *       <button onClick={stop}>Stop</button>
- *       <input type="range" onChange={(e) => seek(Number(e.target.value))} />
- *     </div>
- *   );
- * }
- * ```
+ * @param options Optional playback configuration to initialize the store.
+ * @returns PlaybackControls object.
  */
 export function usePlayback(options: PlaybackOptions = {}): PlaybackControls {
-    const { loop = false, speed = 1.0 } = options;
+    const { loop, speed } = options;
+    const setPlayback = useSceneStore((s) => s.setPlayback);
 
-    // Use refs to avoid stale closures in the animation loop
-    const loopRef = useRef(loop);
-    const speedRef = useRef(speed);
-    const rafIdRef = useRef<number | null>(null);
-    const lastFrameTimeRef = useRef<number | null>(null);
-
-    // Sync refs with props
+    // Initialize store with options if provided
     useEffect(() => {
-        loopRef.current = loop;
-    }, [loop]);
+        const updates: any = {};
+        if (loop !== undefined) updates.loop = loop;
+        if (speed !== undefined) updates.speed = speed;
 
-    useEffect(() => {
-        speedRef.current = speed;
-    }, [speed]);
-
-    // We subscribe to isPlaying only to trigger re-renders if the component needs to know.
-    // However, the hook returns controls, not state.
-    // If the component needs state, it should use useSceneStore separately.
-    // But typically usePlayback is used in a component that might change appearance based on isPlaying.
-    // The original implementation subscribed.
-    // To match original behavior (re-render on change), we keep the subscription,
-    // but we use underscores to ignore unused variable linting if we don't return it?
-    // The original hook returned { play, ... } but NOT isPlaying.
-    // The components using this hook might expect it to trigger re-render when playing starts/stops?
-    // If we remove the subscription, the component won't re-render.
-    // But usePlayback doesn't return isPlaying.
-    // So the component doesn't know.
-    // Unless usePlayback is used alongside useSceneStore.
-    // I will remove the unused variable. If re-render is needed, the component should subscribe itself.
-    useSceneStore((s) => s.playback.isPlaying);
+        if (Object.keys(updates).length > 0) {
+            setPlayback(updates);
+        }
+    }, [loop, speed, setPlayback]);
 
     /**
-     * The core animation frame callback.
-     * Calculates delta time and advances the store's currentTime.
-     */
-    const tick = useCallback(
-        (timestamp: number) => {
-            if (lastFrameTimeRef.current === null) {
-                lastFrameTimeRef.current = timestamp;
-            }
-
-            const deltaMs = timestamp - lastFrameTimeRef.current;
-            lastFrameTimeRef.current = timestamp;
-
-            // Convert to seconds and apply speed multiplier
-            const deltaSec = (deltaMs / 1000) * speedRef.current;
-
-            // Get fresh state directly to avoid dependency chains
-            const state = useSceneStore.getState();
-            const { duration } = state.timeline;
-            const { frameRate, currentTime } = state.playback;
-
-            let newTime = currentTime + deltaSec;
-
-            // Handle end of timeline
-            if (newTime >= duration) {
-                if (loopRef.current) {
-                    newTime = newTime % duration;
-                } else {
-                    newTime = duration;
-                    // Auto-pause at end
-                    state.setPlayback({ currentTime: newTime, isPlaying: false });
-                    rafIdRef.current = null;
-                    lastFrameTimeRef.current = null;
-                    return;
-                }
-            }
-
-            const targetFPS = frameRate || 24;
-            const frameDuration = 1 / targetFPS;
-
-            const quantizedTime = Math.round(newTime / frameDuration) * frameDuration;
-
-            // Only update if time changed (prevent spamming store if delta is tiny)
-            if (Math.abs(quantizedTime - currentTime) > 0.0001) {
-                state.setPlayback({ currentTime: quantizedTime });
-            }
-
-            // Schedule next frame
-            rafIdRef.current = requestAnimationFrame(tick);
-        },
-        [] // No dependencies! Reads everything from refs or store.getState()
-    );
-
-    /**
-     * Starts the animation loop.
+     * Starts playback.
      */
     const play = useCallback(() => {
-        if (rafIdRef.current !== null) return; // Already playing
-
         const state = useSceneStore.getState();
         const { duration } = state.timeline;
         const { currentTime } = state.playback;
 
         // If at the end, reset to start
         if (currentTime >= duration) {
-            state.setPlayback({ currentTime: 0 });
+            setPlayback({ currentTime: 0, isPlaying: true });
+        } else {
+            setPlayback({ isPlaying: true });
         }
-
-        state.setPlayback({ isPlaying: true });
-        lastFrameTimeRef.current = null;
-        rafIdRef.current = requestAnimationFrame(tick);
-    }, [tick]); // tick is stable
+    }, [setPlayback]);
 
     /**
-     * Pauses the animation loop.
+     * Pauses playback.
      */
     const pause = useCallback(() => {
-        if (rafIdRef.current !== null) {
-            cancelAnimationFrame(rafIdRef.current);
-            rafIdRef.current = null;
-        }
-        lastFrameTimeRef.current = null;
-
-        // Update store
-        useSceneStore.getState().setPlayback({ isPlaying: false });
-    }, []);
+        setPlayback({ isPlaying: false });
+    }, [setPlayback]);
 
     /**
      * Stops playback and resets to time 0.
      */
     const stop = useCallback(() => {
-        if (rafIdRef.current !== null) {
-            cancelAnimationFrame(rafIdRef.current);
-            rafIdRef.current = null;
-        }
-        lastFrameTimeRef.current = null;
-
-        useSceneStore.getState().setPlayback({ currentTime: 0, isPlaying: false });
-    }, []);
+        setPlayback({ currentTime: 0, isPlaying: false });
+    }, [setPlayback]);
 
     /**
      * Seeks to a specific time in seconds.
@@ -199,20 +96,17 @@ export function usePlayback(options: PlaybackOptions = {}): PlaybackControls {
             const state = useSceneStore.getState();
             const { duration } = state.timeline;
             const clampedTime = Math.max(0, Math.min(time, duration));
-            state.setPlayback({ currentTime: clampedTime });
+            setPlayback({ currentTime: clampedTime });
         },
-        []
+        [setPlayback]
     );
 
     /**
      * Toggles between play and pause.
      */
     const toggle = useCallback(() => {
-        // Need to check current playing state from store or local ref?
-        // We subscribe to isPlaying for UI, so we can use that.
-        // But inside callback better to read fresh state to be safe.
-        const playing = useSceneStore.getState().playback.isPlaying;
-        if (playing) {
+        const isPlaying = useSceneStore.getState().playback.isPlaying;
+        if (isPlaying) {
             pause();
         } else {
             play();
@@ -223,17 +117,9 @@ export function usePlayback(options: PlaybackOptions = {}): PlaybackControls {
      * Sets the playback speed multiplier.
      */
     const setSpeedHandler = useCallback((newSpeed: number) => {
-        speedRef.current = Math.max(0.1, Math.min(newSpeed, 10));
-    }, []);
-
-    // Cleanup on unmount
-    useEffect(() => {
-        return () => {
-            if (rafIdRef.current !== null) {
-                cancelAnimationFrame(rafIdRef.current);
-            }
-        };
-    }, []);
+        const clampedSpeed = Math.max(0.1, Math.min(newSpeed, 10));
+        setPlayback({ speed: clampedSpeed });
+    }, [setPlayback]);
 
     return {
         play,

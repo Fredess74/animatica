@@ -22,7 +22,7 @@ interface CameraRendererProps {
  * <CameraRenderer actor={myCameraActor} isActive={true} />
  * ```
  */
-export const CameraRenderer: React.FC<CameraRendererProps> = ({
+export const CameraRenderer: React.FC<CameraRendererProps> = React.memo(({
   actor,
   isActive = false,
   showHelper = true,
@@ -51,4 +51,4 @@ export const CameraRenderer: React.FC<CameraRendererProps> = ({
       far={far}
     />
   )
-}
+})

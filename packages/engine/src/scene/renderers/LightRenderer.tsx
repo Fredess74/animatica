@@ -20,7 +20,7 @@ interface LightRendererProps {
  * <LightRenderer actor={myLightActor} showHelper={true} />
  * ```
  */
-export const LightRenderer: React.FC<LightRendererProps> = ({
+export const LightRenderer: React.FC<LightRendererProps> = React.memo(({
   actor,
   showHelper = false,
 }) => {
@@ -88,7 +88,7 @@ export const LightRenderer: React.FC<LightRendererProps> = ({
       )}
     </group>
   )
-}
+})
 
 function getHelperClass(type: string) {
   switch (type) {
