@@ -34,7 +34,7 @@ const advanceTime = (ms: number) => {
         const callbacksToRun = Array.from(rafCallbacks.entries());
         rafCallbacks.clear(); // Clear immediately, as rAF is one-shot
 
-        callbacksToRun.forEach(([id, cb]) => {
+        callbacksToRun.forEach(([_id, cb]) => {
             cb(currentTime);
         });
     }
