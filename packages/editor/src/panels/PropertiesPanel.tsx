@@ -4,17 +4,23 @@
  *
  * @module @animatica/editor/panels/PropertiesPanel
  */
-import React, { useCallback, useRef, useState, useEffect, useMemo } from 'react';
+import React, { useCallback, useRef, useState, useEffect } from 'react';
 import { useSceneStore, Actor, PrimitiveActor, LightActor, CameraActor, CharacterActor } from '@Animatica/engine';
-import { MathUtils } from 'three';
 
 interface PropertiesPanelProps {
     selectedActorId: string | null;
 }
 
+// Local math helpers to avoid three.js dependency in UI component
+const RAD2DEG = 180 / Math.PI;
+const DEG2RAD = Math.PI / 180;
+
+const radToDeg = (rad: number) => rad * RAD2DEG;
+const degToRad = (deg: number) => deg * DEG2RAD;
+
 // Helper hook for debounced updates
 function useDebouncedCallback<T extends (...args: any[]) => any>(callback: T, delay: number) {
-    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     // Clean up timeout on unmount
     useEffect(() => {
@@ -70,26 +76,7 @@ const NumberInput: React.FC<{
             // Recover from invalid state if prop updates
              setLocalValue(value.toString());
         }
-    }, [value]); // localValue dependency omitted to avoid loop, but we need it for comparison?
-    // Actually, we can just compare inside.
-    // Wait, localValue is state. We can't access latest without dependency.
-    // We should use a ref for latest localValue?
-    // Or just accept that if prop updates, we overwrite unless strictly equal?
-
-    // Simpler:
-    // If prop value changes, we MUST update local value unless we are editing.
-    // But how do we know we are editing?
-    // Comparing numbers is the best heuristic.
-
-    // Let's use the comparison logic inside the effect properly.
-    // We need localValue in dependency?
-    // If we add localValue, effect runs on every type.
-    // We only want to run when VALUE changes.
-    // So we need access to current localValue.
-
-    // We can use setState callback to check? No.
-    // We use a ref to track if we are editing?
-    // Or just use the value comparison.
+    }, [value]);
 
     const debouncedOnChange = useDebouncedCallback(onChange, 300);
 
@@ -275,9 +262,9 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorI
 
     // Convert rotation to degrees for display
     const rotationDeg = [
-        MathUtils.radToDeg(actor.transform.rotation[0]),
-        MathUtils.radToDeg(actor.transform.rotation[1]),
-        MathUtils.radToDeg(actor.transform.rotation[2])
+        radToDeg(actor.transform.rotation[0]),
+        radToDeg(actor.transform.rotation[1]),
+        radToDeg(actor.transform.rotation[2])
     ] as [number, number, number];
 
     return (
@@ -308,9 +295,9 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorI
                         transform: {
                             ...actor.transform,
                             rotation: [
-                                MathUtils.degToRad(deg[0]),
-                                MathUtils.degToRad(deg[1]),
-                                MathUtils.degToRad(deg[2])
+                                degToRad(deg[0]),
+                                degToRad(deg[1]),
+                                degToRad(deg[2])
                             ]
                         }
                     })}
