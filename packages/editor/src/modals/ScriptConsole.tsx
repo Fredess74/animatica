@@ -101,10 +101,16 @@ export const ScriptConsole: React.FC<ScriptConsoleProps> = ({ onClose }) => {
 
     return (
         <div className="modal-overlay" onClick={onClose}>
-            <div className="modal script-console-modal" onClick={(e) => e.stopPropagation()}>
+            <div
+                className="modal script-console-modal"
+                onClick={(e) => e.stopPropagation()}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="script-console-title"
+            >
                 <div className="modal__header">
-                    <h2 className="modal__title">📜 Script Console</h2>
-                    <button className="modal__close" onClick={onClose}>✕</button>
+                    <h2 id="script-console-title" className="modal__title">📜 Script Console</h2>
+                    <button className="modal__close" onClick={onClose} aria-label="Close">✕</button>
                 </div>
                 <div className="retro-stripe retro-stripe--thin" />
 
@@ -118,6 +124,7 @@ export const ScriptConsole: React.FC<ScriptConsoleProps> = ({ onClose }) => {
                         }}
                         spellCheck={false}
                         placeholder="Paste your JSON scene script here..."
+                        aria-label="Scene Script JSON"
                     />
 
                     {errors.length > 0 && (
