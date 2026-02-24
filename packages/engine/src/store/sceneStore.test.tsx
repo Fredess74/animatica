@@ -1,5 +1,16 @@
+// @vitest-environment jsdom
+
 import { describe, it, expect, beforeEach } from 'vitest';
-import { useSceneStore, getActorById, getActiveActors, getCurrentTime } from './sceneStore';
+import { renderHook, act } from '@testing-library/react';
+import {
+    useSceneStore,
+    getActorById,
+    getActiveActors,
+    getCurrentTime,
+    useActorById,
+    useActorsByType,
+    useUndoRedo
+} from './sceneStore';
 import { PrimitiveActor } from '../types';
 
 describe('sceneStore', () => {
@@ -109,17 +120,25 @@ describe('sceneStore', () => {
       expect(useSceneStore.getState().selectedActorId).toBeNull();
   });
 
-  it('should handle undo/redo', () => {
+  it('should handle undo/redo via hook', () => {
+      const { result } = renderHook(() => useUndoRedo());
       const actor = createActor('1');
-      useSceneStore.getState().addActor(actor);
-      expect(useSceneStore.getState().actors).toHaveLength(1);
 
-      // Undo
-      useSceneStore.temporal.getState().undo();
+      act(() => {
+          useSceneStore.getState().addActor(actor);
+      });
+
+      expect(result.current.canUndo).toBe(true);
+
+      act(() => {
+          result.current.undo();
+      });
       expect(useSceneStore.getState().actors).toHaveLength(0);
+      expect(result.current.canRedo).toBe(true);
 
-      // Redo
-      useSceneStore.temporal.getState().redo();
+      act(() => {
+          result.current.redo();
+      });
       expect(useSceneStore.getState().actors).toHaveLength(1);
   });
 
@@ -149,16 +168,37 @@ describe('sceneStore', () => {
       expect(useSceneStore.getState().playback.currentTime).toBe(20); // Should remain 20
   });
 
-  it('should filter actors by type', () => {
-      const primitive = createActor('1');
-      const light: any = { id: '2', type: 'light', visible: true, transform: primitive.transform, properties: { lightType: 'point' } };
+  it('should maintain referential equality of selectors during playback updates', () => {
+      const actor = createActor('1');
+      act(() => {
+          useSceneStore.getState().addActor(actor);
+      });
 
-      useSceneStore.getState().addActor(primitive);
-      useSceneStore.getState().addActor(light);
+      const { result: byIdResult } = renderHook(() => useActorById('1'));
+      const { result: byTypeResult } = renderHook(() => useActorsByType('primitive'));
 
-      // Simulate useActorsByType logic
-      const result = useSceneStore.getState().actors.filter(a => a.type === 'primitive');
-      expect(result).toHaveLength(1);
-      expect(result[0].id).toBe('1');
+      const initialActorRef = byIdResult.current;
+      const initialListRef = byTypeResult.current;
+
+      expect(initialActorRef).toBeDefined();
+      expect(initialListRef).toHaveLength(1);
+
+      // Trigger playback update (should be transient for these selectors)
+      act(() => {
+          useSceneStore.getState().setPlayback({ currentTime: 1.5 });
+      });
+
+      // Verify references are exactly the same
+      expect(byIdResult.current).toBe(initialActorRef);
+      expect(byTypeResult.current).toBe(initialListRef);
+
+      // Verify update still works for actual changes
+      act(() => {
+        useSceneStore.getState().updateActor('1', { name: 'Changed' });
+      });
+
+      expect(byIdResult.current).not.toBe(initialActorRef); // Should be new ref
+      expect(byIdResult.current?.name).toBe('Changed');
+      expect(byTypeResult.current).not.toBe(initialListRef); // Should be new array ref (because one item changed)
   });
 });

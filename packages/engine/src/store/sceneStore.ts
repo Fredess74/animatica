@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { persist } from 'zustand/middleware';
 import { temporal } from 'zundo';
+import { useStore } from 'zustand';
 import { useShallow } from 'zustand/react/shallow';
 import { Actor, Environment, Timeline, ProjectState, ProjectMeta } from '../types';
 
@@ -153,7 +154,9 @@ export const useSceneStore = create<SceneStoreState>()(
         const keysB = Object.keys(bObj);
         if (keysA.length !== keysB.length) return false;
         for (const key of keysA) {
-          if (aObj[key] !== bObj[key]) return false;
+            // Shallow comparison for top-level keys (actors array, env object, etc.)
+            // Note: If actors array reference changes, equality returns false -> undo point created.
+            if (aObj[key] !== bObj[key]) return false;
         }
         return true;
       },
@@ -174,9 +177,11 @@ export const getActorById = (id: string) => (state: SceneStoreState): Actor | un
 
 /**
  * Hook to select a specific actor by ID.
+ * Optimized to only re-render if the specific actor changes.
  * @param id The UUID of the actor.
  */
-export const useActorById = (id: string) => useSceneStore((state) => state.actors.find((a) => a.id === id));
+export const useActorById = (id: string) =>
+  useSceneStore((state) => state.actors.find((a) => a.id === id));
 
 /**
  * Selector to get all currently visible actors.
@@ -184,6 +189,13 @@ export const useActorById = (id: string) => useSceneStore((state) => state.actor
  */
 export const getActiveActors = (state: SceneStoreState): Actor[] =>
   state.actors.filter((a) => a.visible);
+
+/**
+ * Hook to get all currently visible actors.
+ * Uses useShallow to prevent re-renders if the list content (references) hasn't changed.
+ */
+export const useActiveActors = () =>
+  useSceneStore(useShallow((state) => state.actors.filter((a) => a.visible)));
 
 /**
  * Selector to get the current playback time.
@@ -202,6 +214,7 @@ export const useSelectedActor = () =>
 
 /**
  * Hook to get all actors of a specific type.
+ * Uses useShallow to prevent re-renders if the filtered list content hasn't changed.
  * @param type The type of actor to filter by.
  */
 export const useActorsByType = (type: Actor['type']) =>
@@ -211,3 +224,29 @@ export const useActorsByType = (type: Actor['type']) =>
  * Hook to get the list of all actors.
  */
 export const useActorList = () => useSceneStore((state) => state.actors);
+
+/**
+ * Hook to access undo/redo functionality.
+ */
+export const useUndoRedo = () => {
+  // Access the temporal store directly
+  const temporalStore = useSceneStore.temporal;
+  if (!temporalStore) {
+    throw new Error('Undo/Redo middleware is not initialized');
+  }
+
+  // We subscribe to the temporal state to get reactive updates for canUndo/canRedo/history
+  // Note: This subscription might trigger re-renders on every undo/redo action.
+  // If performance is an issue, components should subscribe only to what they need.
+  const { undo, redo, clear, pastStates, futureStates } = useStore(temporalStore, (state) => state);
+
+  return {
+    undo,
+    redo,
+    clear,
+    canUndo: pastStates.length > 0,
+    canRedo: futureStates.length > 0,
+    historyLength: pastStates.length,
+    futureLength: futureStates.length,
+  };
+};
