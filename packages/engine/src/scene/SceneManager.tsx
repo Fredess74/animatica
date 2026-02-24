@@ -13,12 +13,14 @@ import { PrimitiveRenderer } from './renderers/PrimitiveRenderer';
 import { LightRenderer } from './renderers/LightRenderer';
 import { CameraRenderer } from './renderers/CameraRenderer';
 import { CharacterRenderer } from './renderers/CharacterRenderer';
+import { SpeakerRenderer } from './renderers/SpeakerRenderer';
 import type {
     Actor,
     PrimitiveActor,
     LightActor,
     CameraActor,
     CharacterActor,
+    SpeakerActor,
 } from '../types';
 
 interface SceneManagerProps {
@@ -149,8 +151,13 @@ export const SceneManager: React.FC<SceneManagerProps> = ({
                         );
 
                     case 'speaker':
-                        // TODO: SpeakerRenderer not yet implemented
-                        return null;
+                        return (
+                            <SpeakerRenderer
+                                key={actor.id}
+                                actor={actor as SpeakerActor}
+                                showHelper={showHelpers || actor.id === selectedActorId}
+                            />
+                        );
 
                     default:
                         return null;
