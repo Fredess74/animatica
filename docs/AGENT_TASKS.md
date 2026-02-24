@@ -6,68 +6,26 @@
 
 ---
 
-## How It Works
+## Tonight's Plan (2026-02-23): Focus on Character Logic (Batch 3) and Editor Wiring (Batch 4)
 
-1. The **Conductor** agent runs first each night and populates this file with tasks
-2. Each agent reads ONLY tasks tagged with its role: `[ROLE: agent-name]`
-3. After completing a task, the agent:
-   - Removes the task line from this file
-   - Appends `- [DONE] [agent-name] [YYYY-MM-DD] task description` to `docs/AGENT_COMPLETED.md`
-4. If no tasks are assigned to your role, check the `[ROLE: any]` section
+Tonight, we focus on:
+1.  **Engine (Characters):** Implementing the missing character logic (`BoneController`, `MorphTargets`, `ClothingSystem`) and the `Humanoid` component to replace the placeholder renderer.
+2.  **Editor (Wiring):** Connecting the existing UI panels (`AssetLibrary`, `PropertiesPanel`, `TimelinePanel`) to the engine store (`useSceneStore`, `usePlayback`).
 
 ---
 
-## Engine Tasks
+## Batch 3: Characters (Engine)
 
-- [ROLE: engine-type-hardener] Review all type definitions in `packages/engine/src/types/index.ts`, remove any `any` usage, add missing interfaces
-- [ROLE: engine-schema-validator] Ensure all Zod schemas in `packages/engine/src/schemas/` match TypeScript interfaces exactly
-- [ROLE: engine-animation-dev] Add missing easing functions (bounce, elastic, back) to `packages/engine/src/animation/easing.ts`
-- [ROLE: engine-playback-dev] Add speed controls and loop modes to PlaybackController
-- [ROLE: engine-test-writer] Write tests for SceneManager and PlaybackController
-- [ROLE: engine-api-docs] Add JSDoc comments to all exported functions in `packages/engine/src/index.ts`
+- [ROLE: engine-char-dev] Create `packages/engine/src/characters/BoneController.ts`. Implement `BoneController` class/functions to map `BodyPose` interface to Three.js bone rotations. Include unit tests.
+- [ROLE: engine-char-dev] Create `packages/engine/src/characters/MorphTargets.ts`. Implement logic to apply `MorphTargets` interface values to a SkinnedMesh. Include unit tests.
+- [ROLE: engine-char-dev] Create `packages/engine/src/characters/ClothingSystem.ts`. Implement `ClothingSystem` to manage `ClothingSlots` and attach/detach meshes to character bones. Include unit tests.
+- [ROLE: engine-char-dev] Create `packages/engine/src/characters/Humanoid.tsx`. Implement `Humanoid` component that loads a GLB model (use a default placeholder URL or prop) and uses Bone/Morph/Clothing controllers. Update `packages/engine/src/scene/renderers/CharacterRenderer.tsx` to use this component instead of the capsule.
 
-## Editor Tasks
+## Batch 4: Editor UI Wiring
 
-- [ROLE: editor-layout-dev] Add responsive breakpoints to EditorLayout for tablet/mobile
-- [ROLE: editor-components-dev] Create shared Button, Input, Select components using design tokens
-- [ROLE: editor-properties-dev] Wire PropertiesPanel to Zustand store (read/write actor properties)
-- [ROLE: editor-timeline-dev] Wire TimelinePanel to usePlayback hook, add real keyframe rendering
-- [ROLE: editor-viewport-dev] Create Viewport component with R3F Canvas + OrbitControls + SceneManager
-
-## Web App Tasks
-
-- [ROLE: web-layout-dev] Create Next.js app layout with navigation, auth placeholder
-- [ROLE: web-pages-dev] Create landing page, /create route with editor, /explore route
-- [ROLE: web-api-dev] Create API routes for project CRUD operations
-- [ROLE: web-test-writer] Write E2E tests for main user flows
-
-## Quality Tasks
-
-- [ROLE: lint-fixer] Run eslint --fix on all packages, fix remaining issues manually
-- [ROLE: security-auditor] Scan for XSS vectors, unsafe innerHTML, unvalidated inputs
-- [ROLE: accessibility-auditor] Add aria-labels, keyboard navigation, screen reader support
-- [ROLE: error-boundary-agent] Add try/catch to all async operations, ErrorBoundary to all canvas components
-
-## Infrastructure Tasks
-
-- [ROLE: ci-guardian] Verify CI pipeline runs correctly, add caching for pnpm
-- [ROLE: dependency-updater] Check for outdated dependencies, update minor/patch versions
-- [ROLE: supabase-guardian] Verify database schema matches TypeScript types
-
-## Documentation Tasks
-
-- [ROLE: api-docs-writer] Generate API reference from JSDoc comments
-- [ROLE: readme-updater] Update README.md with current features, quick start guide
-- [ROLE: changelog-writer] Update CHANGELOG.md with recent changes
-- [ROLE: progress-reporter] Update PROGRESS.md and create daily report in `reports/daily/`
-- [ROLE: architecture-diagrammer] Update ARCHITECTURE.md with new components
-
-## Cleanup Tasks
-
-- [ROLE: license-auditor] Verify all dependencies have compatible licenses
-- [ROLE: bundle-watcher] Check bundle sizes, suggest tree-shaking opportunities
-- [ROLE: release-preparer] Verify all packages have consistent versions, README is accurate
-- [ROLE: night-reporter] Create nightly summary of all agent activity
+- [ROLE: editor-wiring-dev] Wire `packages/editor/src/panels/AssetLibrary.tsx` to `useSceneStore`. Implement `handleAddActor` to create real actors (Character, Light, Camera, Primitive) in the store using `addActor`. Use `uuid` for IDs.
+- [ROLE: editor-wiring-dev] Wire `packages/editor/src/panels/PropertiesPanel.tsx` to `useSceneStore`. Replace mock inputs with real bindings to the selected actor's properties using `updateActor`. Handle `Transform`, `PrimitiveActor` props, and `LightActor` props.
+- [ROLE: editor-wiring-dev] Wire `packages/editor/src/panels/TimelinePanel.tsx` to `usePlayback` and `useSceneStore`. Bind Play/Pause/Stop to `PlaybackController` (via `usePlayback` or store actions). Bind scrubber to `currentTime`. Display real track data from `useSceneStore`.
 
 ## Unassigned Tasks
 
