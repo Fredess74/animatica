@@ -3,6 +3,8 @@
 > **Create. Animate. Earn.** — A web-based platform where anyone can turn ideas into animated films and get paid globally via crypto.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](package.json)
+[![CI](https://github.com/YOUR_ORG/Animatica/actions/workflows/ci.yml/badge.svg)](.github/workflows/ci.yml)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
 ---
@@ -18,18 +20,18 @@ Animatica is an open-source platform that democratizes animation. People write f
 
 ## Key Features
 
-| Feature | Description |
-|---------|------------|
-| 🎮 **3D/2D Animation Engine** | Browser-based engine with Three.js (3D) and PixiJS (2D) — PBR, cel-shading, pixel art |
-| 🤖 **AI Scene Generation** | Describe your scene in text → AI generates complete animated scenes |
-| 🎭 **Character System** | Humanoid characters with skeletal animation, facial expressions, clothing, IK |
-| 📹 **Camera & Timeline** | Professional keyframe animation, multi-camera system, easing curves |
-| 🌍 **Environment Builder** | Create any environment — cities, forests, space, interiors |
-| 🎵 **Audio** | TTS voice acting, AI music, spatial SFX, lip-sync |
-| 🤝 **Real-time Collaboration** | Google Docs-style sync with role-based permissions |
-| 🏪 **Asset Marketplace** | Buy, sell, or rent 3D/2D assets — earn royalties per view |
-| 💰 **Crypto Monetization** | Donation pool → 70% creator, 20% creator fund, 10% platform |
-| 🌐 **Global Payments** | Any currency (crypto + fiat), anyone, anywhere |
+| Feature | Status | Description |
+|---------|--------|-------------|
+| 🎮 **3D/2D Animation Engine** | ✅ 3D / ⚪ 2D | Browser-based engine with Three.js (3D) and PixiJS (2D, Planned) — PBR, cel-shading, pixel art |
+| 🤖 **AI Scene Generation** | 🚧 WIP | Describe your scene in text → AI generates complete animated scenes |
+| 🎭 **Character System** | ⚪ Pending | Humanoid characters with skeletal animation, facial expressions, clothing, IK |
+| 📹 **Camera & Timeline** | ✅ Engine Ready | Professional keyframe animation, multi-camera system, easing curves |
+| 🌍 **Environment Builder** | 🚧 Partial | Create any environment — cities, forests, space, interiors |
+| 🎵 **Audio** | ⚪ Pending | TTS voice acting, AI music, spatial SFX, lip-sync |
+| 🤝 **Real-time Collaboration** | ⚪ Pending | Google Docs-style sync with role-based permissions |
+| 🏪 **Asset Marketplace** | ⚪ Pending | Buy, sell, or rent 3D/2D assets — earn royalties per view |
+| 💰 **Crypto Monetization** | ⚪ Pending | Donation pool → 70% creator, 20% creator fund, 10% platform |
+| 🌐 **Global Payments** | ⚪ Pending | Any currency (crypto + fiat), anyone, anywhere |
 
 ## Architecture
 
@@ -55,13 +57,13 @@ git clone https://github.com/YOUR_ORG/Animatica.git
 cd Animatica
 
 # Install
-npm install
+pnpm install
 
 # Run editor
-npm run dev --workspace=packages/editor
+pnpm --filter @Animatica/editor dev
 
 # Run full app
-npm run dev --workspace=apps/web
+pnpm --filter @Animatica/web dev
 ```
 
 ## Documentation
