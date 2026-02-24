@@ -6,7 +6,7 @@
  * @module @animatica/engine/playback/PlaybackController
  */
 import { useCallback, useEffect, useRef } from 'react';
-import { useSceneStore } from '../store/sceneStore';
+import { useEngineStore } from '../store/useEngineStore';
 
 /**
  * Options for customizing playback behavior.
@@ -87,9 +87,9 @@ export function usePlayback(options: PlaybackOptions = {}): PlaybackControls {
     // If we remove the subscription, the component won't re-render.
     // But usePlayback doesn't return isPlaying.
     // So the component doesn't know.
-    // Unless usePlayback is used alongside useSceneStore.
+    // Unless usePlayback is used alongside useEngineStore.
     // I will remove the unused variable. If re-render is needed, the component should subscribe itself.
-    useSceneStore((s) => s.playback.isPlaying);
+    useEngineStore((s) => s.playback.isPlaying);
 
     /**
      * The core animation frame callback.
@@ -108,7 +108,7 @@ export function usePlayback(options: PlaybackOptions = {}): PlaybackControls {
             const deltaSec = (deltaMs / 1000) * speedRef.current;
 
             // Get fresh state directly to avoid dependency chains
-            const state = useSceneStore.getState();
+            const state = useEngineStore.getState();
             const { duration } = state.timeline;
             const { frameRate, currentTime } = state.playback;
 
@@ -150,7 +150,7 @@ export function usePlayback(options: PlaybackOptions = {}): PlaybackControls {
     const play = useCallback(() => {
         if (rafIdRef.current !== null) return; // Already playing
 
-        const state = useSceneStore.getState();
+        const state = useEngineStore.getState();
         const { duration } = state.timeline;
         const { currentTime } = state.playback;
 
@@ -175,7 +175,7 @@ export function usePlayback(options: PlaybackOptions = {}): PlaybackControls {
         lastFrameTimeRef.current = null;
 
         // Update store
-        useSceneStore.getState().setPlayback({ isPlaying: false });
+        useEngineStore.getState().setPlayback({ isPlaying: false });
     }, []);
 
     /**
@@ -188,7 +188,7 @@ export function usePlayback(options: PlaybackOptions = {}): PlaybackControls {
         }
         lastFrameTimeRef.current = null;
 
-        useSceneStore.getState().setPlayback({ currentTime: 0, isPlaying: false });
+        useEngineStore.getState().setPlayback({ currentTime: 0, isPlaying: false });
     }, []);
 
     /**
@@ -196,7 +196,7 @@ export function usePlayback(options: PlaybackOptions = {}): PlaybackControls {
      */
     const seek = useCallback(
         (time: number) => {
-            const state = useSceneStore.getState();
+            const state = useEngineStore.getState();
             const { duration } = state.timeline;
             const clampedTime = Math.max(0, Math.min(time, duration));
             state.setPlayback({ currentTime: clampedTime });
@@ -211,7 +211,7 @@ export function usePlayback(options: PlaybackOptions = {}): PlaybackControls {
         // Need to check current playing state from store or local ref?
         // We subscribe to isPlaying for UI, so we can use that.
         // But inside callback better to read fresh state to be safe.
-        const playing = useSceneStore.getState().playback.isPlaying;
+        const playing = useEngineStore.getState().playback.isPlaying;
         if (playing) {
             pause();
         } else {

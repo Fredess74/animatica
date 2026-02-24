@@ -1,7 +1,7 @@
 import { describe, it, afterAll } from 'vitest';
 import { interpolateKeyframes } from '../animation/interpolate';
 import { ProjectStateSchema } from '../schemas';
-import { useSceneStore } from '../store/sceneStore';
+import { useEngineStore } from '../store/useEngineStore';
 import type { Keyframe, ProjectState, Actor, PrimitiveActor, Vector3 } from '../types';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -144,7 +144,7 @@ describe('Engine Benchmarks', () => {
 
     describe('Store Performance', () => {
         it('Store Update Throughput (10k playback updates)', () => {
-            const { setState, getState } = useSceneStore;
+            const { setState, getState } = useEngineStore;
 
             setState({
                 meta: { title: 'Reset', version: '1.0.0' },
@@ -167,7 +167,7 @@ describe('Engine Benchmarks', () => {
         });
 
         it('Store Actor CRUD Throughput (1k actors)', () => {
-            const { setState, getState } = useSceneStore;
+            const { setState, getState } = useEngineStore;
 
             setState({
                 actors: [],
