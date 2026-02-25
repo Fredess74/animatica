@@ -6,6 +6,11 @@ import { useShallow } from 'zustand/react/shallow';
 import { Actor, Environment, Timeline, ProjectState, ProjectMeta } from '../types';
 
 /**
+ * Loop modes for playback.
+ */
+export type LoopMode = 'none' | 'loop' | 'pingpong';
+
+/**
  * Playback state for the scene.
  */
 export interface PlaybackState {
@@ -15,6 +20,12 @@ export interface PlaybackState {
   isPlaying: boolean;
   /** Frame rate for playback (e.g., 24, 30, 60). */
   frameRate: number;
+  /** Playback speed multiplier (default: 1.0). */
+  speed: number;
+  /** Playback direction (1 for forward, -1 for backward). */
+  direction: 1 | -1;
+  /** Current loop mode. */
+  loopMode: LoopMode;
 }
 
 /**
@@ -58,6 +69,7 @@ const initialTimeline: Timeline = {
   duration: 10,
   cameraTrack: [],
   animationTracks: [],
+  markers: [],
 };
 
 const initialState: ProjectState & { playback: PlaybackState; selectedActorId: string | null } = {
@@ -66,7 +78,14 @@ const initialState: ProjectState & { playback: PlaybackState; selectedActorId: s
   actors: [],
   timeline: initialTimeline,
   library: { clips: [] },
-  playback: { currentTime: 0, isPlaying: false, frameRate: 24 },
+  playback: {
+    currentTime: 0,
+    isPlaying: false,
+    frameRate: 24,
+    speed: 1.0,
+    direction: 1,
+    loopMode: 'none',
+  },
   selectedActorId: null,
 };
 
