@@ -14,6 +14,7 @@ import { TimelinePanel } from '../panels/TimelinePanel';
 import { ScriptConsole } from '../modals/ScriptConsole';
 import { ExportModal } from '../modals/ExportModal';
 import { ToastProvider, useToast } from '../components/ToastContext';
+import { ErrorBoundary } from '../components/ErrorBoundary';
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
 
 interface EditorLayoutProps {
@@ -106,31 +107,43 @@ const EditorContent: React.FC<EditorLayoutProps> = ({ viewport }) => {
             <div className="editor-main">
                 {/* Left Sidebar — Asset Library */}
                 <aside className="editor-sidebar editor-sidebar--left">
-                    <AssetLibrary onActorCreated={(id) => setSelectedActorId(id)} />
+                    <ErrorBoundary componentName="AssetLibrary">
+                        <AssetLibrary onActorCreated={(id) => setSelectedActorId(id)} />
+                    </ErrorBoundary>
                 </aside>
 
                 {/* Center — Viewport */}
                 <main className="editor-viewport">
-                    {viewport}
+                    <ErrorBoundary componentName="Viewport">
+                        {viewport}
+                    </ErrorBoundary>
                 </main>
 
                 {/* Right Sidebar — Properties */}
                 <aside className="editor-sidebar editor-sidebar--right">
-                    <PropertiesPanel selectedActorId={selectedActorId} />
+                    <ErrorBoundary componentName="PropertiesPanel">
+                        <PropertiesPanel selectedActorId={selectedActorId} />
+                    </ErrorBoundary>
                 </aside>
             </div>
 
             {/* Bottom — Timeline */}
             <div className="editor-timeline">
-                <TimelinePanel selectedActorId={selectedActorId} />
+                <ErrorBoundary componentName="TimelinePanel">
+                    <TimelinePanel selectedActorId={selectedActorId} />
+                </ErrorBoundary>
             </div>
 
             {/* Modals */}
             {showScriptConsole && (
-                <ScriptConsole onClose={() => setShowScriptConsole(false)} />
+                <ErrorBoundary componentName="ScriptConsole">
+                    <ScriptConsole onClose={() => setShowScriptConsole(false)} />
+                </ErrorBoundary>
             )}
             {showExportModal && (
-                <ExportModal onClose={() => setShowExportModal(false)} />
+                <ErrorBoundary componentName="ExportModal">
+                    <ExportModal onClose={() => setShowExportModal(false)} />
+                </ErrorBoundary>
             )}
         </div>
     );
