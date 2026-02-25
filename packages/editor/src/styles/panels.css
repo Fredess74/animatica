@@ -11,13 +11,20 @@
   background-color: var(--bg-deep);
   color: var(--text-primary);
   overflow: hidden;
+
+  /* Layout Variables (defaults, overridden by React inline styles) */
+  --left-sidebar-width: 280px;
+  --right-sidebar-width: 320px;
+  --timeline-height: 200px;
+  --header-height: 60px;
 }
 
 .editor-main {
   display: flex;
   flex: 1;
   overflow: hidden;
-  height: calc(100vh - 60px - 200px); /* Subtract header and timeline */
+  height: calc(100vh - var(--header-height) - var(--timeline-height));
+  position: relative;
 }
 
 .editor-viewport {
@@ -25,6 +32,8 @@
   position: relative;
   background-color: var(--bg-deep);
   overflow: hidden;
+  /* Ensure it doesn't shrink below 0 */
+  min-width: 0;
 }
 
 /* ---- Toolbar ---- */
@@ -32,7 +41,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 60px;
+  height: var(--header-height);
   padding: 0 var(--space-md);
   background-color: var(--bg-surface);
   border-bottom: 1px solid var(--border-subtle);
@@ -64,21 +73,130 @@
 /* ---- Sidebars ---- */
 .editor-sidebar {
   background-color: var(--bg-base);
-  border-right: 1px solid var(--border-subtle);
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  /* Smooth transition for collapse, but not resizing (handled by JS) */
+  /* We only transition opacity or transform, width transition conflicts with drag */
 }
 
 .editor-sidebar--left {
-  width: 280px;
+  width: var(--left-sidebar-width);
   border-right: 1px solid var(--border-subtle);
 }
 
 .editor-sidebar--right {
-  width: 320px;
+  width: var(--right-sidebar-width);
   border-left: 1px solid var(--border-subtle);
-  border-right: none;
+}
+
+.editor-sidebar.collapsed {
+  width: 0 !important;
+  border: none;
+  min-width: 0;
+}
+
+/* Fix width of content to prevent squishing during collapse/resize */
+.sidebar-content {
+    width: var(--left-sidebar-width);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.editor-sidebar--right .sidebar-content {
+    width: var(--right-sidebar-width);
+}
+
+/* ---- Resizers ---- */
+.resizer {
+    background-color: var(--bg-deep);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+    user-select: none;
+}
+
+.resizer:hover, .resizer.resizing {
+    background-color: var(--green-600);
+}
+
+.resizer--vertical {
+    width: 6px;
+    cursor: col-resize;
+    height: 100%;
+    margin: 0 -3px; /* Center over border area */
+    position: relative;
+    z-index: 20;
+}
+
+.resizer--horizontal {
+    height: 6px;
+    cursor: row-resize;
+    width: 100%;
+    margin: -3px 0;
+    position: relative;
+    z-index: 20;
+}
+
+.resizer-handle {
+    width: 4px;
+    height: 20px;
+    border-radius: 2px;
+    background-color: var(--text-muted);
+    opacity: 0;
+    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--bg-deep);
+}
+
+.resizer:hover .resizer-handle, .resizer.resizing .resizer-handle {
+    opacity: 1;
+}
+
+/* ---- Timeline ---- */
+.editor-timeline {
+    height: var(--timeline-height);
+    background-color: var(--bg-surface);
+    border-top: 1px solid var(--border-subtle);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.editor-timeline.collapsed {
+    height: 32px !important;
+}
+
+.timeline-header-toggle {
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    background-color: var(--bg-elevated);
+    border-bottom: 1px solid var(--border-subtle);
+    cursor: pointer;
+    font-size: var(--text-xs);
+    color: var(--text-secondary);
+    transition: all 0.2s;
+    user-select: none;
+}
+
+.timeline-header-toggle:hover {
+    background-color: var(--bg-surface);
+    color: var(--text-primary);
+}
+
+.timeline-content {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 /* ---- Generic Panel ---- */
@@ -100,7 +218,6 @@
   position: relative;
 }
 
-/* Ensure retro stripe is visible if present */
 .panel__title + .retro-stripe {
   margin-bottom: var(--space-sm);
 }
@@ -137,6 +254,11 @@
   border: 1px solid transparent;
 }
 
+.editor-btn--icon {
+    padding: var(--space-xs);
+    border-radius: var(--radius-sm);
+}
+
 .editor-btn--ghost {
   background: transparent;
   color: var(--text-secondary);
@@ -156,6 +278,11 @@
 .editor-btn--primary:hover {
   background: var(--green-500);
   box-shadow: var(--shadow-glow);
+}
+
+.editor-btn--xs {
+    padding: 2px 6px;
+    font-size: var(--text-xs);
 }
 
 /* ---- Asset Library ---- */
@@ -319,10 +446,9 @@
   cursor: ew-resize; /* Suggests drag capability */
 }
 
-/* Using palette-compliant colors for axes */
-.prop-field__axis-label--x { background-color: var(--color-error); } /* Red */
-.prop-field__axis-label--y { background-color: var(--green-500); } /* Green */
-.prop-field__axis-label--z { background-color: var(--text-primary); color: var(--text-inverse); } /* White/Gray */
+.prop-field__axis-label--x { background-color: var(--color-error); }
+.prop-field__axis-label--y { background-color: var(--green-500); }
+.prop-field__axis-label--z { background-color: var(--text-primary); color: var(--text-inverse); }
 
 .prop-field__input {
   width: 100%;
@@ -387,4 +513,70 @@
 
 .prop-field__slider:focus::-webkit-slider-thumb {
   box-shadow: 0 0 0 4px var(--color-primary-glow);
+}
+
+/* ============================================
+   Responsive Breakpoints
+   ============================================ */
+
+/* Mobile */
+@media (max-width: 768px) {
+    .editor-layout {
+        --header-height: 50px;
+        --timeline-height: 160px;
+    }
+
+    /* Stack or hide panels */
+    .editor-main {
+        position: relative;
+    }
+
+    .editor-sidebar {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        z-index: 50;
+        height: 100%;
+        box-shadow: var(--shadow-lg);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        width: 85vw !important; /* Force width */
+    }
+
+    .editor-sidebar--left {
+        left: 0;
+        transform: translateX(0);
+        border-right: 1px solid var(--border-subtle);
+    }
+
+    .editor-sidebar--left.collapsed {
+        transform: translateX(-100%);
+        border: none;
+        width: 85vw !important; /* Ensure it stays sized correctly for animation */
+    }
+
+    .editor-sidebar--right {
+        right: 0;
+        transform: translateX(0);
+        border-left: 1px solid var(--border-subtle);
+    }
+
+    .editor-sidebar--right.collapsed {
+        transform: translateX(100%);
+        border: none;
+        width: 85vw !important;
+    }
+
+    /* Hide resizers on mobile as we use toggle/overlay */
+    .resizer {
+        display: none !important;
+    }
+
+    .sidebar-content {
+        width: 100% !important;
+    }
+
+    /* Mobile Toolbar adjustments */
+    .editor-toolbar__title {
+        display: none; /* Hide title on very small screens if needed, or keep */
+    }
 }
