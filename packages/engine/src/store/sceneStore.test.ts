@@ -228,11 +228,12 @@ describe('sceneStore', () => {
 
     // Remove middle actor
     const toRemove = '500';
-    const start = performance.now();
+    // Performance measurement removed to avoid unused variable errors in CI
+    // const start = performance.now();
     act(() => {
         useSceneStore.getState().removeActor(toRemove);
     });
-    const end = performance.now();
+    // const end = performance.now();
 
     expect(useSceneStore.getState().actors).toHaveLength(999);
     expect(useSceneStore.getState().actors.find(a => a.id === toRemove)).toBeUndefined();
