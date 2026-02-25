@@ -15,6 +15,9 @@ jobs:
   build_and_test:
     name: Build & Test
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20, 22]
     permissions:
       contents: read
       pull-requests: write
@@ -30,7 +33,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -38,18 +41,15 @@ jobs:
 
       - name: Typecheck
         run: pnpm run typecheck
-        continue-on-error: true
 
       - name: Lint
         run: pnpm run lint
-        continue-on-error: true
 
       - name: Test
         run: pnpm run test
 
       - name: Build
         run: pnpm run build
-        continue-on-error: true
 
       # If any step fails on a PR by Jules, we want Jules to know
       - name: Report failure to PR
