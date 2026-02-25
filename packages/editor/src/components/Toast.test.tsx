@@ -1,9 +1,8 @@
 // @vitest-environment jsdom
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, cleanup, act, fireEvent } from '@testing-library/react';
 import { Toast, ToastMessage } from './Toast';
 import { ToastProvider, useToast } from './ToastContext';
-import React, { useEffect } from 'react';
 
 // Mock timer functions
 vi.useFakeTimers();

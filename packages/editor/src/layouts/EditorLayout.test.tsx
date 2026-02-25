@@ -1,8 +1,7 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, cleanup, fireEvent, act } from '@testing-library/react';
+import { render, screen, cleanup, fireEvent } from '@testing-library/react';
 import { EditorLayout } from './EditorLayout';
-import * as ToastContext from '../components/ToastContext';
 import { useSceneStore } from '@Animatica/engine';
 
 // Mock child components

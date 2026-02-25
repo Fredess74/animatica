@@ -1,8 +1,7 @@
 // @vitest-environment jsdom
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen, cleanup, fireEvent, act } from '@testing-library/react';
 import { ScriptConsole } from './ScriptConsole';
-import * as ToastContext from '../components/ToastContext';
 import * as Engine from '@Animatica/engine';
 
 // Mock useToast
