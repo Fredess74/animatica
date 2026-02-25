@@ -1,6 +1,5 @@
 // @vitest-environment jsdom
-import React from 'react';
-import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { ErrorBoundary } from './ErrorBoundary';
 
@@ -71,7 +70,7 @@ describe('ErrorBoundary', () => {
             return <div>Recovered Content</div>;
         };
 
-        const { rerender } = render(
+        render(
             <ErrorBoundary>
                 <FlakyComponent />
             </ErrorBoundary>
