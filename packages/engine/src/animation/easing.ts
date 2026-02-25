@@ -14,48 +14,46 @@
 export const linear = (t: number): number => t;
 
 /**
+ * Step function (returns 0 if t < 1, else 1).
+ * Used for instant value changes without interpolation.
+ * @param t Normalized time (0-1).
+ * @returns 0 or 1.
+ */
+export const step = (t: number): number => (t < 1 ? 0 : 1);
+
+// ---- Quad ----
+
+/**
  * Quadratic ease-in.
- * @param t Normalized time (0-1).
- * @returns Eased value.
  */
-export const quad = (t: number): number => t * t;
-
-/**
- * Cubic ease-in.
- * @param t Normalized time (0-1).
- * @returns Eased value.
- */
-export const cubic = (t: number): number => t * t * t;
-
-/**
- * Alias for quadratic ease-in.
- * @param t Normalized time (0-1).
- * @returns Eased value.
- */
-export const easeIn = (t: number): number => quad(t);
+export const quadIn = (t: number): number => t * t;
 
 /**
  * Quadratic ease-out.
- * @param t Normalized time (0-1).
- * @returns Eased value.
  */
-export const easeOut = (t: number): number => 1 - Math.pow(1 - t, 2);
+export const quadOut = (t: number): number => 1 - (1 - t) * (1 - t);
 
 /**
  * Quadratic ease-in-out.
- * @param t Normalized time (0-1).
- * @returns Eased value.
  */
-export const easeInOut = (t: number): number => {
-  return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-};
+export const quadInOut = (t: number): number =>
+  t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+
+// Aliases for standard easing names
+export const easeIn = quadIn;
+export const easeOut = quadOut;
+export const easeInOut = quadInOut;
+
+// Legacy/Auxiliary
+export const quad = quadIn;
+export const cubic = (t: number): number => t * t * t;
+
+// ---- Bounce ----
 
 /**
- * Bounce effect easing.
- * @param t Normalized time (0-1).
- * @returns Eased value with bounce effect.
+ * Bounce ease-out.
  */
-export const bounce = (t: number): number => {
+export const bounceOut = (t: number): number => {
   const n1 = 7.5625;
   const d1 = 2.75;
 
@@ -71,11 +69,24 @@ export const bounce = (t: number): number => {
 };
 
 /**
- * Elastic effect easing.
- * @param t Normalized time (0-1).
- * @returns Eased value with elastic effect.
+ * Bounce ease-in.
  */
-export const elastic = (t: number): number => {
+export const bounceIn = (t: number): number => 1 - bounceOut(1 - t);
+
+/**
+ * Bounce ease-in-out.
+ */
+export const bounceInOut = (t: number): number =>
+  t < 0.5 ? (1 - bounceOut(1 - 2 * t)) / 2 : (1 + bounceOut(2 * t - 1)) / 2;
+
+export const bounce = bounceOut;
+
+// ---- Elastic ----
+
+/**
+ * Elastic ease-out.
+ */
+export const elasticOut = (t: number): number => {
   const c4 = (2 * Math.PI) / 3;
   return t === 0
     ? 0
@@ -85,11 +96,60 @@ export const elastic = (t: number): number => {
 };
 
 /**
- * Step function (returns 0 if t < 1, else 1).
- * Used for instant value changes without interpolation.
- * @param t Normalized time (0-1).
- * @returns 0 or 1.
+ * Elastic ease-in.
  */
-export const step = (t: number): number => {
-  return t < 1 ? 0 : 1;
+export const elasticIn = (t: number): number => {
+  const c4 = (2 * Math.PI) / 3;
+  return t === 0
+    ? 0
+    : t === 1
+    ? 1
+    : -Math.pow(2, 10 * t - 10) * Math.sin((t * 10 - 10.75) * c4);
+};
+
+/**
+ * Elastic ease-in-out.
+ */
+export const elasticInOut = (t: number): number => {
+  const c5 = (2 * Math.PI) / 4.5;
+  return t === 0
+    ? 0
+    : t === 1
+    ? 1
+    : t < 0.5
+    ? -(Math.pow(2, 20 * t - 10) * Math.sin((20 * t - 11.125) * c5)) / 2
+    : (Math.pow(2, -20 * t + 10) * Math.sin((20 * t - 11.125) * c5)) / 2 + 1;
+};
+
+export const elastic = elasticOut;
+
+// ---- Back ----
+
+/**
+ * Back ease-in.
+ */
+export const backIn = (t: number): number => {
+  const c1 = 1.70158;
+  const c3 = c1 + 1;
+  return c3 * t * t * t - c1 * t * t;
+};
+
+/**
+ * Back ease-out.
+ */
+export const backOut = (t: number): number => {
+  const c1 = 1.70158;
+  const c3 = c1 + 1;
+  return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+};
+
+/**
+ * Back ease-in-out.
+ */
+export const backInOut = (t: number): number => {
+  const c1 = 1.70158;
+  const c2 = c1 * 1.525;
+  return t < 0.5
+    ? (Math.pow(2 * t, 2) * ((c2 + 1) * 2 * t - c2)) / 2
+    : (Math.pow(2 * t - 2, 2) * ((c2 + 1) * (2 * t - 2) + c2) + 2) / 2;
 };

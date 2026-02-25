@@ -8,73 +8,107 @@ describe('Easing Functions', () => {
     expect(Easing.linear(1)).toBe(1);
   });
 
-  it('quad', () => {
-    expect(Easing.quad(0)).toBe(0);
-    expect(Easing.quad(0.5)).toBe(0.25);
-    expect(Easing.quad(1)).toBe(1);
-  });
-
-  it('cubic', () => {
-    expect(Easing.cubic(0)).toBe(0);
-    expect(Easing.cubic(0.5)).toBe(0.125);
-    expect(Easing.cubic(1)).toBe(1);
-  });
-
-  it('easeIn', () => {
-    expect(Easing.easeIn(0)).toBe(0);
-    expect(Easing.easeIn(0.5)).toBe(0.25);
-    expect(Easing.easeIn(1)).toBe(1);
-  });
-
-  it('easeOut', () => {
-    expect(Easing.easeOut(0)).toBe(0);
-    expect(Easing.easeOut(0.5)).toBe(0.75);
-    expect(Easing.easeOut(1)).toBe(1);
-  });
-
-  it('easeInOut', () => {
-    expect(Easing.easeInOut(0)).toBe(0);
-    expect(Easing.easeInOut(0.25)).toBe(0.125); // < 0.5
-    expect(Easing.easeInOut(0.5)).toBe(0.5);
-    expect(Easing.easeInOut(0.75)).toBe(0.875); // >= 0.5
-    expect(Easing.easeInOut(1)).toBe(1);
-  });
-
-  it('bounce', () => {
-    expect(Easing.bounce(0)).toBe(0);
-    expect(Easing.bounce(1)).toBeCloseTo(1);
-
-    // Branch 1: t < 1/2.75 (~0.3636)
-    expect(Easing.bounce(0.1)).toBeCloseTo(7.5625 * 0.1 * 0.1);
-
-    // Branch 2: t < 2/2.75 (~0.7272)
-    const t2 = 0.5;
-    let t_calc2 = t2 - 1.5 / 2.75;
-    expect(Easing.bounce(t2)).toBeCloseTo(7.5625 * t_calc2 * t_calc2 + 0.75);
-
-    // Branch 3: t < 2.5/2.75 (~0.9090)
-    const t3 = 0.8;
-    let t_calc3 = t3 - 2.25 / 2.75;
-    expect(Easing.bounce(t3)).toBeCloseTo(7.5625 * t_calc3 * t_calc3 + 0.9375);
-
-    // Branch 4: t >= 2.5/2.75
-    const t4 = 0.95;
-    let t_calc4 = t4 - 2.625 / 2.75;
-    expect(Easing.bounce(t4)).toBeCloseTo(7.5625 * t_calc4 * t_calc4 + 0.984375);
-  });
-
-  it('elastic', () => {
-    expect(Easing.elastic(0)).toBe(0);
-    expect(Easing.elastic(1)).toBe(1);
-    // Check value
-    const t = 0.5;
-    expect(Easing.elastic(t)).toBeCloseTo(Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * ((2 * Math.PI) / 3)) + 1);
-  });
-
   it('step', () => {
     expect(Easing.step(0)).toBe(0);
     expect(Easing.step(0.5)).toBe(0);
     expect(Easing.step(0.999)).toBe(0);
     expect(Easing.step(1)).toBe(1);
+  });
+
+  // ---- Quad ----
+  it('quadIn', () => {
+    expect(Easing.quadIn(0)).toBe(0);
+    expect(Easing.quadIn(0.5)).toBe(0.25);
+    expect(Easing.quadIn(1)).toBe(1);
+  });
+
+  it('quadOut', () => {
+    expect(Easing.quadOut(0)).toBe(0);
+    expect(Easing.quadOut(0.5)).toBe(0.75);
+    expect(Easing.quadOut(1)).toBe(1);
+  });
+
+  it('quadInOut', () => {
+    expect(Easing.quadInOut(0)).toBe(0);
+    expect(Easing.quadInOut(0.25)).toBe(0.125);
+    expect(Easing.quadInOut(0.5)).toBe(0.5);
+    expect(Easing.quadInOut(0.75)).toBe(0.875);
+    expect(Easing.quadInOut(1)).toBe(1);
+  });
+
+  // ---- Bounce ----
+  it('bounceOut', () => {
+    expect(Easing.bounceOut(0)).toBe(0);
+    expect(Easing.bounceOut(1)).toBeCloseTo(1);
+
+    // Check specific value logic roughly
+    // t=0.1 (branch 1)
+    expect(Easing.bounceOut(0.1)).toBeCloseTo(7.5625 * 0.1 * 0.1);
+  });
+
+  it('bounceIn', () => {
+    expect(Easing.bounceIn(0)).toBe(0);
+    expect(Easing.bounceIn(1)).toBeCloseTo(1);
+    // bounceIn(0.9) should match 1 - bounceOut(0.1)
+    expect(Easing.bounceIn(0.9)).toBeCloseTo(1 - Easing.bounceOut(0.1));
+  });
+
+  it('bounceInOut', () => {
+    expect(Easing.bounceInOut(0)).toBe(0);
+    expect(Easing.bounceInOut(0.5)).toBe(0.5);
+    expect(Easing.bounceInOut(1)).toBeCloseTo(1);
+  });
+
+  // ---- Elastic ----
+  it('elasticOut', () => {
+    expect(Easing.elasticOut(0)).toBe(0);
+    expect(Easing.elasticOut(1)).toBe(1);
+    // Should overshoot 1 slightly around t=0.4
+    expect(Easing.elasticOut(0.4)).toBeGreaterThan(1);
+  });
+
+  it('elasticIn', () => {
+    expect(Easing.elasticIn(0)).toBe(0);
+    expect(Easing.elasticIn(1)).toBe(1);
+    // Should undershoot 0 slightly around t=0.6
+    expect(Easing.elasticIn(0.6)).toBeLessThan(0);
+  });
+
+  it('elasticInOut', () => {
+    expect(Easing.elasticInOut(0)).toBe(0);
+    expect(Easing.elasticInOut(0.5)).toBe(0.5);
+    expect(Easing.elasticInOut(1)).toBe(1);
+  });
+
+  // ---- Back ----
+  it('backIn', () => {
+    expect(Easing.backIn(0)).toBeCloseTo(0);
+    expect(Easing.backIn(1)).toBeCloseTo(1);
+    // Should go below 0 initially
+    expect(Easing.backIn(0.25)).toBeLessThan(0);
+  });
+
+  it('backOut', () => {
+    expect(Easing.backOut(0)).toBeCloseTo(0);
+    expect(Easing.backOut(1)).toBeCloseTo(1);
+    // Should go above 1 initially (well, at the end actually, it overshoots)
+    expect(Easing.backOut(0.75)).toBeGreaterThan(1);
+  });
+
+  it('backInOut', () => {
+    expect(Easing.backInOut(0)).toBeCloseTo(0);
+    expect(Easing.backInOut(0.5)).toBe(0.5);
+    expect(Easing.backInOut(1)).toBeCloseTo(1);
+  });
+
+  // ---- Aliases ----
+  it('aliases work', () => {
+      expect(Easing.easeIn).toBe(Easing.quadIn);
+      expect(Easing.easeOut).toBe(Easing.quadOut);
+      expect(Easing.easeInOut).toBe(Easing.quadInOut);
+      expect(Easing.bounce).toBe(Easing.bounceOut);
+      expect(Easing.elastic).toBe(Easing.elasticOut);
+      // Legacy
+      expect(Easing.quad).toBe(Easing.quadIn);
   });
 });

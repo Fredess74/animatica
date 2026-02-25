@@ -13,10 +13,21 @@ import * as Easing from './easing';
 
 const EASING_MAP: Record<EasingType, (t: number) => number> = {
     linear: Easing.linear,
+    step: Easing.step,
     easeIn: Easing.easeIn,
     easeOut: Easing.easeOut,
     easeInOut: Easing.easeInOut,
-    step: Easing.step,
+    backIn: Easing.backIn,
+    backOut: Easing.backOut,
+    backInOut: Easing.backInOut,
+    bounceIn: Easing.bounceIn,
+    bounceOut: Easing.bounceOut,
+    bounceInOut: Easing.bounceInOut,
+    elasticIn: Easing.elasticIn,
+    elasticOut: Easing.elasticOut,
+    elasticInOut: Easing.elasticInOut,
+    bounce: Easing.bounce,
+    elastic: Easing.elastic,
 };
 
 function resolveEasing(type?: EasingType): (t: number) => number {
