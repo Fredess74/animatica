@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { renderHook, act } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { usePlayback } from './PlaybackController';
 import { useSceneStore } from '../store/sceneStore';
 
@@ -52,7 +52,7 @@ describe('usePlayback', () => {
     });
 
     // We expect play to have requested a frame
-    const rafId = requestAnimationFrameMock.mock.results[0].value;
+    expect(requestAnimationFrameMock).toHaveBeenCalled();
 
     act(() => {
       result.current.pause();
