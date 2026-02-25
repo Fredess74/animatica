@@ -3,8 +3,7 @@ import * as THREE from 'three';
 import { Canvas, useThree } from '@react-three/fiber';
 import { OrbitControls, TransformControls, Grid } from '@react-three/drei';
 import { SceneManager, useSceneStore } from '@Animatica/engine';
-import { clsx } from 'clsx';
-import { Box, Camera, Eye, Monitor, Maximize } from 'lucide-react';
+import { Box, Eye, Monitor, Maximize } from 'lucide-react';
 
 // --- Components ---
 
