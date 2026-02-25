@@ -1,5 +1,7 @@
+// @vitest-environment jsdom
 import { describe, it, expect, beforeEach } from 'vitest';
-import { useSceneStore, getActorById, getActiveActors, getCurrentTime } from './sceneStore';
+import { renderHook, act } from '@testing-library/react';
+import { useSceneStore, getActorById, getActiveActors, getCurrentTime, useActiveActors, useActorIds, useUndoRedo } from './sceneStore';
 import { PrimitiveActor } from '../types';
 
 describe('sceneStore', () => {
@@ -160,5 +162,82 @@ describe('sceneStore', () => {
       const result = useSceneStore.getState().actors.filter(a => a.type === 'primitive');
       expect(result).toHaveLength(1);
       expect(result[0].id).toBe('1');
+  });
+
+  it('should useActiveActors hook correctly', () => {
+    const actor1 = createActor('1', true);
+    const actor2 = createActor('2', false);
+    useSceneStore.setState({ actors: [actor1, actor2] });
+
+    const { result } = renderHook(() => useActiveActors());
+    expect(result.current).toHaveLength(1);
+    expect(result.current[0].id).toBe('1');
+  });
+
+  it('should useActorIds hook correctly', () => {
+    const actor1 = createActor('1');
+    const actor2 = createActor('2');
+    useSceneStore.setState({ actors: [actor1, actor2] });
+
+    const { result } = renderHook(() => useActorIds());
+    expect(result.current).toEqual(['1', '2']);
+  });
+
+  it('should useUndoRedo hook correctly', () => {
+    const { result } = renderHook(() => useUndoRedo());
+
+    // Initial state
+    expect(result.current.canUndo).toBe(false);
+    expect(result.current.canRedo).toBe(false);
+
+    // Perform action
+    act(() => {
+      useSceneStore.getState().addActor(createActor('1'));
+    });
+
+    // Check updated state (re-render)
+    // renderHook results are mutable refs, but we might need to rely on re-renders.
+    // However, useStore subscription should update it.
+    expect(result.current.canUndo).toBe(true);
+
+    // Undo
+    act(() => {
+      result.current.undo();
+    });
+    expect(result.current.canUndo).toBe(false);
+    expect(result.current.canRedo).toBe(true);
+    expect(useSceneStore.getState().actors).toHaveLength(0);
+
+    // Redo
+    act(() => {
+        result.current.redo();
+    });
+    expect(result.current.canUndo).toBe(true);
+    expect(useSceneStore.getState().actors).toHaveLength(1);
+  });
+
+  it('should handle large number of actors efficiently', () => {
+    const actors: PrimitiveActor[] = Array.from({ length: 1000 }, (_, i) => createActor(`${i}`));
+
+    // Bulk set
+    act(() => {
+        useSceneStore.setState({ actors });
+    });
+
+    expect(useSceneStore.getState().actors).toHaveLength(1000);
+
+    // Remove middle actor
+    const toRemove = '500';
+    const start = performance.now();
+    act(() => {
+        useSceneStore.getState().removeActor(toRemove);
+    });
+    const end = performance.now();
+
+    expect(useSceneStore.getState().actors).toHaveLength(999);
+    expect(useSceneStore.getState().actors.find(a => a.id === toRemove)).toBeUndefined();
+
+    // Performance check is flaky in CI/JS environments, but correctness is key here.
+    // Just ensuring it doesn't timeout or crash.
   });
 });

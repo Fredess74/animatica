@@ -8,7 +8,15 @@ export * from './types/index'
 export * from './schemas/index'
 
 // === STORE ===
-export { useSceneStore, getActorById, getActiveActors, getCurrentTime } from './store/sceneStore';
+export {
+  useSceneStore,
+  getActorById,
+  getActiveActors,
+  getCurrentTime,
+  useActiveActors,
+  useActorIds,
+  useUndoRedo
+} from './store/sceneStore';
 
 // === COMPONENTS (R3F) ===
 export { PrimitiveRenderer } from './scene/renderers/PrimitiveRenderer'

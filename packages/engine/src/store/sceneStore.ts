@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create, useStore } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { persist } from 'zustand/middleware';
 import { temporal } from 'zundo';
@@ -92,7 +92,10 @@ export const useSceneStore = create<SceneStoreState>()(
 
         removeActor: (actorId) =>
           set((state) => {
-            state.actors = state.actors.filter((a) => a.id !== actorId);
+            const index = state.actors.findIndex((a) => a.id === actorId);
+            if (index !== -1) {
+              state.actors.splice(index, 1);
+            }
             if (state.selectedActorId === actorId) {
               state.selectedActorId = null;
             }
@@ -211,3 +214,33 @@ export const useActorsByType = (type: Actor['type']) =>
  * Hook to get the list of all actors.
  */
 export const useActorList = () => useSceneStore((state) => state.actors);
+
+/**
+ * Hook to get all currently visible actors.
+ * Uses shallow comparison to prevent unnecessary re-renders.
+ */
+export const useActiveActors = () =>
+  useSceneStore(useShallow((state) => state.actors.filter((a) => a.visible)));
+
+/**
+ * Hook to get a list of all actor IDs.
+ * Useful for rendering lists of actors without re-rendering when properties change.
+ */
+export const useActorIds = () =>
+  useSceneStore(useShallow((state) => state.actors.map((a) => a.id)));
+
+/**
+ * Hook to access undo/redo functionality and state.
+ */
+export const useUndoRedo = () => {
+  return useStore(
+    useSceneStore.temporal,
+    useShallow((state) => ({
+      undo: state.undo,
+      redo: state.redo,
+      canUndo: state.pastStates.length > 0,
+      canRedo: state.futureStates.length > 0,
+      clear: state.clear,
+    }))
+  );
+};
