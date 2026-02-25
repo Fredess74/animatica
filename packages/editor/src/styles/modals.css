@@ -10,7 +10,7 @@
   width: 100vw;
   height: 100vh;
   background-color: var(--glass-bg); /* Use glass token */
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(var(--glass-blur));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -27,7 +27,7 @@
   background-color: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-lg), 0 0 40px var(--color-primary-glow);
   display: flex;
   flex-direction: column;
   overflow: hidden;

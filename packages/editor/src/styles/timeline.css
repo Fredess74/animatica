@@ -169,6 +169,7 @@
   height: 32px;
   border-bottom: 1px solid var(--border-subtle);
   margin-bottom: 1px;
+  transition: background-color var(--transition-fast);
 }
 
 .timeline-track:hover {
@@ -205,6 +206,12 @@
 }
 
 /* ---- Keyframes ---- */
+@keyframes keyframe-pulse {
+  0% { transform: translate(-50%, -50%) rotate(45deg) scale(1.3); box-shadow: 0 0 4px var(--color-primary-glow); }
+  50% { transform: translate(-50%, -50%) rotate(45deg) scale(1.5); box-shadow: 0 0 12px var(--color-primary-glow); }
+  100% { transform: translate(-50%, -50%) rotate(45deg) scale(1.3); box-shadow: 0 0 4px var(--color-primary-glow); }
+}
+
 .timeline-keyframe {
   position: absolute;
   top: 50%;
@@ -215,13 +222,13 @@
   border: 1px solid var(--bg-deep);
   cursor: pointer;
   z-index: 5;
-  transition: transform var(--transition-fast);
+  transition: transform var(--transition-fast), background-color var(--transition-fast);
 }
 
 .timeline-keyframe:hover {
-  transform: translate(-50%, -50%) rotate(45deg) scale(1.3);
   background-color: var(--green-300);
-  box-shadow: 0 0 4px var(--color-primary-glow);
+  animation: keyframe-pulse 1.5s infinite ease-in-out;
+  z-index: 10;
 }
 
 .timeline-keyframe--selected {
