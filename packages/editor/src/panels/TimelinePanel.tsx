@@ -4,7 +4,7 @@
  *
  * @module @animatica/editor/panels/TimelinePanel
  */
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useId } from 'react';
 import { useTranslation } from '../i18n/useTranslation';
 
 interface TimelinePanelProps {
@@ -32,6 +32,7 @@ export const TimelinePanel: React.FC<TimelinePanelProps> = ({ selectedActorId })
     };
 
     const progressPercent = (currentTime / duration) * 100;
+    const durationId = useId();
 
     return (
         <div className="panel timeline-panel">
@@ -39,44 +40,52 @@ export const TimelinePanel: React.FC<TimelinePanelProps> = ({ selectedActorId })
             <div className="timeline-transport">
                 <div className="timeline-transport__controls">
                     <button
-                        className="timeline-btn"
+                        className="timeline-btn focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none"
                         onClick={handleStop}
                         title={t('timeline.stop')}
+                        aria-label={t('timeline.stop')}
                     >
-                        ⏹
+                        <span aria-hidden="true">⏹</span>
                     </button>
                     {isPlaying ? (
                         <button
-                            className="timeline-btn timeline-btn--active"
+                            className="timeline-btn timeline-btn--active focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none"
                             onClick={handlePause}
                             title={t('timeline.pause')}
+                            aria-label={t('timeline.pause')}
                         >
-                            ⏸
+                            <span aria-hidden="true">⏸</span>
                         </button>
                     ) : (
                         <button
-                            className="timeline-btn timeline-btn--play"
+                            className="timeline-btn timeline-btn--play focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none"
                             onClick={handlePlay}
                             title={t('timeline.play')}
+                            aria-label={t('timeline.play')}
                         >
-                            ▶
+                            <span aria-hidden="true">▶</span>
                         </button>
                     )}
-                    <button className="timeline-btn" title={t('timeline.addKeyframe')}>
-                        ◇+
+                    <button
+                        className="timeline-btn focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none"
+                        title={t('timeline.addKeyframe')}
+                        aria-label={t('timeline.addKeyframe')}
+                    >
+                        <span aria-hidden="true">◇+</span>
                     </button>
                 </div>
 
-                <div className="timeline-transport__time">
+                <div className="timeline-transport__time" aria-label="Current time">
                     <span className="timeline-time">{formatTime(currentTime)}</span>
-                    <span className="timeline-time timeline-time--muted">/</span>
+                    <span className="timeline-time timeline-time--muted" aria-hidden="true">/</span>
                     <span className="timeline-time timeline-time--muted">{formatTime(duration)}</span>
                 </div>
 
                 <div className="timeline-transport__duration">
-                    <label className="prop-field__label">{t('timeline.duration')}</label>
+                    <label htmlFor={durationId} className="prop-field__label">{t('timeline.duration')}</label>
                     <select
-                        className="timeline-select"
+                        id={durationId}
+                        className="timeline-select focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none"
                         value={duration}
                         onChange={(e) => setDuration(Number(e.target.value))}
                     >
@@ -91,7 +100,7 @@ export const TimelinePanel: React.FC<TimelinePanelProps> = ({ selectedActorId })
 
             {/* Scrubber */}
             <div className="timeline-scrubber">
-                <div className="timeline-ruler">
+                <div className="timeline-ruler" aria-hidden="true">
                     {Array.from({ length: Math.ceil(duration) + 1 }, (_, i) => (
                         <span
                             key={i}
@@ -105,12 +114,14 @@ export const TimelinePanel: React.FC<TimelinePanelProps> = ({ selectedActorId })
 
                 <input
                     type="range"
-                    className="timeline-scrubber__slider"
+                    className="timeline-scrubber__slider focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none"
                     min={0}
                     max={duration}
                     step={1 / 30}
                     value={currentTime}
                     onChange={(e) => setCurrentTime(parseFloat(e.target.value))}
+                    aria-label="Timeline scrubber"
+                    aria-valuetext={formatTime(currentTime)}
                 />
                 <div
                     className="timeline-scrubber__progress"

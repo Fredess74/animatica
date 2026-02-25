@@ -4,7 +4,7 @@
  *
  * @module @animatica/editor/panels/PropertiesPanel
  */
-import React, { useCallback, useRef, useState, useEffect } from 'react';
+import React, { useCallback, useRef, useState, useEffect, useId } from 'react';
 import { useSceneStore, Actor, PrimitiveActor, LightActor, CameraActor, CharacterActor } from '@Animatica/engine';
 
 interface PropertiesPanelProps {
@@ -67,6 +67,7 @@ const NumberInput: React.FC<{
     className?: string;
 }> = ({ label, value, onChange, step = 0.1, min, max, className }) => {
     const [localValue, setLocalValue] = useState<string>(value.toString());
+    const id = useId();
 
     useEffect(() => {
         // Only update if value matches parsed local value (handles 1. vs 1)
@@ -91,10 +92,11 @@ const NumberInput: React.FC<{
 
     return (
         <div className={className || "prop-field"}>
-            {label && <label className="prop-field__label">{label}</label>}
+            {label && <label htmlFor={id} className="prop-field__label">{label}</label>}
             <input
+                id={id}
                 type="number"
-                className="prop-field__input"
+                className="prop-field__input focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none"
                 value={localValue}
                 onChange={handleChange}
                 step={step}
@@ -116,6 +118,7 @@ const Vector3Input: React.FC<Vector3InputProps> = ({ label, value, onChange }) =
     const [localValue, setLocalValue] = useState<[string, string, string]>([
         value[0].toString(), value[1].toString(), value[2].toString()
     ]);
+    const id = useId();
 
     useEffect(() => {
         // Sync props to local state if they differ significantly
@@ -150,20 +153,21 @@ const Vector3Input: React.FC<Vector3InputProps> = ({ label, value, onChange }) =
     };
 
     return (
-        <div className="prop-field">
-            <label className="prop-field__label">{label}</label>
+        <div className="prop-field" role="group" aria-labelledby={id}>
+            <label id={id} className="prop-field__label">{label}</label>
             <div className="prop-field__vector3">
                 {(['X', 'Y', 'Z'] as const).map((axis, i) => (
                     <div key={axis} className="prop-field__axis">
-                        <span className={`prop-field__axis-label prop-field__axis-label--${axis.toLowerCase()}`}>
+                        <span className={`prop-field__axis-label prop-field__axis-label--${axis.toLowerCase()}`} aria-hidden="true">
                             {axis}
                         </span>
                         <input
                             type="number"
-                            className="prop-field__input"
+                            className="prop-field__input focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none"
                             value={localValue[i]}
                             onChange={(e) => handleChange(i, e.target.value)}
                             step={0.1}
+                            aria-label={`${label} ${axis}`}
                         />
                     </div>
                 ))}
@@ -178,13 +182,14 @@ const ColorInput: React.FC<{ label: string; value: string; onChange: (v: string)
     onChange,
 }) => {
     const [localValue, handleChange] = useDebouncedInput(value, onChange, 100);
+    const id = useId();
 
     return (
         <div className="prop-field">
-            <label className="prop-field__label">{label}</label>
+            <label htmlFor={id} className="prop-field__label">{label}</label>
             <div className="prop-field__color">
-                <input type="color" value={localValue} onChange={(e) => handleChange(e.target.value)} />
-                <span className="prop-field__color-hex">{localValue}</span>
+                <input id={id} type="color" value={localValue} onChange={(e) => handleChange(e.target.value)} className="focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none" />
+                <span className="prop-field__color-hex" aria-hidden="true">{localValue}</span>
             </div>
         </div>
     );
@@ -199,16 +204,18 @@ const SliderInput: React.FC<{
     onChange: (v: number) => void;
 }> = ({ label, value, min, max, step, onChange }) => {
     const [localValue, handleChange] = useDebouncedInput(value, onChange, 50);
+    const id = useId();
 
     return (
         <div className="prop-field">
-            <label className="prop-field__label">
+            <label htmlFor={id} className="prop-field__label">
                 {label}
-                <span className="prop-field__value">{localValue.toFixed(2)}</span>
+                <span className="prop-field__value" aria-hidden="true">{localValue.toFixed(2)}</span>
             </label>
             <input
+                id={id}
                 type="range"
-                className="prop-field__slider"
+                className="prop-field__slider focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none"
                 value={localValue}
                 min={min}
                 max={max}
@@ -225,12 +232,15 @@ const TextInput: React.FC<{ label: string; value: string; onChange: (v: string) 
     onChange,
 }) => {
     const [localValue, handleChange] = useDebouncedInput(value, onChange, 300);
+    const id = useId();
+
     return (
         <div className="prop-field">
-            <label className="prop-field__label">{label}</label>
+            <label htmlFor={id} className="prop-field__label">{label}</label>
             <input
+                id={id}
                 type="text"
-                className="prop-field__input prop-field__input--text"
+                className="prop-field__input prop-field__input--text focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none"
                 value={localValue}
                 onChange={(e) => handleChange(e.target.value)}
             />
@@ -315,7 +325,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorI
                     <div className="prop-field">
                         <label className="prop-field__label">Shape</label>
                         <select
-                            className="prop-field__select"
+                            className="prop-field__select focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none"
                             value={(actor as PrimitiveActor).properties.shape}
                             onChange={(e) => handleUpdate({
                                 properties: { ...(actor as PrimitiveActor).properties, shape: e.target.value as any }
@@ -371,6 +381,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorI
                         <label className="prop-field__label">
                             <input
                                 type="checkbox"
+                                className="focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none"
                                 checked={(actor as PrimitiveActor).properties.wireframe}
                                 onChange={(e) => handleUpdate({
                                     properties: { ...(actor as PrimitiveActor).properties, wireframe: e.target.checked }
@@ -388,7 +399,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorI
                     <div className="prop-field">
                         <label className="prop-field__label">Type</label>
                         <select
-                            className="prop-field__select"
+                            className="prop-field__select focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none"
                             value={(actor as LightActor).properties.lightType}
                             onChange={(e) => handleUpdate({
                                 properties: { ...(actor as LightActor).properties, lightType: e.target.value as any }
@@ -420,6 +431,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorI
                         <label className="prop-field__label">
                             <input
                                 type="checkbox"
+                                className="focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none"
                                 checked={(actor as LightActor).properties.castShadow}
                                 onChange={(e) => handleUpdate({
                                     properties: { ...(actor as LightActor).properties, castShadow: e.target.checked }
@@ -471,7 +483,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorI
                     <div className="prop-field">
                         <label className="prop-field__label">Animation</label>
                         <select
-                            className="prop-field__select"
+                            className="prop-field__select focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none"
                             value={(actor as CharacterActor).animation}
                             onChange={(e) => handleUpdate({ animation: e.target.value as any })}
                         >

@@ -101,16 +101,22 @@ export const ScriptConsole: React.FC<ScriptConsoleProps> = ({ onClose }) => {
 
     return (
         <div className="modal-overlay" onClick={onClose}>
-            <div className="modal script-console-modal" onClick={(e) => e.stopPropagation()}>
+            <div
+                className="modal script-console-modal"
+                onClick={(e) => e.stopPropagation()}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="script-console-title"
+            >
                 <div className="modal__header">
-                    <h2 className="modal__title">📜 Script Console</h2>
-                    <button className="modal__close" onClick={onClose}>✕</button>
+                    <h2 id="script-console-title" className="modal__title">📜 Script Console</h2>
+                    <button className="modal__close focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none" onClick={onClose} aria-label="Close">✕</button>
                 </div>
                 <div className="retro-stripe retro-stripe--thin" />
 
                 <div className="script-console__body">
                     <textarea
-                        className="script-console__editor"
+                        className="script-console__editor focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none"
                         value={script}
                         onChange={(e) => {
                             setScript(e.target.value);
@@ -118,10 +124,11 @@ export const ScriptConsole: React.FC<ScriptConsoleProps> = ({ onClose }) => {
                         }}
                         spellCheck={false}
                         placeholder="Paste your JSON scene script here..."
+                        aria-label="Script editor"
                     />
 
                     {errors.length > 0 && (
-                        <div className="script-console__errors">
+                        <div className="script-console__errors" role="alert" aria-live="polite">
                             {errors.map((err, i) => (
                                 <p key={i} className="script-console__error">⚠ {err}</p>
                             ))}
@@ -134,13 +141,13 @@ export const ScriptConsole: React.FC<ScriptConsoleProps> = ({ onClose }) => {
                 </div>
 
                 <div className="modal__footer">
-                    <button className="editor-btn editor-btn--ghost" onClick={handleCopyPrompt}>
+                    <button className="editor-btn editor-btn--ghost focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none" onClick={handleCopyPrompt}>
                         📋 Copy AI Prompt
                     </button>
-                    <button className="editor-btn editor-btn--ghost" onClick={handleValidate}>
+                    <button className="editor-btn editor-btn--ghost focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none" onClick={handleValidate}>
                         ✓ Validate
                     </button>
-                    <button className="editor-btn editor-btn--primary" onClick={handleBuildScene}>
+                    <button className="editor-btn editor-btn--primary focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none" onClick={handleBuildScene}>
                         🏗️ Build Scene
                     </button>
                 </div>

@@ -56,12 +56,14 @@ export const AssetLibrary: React.FC<AssetLibraryProps> = ({ onActorCreated }) =>
             {Object.entries(ASSET_CATEGORIES).map(([category, items]) => (
                 <div key={category} className="asset-category">
                     <button
-                        className={`asset-category__header ${expandedCategory === category ? 'asset-category__header--active' : ''}`}
+                        className={`asset-category__header ${expandedCategory === category ? 'asset-category__header--active' : ''} focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none`}
                         onClick={() =>
                             setExpandedCategory(expandedCategory === category ? '' : category)
                         }
+                        aria-expanded={expandedCategory === category}
+                        aria-controls={`category-items-${category}`}
                     >
-                        <span className="asset-category__arrow">
+                        <span className="asset-category__arrow" aria-hidden="true">
                             {expandedCategory === category ? '▼' : '▶'}
                         </span>
                         <span>{category}</span>
@@ -69,15 +71,19 @@ export const AssetLibrary: React.FC<AssetLibraryProps> = ({ onActorCreated }) =>
                     </button>
 
                     {expandedCategory === category && (
-                        <div className="asset-category__items">
+                        <div
+                            className="asset-category__items"
+                            id={`category-items-${category}`}
+                        >
                             {items.map((item) => (
                                 <button
                                     key={item.name}
-                                    className="asset-item"
+                                    className="asset-item focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none"
                                     onClick={() => handleAddActor(item)}
                                     title={`Add ${item.name}`}
+                                    aria-label={`Add ${item.name}`}
                                 >
-                                    <span className="asset-item__icon">{item.icon}</span>
+                                    <span className="asset-item__icon" aria-hidden="true">{item.icon}</span>
                                     <span className="asset-item__name">{item.name}</span>
                                 </button>
                             ))}
