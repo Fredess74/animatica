@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import React from 'react'
-// @ts-expect-error: Mocking internal component render
 import { CharacterRenderer } from './CharacterRenderer'
 import { CharacterActor } from '../../types'
 
