@@ -5,6 +5,7 @@ import { Viewport } from './Viewport'
 import React from 'react'
 
 // Mock ResizeObserver
+// @ts-ignore
 global.ResizeObserver = class ResizeObserver {
   observe() {}
   unobserve() {}

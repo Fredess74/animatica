@@ -42,12 +42,13 @@ const Gizmo: React.FC<{ orbitRef: React.RefObject<any> }> = ({ orbitRef }) => {
         <TransformControls
             object={target}
             mode="translate" // TODO: Add mode switching (rotate, scale)
-            onDraggingChanged={(e) => {
+            // @ts-ignore - onDraggingChanged is valid but types are missing
+            onDraggingChanged={(e: any) => {
                 if (orbitRef.current) {
                     orbitRef.current.enabled = !e.value;
                 }
             }}
-            onChange={(e) => {
+            onChange={(e: any) => {
                 if (e?.target?.object) {
                     const obj = e.target.object;
                     // Sync changes back to store
