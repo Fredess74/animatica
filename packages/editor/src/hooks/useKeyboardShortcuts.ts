@@ -46,7 +46,6 @@ export const useKeyboardShortcuts = (handlers: ShortcutHandlers) => {
           event.preventDefault();
           // Try to perform scene undo
           try {
-            // @ts-expect-error zundo temporal property might not be inferred correctly in all environments
             useSceneStore.temporal.getState().undo();
           } catch (e) {
             console.warn('Undo not available', e);
