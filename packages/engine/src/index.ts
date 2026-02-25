@@ -3,6 +3,7 @@
 
 // === TYPES ===
 export * from './types/index'
+export * from './types/utils'
 
 // === SCHEMAS (Zod validation) ===
 export * from './schemas/index'
