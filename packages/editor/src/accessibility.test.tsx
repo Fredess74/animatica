@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { render, screen, cleanup } from '@testing-library/react';
 import { AssetLibrary } from './panels/AssetLibrary';
 import { PropertiesPanel } from './panels/PropertiesPanel';
@@ -9,7 +9,7 @@ import { useSceneStore } from '@Animatica/engine';
 
 // Mock dependencies
 vi.mock('@Animatica/engine', async (importOriginal) => {
-    const actual = await importOriginal();
+    const actual = await importOriginal<Record<string, unknown>>();
     return {
         ...actual,
         useSceneStore: vi.fn(),
