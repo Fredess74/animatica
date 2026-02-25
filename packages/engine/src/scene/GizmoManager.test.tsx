@@ -6,7 +6,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { GizmoManager } from './GizmoManager';
 import { useSceneStore } from '../store/sceneStore';
 import { useThree } from '@react-three/fiber';
-import React from 'react';
 import * as THREE from 'three';
 
 // Mock dependencies
