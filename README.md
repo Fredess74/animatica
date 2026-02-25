@@ -55,13 +55,13 @@ git clone https://github.com/YOUR_ORG/Animatica.git
 cd Animatica
 
 # Install
-npm install
+pnpm install
 
 # Run editor
-npm run dev --workspace=packages/editor
+pnpm dev --filter @Animatica/editor
 
 # Run full app
-npm run dev --workspace=apps/web
+pnpm dev --filter @Animatica/web
 ```
 
 ## Documentation

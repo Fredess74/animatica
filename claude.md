@@ -130,8 +130,8 @@ fredess/
 
 - **Editor is empty**: only `index.ts` with `export {}` and `design-tokens.css`
 - **No web app**: apps/web is minimal scaffold
-- **No CharacterRenderer**: TODO in SceneManager
-- **No SpeakerRenderer**: TODO in SceneManager
+- **CharacterRenderer placeholder**: capsule placeholder implemented, needs full GLB support
+- **SpeakerRenderer placeholder**: basic 3D audio implemented
 - **All 9 conflicting PRs closed** — agents will create fresh ones
 
 ### Progress Tracking
