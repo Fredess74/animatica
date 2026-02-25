@@ -53,6 +53,7 @@ export const LightRenderer: React.FC<LightRendererProps> = ({
 
   return (
     <group
+      name={actor.id}
       position={transform.position}
       rotation={transform.rotation}
       scale={transform.scale}

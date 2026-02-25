@@ -59,6 +59,7 @@ export const PrimitiveRenderer: React.FC<PrimitiveRendererProps> = ({
   return (
     <mesh
       ref={meshRef}
+      name={actor.id}
       position={transform.position}
       rotation={transform.rotation}
       scale={transform.scale}

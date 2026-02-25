@@ -40,6 +40,7 @@ export const CharacterRenderer = forwardRef<THREE.Group, CharacterRendererProps>
   return (
     <group
       ref={ref}
+      name={actor.id}
       position={transform.position}
       rotation={transform.rotation}
       scale={transform.scale}

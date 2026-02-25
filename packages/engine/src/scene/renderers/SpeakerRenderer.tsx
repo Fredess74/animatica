@@ -27,6 +27,7 @@ export const SpeakerRenderer = forwardRef<THREE.Group, SpeakerRendererProps>(({
   return (
     <group
       ref={ref}
+      name={actor.id}
       position={transform.position}
       rotation={transform.rotation}
       scale={transform.scale}

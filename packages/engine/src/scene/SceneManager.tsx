@@ -14,6 +14,7 @@ import { LightRenderer } from './renderers/LightRenderer';
 import { CameraRenderer } from './renderers/CameraRenderer';
 import { CharacterRenderer } from './renderers/CharacterRenderer';
 import { SpeakerRenderer } from './renderers/SpeakerRenderer';
+import { GizmoManager } from './GizmoManager';
 import type {
     Actor,
     PrimitiveActor,
@@ -30,6 +31,12 @@ interface SceneManagerProps {
     onActorSelect?: (actorId: string) => void;
     /** Whether to show debug helpers (light gizmos, camera frustums). */
     showHelpers?: boolean;
+    /** The current transformation mode for the gizmo. */
+    transformMode?: 'translate' | 'rotate' | 'scale';
+    /** Whether to show the ground grid. */
+    showGrid?: boolean;
+    /** The size of the ground grid. */
+    gridSize?: number;
 }
 
 /**
@@ -45,6 +52,8 @@ interface SceneManagerProps {
  *     selectedActorId={selectedId}
  *     onActorSelect={(id) => setSelectedId(id)}
  *     showHelpers={true}
+ *     transformMode="translate"
+ *     showGrid={true}
  *   />
  * </Canvas>
  * ```
@@ -53,6 +62,9 @@ export const SceneManager: React.FC<SceneManagerProps> = ({
     selectedActorId,
     onActorSelect,
     showHelpers = false,
+    transformMode = 'translate',
+    showGrid = true,
+    gridSize = 20,
 }) => {
     const actors = useSceneStore((s) => s.actors);
     const environment = useSceneStore((s) => s.environment);
@@ -163,6 +175,14 @@ export const SceneManager: React.FC<SceneManagerProps> = ({
                         return null;
                 }
             })}
+
+            {/* === Helpers === */}
+            {showGrid && <gridHelper args={[gridSize, gridSize]} />}
+
+            <GizmoManager
+                selectedActorId={selectedActorId}
+                mode={transformMode}
+            />
         </>
     );
 };

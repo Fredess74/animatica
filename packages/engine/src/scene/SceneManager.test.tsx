@@ -9,6 +9,11 @@ vi.mock('../store/sceneStore', () => ({
   useSceneStore: vi.fn(),
 }))
 
+// Mock GizmoManager
+vi.mock('./GizmoManager', () => ({
+  GizmoManager: () => <div data-testid="gizmo-manager" />
+}))
+
 // Mock renderers to render visible elements we can query
 vi.mock('./renderers/PrimitiveRenderer', () => ({
   PrimitiveRenderer: () => <div data-testid="primitive-renderer" />

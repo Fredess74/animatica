@@ -43,6 +43,7 @@ export const CameraRenderer: React.FC<CameraRendererProps> = ({
     <PerspectiveCamera
       makeDefault={isActive}
       ref={camRef}
+      name={actor.id}
       position={transform.position}
       rotation={transform.rotation}
       scale={transform.scale}
