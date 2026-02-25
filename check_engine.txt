@@ -1,0 +1,9 @@
+
+> Animatica@0.1.0 typecheck /app
+> turbo run typecheck packages/engine
+
+• turbo 2.8.10
+  x Missing tasks in project
+  `->   x Could not find task `packages/engine` in project
+
+ ELIFECYCLE  Command failed with exit code 1.

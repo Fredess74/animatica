@@ -5,7 +5,17 @@
  * @module @animatica/editor/panels/PropertiesPanel
  */
 import React, { useCallback, useRef, useState, useEffect } from 'react';
-import { useSceneStore, Actor, PrimitiveActor, LightActor, CameraActor, CharacterActor } from '@Animatica/engine';
+import {
+    useSceneStore,
+    Actor,
+    PrimitiveActor,
+    LightActor,
+    CameraActor,
+    CharacterActor,
+    PrimitiveShape,
+    LightType,
+    AnimationState
+} from '@Animatica/engine';
 
 interface PropertiesPanelProps {
     selectedActorId: string | null;
@@ -19,7 +29,7 @@ const radToDeg = (rad: number) => rad * RAD2DEG;
 const degToRad = (deg: number) => deg * DEG2RAD;
 
 // Helper hook for debounced updates
-function useDebouncedCallback<T extends (...args: any[]) => any>(callback: T, delay: number) {
+function useDebouncedCallback<T extends (...args: any[]) => void>(callback: T, delay: number) {
     const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     // Clean up timeout on unmount
@@ -318,7 +328,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorI
                             className="prop-field__select"
                             value={(actor as PrimitiveActor).properties.shape}
                             onChange={(e) => handleUpdate({
-                                properties: { ...(actor as PrimitiveActor).properties, shape: e.target.value as any }
+                                properties: { ...(actor as PrimitiveActor).properties, shape: e.target.value as PrimitiveShape }
                             })}
                         >
                             <option value="box">Box</option>
@@ -391,7 +401,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorI
                             className="prop-field__select"
                             value={(actor as LightActor).properties.lightType}
                             onChange={(e) => handleUpdate({
-                                properties: { ...(actor as LightActor).properties, lightType: e.target.value as any }
+                                properties: { ...(actor as LightActor).properties, lightType: e.target.value as LightType }
                             })}
                         >
                             <option value="point">Point</option>
@@ -473,7 +483,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorI
                         <select
                             className="prop-field__select"
                             value={(actor as CharacterActor).animation}
-                            onChange={(e) => handleUpdate({ animation: e.target.value as any })}
+                            onChange={(e) => handleUpdate({ animation: e.target.value as AnimationState })}
                         >
                             <option value="idle">Idle</option>
                             <option value="walk">Walk</option>

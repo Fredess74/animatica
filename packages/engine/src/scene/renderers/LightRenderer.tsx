@@ -41,11 +41,16 @@ export const LightRenderer: React.FC<LightRendererProps> = ({
     : [lightType === 'directional' ? 1 : 0.5, 'yellow'];
 
   // useHelper expects a MutableRefObject or Object3D.
-  // We cast the hook to unknown to avoid strict type checks on the helper constructor arguments
-  // or ref type mismatches in some TS versions, but we try to keep it clean.
-  (useHelper as any)(
-    (showHelper && visible && HelperClass ? lightRef : undefined),
-    HelperClass,
+  // We cast the hook to a compatible signature to allow dynamic helper constructors and arguments
+  const useHelperSafe = useHelper as unknown as (
+    object3D: React.MutableRefObject<THREE.Object3D | null | undefined> | undefined,
+    helperConstructor: new (...args: any[]) => THREE.Object3D,
+    ...args: any[]
+  ) => void
+
+  useHelperSafe(
+    showHelper && visible && HelperClass ? (lightRef as React.MutableRefObject<THREE.Object3D | null>) : undefined,
+    (HelperClass || THREE.Object3D),
     ...helperArgs
   )
 

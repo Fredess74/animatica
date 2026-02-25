@@ -33,7 +33,7 @@ export const CameraRenderer: React.FC<CameraRendererProps> = ({
 
   // Show helper only if visible, helper is requested, AND it's NOT the active camera
   useHelper(
-    showHelper && visible && !isActive ? (camRef as any) : null,
+    showHelper && visible && !isActive ? (camRef as React.RefObject<THREE.Object3D>) : null,
     THREE.CameraHelper
   )
 

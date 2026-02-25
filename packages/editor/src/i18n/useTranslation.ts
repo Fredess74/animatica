@@ -8,8 +8,15 @@ export type Language = 'en' | 'ru' | 'ja';
 let currentLanguage: Language = 'en';
 
 // Helper to access nested keys safely
-function getNestedValue(obj: any, path: string): string | undefined {
-    return path.split('.').reduce((acc, part) => (acc && acc[part] !== undefined ? acc[part] : undefined), obj);
+function getNestedValue(obj: unknown, path: string): string | undefined {
+    const value = path.split('.').reduce((acc: unknown, part) => {
+        if (acc && typeof acc === 'object' && acc !== null && part in acc) {
+             return (acc as Record<string, unknown>)[part];
+        }
+        return undefined;
+    }, obj);
+
+    return typeof value === 'string' ? value : undefined;
 }
 
 export const useTranslation = () => {

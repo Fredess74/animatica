@@ -1,8 +1,10 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import React from 'react'
-// @ts-ignore
 import { CharacterRenderer } from './CharacterRenderer'
 import { CharacterActor } from '../../types'
+
+// Access internal render function for direct testing
+const Renderer = CharacterRenderer as any
 
 // Mock react to bypass hooks checks when calling component directly
 vi.mock('react', async () => {
@@ -41,8 +43,7 @@ describe('CharacterRenderer', () => {
 
   it('renders a group containing capsule mesh with correct transform', () => {
     // Call the forwardRef component's render function directly
-    // @ts-ignore
-    const result = CharacterRenderer.render({ actor: mockActor }, null) as React.ReactElement
+    const result = Renderer.render({ actor: mockActor }, null) as React.ReactElement
 
     expect(result).not.toBeNull()
     expect(result.type).toBe('group')
@@ -81,14 +82,12 @@ describe('CharacterRenderer', () => {
 
   it('renders nothing when visible is false', () => {
     const invisibleActor = { ...mockActor, visible: false }
-    // @ts-ignore
-    const result = CharacterRenderer.render({ actor: invisibleActor }, null)
+    const result = Renderer.render({ actor: invisibleActor }, null)
     expect(result).toBeNull()
   })
 
   it('renders face direction indicator', () => {
-     // @ts-ignore
-    const result = CharacterRenderer.render({ actor: mockActor }, null) as React.ReactElement
+    const result = Renderer.render({ actor: mockActor }, null) as React.ReactElement
     const props = result.props as any
     const children = React.Children.toArray(props.children) as React.ReactElement[]
 
