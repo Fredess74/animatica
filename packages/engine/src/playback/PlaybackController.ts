@@ -1,9 +1,9 @@
 /**
- * PlaybackController — Drives animation playback via requestAnimationFrame.
- * Provides a React hook that manages the animation loop, time tracking,
- * and camera cuts for the scene.
+ * Animation Playback Controller.
+ * Drives the animation loop using `requestAnimationFrame` and synchronizes
+ * the scene store's current time.
  *
- * @module @animatica/engine/playback/PlaybackController
+ * @module @animatica/engine/playback
  */
 import { useCallback, useEffect, useRef } from 'react';
 import { useSceneStore } from '../store/sceneStore';
@@ -37,24 +37,25 @@ interface PlaybackControls {
 }
 
 /**
- * React hook that provides playback controls for the scene animation.
- * Uses requestAnimationFrame for smooth, frame-accurate playback.
+ * A React Hook to control the animation playback loop.
  *
- * @param options Optional playback configuration.
- * @returns PlaybackControls object with play, pause, stop, seek, toggle, setSpeed.
+ * It manages the `requestAnimationFrame` loop, calculates delta time based on
+ * the `speed` multiplier, and updates the `currentTime` in the scene store.
+ * It also handles looping logic and auto-pause at the end of the timeline.
+ *
+ * **Note:** This hook does not return the current time or playing state to avoid
+ * re-renders on every frame. Use `useSceneStore` selectors to get reactive state.
+ *
+ * @param options Configuration for the playback behavior.
+ * @returns A set of stable callback functions to control playback.
  *
  * @example
  * ```tsx
- * function ControlBar() {
- *   const { play, pause, stop, seek, toggle } = usePlayback({ loop: true });
- *   return (
- *     <div>
- *       <button onClick={toggle}>Play/Pause</button>
- *       <button onClick={stop}>Stop</button>
- *       <input type="range" onChange={(e) => seek(Number(e.target.value))} />
- *     </div>
- *   );
- * }
+ * const { play, pause, toggle, seek } = usePlayback({ loop: true, speed: 1.5 });
+ *
+ * return (
+ *   <button onClick={toggle}>Toggle Play/Pause</button>
+ * );
  * ```
  */
 export function usePlayback(options: PlaybackOptions = {}): PlaybackControls {

@@ -71,12 +71,24 @@ const initialState: ProjectState & { playback: PlaybackState; selectedActorId: s
 };
 
 /**
- * Zustand store for managing the scene state, including actors, timeline, environment, and playback.
- * Uses `immer` for immutable updates, `persist` for local storage, and `temporal` (zundo) for undo/redo.
+ * The main Zustand store hook for managing the Animatica scene state.
+ * This store handles all project data (actors, timeline, environment), playback state, and selection.
+ *
+ * It is enhanced with middleware:
+ * - `immer`: Allows for immutable state updates using mutable syntax.
+ * - `persist`: Automatically saves project state to local storage (key: 'animatica-scene').
+ * - `temporal`: Provides undo/redo functionality for project state changes (zundo).
+ *
+ * @returns The store state and actions, plus temporal controls (undo, redo, clear).
  *
  * @example
  * ```tsx
- * const { actors, addActor, undo, redo } = useSceneStore()
+ * // Select specific state slices for performance
+ * const actors = useSceneStore((state) => state.actors);
+ * const addActor = useSceneStore((state) => state.addActor);
+ *
+ * // Use temporal actions
+ * const { undo, redo } = useSceneStore.temporal.getState();
  * ```
  */
 export const useSceneStore = create<SceneStoreState>()(
@@ -165,35 +177,49 @@ export const useSceneStore = create<SceneStoreState>()(
 // Selectors
 
 /**
- * Selector to get an actor by its ID.
- * @param id The UUID of the actor.
- * @returns The actor object if found, otherwise undefined.
+ * Selector function to retrieve an actor by its UUID.
+ * Designed to be used within `useSceneStore` or directly with state.
+ *
+ * @param id The UUID of the actor to find.
+ * @returns A selector function that returns the actor object or undefined.
+ *
+ * @example
+ * const myActor = useSceneStore(getActorById('some-uuid'));
  */
 export const getActorById = (id: string) => (state: SceneStoreState): Actor | undefined =>
   state.actors.find((a) => a.id === id);
 
 /**
- * Hook to select a specific actor by ID.
+ * React Hook to select a specific actor by ID from the store.
+ * Re-renders only when the specific actor changes.
+ *
  * @param id The UUID of the actor.
+ * @returns The actor object if found, otherwise undefined.
  */
 export const useActorById = (id: string) => useSceneStore((state) => state.actors.find((a) => a.id === id));
 
 /**
- * Selector to get all currently visible actors.
- * @returns An array of visible actors.
+ * Selector function to retrieve all currently visible actors.
+ *
+ * @param state The current store state.
+ * @returns An array of actors where `visible` is true.
  */
 export const getActiveActors = (state: SceneStoreState): Actor[] =>
   state.actors.filter((a) => a.visible);
 
 /**
- * Selector to get the current playback time.
+ * Selector function to retrieve the current playback time.
+ *
+ * @param state The current store state.
  * @returns The current time in seconds.
  */
 export const getCurrentTime = (state: SceneStoreState): number =>
   state.playback.currentTime;
 
 /**
- * Hook to get the currently selected actor.
+ * React Hook to get the currently selected actor.
+ *
+ * @returns The currently selected actor object, or undefined if no selection.
  */
 export const useSelectedActor = () =>
   useSceneStore((state) =>
@@ -201,13 +227,18 @@ export const useSelectedActor = () =>
   );
 
 /**
- * Hook to get all actors of a specific type.
- * @param type The type of actor to filter by.
+ * React Hook to get all actors of a specific type.
+ * Uses `useShallow` to prevent unnecessary re-renders when the array reference changes but content is same.
+ *
+ * @param type The type of actor to filter by (e.g., 'character', 'light').
+ * @returns An array of actors of the specified type.
  */
 export const useActorsByType = (type: Actor['type']) =>
   useSceneStore(useShallow((state) => state.actors.filter((a) => a.type === type)));
 
 /**
- * Hook to get the list of all actors.
+ * React Hook to get the full list of actors.
+ *
+ * @returns Array of all actors in the scene.
  */
 export const useActorList = () => useSceneStore((state) => state.actors);

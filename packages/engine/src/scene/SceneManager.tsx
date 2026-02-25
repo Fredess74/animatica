@@ -1,7 +1,6 @@
 /**
- * SceneManager — Orchestrates all scene renderers based on the Zustand store.
- * Reads actors from the store and delegates rendering to the appropriate component.
- * Handles environment setup (ambient light, sun, sky, fog).
+ * The Scene Orchestration Module.
+ * Responsible for rendering the entire 3D scene based on the current state.
  *
  * @module @animatica/engine/scene/SceneManager
  */
@@ -33,17 +32,26 @@ interface SceneManagerProps {
 }
 
 /**
- * SceneManager — the main scene orchestrator.
- * Reads actors, timeline, and environment from the Zustand store
- * and renders everything using the appropriate renderer components.
+ * The main component for rendering the scene.
+ * It subscribes to the Zustand store to get the list of actors, environment settings,
+ * and animation timeline, then orchestrates the rendering of each element.
+ *
+ * Features:
+ * - Renders Environment (Sky, Sun, Ambient Light, Fog)
+ * - Renders Actors (Primitives, Lights, Cameras, Characters) via specialized renderers
+ * - Evaluates Animation Tracks at the current playback time
+ * - Resolves active camera cuts
  *
  * @component
+ * @param props {@link SceneManagerProps}
+ * @returns A React fragment containing lights, environment, and actor components.
+ *
  * @example
  * ```tsx
  * <Canvas>
  *   <SceneManager
- *     selectedActorId={selectedId}
- *     onActorSelect={(id) => setSelectedId(id)}
+ *     selectedActorId="some-uuid"
+ *     onActorSelect={(id) => console.log('Selected:', id)}
  *     showHelpers={true}
  *   />
  * </Canvas>

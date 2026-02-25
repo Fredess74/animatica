@@ -10,11 +10,19 @@ import type { ProjectState, ValidationResult } from '../types';
 export const MAX_SCRIPT_SIZE = 10 * 1024 * 1024; // 10MB
 
 /**
- * Validate a raw JSON string against the ProjectState schema.
- * Handles nested "project" wrappers commonly found in AI-generated output.
+ * Validates a JSON string against the project schema.
+ * It gracefully handles common issues like:
+ * - Nested "project" keys (often returned by LLMs).
+ * - Extra whitespace.
  *
  * @param jsonString The raw JSON string to validate.
- * @returns A ValidationResult object containing success status, errors, and parsed data.
+ * @returns An object describing whether validation succeeded, with errors or the parsed data.
+ *
+ * @example
+ * const result = validateScript('{"meta": ...}');
+ * if (!result.success) {
+ *   console.error(result.errors);
+ * }
  */
 export function validateScript(jsonString: string): ValidationResult {
     // Step 0: Check size limit to prevent DoS
@@ -71,12 +79,20 @@ export function validateScript(jsonString: string): ValidationResult {
 }
 
 /**
- * Import a scene script. Validates and returns the ProjectState.
- * Throws an error if validation fails.
+ * Imports a scene script, throwing an error if validation fails.
+ * This is the strict version of `tryImportScript`.
  *
  * @param jsonString The raw JSON string to import.
- * @returns The validated ProjectState object.
- * @throws Error if validation fails, with a detailed message.
+ * @returns The fully validated `ProjectState` object ready for the store.
+ * @throws {Error} If the script is invalid, with a newline-separated list of issues.
+ *
+ * @example
+ * try {
+ *   const project = importScript(userInput);
+ *   loadProject(project);
+ * } catch (err) {
+ *   alert(err.message);
+ * }
  */
 export function importScript(jsonString: string): ProjectState {
     const result = validateScript(jsonString);
@@ -89,11 +105,11 @@ export function importScript(jsonString: string): ProjectState {
 }
 
 /**
- * Try to import a script, returning the result without throwing.
- * Useful for UI validation or optional imports.
+ * Attempts to import a script without throwing exceptions.
+ * Useful for real-time validation in UI forms (e.g., checking paste events).
  *
- * @param jsonString The raw JSON string to attempt importing.
- * @returns An object with `ok: true` and data, or `ok: false` and errors.
+ * @param jsonString The raw JSON string.
+ * @returns A result object with either `data` (ProjectState) or `errors` (string[]).
  */
 export function tryImportScript(
     jsonString: string,
