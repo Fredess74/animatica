@@ -1,0 +1,83 @@
+{
+  "timeline": {
+    "stop": "Стоп",
+    "pause": "Пауза",
+    "play": "Воспроизвести",
+    "addKeyframe": "Добавить ключевой кадр",
+    "duration": "Длительность",
+    "selectedActor": "Выбранный объект",
+    "selectActorPrompt": "Выберите объект, чтобы увидеть его треки",
+    "seconds": "{{count}}с"
+  },
+  "export": {
+    "title": "Экспорт видео",
+    "resolution": "Разрешение",
+    "frameRate": "Частота кадров",
+    "format": "Формат",
+    "success": "Экспорт успешно завершен!",
+    "cancelled": "Экспорт отменен",
+    "cancel": "Отмена",
+    "close": "Закрыть",
+    "startExport": "Экспорт {{format}}",
+    "starting": "Начинаем экспорт {{resolution}} @ {{fps}}fps...",
+    "fpsSuffix": "{{count}} fps"
+  },
+  "properties": {
+    "title": "Свойства",
+    "emptyState": "Выберите объект для редактирования свойств",
+    "sections": {
+      "general": "Общее",
+      "transform": "Трансформация",
+      "material": "Материал",
+      "light": "Настройки света",
+      "camera": "Настройки камеры",
+      "character": "Настройки персонажа"
+    },
+    "fields": {
+      "name": "Имя",
+      "position": "Позиция",
+      "rotation": "Вращение",
+      "scale": "Масштаб",
+      "shape": "Форма",
+      "color": "Цвет",
+      "roughness": "Шероховатость",
+      "metalness": "Металличность",
+      "opacity": "Непрозрачность",
+      "wireframe": "Каркас",
+      "type": "Тип",
+      "intensity": "Интенсивность",
+      "castShadow": "Отбрасывать тень",
+      "fov": "Угол обзора",
+      "near": "Ближняя плоскость",
+      "far": "Дальняя плоскость",
+      "animation": "Анимация",
+      "speed": "Скорость анимации"
+    },
+    "options": {
+      "shape": {
+        "box": "Куб",
+        "sphere": "Сфера",
+        "cylinder": "Цилиндр",
+        "plane": "Плоскость",
+        "cone": "Конус",
+        "torus": "Тор",
+        "capsule": "Капсула"
+      },
+      "type": {
+        "point": "Точечный",
+        "spot": "Прожектор",
+        "directional": "Направленный"
+      },
+      "animation": {
+        "idle": "Покой",
+        "walk": "Ходьба",
+        "run": "Бег",
+        "wave": "Махать",
+        "talk": "Разговор",
+        "dance": "Танец",
+        "sit": "Сидеть",
+        "jump": "Прыжок"
+      }
+    }
+  }
+}

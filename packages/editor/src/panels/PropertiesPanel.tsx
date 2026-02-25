@@ -6,6 +6,7 @@
  */
 import React, { useCallback, useRef, useState, useEffect } from 'react';
 import { useSceneStore, Actor, PrimitiveActor, LightActor, CameraActor, CharacterActor } from '@Animatica/engine';
+import { useTranslation } from '../i18n/useTranslation';
 
 interface PropertiesPanelProps {
     selectedActorId: string | null;
@@ -239,6 +240,7 @@ const TextInput: React.FC<{ label: string; value: string; onChange: (v: string) 
 };
 
 export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorId }) => {
+    const { t } = useTranslation();
     const actor = useSceneStore((state) => state.actors.find((a) => a.id === selectedActorId));
 
     const handleUpdate = useCallback((updates: Partial<Actor>) => {
@@ -250,11 +252,11 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorI
     if (!selectedActorId || !actor) {
         return (
             <div className="panel properties-panel">
-                <h3 className="panel__title">Properties</h3>
+                <h3 className="panel__title">{t('properties.title')}</h3>
                 <div className="retro-stripe retro-stripe--thin" />
                 <div className="panel__empty">
                     <span className="panel__empty-icon">🎯</span>
-                    <p>Select an actor to edit its properties</p>
+                    <p>{t('properties.emptyState')}</p>
                 </div>
             </div>
         );
@@ -269,27 +271,27 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorI
 
     return (
         <div className="panel properties-panel">
-            <h3 className="panel__title">Properties</h3>
+            <h3 className="panel__title">{t('properties.title')}</h3>
             <div className="retro-stripe retro-stripe--thin" />
 
             <div className="prop-section">
-                <h4 className="prop-section__title">General</h4>
+                <h4 className="prop-section__title">{t('properties.sections.general')}</h4>
                 <TextInput
-                    label="Name"
+                    label={t('properties.fields.name')}
                     value={actor.name}
                     onChange={(name) => handleUpdate({ name })}
                 />
             </div>
 
             <div className="prop-section">
-                <h4 className="prop-section__title">Transform</h4>
+                <h4 className="prop-section__title">{t('properties.sections.transform')}</h4>
                 <Vector3Input
-                    label="Position"
+                    label={t('properties.fields.position')}
                     value={actor.transform.position}
                     onChange={(position) => handleUpdate({ transform: { ...actor.transform, position } })}
                 />
                 <Vector3Input
-                    label="Rotation"
+                    label={t('properties.fields.rotation')}
                     value={rotationDeg}
                     onChange={(deg) => handleUpdate({
                         transform: {
@@ -303,7 +305,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorI
                     })}
                 />
                 <Vector3Input
-                    label="Scale"
+                    label={t('properties.fields.scale')}
                     value={actor.transform.scale}
                     onChange={(scale) => handleUpdate({ transform: { ...actor.transform, scale } })}
                 />
@@ -311,9 +313,9 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorI
 
             {actor.type === 'primitive' && (
                 <div className="prop-section">
-                    <h4 className="prop-section__title">Material</h4>
+                    <h4 className="prop-section__title">{t('properties.sections.material')}</h4>
                     <div className="prop-field">
-                        <label className="prop-field__label">Shape</label>
+                        <label className="prop-field__label">{t('properties.fields.shape')}</label>
                         <select
                             className="prop-field__select"
                             value={(actor as PrimitiveActor).properties.shape}
@@ -321,24 +323,24 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorI
                                 properties: { ...(actor as PrimitiveActor).properties, shape: e.target.value as any }
                             })}
                         >
-                            <option value="box">Box</option>
-                            <option value="sphere">Sphere</option>
-                            <option value="cylinder">Cylinder</option>
-                            <option value="plane">Plane</option>
-                            <option value="cone">Cone</option>
-                            <option value="torus">Torus</option>
-                            <option value="capsule">Capsule</option>
+                            <option value="box">{t('properties.options.shape.box')}</option>
+                            <option value="sphere">{t('properties.options.shape.sphere')}</option>
+                            <option value="cylinder">{t('properties.options.shape.cylinder')}</option>
+                            <option value="plane">{t('properties.options.shape.plane')}</option>
+                            <option value="cone">{t('properties.options.shape.cone')}</option>
+                            <option value="torus">{t('properties.options.shape.torus')}</option>
+                            <option value="capsule">{t('properties.options.shape.capsule')}</option>
                         </select>
                     </div>
                     <ColorInput
-                        label="Color"
+                        label={t('properties.fields.color')}
                         value={(actor as PrimitiveActor).properties.color}
                         onChange={(color) => handleUpdate({
                             properties: { ...(actor as PrimitiveActor).properties, color }
                         })}
                     />
                     <SliderInput
-                        label="Roughness"
+                        label={t('properties.fields.roughness')}
                         value={(actor as PrimitiveActor).properties.roughness}
                         min={0}
                         max={1}
@@ -348,7 +350,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorI
                         })}
                     />
                     <SliderInput
-                        label="Metalness"
+                        label={t('properties.fields.metalness')}
                         value={(actor as PrimitiveActor).properties.metalness}
                         min={0}
                         max={1}
@@ -358,7 +360,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorI
                         })}
                     />
                     <SliderInput
-                        label="Opacity"
+                        label={t('properties.fields.opacity')}
                         value={(actor as PrimitiveActor).properties.opacity}
                         min={0}
                         max={1}
@@ -376,7 +378,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorI
                                     properties: { ...(actor as PrimitiveActor).properties, wireframe: e.target.checked }
                                 })}
                             />
-                            Wireframe
+                            {t('properties.fields.wireframe')}
                         </label>
                     </div>
                 </div>
@@ -384,9 +386,9 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorI
 
             {actor.type === 'light' && (
                 <div className="prop-section">
-                    <h4 className="prop-section__title">Light Settings</h4>
+                    <h4 className="prop-section__title">{t('properties.sections.light')}</h4>
                     <div className="prop-field">
-                        <label className="prop-field__label">Type</label>
+                        <label className="prop-field__label">{t('properties.fields.type')}</label>
                         <select
                             className="prop-field__select"
                             value={(actor as LightActor).properties.lightType}
@@ -394,20 +396,20 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorI
                                 properties: { ...(actor as LightActor).properties, lightType: e.target.value as any }
                             })}
                         >
-                            <option value="point">Point</option>
-                            <option value="spot">Spot</option>
-                            <option value="directional">Directional</option>
+                            <option value="point">{t('properties.options.type.point')}</option>
+                            <option value="spot">{t('properties.options.type.spot')}</option>
+                            <option value="directional">{t('properties.options.type.directional')}</option>
                         </select>
                     </div>
                     <ColorInput
-                        label="Color"
+                        label={t('properties.fields.color')}
                         value={(actor as LightActor).properties.color}
                         onChange={(color) => handleUpdate({
                             properties: { ...(actor as LightActor).properties, color }
                         })}
                     />
                     <SliderInput
-                        label="Intensity"
+                        label={t('properties.fields.intensity')}
                         value={(actor as LightActor).properties.intensity}
                         min={0}
                         max={10}
@@ -425,7 +427,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorI
                                     properties: { ...(actor as LightActor).properties, castShadow: e.target.checked }
                                 })}
                             />
-                            Cast Shadow
+                            {t('properties.fields.castShadow')}
                         </label>
                     </div>
                 </div>
@@ -433,9 +435,9 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorI
 
             {actor.type === 'camera' && (
                 <div className="prop-section">
-                    <h4 className="prop-section__title">Camera Settings</h4>
+                    <h4 className="prop-section__title">{t('properties.sections.camera')}</h4>
                     <SliderInput
-                        label="Field of View"
+                        label={t('properties.fields.fov')}
                         value={(actor as CameraActor).properties.fov}
                         min={10}
                         max={120}
@@ -445,7 +447,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorI
                         })}
                     />
                     <NumberInput
-                        label="Near Plane"
+                        label={t('properties.fields.near')}
                         value={(actor as CameraActor).properties.near}
                         onChange={(near) => handleUpdate({
                             properties: { ...(actor as CameraActor).properties, near }
@@ -454,7 +456,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorI
                         min={0.1}
                     />
                     <NumberInput
-                        label="Far Plane"
+                        label={t('properties.fields.far')}
                         value={(actor as CameraActor).properties.far}
                         onChange={(far) => handleUpdate({
                             properties: { ...(actor as CameraActor).properties, far }
@@ -467,26 +469,26 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorI
 
             {actor.type === 'character' && (
                 <div className="prop-section">
-                    <h4 className="prop-section__title">Character Settings</h4>
+                    <h4 className="prop-section__title">{t('properties.sections.character')}</h4>
                     <div className="prop-field">
-                        <label className="prop-field__label">Animation</label>
+                        <label className="prop-field__label">{t('properties.fields.animation')}</label>
                         <select
                             className="prop-field__select"
                             value={(actor as CharacterActor).animation}
                             onChange={(e) => handleUpdate({ animation: e.target.value as any })}
                         >
-                            <option value="idle">Idle</option>
-                            <option value="walk">Walk</option>
-                            <option value="run">Run</option>
-                            <option value="wave">Wave</option>
-                            <option value="talk">Talk</option>
-                            <option value="dance">Dance</option>
-                            <option value="sit">Sit</option>
-                            <option value="jump">Jump</option>
+                            <option value="idle">{t('properties.options.animation.idle')}</option>
+                            <option value="walk">{t('properties.options.animation.walk')}</option>
+                            <option value="run">{t('properties.options.animation.run')}</option>
+                            <option value="wave">{t('properties.options.animation.wave')}</option>
+                            <option value="talk">{t('properties.options.animation.talk')}</option>
+                            <option value="dance">{t('properties.options.animation.dance')}</option>
+                            <option value="sit">{t('properties.options.animation.sit')}</option>
+                            <option value="jump">{t('properties.options.animation.jump')}</option>
                         </select>
                     </div>
                     <SliderInput
-                        label="Animation Speed"
+                        label={t('properties.fields.speed')}
                         value={(actor as CharacterActor).animationSpeed || 1}
                         min={0}
                         max={5}

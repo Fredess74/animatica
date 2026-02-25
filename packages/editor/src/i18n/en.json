@@ -21,5 +21,63 @@
     "startExport": "Export {{format}}",
     "starting": "Starting {{resolution}} @ {{fps}}fps export...",
     "fpsSuffix": "{{count}} fps"
+  },
+  "properties": {
+    "title": "Properties",
+    "emptyState": "Select an actor to edit its properties",
+    "sections": {
+      "general": "General",
+      "transform": "Transform",
+      "material": "Material",
+      "light": "Light Settings",
+      "camera": "Camera Settings",
+      "character": "Character Settings"
+    },
+    "fields": {
+      "name": "Name",
+      "position": "Position",
+      "rotation": "Rotation",
+      "scale": "Scale",
+      "shape": "Shape",
+      "color": "Color",
+      "roughness": "Roughness",
+      "metalness": "Metalness",
+      "opacity": "Opacity",
+      "wireframe": "Wireframe",
+      "type": "Type",
+      "intensity": "Intensity",
+      "castShadow": "Cast Shadow",
+      "fov": "Field of View",
+      "near": "Near Plane",
+      "far": "Far Plane",
+      "animation": "Animation",
+      "speed": "Animation Speed"
+    },
+    "options": {
+      "shape": {
+        "box": "Box",
+        "sphere": "Sphere",
+        "cylinder": "Cylinder",
+        "plane": "Plane",
+        "cone": "Cone",
+        "torus": "Torus",
+        "capsule": "Capsule"
+      },
+      "type": {
+        "point": "Point",
+        "spot": "Spot",
+        "directional": "Directional"
+      },
+      "animation": {
+        "idle": "Idle",
+        "walk": "Walk",
+        "run": "Run",
+        "wave": "Wave",
+        "talk": "Talk",
+        "dance": "Dance",
+        "sit": "Sit",
+        "jump": "Jump"
+      }
+    }
   }
 }
