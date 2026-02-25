@@ -1,0 +1,266 @@
+/* ============================================
+   Shared UI Components
+   ============================================ */
+
+/* ---- Button ---- */
+.editor-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border: 1px solid transparent;
+  text-decoration: none;
+  line-height: 1.5;
+}
+
+.editor-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Variants */
+.editor-btn--ghost {
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.editor-btn--ghost:hover {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+.editor-btn--primary {
+  background: var(--green-600);
+  color: white;
+  box-shadow: var(--shadow-sm);
+  border-color: var(--green-700);
+}
+
+.editor-btn--primary:hover {
+  background: var(--green-500);
+  box-shadow: var(--shadow-glow);
+}
+
+.editor-btn--outline {
+  background: transparent;
+  border-color: var(--border-subtle);
+  color: var(--text-secondary);
+}
+
+.editor-btn--outline:hover {
+  border-color: var(--text-secondary);
+  color: var(--text-primary);
+  background: var(--bg-elevated);
+}
+
+.editor-btn--danger {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--color-error);
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.editor-btn--danger:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: var(--color-error);
+}
+
+/* Sizes */
+.editor-btn--sm {
+  padding: 4px 8px;
+  font-size: var(--text-xs);
+}
+
+.editor-btn--lg {
+  padding: 10px 20px;
+  font-size: var(--text-base);
+}
+
+/* ---- Input ---- */
+.editor-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  width: 100%;
+}
+
+.editor-input-label {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.editor-input {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--bg-deep);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.editor-input:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 1px var(--border-focus);
+}
+
+.editor-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: var(--bg-base);
+}
+
+.editor-input--error {
+  border-color: var(--color-error);
+}
+
+.editor-input-error-msg {
+  font-size: var(--text-xs);
+  color: var(--color-error);
+  margin-top: 2px;
+}
+
+/* ---- Select ---- */
+.editor-select-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  width: 100%;
+  position: relative;
+}
+
+.editor-select-container {
+  position: relative;
+  width: 100%;
+}
+
+.editor-select {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  padding-right: var(--space-xl); /* Space for arrow */
+  background-color: var(--bg-deep);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  outline: none;
+  appearance: none;
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+}
+
+.editor-select:focus {
+  border-color: var(--border-focus);
+}
+
+.editor-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.editor-select-arrow {
+  position: absolute;
+  right: var(--space-sm);
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---- Tooltip ---- */
+.editor-tooltip-trigger {
+  display: inline-flex;
+  position: relative;
+  cursor: help;
+}
+
+.editor-tooltip-content {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  background-color: var(--bg-elevated);
+  color: var(--text-primary);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-xs);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border-subtle);
+  z-index: 1000;
+  max-width: 200px;
+  width: max-content;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+  white-space: normal;
+  text-align: center;
+}
+
+.editor-tooltip-trigger:hover .editor-tooltip-content,
+.editor-tooltip-trigger:focus-within .editor-tooltip-content {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-4px);
+}
+
+/* ---- Icon Button ---- */
+.editor-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  padding: 0;
+}
+
+.editor-icon-btn:hover {
+  background-color: var(--bg-elevated);
+  color: var(--text-primary);
+  border-color: var(--border-subtle);
+}
+
+.editor-icon-btn:active {
+  background-color: var(--bg-surface);
+  transform: translateY(1px);
+}
+
+.editor-icon-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.editor-icon-btn--active {
+  background-color: var(--bg-surface);
+  color: var(--green-400);
+  border-color: var(--green-900);
+}
+
+.editor-icon-btn--sm {
+  width: 24px;
+  height: 24px;
+}
+
+.editor-icon-btn--lg {
+  width: 40px;
+  height: 40px;
+}

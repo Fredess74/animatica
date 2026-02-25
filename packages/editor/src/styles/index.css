@@ -4,6 +4,7 @@
  */
 
 @import './design-tokens.css';
+@import './components.css';
 @import './panels.css';
 @import './timeline.css';
 @import './modals.css';
