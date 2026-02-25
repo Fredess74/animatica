@@ -4,6 +4,23 @@
 
 Animatica is a **Turborepo monorepo** with 4 packages and 1 app. Each package has strict boundaries and communicates through published interfaces only.
 
+```mermaid
+graph TD
+    classDef package fill:#f9f,stroke:#333,stroke-width:2px;
+    classDef app fill:#bbf,stroke:#333,stroke-width:2px;
+
+    Web[apps/web]:::app
+    Engine[packages/engine]:::package
+    Editor[packages/editor]:::package
+    Platform[packages/platform]:::package
+    Contracts[packages/contracts]:::package
+
+    Web --> Engine
+    Web --> Editor
+    Web --> Platform
+    Editor --> Engine
+```
+
 ```
 Animatica/
 ├── package.json              # Root workspace config
@@ -20,6 +37,74 @@ Animatica/
 │   └── web/                  # Next.js app (combines all packages)
 │
 └── docs/                     # Documentation
+```
+
+---
+
+## Data Flow: Store to Renderer
+
+The engine uses a unidirectional data flow powered by Zustand and Immer. The `SceneManager` component orchestrates the rendering process by reading state from the store, calculating interpolated values for the current frame, and dispatching actors to their specific renderers.
+
+```mermaid
+flowchart LR
+    Store[(Zustand Store)]
+    Manager[SceneManager]
+    Interpolator[Interpolator]
+    Renderers{Renderers}
+    Canvas[R3F Canvas]
+
+    Store -->|State: actors, timeline| Manager
+    Manager -->|Timeline Data| Interpolator
+    Interpolator -->|Animated Values| Manager
+    Manager -->|Props| Renderers
+    Renderers -->|JSX| Canvas
+```
+
+---
+
+## Component Hierarchy: Editor
+
+The Editor is built using React components organized in a layout shell. Panels communicate via the shared `SceneStore` (from `@Animatica/engine`), not via prop drilling.
+
+```mermaid
+graph TD
+    Layout[EditorLayout]
+    Library[AssetLibrary]
+    Viewport[ViewportPanel]
+    Props[PropertiesPanel]
+    Timeline[TimelinePanel]
+    Console[ScriptConsole]
+    Export[ExportModal]
+    Scene[SceneManager]
+
+    Layout --> Library
+    Layout --> Viewport
+    Layout --> Props
+    Layout --> Timeline
+    Layout -.-> Console
+    Layout -.-> Export
+    Viewport --> Scene
+```
+
+---
+
+## Agent System Architecture
+
+The development is driven by a multi-agent system orchestrating tasks through markdown files in the `docs/` folder.
+
+```mermaid
+flowchart TD
+    Conductor[Conductor Agent]
+    Queue[docs/AGENT_TASKS.md]
+    Lock[.jules/TASK_LOCK.md]
+    Log[docs/AGENT_COMPLETED.md]
+    Codebase[(Codebase)]
+
+    Conductor -->|Generate Tasks| Queue
+    Agent -->|Read Tasks| Queue
+    Agent -->|Check/Set| Lock
+    Agent -->|Edit| Codebase
+    Agent -->|Append| Log
 ```
 
 ---
@@ -212,32 +297,6 @@ packages/contracts/
 │   └── deploy.ts
 └── hardhat.config.ts
 ```
-
----
-
-## Dependency Graph
-
-```
-@Animatica/contracts  (standalone — no JS dependencies)
-        ↑
-        │ (ABI imports only)
-        │
-@Animatica/engine  ←── @Animatica/editor
-        ↑                    ↑
-        │                    │
-        └────── apps/web ────┘
-                    ↑
-                    │
-            @Animatica/platform
-```
-
-**Rules:**
-
-- `engine` imports NOTHING from other packages
-- `editor` imports ONLY from `engine`
-- `platform` imports NOTHING from engine/editor (communicates via API)
-- `apps/web` imports from all packages to compose the full app
-- `contracts` is standalone (Solidity + Hardhat)
 
 ---
 
