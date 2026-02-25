@@ -5,7 +5,7 @@
  * @module @animatica/editor/modals/ScriptConsole
  */
 import React, { useState, useCallback } from 'react';
-import { getAiPrompt, validateScript } from '@Animatica/engine';
+import { getAiPrompt, validateScript, tryImportScript, useSceneStore } from '@Animatica/engine';
 import { useToast } from '../components/ToastContext';
 
 interface ScriptConsoleProps {
@@ -66,11 +66,20 @@ export const ScriptConsole: React.FC<ScriptConsoleProps> = ({ onClose }) => {
 
     const handleBuildScene = useCallback(() => {
         try {
-            const result = validateScript(script);
+            const result = tryImportScript(script);
 
-            if (result.success) {
-                // In a real implementation, we would call importScript(script) here
-                // importScript(script);
+            if (result.ok) {
+                // Get store actions (no subscription needed inside callback)
+                const store = useSceneStore.getState();
+
+                // 1. Clear existing scene
+                store.actors.forEach((actor) => store.removeActor(actor.id));
+
+                // 2. Import new scene
+                store.setEnvironment(result.data.environment);
+                store.setTimeline(result.data.timeline);
+                result.data.actors.forEach((actor) => store.addActor(actor));
+
                 setStatus('valid');
                 setErrors([]);
                 showToast('Scene built successfully!', 'success');
