@@ -122,4 +122,71 @@ describe('PropertiesPanel', () => {
         const updatedActor = useSceneStore.getState().actors[0] as PrimitiveActor;
         expect(updatedActor.properties.shape).toBe('sphere');
     });
+
+    it('undoes and redoes changes via keyboard shortcuts', async () => {
+        const actor = createPrimitive('actor_1');
+        useSceneStore.getState().addActor(actor);
+        render(<PropertiesPanel selectedActorId="actor_1" />);
+
+        // Change position
+        const inputs = screen.getAllByRole('spinbutton') as HTMLInputElement[];
+        const posXInput = inputs[0];
+
+        fireEvent.change(posXInput, { target: { value: '5' } });
+
+        act(() => {
+            vi.advanceTimersByTime(350);
+        });
+
+        expect(useSceneStore.getState().actors[0].transform.position[0]).toBe(5);
+
+        // Ensure input is not focused so undo works
+        posXInput.blur();
+
+        // Undo (Ctrl+Z)
+        fireEvent.keyDown(window, { key: 'z', code: 'KeyZ', ctrlKey: true });
+        expect(useSceneStore.getState().actors[0].transform.position[0]).toBe(0);
+
+        // Redo (Ctrl+Shift+Z)
+        fireEvent.keyDown(window, { key: 'Z', code: 'KeyZ', ctrlKey: true, shiftKey: true });
+        expect(useSceneStore.getState().actors[0].transform.position[0]).toBe(5);
+
+        // Redo with Ctrl+Y
+        fireEvent.keyDown(window, { key: 'z', code: 'KeyZ', ctrlKey: true }); // Undo first
+        expect(useSceneStore.getState().actors[0].transform.position[0]).toBe(0);
+
+        fireEvent.keyDown(window, { key: 'y', code: 'KeyY', ctrlKey: true });
+        expect(useSceneStore.getState().actors[0].transform.position[0]).toBe(5);
+    });
+
+    it('ignores undo shortcut when typing in input', async () => {
+        const actor = createPrimitive('actor_1');
+        useSceneStore.getState().addActor(actor);
+        render(<PropertiesPanel selectedActorId="actor_1" />);
+
+        const inputs = screen.getAllByRole('spinbutton') as HTMLInputElement[];
+        const posXInput = inputs[0];
+
+        // Create some history
+        act(() => {
+             useSceneStore.getState().updateActor('actor_1', { transform: { ...actor.transform, position: [10, 0, 0] } });
+        });
+        expect(useSceneStore.getState().actors[0].transform.position[0]).toBe(10);
+
+        // Focus input
+        posXInput.focus();
+
+        // Press Ctrl+Z while focused
+        fireEvent.keyDown(window, { key: 'z', code: 'KeyZ', ctrlKey: true });
+
+        // Store should still be 10 (Undo ignored)
+        expect(useSceneStore.getState().actors[0].transform.position[0]).toBe(10);
+
+        // Blur and undo
+        posXInput.blur();
+        fireEvent.keyDown(window, { key: 'z', code: 'KeyZ', ctrlKey: true });
+
+        // Store should revert to 0 (initial state)
+        expect(useSceneStore.getState().actors[0].transform.position[0]).toBe(0);
+    });
 });

@@ -247,6 +247,34 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorI
         }
     }, [selectedActorId]);
 
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            // Ignore if input is active
+            const active = document.activeElement;
+            if (active) {
+                const tagName = active.tagName;
+                if (tagName === 'TEXTAREA' || active.getAttribute('contenteditable') === 'true') return;
+                if (tagName === 'INPUT') {
+                    const type = (active as HTMLInputElement).type;
+                    if (['text', 'password', 'number', 'email', 'url', 'search', 'tel'].includes(type)) return;
+                }
+            }
+
+            if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'z') {
+                if (e.shiftKey) {
+                    useSceneStore.temporal.getState().redo();
+                } else {
+                    useSceneStore.temporal.getState().undo();
+                }
+            } else if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'y') {
+                useSceneStore.temporal.getState().redo();
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, []);
+
     if (!selectedActorId || !actor) {
         return (
             <div className="panel properties-panel">
