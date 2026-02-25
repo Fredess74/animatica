@@ -7,7 +7,7 @@
         "build": "next build",
         "start": "next start",
         "test": "vitest run --environment jsdom",
-        "lint": "next lint",
+        "lint": "eslint .",
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
@@ -26,6 +26,8 @@
         "@testing-library/react": "^16.3.2",
         "@types/react": "^19.2.7",
         "@types/react-dom": "^19.2.3",
+        "eslint": "^9.39.3",
+        "eslint-config-next": "^16.1.6",
         "jsdom": "^28.1.0",
         "typescript": "~5.9.3",
         "vitest": "^4.0.18"

@@ -96,7 +96,7 @@ export function usePlayback(options: PlaybackOptions = {}): PlaybackControls {
      * Calculates delta time and advances the store's currentTime.
      */
     const tick = useCallback(
-        (timestamp: number) => {
+        function tickLoop(timestamp: number) {
             if (lastFrameTimeRef.current === null) {
                 lastFrameTimeRef.current = timestamp;
             }
@@ -139,7 +139,7 @@ export function usePlayback(options: PlaybackOptions = {}): PlaybackControls {
             }
 
             // Schedule next frame
-            rafIdRef.current = requestAnimationFrame(tick);
+            rafIdRef.current = requestAnimationFrame(tickLoop);
         },
         [] // No dependencies! Reads everything from refs or store.getState()
     );

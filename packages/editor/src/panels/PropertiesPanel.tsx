@@ -67,16 +67,14 @@ const NumberInput: React.FC<{
     className?: string;
 }> = ({ label, value, onChange, step = 0.1, min, max, className }) => {
     const [localValue, setLocalValue] = useState<string>(value.toString());
+    const [prevValue, setPrevValue] = useState<number>(value);
 
-    useEffect(() => {
-        // Only update if value matches parsed local value (handles 1. vs 1)
-        if (parseFloat(localValue) !== value && !isNaN(parseFloat(localValue))) {
+    if (value !== prevValue) {
+        setPrevValue(value);
+        if (parseFloat(localValue) !== value) {
             setLocalValue(value.toString());
-        } else if (isNaN(parseFloat(localValue)) && !isNaN(value)) {
-            // Recover from invalid state if prop updates
-             setLocalValue(value.toString());
         }
-    }, [value]);
+    }
 
     const debouncedOnChange = useDebouncedCallback(onChange, 300);
 
@@ -116,21 +114,25 @@ const Vector3Input: React.FC<Vector3InputProps> = ({ label, value, onChange }) =
     const [localValue, setLocalValue] = useState<[string, string, string]>([
         value[0].toString(), value[1].toString(), value[2].toString()
     ]);
+    const [prevValue, setPrevValue] = useState<[number, number, number]>(value);
 
-    useEffect(() => {
-        // Sync props to local state if they differ significantly
-        setLocalValue(prev => {
-            const next = [...prev] as [string, string, string];
-            let changed = false;
-            for (let i = 0; i < 3; i++) {
-                if (parseFloat(prev[i]) !== value[i]) {
-                    next[i] = value[i].toString();
-                    changed = true;
-                }
+    // Deep compare check for vector
+    const hasChanged = value[0] !== prevValue[0] || value[1] !== prevValue[1] || value[2] !== prevValue[2];
+
+    if (hasChanged) {
+        setPrevValue(value);
+        const next = [...localValue] as [string, string, string];
+        let changed = false;
+        for (let i = 0; i < 3; i++) {
+            if (parseFloat(localValue[i]) !== value[i]) {
+                next[i] = value[i].toString();
+                changed = true;
             }
-            return changed ? next : prev;
-        });
-    }, [value]);
+        }
+        if (changed) {
+            setLocalValue(next);
+        }
+    }
 
     const debouncedOnChange = useDebouncedCallback(onChange, 300);
 
@@ -318,7 +320,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorI
                             className="prop-field__select"
                             value={(actor as PrimitiveActor).properties.shape}
                             onChange={(e) => handleUpdate({
-                                properties: { ...(actor as PrimitiveActor).properties, shape: e.target.value as any }
+                                properties: { ...(actor as PrimitiveActor).properties, shape: e.target.value as PrimitiveActor['properties']['shape'] }
                             })}
                         >
                             <option value="box">Box</option>
@@ -391,7 +393,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorI
                             className="prop-field__select"
                             value={(actor as LightActor).properties.lightType}
                             onChange={(e) => handleUpdate({
-                                properties: { ...(actor as LightActor).properties, lightType: e.target.value as any }
+                                properties: { ...(actor as LightActor).properties, lightType: e.target.value as LightActor['properties']['lightType'] }
                             })}
                         >
                             <option value="point">Point</option>
@@ -473,7 +475,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorI
                         <select
                             className="prop-field__select"
                             value={(actor as CharacterActor).animation}
-                            onChange={(e) => handleUpdate({ animation: e.target.value as any })}
+                            onChange={(e) => handleUpdate({ animation: e.target.value as CharacterActor['animation'] })}
                         >
                             <option value="idle">Idle</option>
                             <option value="walk">Walk</option>

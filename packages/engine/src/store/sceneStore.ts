@@ -130,7 +130,7 @@ export const useSceneStore = create<SceneStoreState>()(
         name: 'animatica-scene',
         // Only persist project state, not playback or selection
         partialize: (state) => {
-          const { playback, selectedActorId, ...rest } = state;
+          const { playback: _playback, selectedActorId: _selectedActorId, ...rest } = state;
           return rest as unknown as SceneStoreState; // Typescript workaround for partialize return type
         },
       }

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import React from 'react'
-// @ts-ignore
+// @ts-expect-error: Mocking internal component render
 import { CharacterRenderer } from './CharacterRenderer'
 import { CharacterActor } from '../../types'
 
@@ -41,7 +41,7 @@ describe('CharacterRenderer', () => {
 
   it('renders a group containing capsule mesh with correct transform', () => {
     // Call the forwardRef component's render function directly
-    // @ts-ignore
+    // @ts-expect-error: Testing implementation detail
     const result = CharacterRenderer.render({ actor: mockActor }, null) as React.ReactElement
 
     expect(result).not.toBeNull()
@@ -81,13 +81,13 @@ describe('CharacterRenderer', () => {
 
   it('renders nothing when visible is false', () => {
     const invisibleActor = { ...mockActor, visible: false }
-    // @ts-ignore
+    // @ts-expect-error: Testing implementation detail
     const result = CharacterRenderer.render({ actor: invisibleActor }, null)
     expect(result).toBeNull()
   })
 
   it('renders face direction indicator', () => {
-     // @ts-ignore
+     // @ts-expect-error: Testing implementation detail
     const result = CharacterRenderer.render({ actor: mockActor }, null) as React.ReactElement
     const props = result.props as any
     const children = React.Children.toArray(props.children) as React.ReactElement[]

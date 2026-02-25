@@ -4,7 +4,7 @@
  *
  * @module @animatica/editor/panels/AssetLibrary
  */
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 
 interface AssetLibraryProps {
     onActorCreated?: (actorId: string) => void;
@@ -42,11 +42,11 @@ const ASSET_CATEGORIES: Record<string, AssetItem[]> = {
 export const AssetLibrary: React.FC<AssetLibraryProps> = ({ onActorCreated }) => {
     const [expandedCategory, setExpandedCategory] = useState<string>('Primitives');
 
-    const handleAddActor = (_item: AssetItem) => {
+    const handleAddActor = useCallback((_item: AssetItem) => {
         // In production, this would call useSceneStore.getState().addActor(...) with _item.defaults
         const id = `actor_${Date.now()}`;
         onActorCreated?.(id);
-    };
+    }, [onActorCreated]);
 
     return (
         <div className="panel asset-library">

@@ -42,7 +42,6 @@
 
 ## Quality Tasks
 
-- [ROLE: lint-fixer] Run eslint --fix on all packages, fix remaining issues manually
 - [ROLE: security-auditor] Scan for XSS vectors, unsafe innerHTML, unvalidated inputs
 - [ROLE: accessibility-auditor] Add aria-labels, keyboard navigation, screen reader support
 - [ROLE: error-boundary-agent] Add try/catch to all async operations, ErrorBoundary to all canvas components
