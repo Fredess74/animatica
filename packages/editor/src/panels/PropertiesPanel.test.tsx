@@ -18,7 +18,7 @@ describe('PropertiesPanel', () => {
     const initialStoreState = {
         actors: [],
         selectedActorId: null,
-        playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, direction: 1 as 1 | -1, loopMode: 'none' as 'none' | 'loop' | 'pingpong' },
+        playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, direction: 1 as 1 | -1, loopMode: 'none' as 'none' | 'loop' | 'bounce' },
         environment: { ambientLight: { intensity: 1, color: '#fff' }, sun: { position: [0, 10, 0] as [number, number, number], intensity: 1, color: '#fff' }, skyColor: '#000' },
         timeline: { duration: 10, cameraTrack: [], animationTracks: [], markers: [] },
         meta: { title: 'Test', version: '1.0.0' },
