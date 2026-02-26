@@ -47,6 +47,7 @@ const validProject = {
         duration: 30,
         cameraTrack: [],
         animationTracks: [],
+        markers: [],
     },
     library: { clips: [] },
 };
