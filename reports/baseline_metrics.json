@@ -1,10 +1,13 @@
 {
-  "Number Interpolation (10k ops)": "473.22ms",
-  "Vector3 Interpolation (10k ops)": "607.11ms",
-  "Color Interpolation (10k ops)": "519.10ms",
-  "Schema Validation Speed (100 runs)": "108.67ms",
-  "Store Playback Updates (10k ops)": "262.81ms",
-  "Store Add Actor (1k ops)": "150.30ms",
-  "Store Update Actor (1k ops)": "1376.79ms",
-  "Store Remove Actor (1k ops)": "1051.32ms"
+  "Number Interpolation (10k ops)": "458.97ms",
+  "Vector3 Interpolation (10k ops)": "514.26ms",
+  "Color Interpolation (10k ops)": "492.68ms",
+  "Timeline Evaluation (10k keyframes total)": "8.38ms",
+  "Schema Validation Speed (100 runs)": "23.71ms",
+  "Store Playback Updates (10k ops)": "180.04ms",
+  "Store Add Actor (1k ops)": "3487.73ms",
+  "Store Update Actor (1k ops)": "5685.90ms",
+  "Store Remove Actor (1k ops)": "24.62ms",
+  "Large Store Playback Updates (1k ops)": "393.86ms",
+  "Large Store Actor Update (1k ops)": "765.06ms"
 }
