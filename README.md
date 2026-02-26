@@ -2,6 +2,7 @@
 
 > **Create. Animate. Earn.** — A web-based platform where anyone can turn ideas into animated films and get paid globally via crypto.
 
+[![CI](https://github.com/YOUR_ORG/Animatica/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_ORG/Animatica/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
@@ -16,32 +17,48 @@ Animatica is an open-source platform that democratizes animation. People write f
 3. **Publish** — Upload films, series, shorts to a built-in social platform
 4. **Earn** — Get paid through a transparent donation pool powered by smart contracts
 
+## Tech Stack
+
+| Component | Technology | Description |
+|-----------|------------|-------------|
+| **Core** | [Turbo](https://turbo.build/) | High-performance monorepo build system |
+| | [pnpm](https://pnpm.io/) | Fast, disk-efficient package manager |
+| **Frontend** | [Next.js 15](https://nextjs.org/) | React framework with App Router |
+| | [React 19](https://react.dev/) | UI library with Concurrent Mode |
+| | [Tailwind CSS](https://tailwindcss.com/) | Utility-first CSS framework |
+| **Engine** | [Three.js](https://threejs.org/) | 3D library (via [React Three Fiber](https://docs.pmnd.rs/react-three-fiber)) |
+| | [Zustand](https://github.com/pmndrs/zustand) | State management with [Immer](https://github.com/immerjs/immer) |
+| | [Zundo](https://github.com/charkour/zundo) | Undo/Redo middleware |
+| **Validation** | [Zod](https://zod.dev/) | TypeScript-first schema validation |
+| **Testing** | [Vitest](https://vitest.dev/) | Blazing fast unit test framework |
+| | [Playwright](https://playwright.dev/) | End-to-end testing |
+
 ## Key Features
 
-| Feature | Description |
-|---------|------------|
-| 🎮 **3D/2D Animation Engine** | Browser-based engine with Three.js (3D) and PixiJS (2D) — PBR, cel-shading, pixel art |
-| 🤖 **AI Scene Generation** | Describe your scene in text → AI generates complete animated scenes |
-| 🎭 **Character System** | Humanoid characters with skeletal animation, facial expressions, clothing, IK |
-| 📹 **Camera & Timeline** | Professional keyframe animation, multi-camera system, easing curves |
-| 🌍 **Environment Builder** | Create any environment — cities, forests, space, interiors |
-| 🎵 **Audio** | TTS voice acting, AI music, spatial SFX, lip-sync |
-| 🤝 **Real-time Collaboration** | Google Docs-style sync with role-based permissions |
-| 🏪 **Asset Marketplace** | Buy, sell, or rent 3D/2D assets — earn royalties per view |
-| 💰 **Crypto Monetization** | Donation pool → 70% creator, 20% creator fund, 10% platform |
-| 🌐 **Global Payments** | Any currency (crypto + fiat), anyone, anywhere |
+### Core Engine (In Progress)
+- 🎮 **3D Animation Engine**: Browser-based engine built on Three.js and React Three Fiber.
+- 🎭 **Character System**: Humanoid characters with skeletal animation and IK.
+- 📹 **Camera & Timeline**: Professional keyframe animation with easing curves.
+- 🌍 **Environment Builder**: Dynamic environments with lighting and weather controls.
+- 📜 **Script Importer**: JSON-based scene description format.
+
+### Platform (Roadmap)
+- 🤖 **AI Scene Generation**: Text-to-scene generation pipeline.
+- 🤝 **Real-time Collaboration**: Multi-user editing with role-based permissions.
+- 💰 **Crypto Monetization**: Smart contracts for creator payouts and royalties.
+- 🏪 **Asset Marketplace**: Buy, sell, and rent digital assets.
 
 ## Architecture
 
 ```
 Animatica/
 ├── packages/
-│   ├── engine/       # 🎮 Core animation engine (Three.js + PixiJS)
-│   ├── editor/       # 🖥️ Editor UI (React)
-│   ├── platform/     # 🌐 Social platform (feeds, profiles, streaming)
+│   ├── engine/       # 🎮 Core animation engine (Three.js + R3F + Zustand)
+│   ├── editor/       # 🖥️ Editor UI components (React)
+│   ├── platform/     # 🌐 Shared platform types and utilities
 │   └── contracts/    # 💰 Smart contracts (Solidity)
 ├── apps/
-│   └── web/          # Next.js app (combines everything)
+│   └── web/          # 🌍 Next.js app (combines engine + editor + platform)
 └── docs/             # 📄 Full documentation
 ```
 
@@ -49,19 +66,24 @@ Animatica/
 
 ## Quick Start
 
+Prerequisites: Node.js 20+ and [pnpm](https://pnpm.io/).
+
 ```bash
 # Clone
 git clone https://github.com/YOUR_ORG/Animatica.git
 cd Animatica
 
-# Install
-npm install
+# Install dependencies (frozen lockfile)
+pnpm install
 
-# Run editor
-npm run dev --workspace=packages/editor
+# Run development server (starts all apps)
+pnpm run dev
 
-# Run full app
-npm run dev --workspace=apps/web
+# Run tests
+pnpm run test
+
+# Typecheck
+pnpm run typecheck
 ```
 
 ## Documentation
