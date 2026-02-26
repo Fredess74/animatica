@@ -23,14 +23,13 @@
 - [ROLE: engine-schema-validator] Ensure all Zod schemas in `packages/engine/src/schemas/` match TypeScript interfaces exactly
 - [ROLE: engine-animation-dev] Add missing easing functions (bounce, elastic, back) to `packages/engine/src/animation/easing.ts`
 - [ROLE: engine-playback-dev] Add speed controls and loop modes to PlaybackController
-- [ROLE: engine-test-writer] Write tests for SceneManager and PlaybackController
+- [ROLE: engine-test-writer] Write tests for PlaybackController
 - [ROLE: engine-api-docs] Add JSDoc comments to all exported functions in `packages/engine/src/index.ts`
 
 ## Editor Tasks
 
 - [ROLE: editor-layout-dev] Add responsive breakpoints to EditorLayout for tablet/mobile
 - [ROLE: editor-components-dev] Create shared Button, Input, Select components using design tokens
-- [ROLE: editor-properties-dev] Wire PropertiesPanel to Zustand store (read/write actor properties)
 - [ROLE: editor-timeline-dev] Wire TimelinePanel to usePlayback hook, add real keyframe rendering
 - [ROLE: editor-viewport-dev] Create Viewport component with R3F Canvas + OrbitControls + SceneManager
 
@@ -44,13 +43,13 @@
 ## Quality Tasks
 
 - [ROLE: lint-fixer] Run eslint --fix on all packages, fix remaining issues manually
-- [ROLE: perf-auditor] Check for unnecessary re-renders, large bundle imports, missing memoization
 - [ROLE: security-auditor] Scan for XSS vectors, unsafe innerHTML, unvalidated inputs
 - [ROLE: accessibility-auditor] Add aria-labels, keyboard navigation, screen reader support
 - [ROLE: error-boundary-agent] Add try/catch to all async operations, ErrorBoundary to all canvas components
 
 ## Infrastructure Tasks
 
+- [ROLE: ci-guardian] Verify CI pipeline runs correctly, add caching for pnpm
 - [ROLE: dependency-updater] Check for outdated dependencies, update minor/patch versions
 - [ROLE: supabase-guardian] Verify database schema matches TypeScript types
 
