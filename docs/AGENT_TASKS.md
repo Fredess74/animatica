@@ -37,6 +37,9 @@ Focus on completing **Batch 3 (Characters)** and the missing **Batch 4 (Viewport
 - [ROLE: web-layout-dev] Refine Next.js app layout with navigation, auth placeholder in `apps/web/app/layout.tsx`
 - [ROLE: web-pages-dev] Create landing page content in `apps/web/app/page.tsx`
 - [ROLE: web-test-writer] Write E2E tests for main user flows (create project, add actor, play)
+- [ROLE: web-layout-dev] Create Next.js app layout with navigation, auth placeholder
+- [ROLE: web-pages-dev] Create landing page, /create route with editor, /explore route
+- [ROLE: web-test-writer] Write E2E tests for main user flows
 
 ## Quality Tasks
 
@@ -54,7 +57,6 @@ Focus on completing **Batch 3 (Characters)** and the missing **Batch 4 (Viewport
 ## Documentation Tasks
 
 - [ROLE: api-docs-writer] Generate API reference from JSDoc comments
-- [ROLE: readme-updater] Update README.md with current features, quick start guide
 - [ROLE: changelog-writer] Update CHANGELOG.md with recent changes
 - [ROLE: progress-reporter] Update PROGRESS.md and create daily report in `reports/daily/`
 - [ROLE: architecture-diagrammer] Update ARCHITECTURE.md with new components

@@ -75,22 +75,6 @@ export function usePlayback(options: PlaybackOptions = {}): PlaybackControls {
         speedRef.current = speed;
     }, [speed]);
 
-    // We subscribe to isPlaying only to trigger re-renders if the component needs to know.
-    // However, the hook returns controls, not state.
-    // If the component needs state, it should use useSceneStore separately.
-    // But typically usePlayback is used in a component that might change appearance based on isPlaying.
-    // The original implementation subscribed.
-    // To match original behavior (re-render on change), we keep the subscription,
-    // but we use underscores to ignore unused variable linting if we don't return it?
-    // The original hook returned { play, ... } but NOT isPlaying.
-    // The components using this hook might expect it to trigger re-render when playing starts/stops?
-    // If we remove the subscription, the component won't re-render.
-    // But usePlayback doesn't return isPlaying.
-    // So the component doesn't know.
-    // Unless usePlayback is used alongside useSceneStore.
-    // I will remove the unused variable. If re-render is needed, the component should subscribe itself.
-    useSceneStore((s) => s.playback.isPlaying);
-
     /**
      * The core animation frame callback.
      * Calculates delta time and advances the store's currentTime.

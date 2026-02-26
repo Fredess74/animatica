@@ -1,29 +1,34 @@
-# Bundle Size Report - 2025-02-22
+# Bundle Size Report - 2026-02-25
 
 ## Package Sizes
 
 | Package | Size | Comparison | Notes |
 | :--- | :--- | :--- | :--- |
-| **@Animatica/web** | N/A | N/A | Build Failed (Missing Source Code) |
-| **@Animatica/engine** | 48K | N/A | Initial Audit |
-| **@Animatica/editor** | 12K | N/A | Initial Audit |
-| **@Animatica/platform** | 12K | N/A | Initial Audit |
-| **@Animatica/contracts** | 8K | N/A | Cache Size |
+| **@Animatica/web** | 102K | NEW | First Load JS (built successfully) |
+| **@Animatica/engine** | 71K | +23K | Includes index.js (41K) and index.cjs (30K) |
+| **@Animatica/editor** | 76K | +64K | Includes index.js (46K) and index.cjs (30K) |
+| **@Animatica/platform** | 0.2K | -11.8K | Minimal exports only |
+| **@Animatica/contracts** | 8K | 0K | Cache size (no compiled contracts) |
 
 ## Total Size
-**72K** (excluding web)
+**155.2K** (excluding web), **257.2K** (including web)
 
 ## Largest Dependencies
-### @Animatica/engine (48K)
-- `dist/index.js`: 24K
-- `dist/index.cjs`: 19K
+### @Animatica/editor (76K)
+- `dist/index.js`: 46K
+- `dist/index.cjs`: 30K
+
+### @Animatica/engine (71K)
+- `dist/index.js`: 41K
+- `dist/index.cjs`: 30K
 
 ## Changes
-- Initial audit.
-- Fixed build configuration for `packages/editor`, `packages/platform`, and `packages/contracts`.
-- `apps/web` failed to build due to missing source code (`app/` or `pages/`).
+- Updated audit for 2026-02-25.
+- `apps/web` now builds successfully using Next.js 15.
+- Significant growth in `@Animatica/engine` and `@Animatica/editor` as features are implemented.
+- `@Animatica/platform` remains minimal.
 
 ## Suggestions
-- **@Animatica/engine**: Currently very small (48K). Ensure tree-shaking is enabled in consuming apps.
-- **@Animatica/web**: Needs source code to be measurable.
-- **@Animatica/editor** & **@Animatica/platform**: Currently minimal/empty. Monitor size as features are added.
+- **@Animatica/engine**: Monitor size as more R3F components are added.
+- **@Animatica/editor**: Keep an eye on UI component library weight.
+- **@Animatica/web**: 102K First Load JS is good for a Next.js app, but watch for bloating as more routes are added.
