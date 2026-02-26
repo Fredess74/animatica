@@ -11,6 +11,7 @@ export const createTimelineSlice: StateCreator<
     duration: 10,
     cameraTrack: [],
     animationTracks: [],
+    markers: [],
   },
 
   setTimeline: (timeline) =>
