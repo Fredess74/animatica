@@ -152,7 +152,7 @@ describe('TimelinePanel', () => {
             }
         ];
 
-        const { rerender } = render(<TimelinePanel selectedActorId="actor1" />);
+        render(<TimelinePanel selectedActorId="actor1" />);
 
         const keyframes = screen.getAllByRole('button', { name: /timeline.keyframeLabel/ });
         // Keyframe 0 at 1s ([10,10,10])

@@ -26,3 +26,4 @@
 - [DONE] [conductor] [2026-02-24] Updated task queue for Phase 2 (Characters) and Phase 3 (Editor Viewport)
 - [DONE] [readme-updater] [2026-02-25] Update README.md with current features, quick start guide
 - [DONE] [editor-timeline-dev] 2026-02-26 Wired TimelinePanel to playback engine, added keyframe rendering, drag-and-drop, and context menu
+- [DONE] [editor-timeline-dev] 2026-02-26 Fixed TypeScript errors in packages/editor and verified PlaybackController tests

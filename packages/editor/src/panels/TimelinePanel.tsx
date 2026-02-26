@@ -86,7 +86,7 @@ export const TimelinePanel: React.FC<TimelinePanelProps> = ({ selectedActorId })
         setTimeline({ animationTracks: newTracks });
     }, [animationTracks, selectedActorId, setTimeline]);
 
-    const handleKeyframeDragEnd = useCallback((property: string, index: number) => {
+    const handleKeyframeDragEnd = useCallback((property: string, _index: number) => {
         // Sort keyframes after drag ends
         const newTracks = animationTracks.map(track => {
             if (track.targetId === selectedActorId && track.property === property) {
