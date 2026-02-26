@@ -275,20 +275,6 @@ export interface Keyframe<T = unknown> {
 }
 
 /**
- * A marker on the timeline for bookmarking or triggering events.
- */
-export interface Marker {
-  /** Unique ID for the marker. */
-  id: UUID
-  /** Time of the marker in seconds. */
-  time: number
-  /** Label text for the marker. */
-  label: string
-  /** Color of the marker (e.g. for categorization). */
-  color: Color
-}
-
-/**
  * An animation track targeting a specific property of an actor.
  */
 export interface AnimationTrack {
@@ -331,8 +317,6 @@ export interface Timeline {
   cameraTrack: CameraCut[]
   /** Collection of animation tracks for actors. */
   animationTracks: AnimationTrack[]
-  /** List of markers on the timeline. */
-  markers: Marker[]
 }
 
 // ---- Environment ----

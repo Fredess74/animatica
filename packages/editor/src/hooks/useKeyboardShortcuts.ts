@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { useSceneStore } from '@Animatica/engine';
 
 export interface ShortcutHandlers {
   onPlayPause?: () => void;
@@ -26,12 +25,6 @@ export const useKeyboardShortcuts = (handlers: ShortcutHandlers) => {
 
       const currentHandlers = handlersRef.current;
 
-      // Handle Escape (works inside inputs)
-      if (event.key === 'Escape') {
-        currentHandlers.onEscape?.();
-        return;
-      }
-
       // Ctrl+S (Save) - allow even in inputs
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') {
         event.preventDefault();
@@ -44,12 +37,6 @@ export const useKeyboardShortcuts = (handlers: ShortcutHandlers) => {
         // If in input, let browser handle text undo unless we strictly want scene undo
         if (!isInput) {
           event.preventDefault();
-          // Try to perform scene undo
-          try {
-            useSceneStore.temporal.getState().undo();
-          } catch (e) {
-            console.warn('Undo not available', e);
-          }
           currentHandlers.onUndo?.();
         }
         return;
@@ -67,6 +54,9 @@ export const useKeyboardShortcuts = (handlers: ShortcutHandlers) => {
         case 'Delete':
         case 'Backspace':
           currentHandlers.onDelete?.();
+          break;
+        case 'Escape':
+          currentHandlers.onEscape?.();
           break;
       }
     };

@@ -44,8 +44,7 @@ describe('CameraRenderer', () => {
       }
     }
 
-    const Component = (CameraRenderer as any).type;
-    const result = Component({ actor, isActive: false }) as unknown as { type: string, props: any }
+    const result = CameraRenderer({ actor, isActive: false }) as unknown as { type: string, props: any }
 
     // Check perspectiveCamera mock
     expect(result.type).toBe(PerspectiveCamera)
@@ -66,8 +65,7 @@ describe('CameraRenderer', () => {
       properties: { fov: 60, near: 0.1, far: 100 }
     }
 
-    const Component = (CameraRenderer as any).type;
-    const result = Component({ actor, isActive: true }) as unknown as { type: string, props: any }
+    const result = CameraRenderer({ actor, isActive: true }) as unknown as { type: string, props: any }
     expect(result.props.makeDefault).toBe(true)
   })
 
@@ -80,8 +78,7 @@ describe('CameraRenderer', () => {
       transform: { position: [0,0,0], rotation: [0,0,0], scale: [1,1,1] },
       properties: { fov: 60, near: 0.1, far: 100 }
     }
-    const Component = (CameraRenderer as any).type;
-    const result = Component({ actor })
+    const result = CameraRenderer({ actor })
     expect(result).toBeNull()
   })
 })

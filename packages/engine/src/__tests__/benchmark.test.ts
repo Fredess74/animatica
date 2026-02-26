@@ -1,6 +1,6 @@
 import { describe, it, afterAll } from 'vitest';
 import { interpolateKeyframes } from '../animation/interpolate';
-import { ProjectStateSchema } from '../importer/schemas';
+import { ProjectStateSchema } from '../schemas';
 import { useSceneStore } from '../store/sceneStore';
 import type { Keyframe, ProjectState, Actor, PrimitiveActor, Vector3 } from '../types';
 import * as fs from 'fs';
@@ -130,7 +130,6 @@ describe('Engine Benchmarks', () => {
                     duration: 60,
                     cameraTrack: [],
                     animationTracks: [],
-                    markers: [],
                 },
                 library: { clips: [] },
             };
@@ -155,9 +154,16 @@ describe('Engine Benchmarks', () => {
                     skyColor: '#87CEEB',
                 },
                 actors: [],
-                timeline: { duration: 10, cameraTrack: [], animationTracks: [], markers: [] },
+                timeline: { duration: 10, cameraTrack: [], animationTracks: [] },
                 library: { clips: [] },
-                playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, direction: 1, loopMode: 'none' },
+                playback: {
+                    currentTime: 0,
+                    isPlaying: false,
+                    frameRate: 24,
+                    speed: 1.0,
+                    loopMode: 'once',
+                    direction: 'forward',
+                },
             });
 
             measure('Store Playback Updates (10k ops)', () => {
@@ -172,7 +178,7 @@ describe('Engine Benchmarks', () => {
 
             setState({
                 actors: [],
-                playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, direction: 1, loopMode: 'none' },
+                playback: { currentTime: 0, isPlaying: false, frameRate: 24 },
             } as any);
 
             measure('Store Add Actor (1k ops)', () => {

@@ -33,17 +33,19 @@ export function Navbar() {
         </Link>
 
         {/* Desktop Nav */}
-        <div className="desktop-only" style={{ gap: '2rem', alignItems: 'center' }}>
-          <Link href="/explore">Explore</Link>
-          <Link href="/pricing">Pricing</Link>
+        <div className="desktop-nav" style={{ display: 'none', gap: '2rem', alignItems: 'center' }}>
+          {/* Using a media query in JS or CSS is better, but for inline styles we rely on classes defined in globals or here */}
+          {/* I will add a style block for media queries since I can't use CSS modules easily without extra files */}
+          <Link href="/explore" className="nav-link">Explore</Link>
+          <Link href="/pricing" className="nav-link">Pricing</Link>
           <div style={{ width: '1px', height: '24px', backgroundColor: 'var(--border-default)' }} />
-          <Link href="/login">Log In</Link>
+          <Link href="/login" className="nav-link">Log In</Link>
           <Link href="/signup" className="btn btn-primary">Sign Up</Link>
         </div>
 
         {/* Mobile Menu Button */}
         <button
-          className="mobile-only"
+          className="mobile-toggle"
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle menu"
           style={{ color: 'var(--text-primary)' }}
@@ -54,29 +56,47 @@ export function Navbar() {
 
       {/* Mobile Nav Dropdown */}
       {isOpen && (
-        <div className="mobile-only" style={{
+        <div className="mobile-menu" style={{
           position: 'absolute',
           top: '64px',
           left: 0,
           right: 0,
           backgroundColor: 'var(--bg-base)',
           borderBottom: '1px solid var(--border-subtle)',
-          zIndex: 49
+          padding: '1rem',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1rem'
         }}>
-          <div style={{
-            padding: '1rem',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '1rem'
-          }}>
-            <Link href="/explore" onClick={() => setIsOpen(false)}>Explore</Link>
-            <Link href="/pricing" onClick={() => setIsOpen(false)}>Pricing</Link>
-            <hr style={{ borderColor: 'var(--border-subtle)', width: '100%' }} />
-            <Link href="/login" onClick={() => setIsOpen(false)}>Log In</Link>
-            <Link href="/signup" onClick={() => setIsOpen(false)} style={{ color: 'var(--green-400)' }}>Sign Up</Link>
-          </div>
+          <Link href="/explore" onClick={() => setIsOpen(false)}>Explore</Link>
+          <Link href="/pricing" onClick={() => setIsOpen(false)}>Pricing</Link>
+          <hr style={{ borderColor: 'var(--border-subtle)' }} />
+          <Link href="/login" onClick={() => setIsOpen(false)}>Log In</Link>
+          <Link href="/signup" onClick={() => setIsOpen(false)} style={{ color: 'var(--green-400)' }}>Sign Up</Link>
         </div>
       )}
+
+      <style jsx>{`
+        @media (min-width: 768px) {
+          .desktop-nav {
+            display: flex !important;
+          }
+          .mobile-toggle {
+            display: none !important;
+          }
+        }
+        @media (max-width: 767px) {
+          .desktop-nav {
+            display: none !important;
+          }
+          .mobile-toggle {
+            display: block !important;
+          }
+        }
+        .nav-link:hover {
+          color: var(--color-primary);
+        }
+      `}</style>
     </nav>
   );
 }

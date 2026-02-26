@@ -61,15 +61,9 @@ export const ExportModal: React.FC<ExportModalProps> = ({ onClose }) => {
 
     return (
         <div className="modal-overlay" onClick={onClose}>
-            <div
-                className="modal export-modal"
-                onClick={(e) => e.stopPropagation()}
-                role="dialog"
-                aria-modal="true"
-                aria-labelledby="export-modal-title"
-            >
+            <div className="modal export-modal" onClick={(e) => e.stopPropagation()}>
                 <div className="modal__header">
-                    <h2 id="export-modal-title" className="modal__title">🎬 {t('export.title')}</h2>
+                    <h2 className="modal__title">🎬 {t('export.title')}</h2>
                     <button className="modal__close" onClick={onClose}>✕</button>
                 </div>
                 <div className="retro-stripe retro-stripe--thin" />

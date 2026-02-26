@@ -44,8 +44,7 @@ describe('LightRenderer', () => {
       }
     }
 
-    const Component = (LightRenderer as any).type;
-    const result = Component({ actor }) as unknown as { type: string, props: any }
+    const result = LightRenderer({ actor }) as unknown as { type: string, props: any }
 
     // It returns a group
     expect(result.type).toBe('group')
@@ -83,8 +82,7 @@ describe('LightRenderer', () => {
       }
     }
 
-    const Component = (LightRenderer as any).type;
-    const result = Component({ actor }) as unknown as { type: string, props: any }
+    const result = LightRenderer({ actor }) as unknown as { type: string, props: any }
     const children = React.Children.toArray(result.props.children)
 
     const light = children.find((c: any) => c.type === 'directionalLight')
@@ -107,8 +105,7 @@ describe('LightRenderer', () => {
         castShadow: false
       }
     }
-    const Component = (LightRenderer as any).type;
-    const result = Component({ actor })
+    const result = LightRenderer({ actor })
     expect(result).toBeNull()
   })
 })

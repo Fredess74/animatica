@@ -1,4 +1,4 @@
-import React, { useRef, useMemo, memo } from 'react'
+import React, { useRef, useMemo } from 'react'
 import * as THREE from 'three'
 import { useHelper } from '@react-three/drei'
 import { LightActor } from '../../types'
@@ -20,7 +20,7 @@ interface LightRendererProps {
  * <LightRenderer actor={myLightActor} showHelper={true} />
  * ```
  */
-export const LightRenderer: React.FC<LightRendererProps> = memo(({
+export const LightRenderer: React.FC<LightRendererProps> = ({
   actor,
   showHelper = false,
 }) => {
@@ -89,9 +89,7 @@ export const LightRenderer: React.FC<LightRendererProps> = memo(({
       )}
     </group>
   )
-})
-
-LightRenderer.displayName = 'LightRenderer'
+}
 
 function getHelperClass(type: string) {
   switch (type) {

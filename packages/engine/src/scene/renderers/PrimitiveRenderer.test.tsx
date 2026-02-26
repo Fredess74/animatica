@@ -44,9 +44,8 @@ describe('PrimitiveRenderer', () => {
     }
 
     // Call the component as a function to inspect returned JSX
-    // Since it's wrapped in memo, we access the underlying function via .type
-    const Component = (PrimitiveRenderer as any).type;
-    const result = Component({ actor }) as React.ReactElement<{ [key: string]: any }>
+    // Since we mocked useRef, it won't throw "Invalid hook call"
+    const result = PrimitiveRenderer({ actor }) as React.ReactElement<{ [key: string]: any }>
 
     // Verify mesh properties
     expect(result.type).toBe('mesh')
@@ -93,8 +92,7 @@ describe('PrimitiveRenderer', () => {
       }
     }
 
-    const Component = (PrimitiveRenderer as any).type;
-    const result = Component({ actor }) as React.ReactElement<{ [key: string]: any }>
+    const result = PrimitiveRenderer({ actor }) as React.ReactElement<{ [key: string]: any }>
     const children = React.Children.toArray(result.props.children) as React.ReactElement<{ [key: string]: any }>[]
     const geometry = children.find((child) => child.type === 'sphereGeometry')
     expect(geometry).toBeDefined()
@@ -121,8 +119,7 @@ describe('PrimitiveRenderer', () => {
       }
     }
 
-    const Component = (PrimitiveRenderer as any).type;
-    const result = Component({ actor })
+    const result = PrimitiveRenderer({ actor })
     expect(result).toBeNull()
   })
 })

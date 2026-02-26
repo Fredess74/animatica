@@ -10,11 +10,13 @@ import {
     CameraActorSchema,
     SpeakerActorSchema,
     ActorSchema,
+} from './index';
+import {
     TimelineSchema,
     EnvironmentSchema,
     ProjectStateSchema,
     ProjectMetaSchema,
-} from './index';
+} from './scene.schema';
 
 // ---- Valid test data ----
 
