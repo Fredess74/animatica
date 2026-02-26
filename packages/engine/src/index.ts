@@ -34,12 +34,20 @@ export { usePlayback } from './playback/PlaybackController'
 // === CHARACTER SYSTEM ===
 export * from './character/index'
 
+// === GLB MODEL LOADING ===
+export { parseGLBResult, glbToCharacterRig, BUNDLED_MODELS } from './character/GLBLoader'
+export type { GLBLoadResult, BundledModel } from './character/GLBLoader'
+
 // === ANIMATION ===
 export * as Easing from './animation/easing';
 export { interpolateKeyframes, evaluateTracksAtTime } from './animation/interpolate';
 
 // === IMPORTER ===
 export { importScript, validateScript, tryImportScript } from './importer/scriptImporter';
+
+// === CAMERA RIG ===
+export { CameraRig, CAMERA_SHOTS } from './camera/CameraRig'
+export type { CameraMovement } from './camera/CameraRig'
 
 // === AI ===
 export { getAiPrompt, PROMPT_STYLES } from './ai/promptTemplates';
