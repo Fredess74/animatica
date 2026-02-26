@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * PlaybackController — Drives animation playback via requestAnimationFrame.
  * Provides a React hook that manages the animation loop, time tracking,

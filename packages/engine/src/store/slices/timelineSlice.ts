@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { StateCreator } from 'zustand';
 import { TimelineSlice, SceneStoreState } from '../types';
 

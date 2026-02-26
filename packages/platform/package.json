@@ -22,5 +22,9 @@
         "typescript": "~5.9.3",
         "vite": "^7.3.1",
         "vitest": "^4.0.18"
+    },
+    "dependencies": {
+        "@Animatica/engine": "workspace:*",
+        "@supabase/supabase-js": "^2.97.0"
     }
 }

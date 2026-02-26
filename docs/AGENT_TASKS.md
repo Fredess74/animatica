@@ -61,7 +61,6 @@ Focus on completing **Batch 3 (Characters)** and the missing **Batch 4 (Viewport
 
 - [ROLE: ci-guardian] Verify CI pipeline runs correctly, add caching for pnpm
 - [ROLE: dependency-updater] Check for outdated dependencies, update minor/patch versions
-- [ROLE: supabase-guardian] Verify database schema matches TypeScript types
 
 ## Documentation Tasks
 
