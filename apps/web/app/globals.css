@@ -303,3 +303,25 @@ code, pre {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--green-800);
 }
+
+/* ============================================
+   Responsive Utilities
+   ============================================ */
+
+@media (min-width: 768px) {
+  .desktop-only {
+    display: flex !important;
+  }
+  .mobile-only {
+    display: none !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .desktop-only {
+    display: none !important;
+  }
+  .mobile-only {
+    display: block !important;
+  }
+}
