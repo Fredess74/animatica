@@ -10,6 +10,7 @@
 
 <!-- Agents append completed tasks below this line -->
 - [DONE] [editor-viewport-dev] [2026-02-24] Create Viewport component with R3F Canvas + OrbitControls + SceneManager
+- [DONE] [web-api-dev] [2026-02-25] Create API routes for project CRUD operations
 - [DONE] [engine-scene-dev] [2026-02-23] Add SpeakerRenderer and SceneManager tests
 - [DONE] [feature-flag-manager] [2026-02-23] Create feature flag system in packages/engine/src/config/featureFlags.ts
 - [DONE] [engine-scene-dev] [2026-02-23] Add CharacterRenderer placeholder to packages/engine/src/scene/renderers/
@@ -19,3 +20,5 @@
 - [DONE] [type-auditor] [2026-02-23] Scan all .ts files for any type, type assertions, missing return types in packages/engine
 - [DONE] [perf-auditor] [2026-02-23] Check for unnecessary re-renders, large bundle imports, missing memoization
 - [DONE] [editor-properties-dev] [2025-02-23] Wire PropertiesPanel to Zustand store (read/write actor properties)
+- [DONE] [conductor] [2026-02-24] Updated task queue for Phase 2 (Characters) and Phase 3 (Editor Viewport)
+- [DONE] [readme-updater] [2026-02-25] Update README.md with current features, quick start guide

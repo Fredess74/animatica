@@ -5,10 +5,23 @@
 export * from './types/index'
 
 // === SCHEMAS (Zod validation) ===
-export * from './schemas/index'
+export * from './importer/schemas/index'
 
 // === STORE ===
-export { useSceneStore, getActorById, getActiveActors, getCurrentTime } from './store/sceneStore';
+export {
+  useSceneStore,
+  getActorById,
+  getActiveActors,
+  getCurrentTime,
+  useActorById,
+  useActorIds,
+  useCurrentTime,
+  useIsPlaying,
+  useSelectedActorId,
+  useSelectedActor,
+  useActorsByType,
+  useActorList,
+} from './store/sceneStore';
 
 // === COMPONENTS (R3F) ===
 export { PrimitiveRenderer } from './scene/renderers/PrimitiveRenderer'

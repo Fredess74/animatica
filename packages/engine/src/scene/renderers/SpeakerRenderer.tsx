@@ -1,4 +1,4 @@
-import { forwardRef } from 'react'
+import { forwardRef, memo } from 'react'
 import { SpeakerActor } from '../../types'
 import { PositionalAudio } from '@react-three/drei'
 import * as THREE from 'three'
@@ -16,7 +16,7 @@ interface SpeakerRendererProps {
  *
  * @component
  */
-export const SpeakerRenderer = forwardRef<THREE.Group, SpeakerRendererProps>(({
+export const SpeakerRenderer = memo(forwardRef<THREE.Group, SpeakerRendererProps>(({
   actor,
   showHelper = false,
 }, ref) => {
@@ -50,6 +50,6 @@ export const SpeakerRenderer = forwardRef<THREE.Group, SpeakerRendererProps>(({
       )}
     </group>
   )
-})
+}))
 
 SpeakerRenderer.displayName = 'SpeakerRenderer'
