@@ -4,9 +4,24 @@
 
 ---
 
+## ⛔ CRITICAL RULES — READ FIRST
+
+```
+1. ALWAYS run: git pull origin main --rebase BEFORE creating your branch
+2. FORBIDDEN: Do NOT write anything about blockchain, Web3, NFTs, 
+   smart contracts, or cryptocurrency. This project has NOTHING to do with these topics.
+3. Do NOT edit docs/AGENT_TASKS.md or docs/AGENT_COMPLETED.md in feature PRs.
+   Only the Conductor and Night Reporter agents may edit these files.
+4. Max 5 files per PR. One package per PR. Always include tests.
+5. Use pnpm, not npm or yarn.
+6. Check git log --oneline -10 before starting work — do NOT repeat done tasks.
+```
+
+---
+
 ## Project Summary
 
-Animatica is a web-based animation platform. Users write text → AI generates animated scenes → users publish and earn money via crypto donations.
+Animatica is a web-based animation platform. Users write text → AI generates animated scenes → users can publish and share their creations.
 
 **Your job:** Build the codebase module by module, following the task sequence below. Each task = one PR. Each PR touches one package only.
 
