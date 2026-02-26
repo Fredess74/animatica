@@ -6,7 +6,7 @@
  */
 import React, { useState, useCallback, useMemo } from 'react';
 import { useTranslation } from '../i18n/useTranslation';
-import { useSceneStore, usePlayback, evaluateTracksAtTime } from '@Animatica/engine';
+import { useSceneStore, usePlayback, Keyframe } from '@Animatica/engine';
 import { TimelineTrack } from './TimelineTrack';
 
 interface TimelinePanelProps {
@@ -20,6 +20,13 @@ interface ContextMenuState {
     index: number;
 }
 
+// Module-level clipboard for keyframes (resets on refresh)
+let clipboardKeyframe: Pick<Keyframe, 'value' | 'easing'> | null = null;
+
+function getValueByPath(obj: any, path: string): any {
+    return path.split('.').reduce((o, key) => (o ? o[key] : undefined), obj);
+}
+
 export const TimelinePanel: React.FC<TimelinePanelProps> = ({ selectedActorId }) => {
     const { t } = useTranslation();
 
@@ -28,8 +35,14 @@ export const TimelinePanel: React.FC<TimelinePanelProps> = ({ selectedActorId })
     const currentTime = useSceneStore(s => s.playback.currentTime);
     const duration = useSceneStore(s => s.timeline.duration);
     const animationTracks = useSceneStore(s => s.timeline.animationTracks);
+    const actors = useSceneStore(s => s.actors);
     const setTimeline = useSceneStore(s => s.setTimeline);
     const setDuration = (d: number) => setTimeline({ duration: d });
+
+    const selectedActor = useMemo(() =>
+        actors.find(a => a.id === selectedActorId),
+        [actors, selectedActorId]
+    );
 
     // Playback controls
     const { play, pause, stop, seek } = usePlayback();
@@ -64,13 +77,25 @@ export const TimelinePanel: React.FC<TimelinePanelProps> = ({ selectedActorId })
                 const newKeyframes = [...track.keyframes];
                 // Update the specific keyframe
                 newKeyframes[index] = { ...newKeyframes[index], time: newTime };
-                // Sort keyframes by time to maintain order
-                newKeyframes.sort((a, b) => a.time - b.time);
+                // DO NOT SORT HERE to avoid index shifting during drag
                 return { ...track, keyframes: newKeyframes };
             }
             return track;
         });
 
+        setTimeline({ animationTracks: newTracks });
+    }, [animationTracks, selectedActorId, setTimeline]);
+
+    const handleKeyframeDragEnd = useCallback((property: string, index: number) => {
+        // Sort keyframes after drag ends
+        const newTracks = animationTracks.map(track => {
+            if (track.targetId === selectedActorId && track.property === property) {
+                const newKeyframes = [...track.keyframes];
+                newKeyframes.sort((a, b) => a.time - b.time);
+                return { ...track, keyframes: newKeyframes };
+            }
+            return track;
+        });
         setTimeline({ animationTracks: newTracks });
     }, [animationTracks, selectedActorId, setTimeline]);
 
@@ -103,46 +128,103 @@ export const TimelinePanel: React.FC<TimelinePanelProps> = ({ selectedActorId })
     }, [contextMenu, animationTracks, selectedActorId, setTimeline, closeContextMenu]);
 
     const copyKeyframe = useCallback(() => {
-        // In a real app, write to clipboard or internal clipboard state
-        console.log('Copy keyframe not implemented');
+        if (!contextMenu || !selectedActorId) return;
+        const { property, index } = contextMenu;
+
+        const track = animationTracks.find(t => t.targetId === selectedActorId && t.property === property);
+        if (track && track.keyframes[index]) {
+            const kf = track.keyframes[index];
+            clipboardKeyframe = { value: kf.value, easing: kf.easing };
+        }
         closeContextMenu();
-    }, [closeContextMenu]);
+    }, [contextMenu, animationTracks, selectedActorId, closeContextMenu]);
 
     const pasteKeyframe = useCallback(() => {
-        console.log('Paste keyframe not implemented');
-        closeContextMenu();
-    }, [closeContextMenu]);
-
-    const handleAddKeyframe = useCallback(() => {
-        if (!selectedActorId) return;
-
-        // Evaluate current values for existing tracks
-        // Note: This needs the track definition to know what we are interpolating.
-        // We pass the raw tracks to evaluateTracksAtTime.
-        // It returns Map<TargetId, Map<Property, Value>>
-
-        // However, evaluateTracksAtTime calculates interpolated values based on EXISTING keyframes.
-        // If we want to "snapshot" the current state, we use the evaluated value.
-        // This effectively "bakes" the current interpolation into a new keyframe.
-        const values = evaluateTracksAtTime(animationTracks, currentTime);
-        const actorValues = values.get(selectedActorId);
-
-        if (!actorValues) return;
+        if (!contextMenu || !selectedActorId || !clipboardKeyframe) return;
+        const { property, index } = contextMenu;
 
         const newTracks = animationTracks.map(track => {
-            if (track.targetId === selectedActorId) {
-                const val = actorValues.get(track.property);
-                if (val !== undefined) {
-                    const newKeyframes = [...track.keyframes, { time: currentTime, value: val, easing: 'linear' as const }];
-                    newKeyframes.sort((a, b) => a.time - b.time);
-                    return { ...track, keyframes: newKeyframes };
-                }
+            if (track.targetId === selectedActorId && track.property === property) {
+                const newKeyframes = [...track.keyframes];
+                // Overwrite value and easing
+                newKeyframes[index] = {
+                    ...newKeyframes[index],
+                    value: clipboardKeyframe!.value,
+                    easing: clipboardKeyframe!.easing
+                };
+                return { ...track, keyframes: newKeyframes };
             }
             return track;
         });
 
         setTimeline({ animationTracks: newTracks });
-    }, [selectedActorId, animationTracks, currentTime, setTimeline]);
+        closeContextMenu();
+    }, [contextMenu, animationTracks, selectedActorId, setTimeline, closeContextMenu]);
+
+    const handleAddKeyframe = useCallback(() => {
+        if (!selectedActorId || !selectedActor) return;
+
+        // Properties we want to ensure have tracks
+        const defaultProperties = ['transform.position', 'transform.rotation', 'transform.scale'];
+
+        // Also include any existing tracks for this actor that are NOT in defaultProperties
+        const existingProperties = animationTracks
+            .filter(t => t.targetId === selectedActorId)
+            .map(t => t.property);
+
+        const targetProperties = Array.from(new Set([...defaultProperties, ...existingProperties]));
+
+        let newTracks = [...animationTracks];
+
+        targetProperties.forEach(prop => {
+            const valueToAdd = getValueByPath(selectedActor, prop);
+
+            if (valueToAdd === undefined) return;
+
+            const existingTrackIndex = newTracks.findIndex(
+                t => t.targetId === selectedActorId && t.property === prop
+            );
+
+            const newKeyframe: Keyframe = {
+                time: currentTime,
+                value: valueToAdd,
+                easing: 'linear'
+            };
+
+            if (existingTrackIndex !== -1) {
+                // Add to existing track
+                const track = newTracks[existingTrackIndex];
+
+                // Check if keyframe exists at this time (allow small epsilon)
+                const existingKeyframeIndex = track.keyframes.findIndex(kf => Math.abs(kf.time - currentTime) < 0.001);
+
+                let newKeyframes;
+                if (existingKeyframeIndex !== -1) {
+                    // Update existing keyframe value
+                    newKeyframes = [...track.keyframes];
+                    newKeyframes[existingKeyframeIndex] = {
+                        ...newKeyframes[existingKeyframeIndex],
+                        value: valueToAdd
+                    };
+                } else {
+                    // Add new keyframe
+                    newKeyframes = [...track.keyframes, newKeyframe];
+                    newKeyframes.sort((a, b) => a.time - b.time);
+                }
+
+                newTracks[existingTrackIndex] = { ...track, keyframes: newKeyframes };
+            } else {
+                // Create new track
+                newTracks.push({
+                    targetId: selectedActorId,
+                    property: prop,
+                    keyframes: [newKeyframe]
+                });
+            }
+        });
+
+        setTimeline({ animationTracks: newTracks });
+    }, [selectedActorId, selectedActor, animationTracks, currentTime, setTimeline]);
 
     return (
         <div className="panel timeline-panel" onClick={closeContextMenu}>
@@ -243,6 +325,7 @@ export const TimelinePanel: React.FC<TimelinePanelProps> = ({ selectedActorId })
                                 track={track}
                                 duration={duration}
                                 onKeyframeChange={handleKeyframeChange}
+                                onKeyframeDragEnd={handleKeyframeDragEnd}
                                 onKeyframeContextMenu={handleContextMenu}
                             />
                         ))
@@ -292,6 +375,7 @@ export const TimelinePanel: React.FC<TimelinePanelProps> = ({ selectedActorId })
                         className="timeline-context-menu__item"
                         onClick={pasteKeyframe}
                         style={{ display: 'block', width: '100%', textAlign: 'left', padding: '4px 12px', background: 'none', border: 'none', color: '#fff', cursor: 'pointer' }}
+                        disabled={!clipboardKeyframe}
                     >
                         {t('timeline.pasteKeyframe')}
                     </button>

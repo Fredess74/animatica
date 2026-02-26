@@ -6,6 +6,7 @@ interface TimelineTrackProps {
     track: AnimationTrack;
     duration: number;
     onKeyframeChange: (property: string, keyframeIndex: number, newTime: number) => void;
+    onKeyframeDragEnd: (property: string, keyframeIndex: number) => void;
     onKeyframeContextMenu: (e: React.MouseEvent, property: string, keyframeIndex: number) => void;
 }
 
@@ -13,6 +14,7 @@ export const TimelineTrack: React.FC<TimelineTrackProps> = ({
     track,
     duration,
     onKeyframeChange,
+    onKeyframeDragEnd,
     onKeyframeContextMenu
 }) => {
     const laneRef = useRef<HTMLDivElement>(null);
@@ -51,11 +53,12 @@ export const TimelineTrack: React.FC<TimelineTrackProps> = ({
         const handleMouseUp = () => {
             window.removeEventListener('mousemove', handleMouseMove);
             window.removeEventListener('mouseup', handleMouseUp);
+            onKeyframeDragEnd(track.property, index);
         };
 
         window.addEventListener('mousemove', handleMouseMove);
         window.addEventListener('mouseup', handleMouseUp);
-    }, [track, duration, onKeyframeChange]);
+    }, [track, duration, onKeyframeChange, onKeyframeDragEnd]);
 
     return (
         <div className="timeline-track">
