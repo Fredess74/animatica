@@ -11,6 +11,7 @@ import { useSceneStore } from '@Animatica/engine';
 import { AssetLibrary } from '../panels/AssetLibrary';
 import { PropertiesPanel } from '../panels/PropertiesPanel';
 import { TimelinePanel } from '../panels/TimelinePanel';
+import { CharacterPanel } from '../panels/CharacterPanel';
 import { ScriptConsole } from '../modals/ScriptConsole';
 import { ExportModal } from '../modals/ExportModal';
 import { ToastProvider, useToast } from '../components/ToastContext';
@@ -25,6 +26,7 @@ const EditorContent: React.FC<EditorLayoutProps> = ({ viewport }) => {
     const [selectedActorId, setSelectedActorId] = useState<string | null>(null);
     const [showScriptConsole, setShowScriptConsole] = useState(false);
     const [showExportModal, setShowExportModal] = useState(false);
+    const [rightTab, setRightTab] = useState<'properties' | 'character'>('properties');
 
     const { showToast } = useToast();
     const {
@@ -114,9 +116,27 @@ const EditorContent: React.FC<EditorLayoutProps> = ({ viewport }) => {
                     {viewport}
                 </main>
 
-                {/* Right Sidebar — Properties */}
+                {/* Right Sidebar — Properties / Character */}
                 <aside className="editor-sidebar editor-sidebar--right">
-                    <PropertiesPanel selectedActorId={selectedActorId} />
+                    <div className="sidebar-tabs">
+                        <button
+                            className={`sidebar-tab ${rightTab === 'properties' ? 'sidebar-tab--active' : ''}`}
+                            onClick={() => setRightTab('properties')}
+                        >
+                            🎛️ Properties
+                        </button>
+                        <button
+                            className={`sidebar-tab ${rightTab === 'character' ? 'sidebar-tab--active' : ''}`}
+                            onClick={() => setRightTab('character')}
+                        >
+                            🧑 Character
+                        </button>
+                    </div>
+                    {rightTab === 'properties' ? (
+                        <PropertiesPanel selectedActorId={selectedActorId} />
+                    ) : (
+                        <CharacterPanel />
+                    )}
                 </aside>
             </div>
 

@@ -227,3 +227,292 @@ export function createWalkClip(duration = 1.2): THREE.AnimationClip {
     clip.optimize()
     return clip
 }
+
+/**
+ * Procedural run clip — faster walk with more pronounced movements.
+ */
+export function createRunClip(duration = 0.8): THREE.AnimationClip {
+    const fps = 30
+    const frames = duration * fps
+    const times: number[] = []
+    const hipsPositions: number[] = []
+    const leftUpperLegRots: number[] = []
+    const rightUpperLegRots: number[] = []
+    const leftArmRots: number[] = []
+    const rightArmRots: number[] = []
+    const chestRots: number[] = []
+
+    for (let i = 0; i <= frames; i++) {
+        const t = i / fps
+        const phase = (t / duration) * Math.PI * 2
+        times.push(t)
+
+        const bounce = Math.abs(Math.sin(phase)) * 0.04
+        const hipSway = Math.sin(phase) * 0.02
+        hipsPositions.push(hipSway, 0.58 + bounce, 0)
+
+        const legSwing = Math.sin(phase) * 0.6
+        leftUpperLegRots.push(legSwing, 0, 0, 1)
+        rightUpperLegRots.push(-legSwing, 0, 0, 1)
+
+        const armSwing = Math.sin(phase) * 0.5
+        leftArmRots.push(-armSwing, 0, 0, 1)
+        rightArmRots.push(armSwing, 0, 0, 1)
+
+        // Slight forward lean
+        chestRots.push(0.1, 0, 0, 1)
+    }
+
+    const tracks = [
+        new THREE.VectorKeyframeTrack('Hips.position', times, hipsPositions),
+        new THREE.QuaternionKeyframeTrack('LeftUpperLeg.quaternion', times, leftUpperLegRots),
+        new THREE.QuaternionKeyframeTrack('RightUpperLeg.quaternion', times, rightUpperLegRots),
+        new THREE.QuaternionKeyframeTrack('LeftArm.quaternion', times, leftArmRots),
+        new THREE.QuaternionKeyframeTrack('RightArm.quaternion', times, rightArmRots),
+        new THREE.QuaternionKeyframeTrack('Chest.quaternion', times, chestRots),
+    ]
+
+    const clip = new THREE.AnimationClip('run', duration, tracks)
+    clip.optimize()
+    return clip
+}
+
+/**
+ * Procedural talk clip — jaw movement + hand gestures.
+ */
+export function createTalkClip(duration = 2.0): THREE.AnimationClip {
+    const fps = 30
+    const frames = duration * fps
+    const times: number[] = []
+    const headRots: number[] = []
+    const rightArmRots: number[] = []
+    const rightForeArmRots: number[] = []
+    const spineRots: number[] = []
+
+    for (let i = 0; i <= frames; i++) {
+        const t = i / fps
+        times.push(t)
+
+        // Head nods while talking
+        const headNod = Math.sin(t * Math.PI * 2.5) * 0.04
+        const headTilt = Math.sin(t * Math.PI * 1.2) * 0.03
+        headRots.push(headNod, headTilt, 0, 1)
+
+        // Right hand gesture
+        const gesture = Math.sin(t * Math.PI * 1.5) * 0.15
+        rightArmRots.push(-0.3 + gesture, 0, -0.2, 1)
+        rightForeArmRots.push(-0.5 + gesture * 0.5, 0, 0, 1)
+
+        // Subtle body sway
+        const sway = Math.sin(t * Math.PI * 0.7) * 0.02
+        spineRots.push(sway, 0, 0, 1)
+    }
+
+    const tracks = [
+        new THREE.QuaternionKeyframeTrack('Head.quaternion', times, headRots),
+        new THREE.QuaternionKeyframeTrack('RightArm.quaternion', times, rightArmRots),
+        new THREE.QuaternionKeyframeTrack('RightForeArm.quaternion', times, rightForeArmRots),
+        new THREE.QuaternionKeyframeTrack('Spine.quaternion', times, spineRots),
+    ]
+
+    const clip = new THREE.AnimationClip('talk', duration, tracks)
+    clip.optimize()
+    return clip
+}
+
+/**
+ * Procedural wave clip — right hand wave.
+ */
+export function createWaveClip(duration = 2.0): THREE.AnimationClip {
+    const fps = 30
+    const frames = duration * fps
+    const times: number[] = []
+    const rightArmRots: number[] = []
+    const rightForeArmRots: number[] = []
+    const rightHandRots: number[] = []
+
+    for (let i = 0; i <= frames; i++) {
+        const t = i / fps
+        times.push(t)
+
+        // Raise arm
+        const raise = Math.min(t / 0.3, 1) // quick raise in 0.3s
+        rightArmRots.push(0, 0, -1.4 * raise, 1) // arm up
+
+        // Wave forearm
+        const wave = Math.sin(t * Math.PI * 4) * 0.4 * raise
+        rightForeArmRots.push(0, wave, -0.3 * raise, 1)
+
+        // Wave hand
+        const handWave = Math.sin(t * Math.PI * 6) * 0.3 * raise
+        rightHandRots.push(handWave, 0, 0, 1)
+    }
+
+    const tracks = [
+        new THREE.QuaternionKeyframeTrack('RightArm.quaternion', times, rightArmRots),
+        new THREE.QuaternionKeyframeTrack('RightForeArm.quaternion', times, rightForeArmRots),
+        new THREE.QuaternionKeyframeTrack('RightHand.quaternion', times, rightHandRots),
+    ]
+
+    const clip = new THREE.AnimationClip('wave', duration, tracks)
+    clip.optimize()
+    return clip
+}
+
+/**
+ * Procedural dance clip — hip sway + arm groove.
+ */
+export function createDanceClip(duration = 2.4): THREE.AnimationClip {
+    const fps = 30
+    const frames = duration * fps
+    const times: number[] = []
+    const hipsPositions: number[] = []
+    const leftArmRots: number[] = []
+    const rightArmRots: number[] = []
+    const spineRots: number[] = []
+    const headRots: number[] = []
+
+    for (let i = 0; i <= frames; i++) {
+        const t = i / fps
+        const beat = (t / duration) * Math.PI * 4 // 2 beats per loop
+        times.push(t)
+
+        // Hip groove
+        const hipBounce = Math.abs(Math.sin(beat)) * 0.04
+        const hipSway = Math.sin(beat) * 0.04
+        hipsPositions.push(hipSway, 0.52 + hipBounce, 0)
+
+        // Arms pumping
+        const armPump = Math.sin(beat) * 0.5
+        leftArmRots.push(-0.3 + armPump, 0, 0.2, 1)
+        rightArmRots.push(-0.3 - armPump, 0, -0.2, 1)
+
+        // Body sway
+        const sway = Math.sin(beat * 0.5) * 0.08
+        spineRots.push(0, sway, 0, 1)
+
+        // Head bob
+        const bob = Math.sin(beat) * 0.06
+        headRots.push(bob, 0, 0, 1)
+    }
+
+    const tracks = [
+        new THREE.VectorKeyframeTrack('Hips.position', times, hipsPositions),
+        new THREE.QuaternionKeyframeTrack('LeftArm.quaternion', times, leftArmRots),
+        new THREE.QuaternionKeyframeTrack('RightArm.quaternion', times, rightArmRots),
+        new THREE.QuaternionKeyframeTrack('Spine.quaternion', times, spineRots),
+        new THREE.QuaternionKeyframeTrack('Head.quaternion', times, headRots),
+    ]
+
+    const clip = new THREE.AnimationClip('dance', duration, tracks)
+    clip.optimize()
+    return clip
+}
+
+/**
+ * Procedural sit clip — legs bent, leaned back.
+ */
+export function createSitClip(duration = 0.8): THREE.AnimationClip {
+    const fps = 30
+    const frames = duration * fps
+    const times: number[] = []
+    const hipsPositions: number[] = []
+    const leftUpperLegRots: number[] = []
+    const rightUpperLegRots: number[] = []
+    const leftLowerLegRots: number[] = []
+    const rightLowerLegRots: number[] = []
+    const spineRots: number[] = []
+
+    for (let i = 0; i <= frames; i++) {
+        const t = i / fps
+        const progress = Math.min(t / 0.5, 1) // ease into sit
+        const ease = 1 - Math.pow(1 - progress, 3) // easeOutCubic
+        times.push(t)
+
+        hipsPositions.push(0, 0.55 - ease * 0.25, ease * 0.05)
+
+        // Bend legs 90 degrees
+        leftUpperLegRots.push(-1.5 * ease, 0, 0, 1)
+        rightUpperLegRots.push(-1.5 * ease, 0, 0, 1)
+        leftLowerLegRots.push(1.5 * ease, 0, 0, 1)
+        rightLowerLegRots.push(1.5 * ease, 0, 0, 1)
+
+        // Lean back slightly
+        spineRots.push(-0.15 * ease, 0, 0, 1)
+    }
+
+    const tracks = [
+        new THREE.VectorKeyframeTrack('Hips.position', times, hipsPositions),
+        new THREE.QuaternionKeyframeTrack('LeftUpperLeg.quaternion', times, leftUpperLegRots),
+        new THREE.QuaternionKeyframeTrack('RightUpperLeg.quaternion', times, rightUpperLegRots),
+        new THREE.QuaternionKeyframeTrack('LeftLowerLeg.quaternion', times, leftLowerLegRots),
+        new THREE.QuaternionKeyframeTrack('RightLowerLeg.quaternion', times, rightLowerLegRots),
+        new THREE.QuaternionKeyframeTrack('Spine.quaternion', times, spineRots),
+    ]
+
+    const clip = new THREE.AnimationClip('sit', duration, tracks)
+    clip.optimize()
+    return clip
+}
+
+/**
+ * Procedural jump clip — squat → launch → airborne → land.
+ */
+export function createJumpClip(duration = 1.0): THREE.AnimationClip {
+    const fps = 30
+    const frames = duration * fps
+    const times: number[] = []
+    const hipsPositions: number[] = []
+    const leftUpperLegRots: number[] = []
+    const rightUpperLegRots: number[] = []
+    const leftArmRots: number[] = []
+    const rightArmRots: number[] = []
+
+    for (let i = 0; i <= frames; i++) {
+        const t = i / fps
+        const p = t / duration // 0→1
+        times.push(t)
+
+        let hipY: number
+        if (p < 0.2) {
+            // Squat phase
+            hipY = 0.55 - (p / 0.2) * 0.1
+        } else if (p < 0.5) {
+            // Launch phase
+            const launchP = (p - 0.2) / 0.3
+            hipY = 0.45 + launchP * 0.35
+        } else if (p < 0.8) {
+            // Airborne
+            const airP = (p - 0.5) / 0.3
+            hipY = 0.8 - airP * 0.25
+        } else {
+            // Landing
+            const landP = (p - 0.8) / 0.2
+            hipY = 0.55
+        }
+
+        hipsPositions.push(0, hipY, 0)
+
+        // Legs tuck in air
+        const tuck = p > 0.3 && p < 0.7 ? Math.sin((p - 0.3) / 0.4 * Math.PI) * 0.6 : 0
+        leftUpperLegRots.push(-tuck, 0, 0, 1)
+        rightUpperLegRots.push(-tuck, 0, 0, 1)
+
+        // Arms raise
+        const armRaise = p > 0.2 && p < 0.7 ? Math.sin((p - 0.2) / 0.5 * Math.PI) * 0.8 : 0
+        leftArmRots.push(0, 0, armRaise, 1)
+        rightArmRots.push(0, 0, -armRaise, 1)
+    }
+
+    const tracks = [
+        new THREE.VectorKeyframeTrack('Hips.position', times, hipsPositions),
+        new THREE.QuaternionKeyframeTrack('LeftUpperLeg.quaternion', times, leftUpperLegRots),
+        new THREE.QuaternionKeyframeTrack('RightUpperLeg.quaternion', times, rightUpperLegRots),
+        new THREE.QuaternionKeyframeTrack('LeftArm.quaternion', times, leftArmRots),
+        new THREE.QuaternionKeyframeTrack('RightArm.quaternion', times, rightArmRots),
+    ]
+
+    const clip = new THREE.AnimationClip('jump', duration, tracks)
+    clip.optimize()
+    return clip
+}
