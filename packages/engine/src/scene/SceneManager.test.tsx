@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render } from '@testing-library/react'
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { render, screen, cleanup } from '@testing-library/react'
 import { SceneManager } from './SceneManager'
 import { useSceneStore } from '../store/sceneStore'
 
@@ -9,21 +9,11 @@ vi.mock('../store/sceneStore', () => ({
   useSceneStore: vi.fn(),
 }))
 
-// Mock renderers to render visible elements we can query
-vi.mock('./renderers/PrimitiveRenderer', () => ({
-  PrimitiveRenderer: () => <div data-testid="primitive-renderer" />
-}))
-vi.mock('./renderers/LightRenderer', () => ({
-  LightRenderer: () => <div data-testid="light-renderer" />
-}))
-vi.mock('./renderers/CameraRenderer', () => ({
-  CameraRenderer: () => <div data-testid="camera-renderer" />
-}))
-vi.mock('./renderers/CharacterRenderer', () => ({
-  CharacterRenderer: () => <div data-testid="character-renderer" />
-}))
-vi.mock('./renderers/SpeakerRenderer', () => ({
-  SpeakerRenderer: () => <div data-testid="speaker-renderer" />
+// Mock SceneObject to verify it's being used
+vi.mock('./SceneObject', () => ({
+  SceneObject: (props: any) => (
+    <div data-testid="scene-object" data-props={JSON.stringify(props)} />
+  ),
 }))
 
 // Mock animation utils
@@ -35,12 +25,11 @@ vi.mock('./animationUtils', () => ({
   resolveActiveCamera: vi.fn(() => 'camera-1'),
 }))
 
-// Mock Three.js intrinsic elements to avoid React warnings in JSDOM
-// We can't easily mock intrinsic elements like <ambientLight> globally without affecting other tests
-// or modifying the environment. But typically R3F components in JSDOM just render as custom elements (e.g. <ambientlight>).
-// We'll ignore the console errors for unknown elements if necessary, or just focus on our custom renderers.
-
 describe('SceneManager', () => {
+  afterEach(() => {
+    cleanup()
+  })
+
   beforeEach(() => {
     vi.clearAllMocks()
 
@@ -65,7 +54,35 @@ describe('SceneManager', () => {
     })
   })
 
-  it('renders primitive actors', () => {
+  it('renders all actors using SceneObject', () => {
+    const actors = [
+      { id: '1', type: 'primitive' },
+      { id: '2', type: 'light' },
+    ]
+    ;(useSceneStore as any).mockImplementation((selector: any) => {
+       const state = {
+         actors,
+         environment: { ambientLight: {}, sun: {}, skyColor: '#000' },
+         timeline: { cameraTrack: [], animationTracks: [] },
+         playback: { currentTime: 0 },
+       }
+       return selector(state)
+    })
+
+    render(<SceneManager />)
+    const sceneObjects = screen.getAllByTestId('scene-object')
+    expect(sceneObjects).toHaveLength(2)
+
+    // Check first actor
+    const props1 = JSON.parse(sceneObjects[0].getAttribute('data-props') || '{}')
+    expect(props1.actor).toEqual(expect.objectContaining({ id: '1' }))
+
+    // Check second actor
+    const props2 = JSON.parse(sceneObjects[1].getAttribute('data-props') || '{}')
+    expect(props2.actor).toEqual(expect.objectContaining({ id: '2' }))
+  })
+
+  it('passes selected status to SceneObject', () => {
     const actors = [{ id: '1', type: 'primitive' }]
     ;(useSceneStore as any).mockImplementation((selector: any) => {
        const state = {
@@ -77,12 +94,14 @@ describe('SceneManager', () => {
        return selector(state)
     })
 
-    const { getByTestId } = render(<SceneManager />)
-    expect(getByTestId('primitive-renderer')).toBeDefined()
+    render(<SceneManager selectedActorId="1" />)
+    const sceneObject = screen.getByTestId('scene-object')
+    const props = JSON.parse(sceneObject.getAttribute('data-props') || '{}')
+    expect(props.isSelected).toBe(true)
   })
 
-  it('renders light actors', () => {
-    const actors = [{ id: '2', type: 'light' }]
+  it('passes showHelpers to SceneObject', () => {
+    const actors = [{ id: '1', type: 'light' }]
     ;(useSceneStore as any).mockImplementation((selector: any) => {
        const state = {
          actors,
@@ -93,55 +112,9 @@ describe('SceneManager', () => {
        return selector(state)
     })
 
-    const { getByTestId } = render(<SceneManager />)
-    expect(getByTestId('light-renderer')).toBeDefined()
-  })
-
-  it('renders camera actors', () => {
-    const actors = [{ id: '3', type: 'camera' }]
-    ;(useSceneStore as any).mockImplementation((selector: any) => {
-       const state = {
-         actors,
-         environment: { ambientLight: {}, sun: {}, skyColor: '#000' },
-         timeline: { cameraTrack: [], animationTracks: [] },
-         playback: { currentTime: 0 },
-       }
-       return selector(state)
-    })
-
-    const { getByTestId } = render(<SceneManager />)
-    expect(getByTestId('camera-renderer')).toBeDefined()
-  })
-
-  it('renders character actors', () => {
-    const actors = [{ id: '4', type: 'character' }]
-    ;(useSceneStore as any).mockImplementation((selector: any) => {
-       const state = {
-         actors,
-         environment: { ambientLight: {}, sun: {}, skyColor: '#000' },
-         timeline: { cameraTrack: [], animationTracks: [] },
-         playback: { currentTime: 0 },
-       }
-       return selector(state)
-    })
-
-    const { getByTestId } = render(<SceneManager />)
-    expect(getByTestId('character-renderer')).toBeDefined()
-  })
-
-  it('renders speaker actors', () => {
-    const actors = [{ id: '5', type: 'speaker' }]
-    ;(useSceneStore as any).mockImplementation((selector: any) => {
-       const state = {
-         actors,
-         environment: { ambientLight: {}, sun: {}, skyColor: '#000' },
-         timeline: { cameraTrack: [], animationTracks: [] },
-         playback: { currentTime: 0 },
-       }
-       return selector(state)
-    })
-
-    const { getByTestId } = render(<SceneManager />)
-    expect(getByTestId('speaker-renderer')).toBeDefined()
+    render(<SceneManager showHelpers={true} />)
+    const sceneObject = screen.getByTestId('scene-object')
+    const props = JSON.parse(sceneObject.getAttribute('data-props') || '{}')
+    expect(props.showHelpers).toBe(true)
   })
 })

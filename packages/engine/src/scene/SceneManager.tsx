@@ -1,7 +1,7 @@
 /**
  * SceneManager — Orchestrates all scene renderers based on the Zustand store.
  * Reads actors from the store and delegates rendering to the appropriate component.
- * Handles environment setup (ambient light, sun, sky, fog).
+ * Handles environment setup (ambient light, sun, sky, fog, grid).
  *
  * @module @animatica/engine/scene/SceneManager
  */
@@ -9,26 +9,15 @@ import React, { useMemo } from 'react';
 import { useSceneStore } from '../store/sceneStore';
 import { evaluateTracksAtTime } from '../animation/interpolate';
 import { applyAnimationToActor, resolveActiveCamera } from './animationUtils';
-import { PrimitiveRenderer } from './renderers/PrimitiveRenderer';
-import { LightRenderer } from './renderers/LightRenderer';
-import { CameraRenderer } from './renderers/CameraRenderer';
-import { CharacterRenderer } from './renderers/CharacterRenderer';
-import { SpeakerRenderer } from './renderers/SpeakerRenderer';
-import type {
-    Actor,
-    PrimitiveActor,
-    LightActor,
-    CameraActor,
-    CharacterActor,
-    SpeakerActor,
-} from '../types';
+import { SceneObject } from './SceneObject';
+import type { Actor } from '../types';
 
 interface SceneManagerProps {
     /** ID of the currently selected actor in the editor. */
     selectedActorId?: string;
     /** Callback when an actor is clicked. */
     onActorSelect?: (actorId: string) => void;
-    /** Whether to show debug helpers (light gizmos, camera frustums). */
+    /** Whether to show debug helpers (light gizmos, camera frustums, grid). */
     showHelpers?: boolean;
 }
 
@@ -108,61 +97,19 @@ export const SceneManager: React.FC<SceneManagerProps> = ({
                 />
             )}
 
+            {showHelpers && <gridHelper args={[20, 20]} />}
+
             {/* === Actors === */}
-            {animatedActors.map((actor: Actor) => {
-                switch (actor.type) {
-                    case 'primitive':
-                        return (
-                            <PrimitiveRenderer
-                                key={actor.id}
-                                actor={actor as PrimitiveActor}
-                                isSelected={actor.id === selectedActorId}
-                                onClick={() => onActorSelect?.(actor.id)}
-                            />
-                        );
-
-                    case 'light':
-                        return (
-                            <LightRenderer
-                                key={actor.id}
-                                actor={actor as LightActor}
-                                showHelper={showHelpers || actor.id === selectedActorId}
-                            />
-                        );
-
-                    case 'camera':
-                        return (
-                            <CameraRenderer
-                                key={actor.id}
-                                actor={actor as CameraActor}
-                                isActive={actor.id === activeCameraId}
-                                showHelper={showHelpers || actor.id === selectedActorId}
-                            />
-                        );
-
-                    case 'character':
-                        return (
-                            <CharacterRenderer
-                                key={actor.id}
-                                actor={actor as CharacterActor}
-                                isSelected={actor.id === selectedActorId}
-                                onClick={() => onActorSelect?.(actor.id)}
-                            />
-                        );
-
-                    case 'speaker':
-                        return (
-                            <SpeakerRenderer
-                                key={actor.id}
-                                actor={actor as SpeakerActor}
-                                showHelper={showHelpers || actor.id === selectedActorId}
-                            />
-                        );
-
-                    default:
-                        return null;
-                }
-            })}
+            {animatedActors.map((actor: Actor) => (
+                <SceneObject
+                    key={actor.id}
+                    actor={actor}
+                    isSelected={actor.id === selectedActorId}
+                    onSelect={() => onActorSelect?.(actor.id)}
+                    isActiveCamera={actor.id === activeCameraId}
+                    showHelpers={showHelpers}
+                />
+            ))}
         </>
     );
 };
