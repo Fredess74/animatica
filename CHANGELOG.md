@@ -5,23 +5,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
-
-### Added
-
-- **Engine:**
-    - Feature flag system (`config/featureFlags.ts`) for managing experimental features.
-    - `CharacterRenderer` placeholder (`scene/renderers/`) for future character implementation.
-- **Editor:**
-    - CSS styles for panels, timeline, and modals (`design-tokens.css`) matching the design system.
-    - Unit tests for `AssetLibrary`, `PropertiesPanel`, and `TimelinePanel`.
-    - Internationalization (i18n) support by extracting hardcoded strings.
-
-### Changed
-
-- **Engine:**
-    - Improved type safety by removing explicit `any` types and adding missing return types across the codebase.
-
 ## [0.1.0] - 2026-02-22
 
 ### Added
