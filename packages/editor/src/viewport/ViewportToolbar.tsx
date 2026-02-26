@@ -75,6 +75,11 @@ export const ViewportToolbar: React.FC<ViewportToolbarProps> = ({
                     onClick={onGridToggle}
                     icon="⊞"
                 />
+                <Divider />
+                <ToolBtn tooltip="Perspective View" active={false} onClick={() => {}} icon="🎥" />
+                <ToolBtn tooltip="Top View" active={false} onClick={() => {}} icon=" top" />
+                <ToolBtn tooltip="Front View" active={false} onClick={() => {}} icon=" front" />
+                <ToolBtn tooltip="Side View" active={false} onClick={() => {}} icon=" side" />
             </div>
         </div>
     )
