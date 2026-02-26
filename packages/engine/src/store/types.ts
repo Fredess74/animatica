@@ -1,6 +1,14 @@
 import { Actor, Environment, Timeline, ProjectMeta } from '../types';
 
 /**
+ * Loop modes for playback.
+ * - 'none': Stop at the end of the timeline.
+ * - 'loop': Jump back to start and continue playing.
+ * - 'pingpong': Reverse direction at the ends.
+ */
+export type LoopMode = 'none' | 'loop' | 'pingpong';
+
+/**
  * Playback state for the scene.
  */
 export interface PlaybackState {
@@ -10,6 +18,12 @@ export interface PlaybackState {
   isPlaying: boolean;
   /** Frame rate for playback (e.g., 24, 30, 60). */
   frameRate: number;
+  /** Playback speed multiplier (1.0 = normal speed). */
+  speed: number;
+  /** Playback direction (1 = forward, -1 = backward). */
+  direction: 1 | -1;
+  /** Loop mode for playback. */
+  loopMode: LoopMode;
 }
 
 /**
