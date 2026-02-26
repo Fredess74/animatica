@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { Mesh } from 'three'
+import * as THREE from 'three'
 import { ThreeEvent } from '@react-three/fiber'
 import { Edges } from '@react-three/drei'
 import { PrimitiveActor } from '../../types'
@@ -28,7 +28,7 @@ export const PrimitiveRenderer: React.FC<PrimitiveRendererProps> = ({
   isSelected = false,
   onClick,
 }) => {
-  const meshRef = useRef<Mesh>(null)
+  const meshRef = useRef<THREE.Mesh>(null)
 
   const { transform, visible, properties } = actor
   const { shape, color, roughness, metalness, opacity, wireframe } = properties
