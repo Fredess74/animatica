@@ -1,3 +1,4 @@
+- [DONE] [engine-playback-dev] [2026-02-24] Add speed controls and loop modes to PlaybackController
 # Agent Completed Tasks
 
 > This file is a log of all tasks completed by Jules agents.
