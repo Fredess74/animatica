@@ -47,14 +47,9 @@ export function usePlayback(): PlaybackControls {
 
     // Subscribe to playback state changes
     const isPlaying = useSceneStore((s) => s.playback.isPlaying);
-    // Sync refs with props
-    useEffect(() => {
-        loopRef.current = loop;
-    }, [loop]);
-
-    useEffect(() => {
-        speedRef.current = speed;
-    }, [speed]);
+    // We access speed and loopMode directly from store in the tick function via getState()
+    // to avoid stale closures, so we don't need to sync them to refs here if we aren't accepting props.
+    // The previous code seemed to assume props were passed to usePlayback, but the signature is empty.
 
     /**
      * The core animation frame callback.
