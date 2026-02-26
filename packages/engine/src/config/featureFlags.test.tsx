@@ -11,7 +11,8 @@ import {
 describe('Feature Flags', () => {
   describe('getFeatureFlags', () => {
     it('returns all true for development', () => {
-      const flags = getFeatureFlags('development', {});
+      // Pass empty overrides and empty envSource to rely on defaults
+      const flags = getFeatureFlags('development', {}, {});
       expect(flags.characters).toBe(true);
       expect(flags.export).toBe(true);
       expect(flags.aiPrompts).toBe(true);
@@ -20,7 +21,7 @@ describe('Feature Flags', () => {
     });
 
     it('returns all false for production by default', () => {
-      const flags = getFeatureFlags('production', {});
+      const flags = getFeatureFlags('production', {}, {});
       expect(flags.characters).toBe(false);
       expect(flags.export).toBe(false);
       expect(flags.aiPrompts).toBe(false);
@@ -29,24 +30,47 @@ describe('Feature Flags', () => {
     });
 
     it('returns all false for test mode by default (behaves like prod)', () => {
-        const flags = getFeatureFlags('test', {});
+        const flags = getFeatureFlags('test', {}, {});
         expect(flags.characters).toBe(false);
         expect(flags.export).toBe(false);
     });
 
-    it('respects environment variable overrides', () => {
-      const mockEnv = {
+    it('respects explicit overrides (2nd arg)', () => {
+      const overrides = {
         VITE_FEATURE_FLAG_CHARACTERS: 'true',
         VITE_FEATURE_FLAG_EXPORT: 'false',
-        VITE_FEATURE_FLAG_AI_PROMPTS: 'true', // Testing camelCase -> SNAKE_CASE conversion
+        VITE_FEATURE_FLAG_AI_PROMPTS: 'true',
       };
 
-      const flags = getFeatureFlags('production', mockEnv);
+      // overrides take precedence
+      const flags = getFeatureFlags('production', overrides, {});
 
-      expect(flags.characters).toBe(true); // Overridden to true
-      expect(flags.export).toBe(false); // Default false, override false
-      expect(flags.aiPrompts).toBe(true); // Overridden to true
-      expect(flags.multiplayer).toBe(false); // Default false
+      expect(flags.characters).toBe(true);
+      expect(flags.export).toBe(false);
+      expect(flags.aiPrompts).toBe(true);
+      expect(flags.multiplayer).toBe(false); // Default
+    });
+
+    it('respects env source values (3rd arg)', () => {
+      const mockEnvSource = {
+        VITE_FEATURE_FLAG_CHARACTERS: 'true',
+        VITE_FEATURE_FLAG_EXPORT: 'false',
+      };
+
+      // env source is used if overrides are missing
+      const flags = getFeatureFlags('production', undefined, mockEnvSource);
+
+      expect(flags.characters).toBe(true);
+      expect(flags.export).toBe(false);
+      expect(flags.aiPrompts).toBe(false); // Default
+    });
+
+    it('overrides take precedence over env source', () => {
+       const overrides = { VITE_FEATURE_FLAG_CHARACTERS: 'false' };
+       const mockEnvSource = { VITE_FEATURE_FLAG_CHARACTERS: 'true' };
+
+       const flags = getFeatureFlags('production', overrides, mockEnvSource);
+       expect(flags.characters).toBe(false);
     });
   });
 
