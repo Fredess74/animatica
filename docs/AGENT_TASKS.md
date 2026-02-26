@@ -8,74 +8,41 @@
 
 ## Tonight's Plan (2026-02-24)
 
-Focus on completing **Batch 3 (Characters)** and the missing **Batch 4 (Viewport)** component to enable full scene rendering. Continue with **Batch 5 (Integration)** for export/audio capabilities.
+Focus on **Phase 2 (Characters)**: implementing the core character system (Bone, Morph, Clothing).
+Prioritize **Core Fixes** (PlaybackController) to ensure the animation engine is stable.
+Continue **Editor Refinement** and **Integration** tasks.
 
 ---
 
-## High Priority: Core Features
+## High Priority: Core Fixes
 
-- [ROLE: engine-type-hardener] Review all type definitions in `packages/engine/src/types/index.ts`, remove any `any` usage, add missing interfaces
-- [ROLE: engine-schema-validator] Ensure all Zod schemas in `packages/engine/src/schemas/` match TypeScript interfaces exactly
-- [ROLE: engine-animation-dev] Add missing easing functions (bounce, elastic, back) to `packages/engine/src/animation/easing.ts`
-- [ROLE: engine-test-writer] Write tests for PlaybackController
-- [ROLE: engine-api-docs] Add JSDoc comments to all exported functions in `packages/engine/src/index.ts`
-- [ROLE: character-dev] Implement `packages/engine/src/characters/BoneController.ts` (Map body pose to bone rotations)
-- [ROLE: character-dev] Implement `packages/engine/src/characters/MorphTargets.ts` (Apply facial expressions to mesh)
-- [ROLE: character-dev] Implement `packages/engine/src/characters/ClothingSystem.ts` (Procedural clothing attachment)
-- [ROLE: character-dev] Create `packages/engine/src/characters/Humanoid.tsx` (Load ReadyPlayerMe GLB, handle idle animation)
+- [ROLE: engine-playback-dev] Fix `packages/engine/src/playback/PlaybackController.ts`. The current file references undefined variables (`loopRef`, `speedRef`) and has incomplete logic. It must be cleaned up to work correctly with `useSceneStore`.
+- [ROLE: engine-test-writer] Write comprehensive tests for the fixed `PlaybackController` in `packages/engine/src/playback/PlaybackController.test.ts`.
 
-- [ROLE: editor-viewport-dev] Create `packages/editor/src/components/Viewport.tsx` (R3F Canvas, SceneManager, OrbitControls, TransformControls)
+## Phase 2: Characters (Active)
 
-- [ROLE: integration-dev] Implement `packages/engine/src/export/VideoExporter.tsx` (WebCodecs API or MediaRecorder for canvas capture)
-- [ROLE: integration-dev] Implement `packages/engine/src/audio/AudioEngine.tsx` (Tone.js integration, spatial audio with SpeakerActor)
+- [ROLE: character-dev] Implement `packages/engine/src/characters/BoneController.ts`. Map abstract `BodyPose` data to actual Three.js bone rotations (neck, spine, limbs).
+- [ROLE: character-dev] Implement `packages/engine/src/characters/MorphTargets.ts`. Apply facial expressions (joy, anger, etc.) to the mesh's morph targets.
+- [ROLE: character-dev] Implement `packages/engine/src/characters/ClothingSystem.ts`. Handle attaching clothing items to specific bone slots (head, torso, legs).
+- [ROLE: character-dev] Create `packages/engine/src/characters/Humanoid.tsx`. Main R3F component that loads the GLB, sets up the skeleton, and orchestrates the controllers above.
 
-- [ROLE: web-integrator] Update `apps/web/app/create/page.tsx` to mount `EditorLayout` and verify full app assembly
+## Phase 3: Editor Refinement
 
-- [ROLE: editor-layout-dev] Add responsive breakpoints to EditorLayout for tablet/mobile
-- [ROLE: editor-components-dev] Create shared Button, Input, Select components using design tokens
-- [ROLE: editor-viewport-dev] Create Viewport component with R3F Canvas + OrbitControls + SceneManager
-- [ROLE: editor-timeline-dev] Wire TimelinePanel to usePlayback hook, add real keyframe rendering
-## Engine Tasks
+- [ROLE: editor-layout-dev] Add responsive breakpoints to `packages/editor/src/layouts/EditorLayout.tsx`. Ensure panels collapse or adjust for tablet/mobile.
+- [ROLE: editor-components-dev] Create shared UI components in `packages/editor/src/components/ui/` (Button, Input, Select, Slider) to replace raw Tailwind usage and ensure consistency.
+- [ROLE: editor-viewport-dev] Refine `packages/editor/src/viewport/Viewport.tsx`. Ensure the Gizmo works correctly (remove `@ts-ignore`) and add transform mode switching (translate/rotate/scale).
 
-- [ROLE: engine-test-writer] Write tests for `PlaybackController.ts` in `packages/engine/src/playback/`
-- [ROLE: engine-api-docs] Add JSDoc comments to all exported functions in `packages/engine/src/index.ts`
-- [ROLE: engine-animation-dev] Add missing easing functions (bounce, elastic, back) to `packages/engine/src/animation/easing.ts`
+## Phase 4: Integration
 
-## Web App Tasks
+- [ROLE: integration-dev] Implement `packages/engine/src/export/VideoExporter.tsx`. Use WebCodecs API or MediaRecorder to capture the canvas to video.
+- [ROLE: integration-dev] Implement `packages/engine/src/audio/AudioEngine.tsx`. Start the Tone.js integration for spatial audio.
 
-- [ROLE: web-layout-dev] Refine Next.js app layout with navigation, auth placeholder in `apps/web/app/layout.tsx`
-- [ROLE: web-pages-dev] Create landing page content in `apps/web/app/page.tsx`
-- [ROLE: web-test-writer] Write E2E tests for main user flows (create project, add actor, play)
-- [ROLE: web-layout-dev] Create Next.js app layout with navigation, auth placeholder
-- [ROLE: web-pages-dev] Create landing page, /create route with editor, /explore route
-- [ROLE: web-test-writer] Write E2E tests for main user flows
+## Quality & Docs
 
-## Quality Tasks
-
-- [ROLE: lint-fixer] Run eslint --fix on all packages, fix remaining issues manually
-- [ROLE: security-auditor] Scan for XSS vectors, unsafe innerHTML, unvalidated inputs
-- [ROLE: accessibility-auditor] Add aria-labels, keyboard navigation, screen reader support in Editor panels
-- [ROLE: error-boundary-agent] Add try/catch to all async operations, ErrorBoundary to all canvas components
-
-## Infrastructure Tasks
-
-- [ROLE: ci-guardian] Verify CI pipeline runs correctly, add caching for pnpm
-- [ROLE: dependency-updater] Check for outdated dependencies, update minor/patch versions
-- [ROLE: supabase-guardian] Verify database schema matches TypeScript types
-
-## Documentation Tasks
-
-- [ROLE: api-docs-writer] Generate API reference from JSDoc comments
-- [ROLE: changelog-writer] Update CHANGELOG.md with recent changes
-- [ROLE: progress-reporter] Update PROGRESS.md and create daily report in `reports/daily/`
-- [ROLE: architecture-diagrammer] Update ARCHITECTURE.md with new components
-
-## Cleanup Tasks
-
-- [ROLE: license-auditor] Verify all dependencies have compatible licenses
-- [ROLE: bundle-watcher] Check bundle sizes, suggest tree-shaking opportunities
-- [ROLE: release-preparer] Verify all packages have consistent versions, README is accurate
-- [ROLE: night-reporter] Create nightly summary of all agent activity
+- [ROLE: engine-api-docs] Add JSDoc comments to all exported functions in `packages/engine/src/index.ts`.
+- [ROLE: security-auditor] Scan for XSS vectors, unsafe innerHTML, unvalidated inputs.
+- [ROLE: accessibility-auditor] Add aria-labels, keyboard navigation, screen reader support in Editor panels.
+- [ROLE: ci-guardian] Verify CI pipeline runs correctly, add caching for pnpm.
 
 ## Unassigned Tasks
 
