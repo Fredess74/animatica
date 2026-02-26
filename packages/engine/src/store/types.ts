@@ -1,4 +1,4 @@
-import { Actor, Environment, Timeline, ProjectMeta } from '../types';
+import { Actor, Environment, Timeline, ProjectMeta, Clip } from '../types';
 
 /**
  * Playback state for the scene.
@@ -10,6 +10,12 @@ export interface PlaybackState {
   isPlaying: boolean;
   /** Frame rate for playback (e.g., 24, 30, 60). */
   frameRate: number;
+  /** Playback speed multiplier (default: 1). */
+  speed: number;
+  /** Playback direction (1 for forward, -1 for reverse). */
+  direction: 1 | -1;
+  /** Loop mode. */
+  loopMode: 'none' | 'loop' | 'pingpong';
 }
 
 /**
@@ -80,5 +86,5 @@ export interface SceneStoreState extends
   PlaybackSlice,
   MetaSlice {
   /** Asset library. */
-  library: { clips: unknown[] };
+  library: { clips: Clip[] };
 }

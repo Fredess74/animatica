@@ -5,6 +5,25 @@
  */
 
 /**
+ * Recursively makes all properties of T readonly.
+ */
+export type DeepReadonly<T> = {
+  readonly [P in keyof T]: T[P] extends object ? DeepReadonly<T[P]> : T[P]
+}
+
+/**
+ * Removes readonly modifier from all properties of T.
+ */
+export type Mutable<T> = {
+  -readonly [P in keyof T]: T[P]
+}
+
+/**
+ * Helper to create an opaque type (nominal typing).
+ */
+export type Opaque<T, K extends string> = T & { __typename: K }
+
+/**
  * A 3D vector represented as a tuple of three numbers [x, y, z].
  */
 export type Vector3 = [number, number, number]
@@ -20,15 +39,20 @@ export type Color = string
 export type UUID = string
 
 /**
+ * Loop mode for playback.
+ */
+export type LoopMode = 'none' | 'loop' | 'pingpong'
+
+/**
  * Represents the transformation properties of an object in 3D space.
  */
 export interface Transform {
   /** The position of the object as [x, y, z]. */
-  position: Vector3
+  readonly position: Vector3
   /** The rotation of the object as Euler angles in radians [x, y, z]. */
-  rotation: Vector3
+  readonly rotation: Vector3
   /** The scale of the object as [x, y, z]. */
-  scale: Vector3
+  readonly scale: Vector3
 }
 
 /**
@@ -36,31 +60,32 @@ export interface Transform {
  */
 export interface BaseActor {
   /** Unique identifier for the actor. */
-  id: UUID
+  readonly id: UUID
   /** Human-readable name of the actor. */
-  name: string
+  readonly name: string
   /** The actor's transformation in 3D space. */
-  transform: Transform
+  readonly transform: Transform
   /** Whether the actor is visible in the scene. */
-  visible: boolean
+  readonly visible: boolean
   /**
    * UX Enhancement: Prevents accidental selection/edits in editor.
    * Useful for background elements or completed parts of the scene.
    */
-  locked?: boolean
+  readonly locked?: boolean
   /**
    * UX Enhancement: Description for accessibility and organization.
    * Can be used as alt text or tooltip content in the editor.
    */
-  description?: string
+  readonly description?: string
 }
 
 // ---- Character ----
 
 /**
  * Available animation states for a character.
+ * Uses string & {} to allow custom states while providing autocompletion for known ones.
  */
-export type AnimationState = 'idle' | 'walk' | 'run' | 'wave' | 'talk' | 'dance' | 'sit' | 'jump'
+export type AnimationState = 'idle' | 'walk' | 'run' | 'wave' | 'talk' | 'dance' | 'sit' | 'jump' | (string & {})
 
 /**
  * Morph target influences for facial expressions.
@@ -68,25 +93,25 @@ export type AnimationState = 'idle' | 'walk' | 'run' | 'wave' | 'talk' | 'dance'
  */
 export interface MorphTargets {
   /** Smile intensity (0-1). */
-  mouthSmile?: number
+  readonly mouthSmile?: number
   /** Mouth open intensity (0-1). */
-  mouthOpen?: number
+  readonly mouthOpen?: number
   /** Jaw open intensity (0-1). */
-  jawOpen?: number
+  readonly jawOpen?: number
   /** Inner brow raise intensity (0-1). */
-  browInnerUp?: number
+  readonly browInnerUp?: number
   /** Left eye blink intensity (0-1). */
-  eyeBlinkLeft?: number
+  readonly eyeBlinkLeft?: number
   /** Right eye blink intensity (0-1). */
-  eyeBlinkRight?: number
+  readonly eyeBlinkRight?: number
   /** Left eye squint intensity (0-1). */
-  eyeSquintLeft?: number
+  readonly eyeSquintLeft?: number
   /** Right eye squint intensity (0-1). */
-  eyeSquintRight?: number
+  readonly eyeSquintRight?: number
   /** Left nose sneer intensity (0-1). */
-  noseSneerLeft?: number
+  readonly noseSneerLeft?: number
   /** Right nose sneer intensity (0-1). */
-  noseSneerRight?: number
+  readonly noseSneerRight?: number
 }
 
 /**
@@ -94,17 +119,17 @@ export interface MorphTargets {
  */
 export interface BodyPose {
   /** Rotation for the head. */
-  head?: Vector3
+  readonly head?: Vector3
   /** Rotation for the spine. */
-  spine?: Vector3
+  readonly spine?: Vector3
   /** Rotation for the left arm. */
-  leftArm?: Vector3
+  readonly leftArm?: Vector3
   /** Rotation for the right arm. */
-  rightArm?: Vector3
+  readonly rightArm?: Vector3
   /** Rotation for the left leg. */
-  leftLeg?: Vector3
+  readonly leftLeg?: Vector3
   /** Rotation for the right leg. */
-  rightLeg?: Vector3
+  readonly rightLeg?: Vector3
 }
 
 /**
@@ -112,11 +137,11 @@ export interface BodyPose {
  */
 export interface ClothingItem {
   /** The type/model of the clothing item (e.g., 'hat', 'jacket'). */
-  type: string
+  readonly type: string
   /** The color of the clothing item. */
-  color: Color
+  readonly color: Color
   /** Whether the clothing item is visible. */
-  visible: boolean
+  readonly visible: boolean
 }
 
 /**
@@ -124,13 +149,13 @@ export interface ClothingItem {
  */
 export interface ClothingSlots {
   /** Items equipped on the head. */
-  head?: ClothingItem[]
+  readonly head?: ClothingItem[]
   /** Items equipped on the torso. */
-  torso?: ClothingItem[]
+  readonly torso?: ClothingItem[]
   /** Items equipped on the arms. */
-  arms?: ClothingItem[]
+  readonly arms?: ClothingItem[]
   /** Items equipped on the legs. */
-  legs?: ClothingItem[]
+  readonly legs?: ClothingItem[]
 }
 
 /**
@@ -138,17 +163,17 @@ export interface ClothingSlots {
  */
 export interface CharacterActor extends BaseActor {
   /** Discriminator for the actor type. */
-  type: 'character'
+  readonly type: 'character'
   /** Current animation state. */
-  animation: AnimationState
+  readonly animation: AnimationState
   /** Speed multiplier for the animation (default: 1). */
-  animationSpeed?: number
+  readonly animationSpeed?: number
   /** Facial expression morph targets. */
-  morphTargets: MorphTargets
+  readonly morphTargets: MorphTargets
   /** Custom body pose overrides. */
-  bodyPose: BodyPose
+  readonly bodyPose: BodyPose
   /** Equipped clothing items. */
-  clothing: ClothingSlots
+  readonly clothing: ClothingSlots
 }
 
 // ---- Primitive ----
@@ -163,21 +188,21 @@ export type PrimitiveShape = 'box' | 'sphere' | 'cylinder' | 'plane' | 'cone' | 
  */
 export interface PrimitiveActor extends BaseActor {
   /** Discriminator for the actor type. */
-  type: 'primitive'
+  readonly type: 'primitive'
   /** Properties specific to the primitive shape and material. */
-  properties: {
+  readonly properties: {
     /** The geometric shape of the primitive. */
-    shape: PrimitiveShape
+    readonly shape: PrimitiveShape
     /** The color of the material. */
-    color: Color
+    readonly color: Color
     /** Material roughness (0-1). */
-    roughness: number
+    readonly roughness: number
     /** Material metalness (0-1). */
-    metalness: number
+    readonly metalness: number
     /** Material opacity (0-1). */
-    opacity: number
+    readonly opacity: number
     /** Whether to render in wireframe mode. */
-    wireframe: boolean
+    readonly wireframe: boolean
   }
 }
 
@@ -193,17 +218,17 @@ export type LightType = 'point' | 'spot' | 'directional'
  */
 export interface LightActor extends BaseActor {
   /** Discriminator for the actor type. */
-  type: 'light'
+  readonly type: 'light'
   /** Properties specific to the light source. */
-  properties: {
+  readonly properties: {
     /** The type of light source. */
-    lightType: LightType
+    readonly lightType: LightType
     /** Light intensity. */
-    intensity: number
+    readonly intensity: number
     /** Light color. */
-    color: Color
+    readonly color: Color
     /** Whether the light casts shadows. */
-    castShadow: boolean
+    readonly castShadow: boolean
   }
 }
 
@@ -214,15 +239,15 @@ export interface LightActor extends BaseActor {
  */
 export interface CameraActor extends BaseActor {
   /** Discriminator for the actor type. */
-  type: 'camera'
+  readonly type: 'camera'
   /** Properties specific to the camera. */
-  properties: {
+  readonly properties: {
     /** Field of view in degrees. */
-    fov: number
+    readonly fov: number
     /** Near clipping plane distance. */
-    near: number
+    readonly near: number
     /** Far clipping plane distance. */
-    far: number
+    readonly far: number
   }
 }
 
@@ -233,17 +258,17 @@ export interface CameraActor extends BaseActor {
  */
 export interface SpeakerActor extends BaseActor {
   /** Discriminator for the actor type. */
-  type: 'speaker'
+  readonly type: 'speaker'
   /** Properties specific to the audio source. */
-  properties: {
+  readonly properties: {
     /** URL of the audio file. */
-    audioUrl?: string
+    readonly audioUrl?: string
     /** Audio volume (0-1). */
-    volume: number
+    readonly volume: number
     /** Whether the audio should loop. */
-    loop: boolean
+    readonly loop: boolean
     /** Whether the audio is spatial (3D). */
-    spatial: boolean
+    readonly spatial: boolean
   }
 }
 
@@ -265,13 +290,13 @@ export type EasingType = 'linear' | 'easeIn' | 'easeOut' | 'easeInOut' | 'step'
  * A single keyframe in an animation track.
  * @template T The type of value being animated.
  */
-export interface Keyframe<T = unknown> {
+export interface Keyframe<T = number | Vector3 | string | boolean> {
   /** Time of the keyframe in seconds. */
-  time: number
+  readonly time: number
   /** Value at this keyframe. */
-  value: T
+  readonly value: T
   /** Easing function to use when interpolating to the next keyframe. */
-  easing?: EasingType
+  readonly easing?: EasingType
 }
 
 /**
@@ -279,25 +304,26 @@ export interface Keyframe<T = unknown> {
  */
 export interface Marker {
   /** Unique ID for the marker. */
-  id: UUID
+  readonly id: UUID
   /** Time of the marker in seconds. */
-  time: number
+  readonly time: number
   /** Label text for the marker. */
-  label: string
+  readonly label: string
   /** Color of the marker (e.g. for categorization). */
-  color: Color
+  readonly color: Color
 }
 
 /**
  * An animation track targeting a specific property of an actor.
+ * @template T The type of value being animated.
  */
-export interface AnimationTrack {
+export interface AnimationTrack<T = number | Vector3 | string | boolean> {
   /** ID of the target actor. */
-  targetId: UUID
+  readonly targetId: UUID
   /** Dot-notation path to the property being animated (e.g., 'transform.position'). */
-  property: string
+  readonly property: string
   /** Array of keyframes for this property. */
-  keyframes: Keyframe[]
+  readonly keyframes: Keyframe<T>[]
 }
 
 /**
@@ -310,15 +336,15 @@ export type TransitionType = 'cut' | 'dissolve' | 'fade'
  */
 export interface CameraCut {
   /** Unique ID for the cut event. */
-  id: UUID
+  readonly id: UUID
   /** Time when the cut occurs (in seconds). */
-  time: number
+  readonly time: number
   /** ID of the camera to switch to. */
-  cameraId: UUID
+  readonly cameraId: UUID
   /** Type of transition to this camera. */
-  transition: TransitionType
+  readonly transition: TransitionType
   /** Duration of the transition in seconds. */
-  transitionDuration: number
+  readonly transitionDuration: number
 }
 
 /**
@@ -326,13 +352,13 @@ export interface CameraCut {
  */
 export interface Timeline {
   /** Total duration of the scene in seconds. */
-  duration: number
+  readonly duration: number
   /** Sequence of camera cuts. */
-  cameraTrack: CameraCut[]
+  readonly cameraTrack: CameraCut[]
   /** Collection of animation tracks for actors. */
-  animationTracks: AnimationTrack[]
+  readonly animationTracks: AnimationTrack[]
   /** List of markers on the timeline. */
-  markers: Marker[]
+  readonly markers?: Marker[]
 }
 
 // ---- Environment ----
@@ -347,9 +373,9 @@ export type WeatherType = 'none' | 'rain' | 'snow' | 'dust'
  */
 export interface Weather {
   /** The type of weather effect. */
-  type: WeatherType
+  readonly type: WeatherType
   /** Intensity of the weather effect (0-1). */
-  intensity: number
+  readonly intensity: number
 }
 
 /**
@@ -357,11 +383,11 @@ export interface Weather {
  */
 export interface Fog {
   /** Fog color. */
-  color: Color
+  readonly color: Color
   /** Distance where fog starts. */
-  near: number
+  readonly near: number
   /** Distance where fog is fully opaque. */
-  far: number
+  readonly far: number
 }
 
 /**
@@ -369,15 +395,15 @@ export interface Fog {
  */
 export interface Environment {
   /** Ambient light settings. */
-  ambientLight: { intensity: number; color: Color }
+  readonly ambientLight: { readonly intensity: number; readonly color: Color }
   /** Sun (directional light) settings. */
-  sun: { position: Vector3; intensity: number; color: Color }
+  readonly sun: { readonly position: Vector3; readonly intensity: number; readonly color: Color }
   /** Background sky color. */
-  skyColor: Color
+  readonly skyColor: Color
   /** Optional fog settings. */
-  fog?: Fog
+  readonly fog?: Fog
   /** Optional weather settings. */
-  weather?: Weather
+  readonly weather?: Weather
 }
 
 // ---- Project ----
@@ -387,13 +413,29 @@ export interface Environment {
  */
 export interface ProjectMeta {
   /** Title of the project. */
-  title: string
+  readonly title: string
   /** Description of the project. */
-  description?: string
+  readonly description?: string
   /** Project version string (semver). */
-  version: string
+  readonly version: string
   /** Author name. */
-  author?: string
+  readonly author?: string
+}
+
+/**
+ * Represents a media clip in the library.
+ */
+export interface Clip {
+  /** Unique ID for the clip. */
+  readonly id: UUID
+  /** Name of the clip. */
+  readonly name: string
+  /** Duration of the clip in seconds. */
+  readonly duration: number
+  /** URL to the clip resource. */
+  readonly url: string
+  /** Type of the clip. */
+  readonly type: 'audio' | 'video' | 'animation'
 }
 
 /**
@@ -401,15 +443,15 @@ export interface ProjectMeta {
  */
 export interface ProjectState {
   /** Project metadata. */
-  meta: ProjectMeta
+  readonly meta: ProjectMeta
   /** Environment settings. */
-  environment: Environment
+  readonly environment: Environment
   /** List of actors in the scene. */
-  actors: Actor[]
+  readonly actors: Actor[]
   /** Animation and camera timeline. */
-  timeline: Timeline
-  /** Asset library (unused currently). */
-  library: { clips: unknown[] }
+  readonly timeline: Timeline
+  /** Asset library. */
+  readonly library: { readonly clips: Clip[] }
 }
 
 /**
@@ -417,9 +459,9 @@ export interface ProjectState {
  */
 export interface ValidationResult {
   /** Whether the validation was successful. */
-  success: boolean
+  readonly success: boolean
   /** List of error messages if validation failed. */
   errors: string[]
   /** The validated project state (if successful). */
-  data?: ProjectState
+  readonly data?: ProjectState
 }

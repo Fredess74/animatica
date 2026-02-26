@@ -7,7 +7,7 @@ import {
     hexToRgb,
     rgbToHex,
 } from './interpolate';
-import type { Keyframe, Vector3 } from '../types';
+import type { Keyframe, Vector3, AnimationTrack } from '../types';
 
 // ---- Helper data ----
 
@@ -176,13 +176,13 @@ describe('Easing integration', () => {
 
 describe('evaluateTracksAtTime', () => {
     it('evaluates multiple tracks at a given time', () => {
-        const tracks = [
+        const tracks: AnimationTrack[] = [
             {
                 targetId: 'actor-1',
                 property: 'transform.position',
                 keyframes: [
-                    { time: 0, value: [0, 0, 0] },
-                    { time: 2, value: [10, 0, 0], easing: 'linear' as const },
+                    { time: 0, value: [0, 0, 0] as Vector3 },
+                    { time: 2, value: [10, 0, 0] as Vector3, easing: 'linear' as const },
                 ],
             },
             {
@@ -197,8 +197,8 @@ describe('evaluateTracksAtTime', () => {
                 targetId: 'actor-2',
                 property: 'transform.rotation',
                 keyframes: [
-                    { time: 0, value: [0, 0, 0] },
-                    { time: 4, value: [0, 6.28, 0], easing: 'linear' as const },
+                    { time: 0, value: [0, 0, 0] as Vector3 },
+                    { time: 4, value: [0, 6.28, 0] as Vector3, easing: 'linear' as const },
                 ],
             },
         ];
