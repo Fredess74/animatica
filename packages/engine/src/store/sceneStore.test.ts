@@ -2,6 +2,9 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { useSceneStore, getActorById, getActiveActors, getCurrentTime } from './sceneStore';
 import { PrimitiveActor } from '../types';
 
+// Mocking useSceneHistory hook usage for non-React environment isn't straightforward without renderHook.
+// However, we can test the underlying store state which useSceneHistory exposes.
+
 describe('sceneStore', () => {
   beforeEach(() => {
     useSceneStore.setState({
@@ -109,18 +112,26 @@ describe('sceneStore', () => {
       expect(useSceneStore.getState().selectedActorId).toBeNull();
   });
 
-  it('should handle undo/redo', () => {
+  it('should handle undo/redo via temporal interface', () => {
       const actor = createActor('1');
       useSceneStore.getState().addActor(actor);
       expect(useSceneStore.getState().actors).toHaveLength(1);
 
+      // Verify history state
+      const temporal = useSceneStore.temporal.getState();
+      expect(temporal.pastStates.length).toBeGreaterThan(0);
+
       // Undo
-      useSceneStore.temporal.getState().undo();
+      temporal.undo();
       expect(useSceneStore.getState().actors).toHaveLength(0);
 
       // Redo
-      useSceneStore.temporal.getState().redo();
+      temporal.redo();
       expect(useSceneStore.getState().actors).toHaveLength(1);
+
+      // Clear
+      temporal.clear();
+      expect(useSceneStore.temporal.getState().pastStates.length).toBe(0);
   });
 
   it('should not undo playback changes', () => {
@@ -149,7 +160,7 @@ describe('sceneStore', () => {
       expect(useSceneStore.getState().playback.currentTime).toBe(20); // Should remain 20
   });
 
-  it('should filter actors by type', () => {
+  it('should filter actors by type (mocking selector logic)', () => {
       const primitive = createActor('1');
       const light: any = { id: '2', type: 'light', visible: true, transform: primitive.transform, properties: { lightType: 'point' } };
 
