@@ -3,93 +3,27 @@ import { immer } from 'zustand/middleware/immer';
 import { persist } from 'zustand/middleware';
 import { temporal } from 'zundo';
 import { useShallow } from 'zustand/react/shallow';
-import { Actor, Environment, Timeline, ProjectState, ProjectMeta } from '../types';
-
-/**
- * Loop modes for playback.
- */
-export type LoopMode = 'none' | 'loop' | 'pingpong';
-
-/**
- * Playback state for the scene.
- */
-export interface PlaybackState {
-  /** Current playback time in seconds. */
-  currentTime: number;
-  /** Whether the scene is currently playing. */
-  isPlaying: boolean;
-  /** Frame rate for playback (e.g., 24, 30, 60). */
-  frameRate: number;
-  /** Playback speed multiplier (default: 1.0). */
-  speed: number;
-  /** Playback direction (1 for forward, -1 for backward). */
-  direction: 1 | -1;
-  /** Current loop mode. */
-  loopMode: LoopMode;
-}
-
-/**
- * State and actions for the scene store.
- */
-export interface SceneStoreState extends ProjectState {
-  // Runtime state
-  playback: PlaybackState;
-  /** The ID of the currently selected actor, or null if none selected. */
-  selectedActorId: string | null;
-
-  // Actions
-  /** Adds a new actor to the scene. */
-  addActor: (actor: Actor) => void;
-  /** Removes an actor from the scene by ID. */
-  removeActor: (actorId: string) => void;
-  /** Updates properties of an existing actor. */
-  updateActor: (actorId: string, updates: Partial<Actor>) => void;
-  /** Updates the scene environment settings. */
-  setEnvironment: (environment: Partial<Environment>) => void;
-  /** Updates the timeline configuration. */
-  setTimeline: (timeline: Partial<Timeline>) => void;
-  /** Updates playback state (play/pause, time, etc.). */
-  setPlayback: (playback: Partial<PlaybackState>) => void;
-  /** Sets the currently selected actor. */
-  setSelectedActor: (id: string | null) => void;
-}
-
-const initialMeta: ProjectMeta = {
-  title: 'Untitled Project',
-  version: '1.0.0',
-};
-
-const initialEnvironment: Environment = {
-  ambientLight: { intensity: 0.5, color: '#ffffff' },
-  sun: { position: [10, 10, 10], intensity: 1, color: '#ffffff' },
-  skyColor: '#87CEEB',
-};
-
-const initialTimeline: Timeline = {
-  duration: 10,
-  cameraTrack: [],
-  animationTracks: [],
-  markers: [],
-};
-
-const initialState: ProjectState & { playback: PlaybackState; selectedActorId: string | null } = {
-  meta: initialMeta,
-  environment: initialEnvironment,
-  actors: [],
-  timeline: initialTimeline,
-  library: { clips: [] },
-  playback: {
-    currentTime: 0,
-    isPlaying: false,
-    frameRate: 24,
-    speed: 1.0,
-    direction: 1,
-    loopMode: 'none',
-  },
-  selectedActorId: null,
-};
 import { Actor } from '../types';
-import { SceneStoreState } from './types';
+import { LoopMode, SceneStoreState } from './types';
+
+export type { LoopMode };
+
+// const initialState: ProjectState & { playback: PlaybackState; selectedActorId: string | null } = {
+//   meta: initialMeta,
+//   environment: initialEnvironment,
+//   actors: [],
+//   timeline: initialTimeline,
+//   library: { clips: [] },
+//   playback: {
+//     currentTime: 0,
+//     isPlaying: false,
+//     frameRate: 24,
+//     speed: 1.0,
+//     direction: 1,
+//     loopMode: 'none',
+//   },
+//   selectedActorId: null,
+// };
 import { createActorsSlice } from './slices/actorsSlice';
 import { createEnvironmentSlice } from './slices/environmentSlice';
 import { createTimelineSlice } from './slices/timelineSlice';
@@ -150,7 +84,7 @@ export const useSceneStore = create<SceneStoreState>()(
 );
 
 // Re-export types
-export type { SceneStoreState, PlaybackState } from './types';
+// export type { SceneStoreState, PlaybackState } from './types';
 
 // Selectors
 
