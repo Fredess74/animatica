@@ -1,4 +1,4 @@
-import { Actor, Environment, Timeline, ProjectMeta } from '../types';
+import { Actor, Environment, Timeline, ProjectMeta, LoopMode } from '../types';
 
 /**
  * Playback state for the scene.
@@ -10,6 +10,12 @@ export interface PlaybackState {
   isPlaying: boolean;
   /** Frame rate for playback (e.g., 24, 30, 60). */
   frameRate: number;
+  /** Playback speed multiplier (default: 1.0). */
+  speed: number;
+  /** Playback direction (1 for forward, -1 for reverse). */
+  direction: 1 | -1;
+  /** Loop mode for the playback. */
+  loopMode: LoopMode;
 }
 
 /**

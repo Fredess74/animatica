@@ -20,6 +20,11 @@ export type Color = string
 export type UUID = string
 
 /**
+ * Playback loop mode.
+ */
+export type LoopMode = 'none' | 'loop' | 'bounce'
+
+/**
  * Represents the transformation properties of an object in 3D space.
  */
 export interface Transform {
