@@ -16,3 +16,6 @@ export { TimelinePanel } from './panels/TimelinePanel';
 // === MODALS ===
 export { ScriptConsole } from './modals/ScriptConsole';
 export { ExportModal } from './modals/ExportModal';
+
+// === COMPONENTS ===
+export * from './components';
