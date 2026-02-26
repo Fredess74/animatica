@@ -1,5 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { useSceneStore } from '@Animatica/engine';
 
 export interface ShortcutHandlers {
   onPlayPause?: () => void;
@@ -44,12 +43,6 @@ export const useKeyboardShortcuts = (handlers: ShortcutHandlers) => {
         // If in input, let browser handle text undo unless we strictly want scene undo
         if (!isInput) {
           event.preventDefault();
-          // Try to perform scene undo
-          try {
-            useSceneStore.temporal.getState().undo();
-          } catch (e) {
-            console.warn('Undo not available', e);
-          }
           currentHandlers.onUndo?.();
         }
         return;

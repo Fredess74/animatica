@@ -7,7 +7,7 @@
  * @module @animatica/editor/layouts/EditorLayout
  */
 import React, { useState, useCallback } from 'react';
-import { useSceneStore } from '@Animatica/engine';
+import { useSceneStore, useSelectedActorId, useIsPlaying } from '@Animatica/engine';
 import { AssetLibrary } from '../panels/AssetLibrary';
 import { PropertiesPanel } from '../panels/PropertiesPanel';
 import { TimelinePanel } from '../panels/TimelinePanel';
@@ -22,21 +22,24 @@ interface EditorLayoutProps {
 }
 
 const EditorContent: React.FC<EditorLayoutProps> = ({ viewport }) => {
-    const [selectedActorId, setSelectedActorId] = useState<string | null>(null);
+    // Use store for selection instead of local state
+    const selectedActorId = useSelectedActorId();
+    const isPlaying = useIsPlaying();
+
+    // Select specific actions to avoid re-rendering on every store change
+    const setSelectedActor = useSceneStore((state) => state.setSelectedActor);
+    const setPlayback = useSceneStore((state) => state.setPlayback);
+    const removeActor = useSceneStore((state) => state.removeActor);
+
     const [showScriptConsole, setShowScriptConsole] = useState(false);
     const [showExportModal, setShowExportModal] = useState(false);
 
     const { showToast } = useToast();
-    const {
-        playback,
-        setPlayback,
-        removeActor
-    } = useSceneStore();
 
     const handlePlayPause = useCallback(() => {
-        setPlayback({ isPlaying: !playback.isPlaying });
-        showToast(playback.isPlaying ? 'Paused' : 'Playing', 'info', 1500);
-    }, [playback.isPlaying, setPlayback, showToast]);
+        setPlayback({ isPlaying: !isPlaying });
+        showToast(isPlaying ? 'Paused' : 'Playing', 'info', 1500);
+    }, [isPlaying, setPlayback, showToast]);
 
     const handleSave = useCallback(() => {
         // In production: save to database or download JSON
@@ -45,16 +48,22 @@ const EditorContent: React.FC<EditorLayoutProps> = ({ viewport }) => {
     }, [showToast]);
 
     const handleUndo = useCallback(() => {
-        showToast('Undo not implemented yet', 'info');
+        try {
+            useSceneStore.temporal.getState().undo();
+            showToast('Undo', 'info', 1000);
+        } catch (error) {
+            console.warn('Undo failed', error);
+            showToast('Nothing to undo', 'info', 1000);
+        }
     }, [showToast]);
 
     const handleDelete = useCallback(() => {
         if (selectedActorId) {
             removeActor(selectedActorId);
-            setSelectedActorId(null);
+            setSelectedActor(null);
             showToast('Actor removed', 'info');
         }
-    }, [selectedActorId, removeActor, showToast]);
+    }, [selectedActorId, removeActor, setSelectedActor, showToast]);
 
     const handleEscape = useCallback(() => {
         if (showScriptConsole) {
@@ -62,10 +71,10 @@ const EditorContent: React.FC<EditorLayoutProps> = ({ viewport }) => {
         } else if (showExportModal) {
             setShowExportModal(false);
         } else if (selectedActorId) {
-            setSelectedActorId(null);
+            setSelectedActor(null);
             showToast('Actor deselected', 'info', 1000);
         }
-    }, [showScriptConsole, showExportModal, selectedActorId, showToast]);
+    }, [showScriptConsole, showExportModal, selectedActorId, setSelectedActor, showToast]);
 
     useKeyboardShortcuts({
         onPlayPause: handlePlayPause,
@@ -106,7 +115,7 @@ const EditorContent: React.FC<EditorLayoutProps> = ({ viewport }) => {
             <div className="editor-main">
                 {/* Left Sidebar — Asset Library */}
                 <aside className="editor-sidebar editor-sidebar--left">
-                    <AssetLibrary onActorCreated={(id) => setSelectedActorId(id)} />
+                    <AssetLibrary onActorCreated={(id) => setSelectedActor(id)} />
                 </aside>
 
                 {/* Center — Viewport */}

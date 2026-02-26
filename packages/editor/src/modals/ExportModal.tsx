@@ -5,6 +5,7 @@
  * @module @animatica/editor/modals/ExportModal
  */
 import React, { useState, useCallback } from 'react';
+import { useSceneStore } from '@Animatica/engine';
 import { useToast } from '../components/ToastContext';
 import { useTranslation } from '../i18n/useTranslation';
 
@@ -24,6 +25,7 @@ const RESOLUTION_MAP: Record<Resolution, { width: number; height: number }> = {
 
 export const ExportModal: React.FC<ExportModalProps> = ({ onClose }) => {
     const { t } = useTranslation();
+    const duration = useSceneStore((state) => state.timeline.duration);
     const [resolution, setResolution] = useState<Resolution>('1080p');
     const [fps, setFps] = useState<FPS>(30);
     const [format, setFormat] = useState<Format>('mp4');
@@ -124,6 +126,12 @@ export const ExportModal: React.FC<ExportModalProps> = ({ onClose }) => {
                         </div>
                     </div>
 
+                    {/* Duration Info */}
+                    <div className="export-field">
+                        <label className="export-field__label">Duration</label>
+                        <span className="export-field__detail">{duration.toFixed(1)}s</span>
+                    </div>
+
                     {/* Progress Bar */}
                     {isExporting && (
                         <div className="export-progress">
@@ -148,7 +156,13 @@ export const ExportModal: React.FC<ExportModalProps> = ({ onClose }) => {
                             <button className="editor-btn editor-btn--ghost" onClick={onClose}>
                                 {t('export.close')}
                             </button>
-                            <button className="editor-btn editor-btn--primary" onClick={handleExport}>
+                            <button
+                                className="editor-btn editor-btn--primary"
+                                onClick={handleExport}
+                                disabled={duration <= 0}
+                                title={duration <= 0 ? "Timeline is empty (0s)" : ""}
+                                style={duration <= 0 ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
+                            >
                                 {t('export.startExport', { format: format.toUpperCase() })}
                             </button>
                         </>

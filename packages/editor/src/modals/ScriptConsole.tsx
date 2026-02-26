@@ -108,6 +108,13 @@ export const ScriptConsole: React.FC<ScriptConsoleProps> = ({ onClose }) => {
         }
     }, [showToast]);
 
+    const handleClear = useCallback(() => {
+        setScript('');
+        setErrors([]);
+        setStatus('idle');
+        showToast('Script cleared', 'info');
+    }, [showToast]);
+
     return (
         <div className="modal-overlay" onClick={onClose}>
             <div className="modal script-console-modal" onClick={(e) => e.stopPropagation()}>
@@ -130,19 +137,34 @@ export const ScriptConsole: React.FC<ScriptConsoleProps> = ({ onClose }) => {
                     />
 
                     {errors.length > 0 && (
-                        <div className="script-console__errors">
+                        <div
+                            className="script-console__errors"
+                            style={{
+                                marginTop: '1rem',
+                                padding: '1rem',
+                                background: 'rgba(239, 68, 68, 0.1)',
+                                border: '1px solid var(--color-error, #EF4444)',
+                                borderRadius: '4px',
+                                maxHeight: '150px',
+                                overflowY: 'auto'
+                            }}
+                        >
+                            <h4 style={{ color: 'var(--color-error, #EF4444)', margin: '0 0 0.5rem 0' }}>Validation Errors:</h4>
                             {errors.map((err, i) => (
-                                <p key={i} className="script-console__error">⚠ {err}</p>
+                                <p key={i} className="script-console__error" style={{ margin: '0.25rem 0' }}>⚠ {err}</p>
                             ))}
                         </div>
                     )}
 
                     {status === 'valid' && (
-                        <p className="script-console__success">✅ Valid JSON</p>
+                        <p className="script-console__success" style={{ color: 'var(--color-success, #22C55E)', marginTop: '1rem' }}>✅ Valid JSON</p>
                     )}
                 </div>
 
                 <div className="modal__footer">
+                     <button className="editor-btn editor-btn--ghost" onClick={handleClear}>
+                        🗑️ Clear
+                    </button>
                     <button className="editor-btn editor-btn--ghost" onClick={handleCopyPrompt}>
                         📋 Copy AI Prompt
                     </button>
