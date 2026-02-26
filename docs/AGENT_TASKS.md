@@ -18,7 +18,6 @@ Focus on completing **Batch 3 (Characters)** and the missing **Batch 4 (Viewport
 - [ROLE: engine-schema-validator] Ensure all Zod schemas in `packages/engine/src/schemas/` match TypeScript interfaces exactly
 - [ROLE: engine-animation-dev] Add missing easing functions (bounce, elastic, back) to `packages/engine/src/animation/easing.ts`
 - [ROLE: engine-test-writer] Write tests for PlaybackController
-- [ROLE: engine-api-docs] Add JSDoc comments to all exported functions in `packages/engine/src/index.ts`
 - [ROLE: character-dev] Implement `packages/engine/src/characters/BoneController.ts` (Map body pose to bone rotations)
 - [ROLE: character-dev] Implement `packages/engine/src/characters/MorphTargets.ts` (Apply facial expressions to mesh)
 - [ROLE: character-dev] Implement `packages/engine/src/characters/ClothingSystem.ts` (Procedural clothing attachment)
@@ -38,7 +37,6 @@ Focus on completing **Batch 3 (Characters)** and the missing **Batch 4 (Viewport
 ## Engine Tasks
 
 - [ROLE: engine-test-writer] Write tests for `PlaybackController.ts` in `packages/engine/src/playback/`
-- [ROLE: engine-api-docs] Add JSDoc comments to all exported functions in `packages/engine/src/index.ts`
 - [ROLE: engine-animation-dev] Add missing easing functions (bounce, elastic, back) to `packages/engine/src/animation/easing.ts`
 
 ## Web App Tasks
@@ -65,7 +63,6 @@ Focus on completing **Batch 3 (Characters)** and the missing **Batch 4 (Viewport
 
 ## Documentation Tasks
 
-- [ROLE: api-docs-writer] Generate API reference from JSDoc comments
 - [ROLE: changelog-writer] Update CHANGELOG.md with recent changes
 - [ROLE: progress-reporter] Update PROGRESS.md and create daily report in `reports/daily/`
 - [ROLE: architecture-diagrammer] Update ARCHITECTURE.md with new components

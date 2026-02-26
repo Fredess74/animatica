@@ -6,7 +6,8 @@
  * @module @animatica/engine/playback/PlaybackController
  */
 import { useCallback, useEffect, useRef } from 'react';
-import { useSceneStore, type LoopMode } from '../store/sceneStore';
+import { useSceneStore } from '../store/sceneStore';
+import type { LoopMode } from '../store/types';
 
 /**
  * Return type of the usePlayback hook.
@@ -47,14 +48,6 @@ export function usePlayback(): PlaybackControls {
 
     // Subscribe to playback state changes
     const isPlaying = useSceneStore((s) => s.playback.isPlaying);
-    // Sync refs with props
-    useEffect(() => {
-        loopRef.current = loop;
-    }, [loop]);
-
-    useEffect(() => {
-        speedRef.current = speed;
-    }, [speed]);
 
     /**
      * The core animation frame callback.
@@ -208,14 +201,25 @@ export function usePlayback(): PlaybackControls {
         }
     }, [play, pause]);
 
+    /**
+     * Sets the playback speed multiplier.
+     * @param speed Speed multiplier (clamped between 0.1 and 10).
+     */
     const setSpeed = useCallback((speed: number) => {
          useSceneStore.getState().setPlayback({ speed: Math.max(0.1, Math.min(speed, 10)) });
     }, []);
 
+    /**
+     * Sets the loop mode for playback.
+     * @param mode 'none', 'loop', or 'pingpong'.
+     */
     const setLoopMode = useCallback((mode: LoopMode) => {
         useSceneStore.getState().setPlayback({ loopMode: mode });
     }, []);
 
+    /**
+     * Advances playback by one frame based on the current frame rate.
+     */
     const nextFrame = useCallback(() => {
          const state = useSceneStore.getState();
          const { frameRate, currentTime } = state.playback;
@@ -225,6 +229,9 @@ export function usePlayback(): PlaybackControls {
          state.setPlayback({ currentTime: newTime, isPlaying: false });
     }, []);
 
+    /**
+     * Rewinds playback by one frame based on the current frame rate.
+     */
     const prevFrame = useCallback(() => {
          const state = useSceneStore.getState();
          const { frameRate, currentTime } = state.playback;

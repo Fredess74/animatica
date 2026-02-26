@@ -1,11 +1,20 @@
 /// <reference types="vite/client" />
 import React, { createContext, useContext, ReactNode, useMemo } from 'react';
 
+/**
+ * Feature flag configuration.
+ * Controls which features are enabled/disabled based on environment.
+ */
 export interface FeatureFlags {
+  /** Enable character rendering and manipulation. */
   characters: boolean;
+  /** Enable video export functionality. */
   export: boolean;
+  /** Enable AI prompt generation. */
   aiPrompts: boolean;
+  /** Enable multiplayer collaboration (future). */
   multiplayer: boolean;
+  /** Enable cloud synchronization (future). */
   cloudSync: boolean;
 }
 
@@ -33,6 +42,14 @@ const getRawEnv = (key: string, env: Record<string, string | boolean | undefined
   return undefined;
 };
 
+/**
+ * Retrieves the current feature flags based on the environment.
+ * Can be overridden via VITE_FEATURE_FLAG_* environment variables.
+ *
+ * @param envMode Current environment mode (e.g. 'development', 'production').
+ * @param env Environment variables object.
+ * @returns The resolved FeatureFlags object.
+ */
 export const getFeatureFlags = (
   envMode: string = import.meta.env.MODE,
   env: Record<string, string | boolean | undefined> = import.meta.env as unknown as Record<string, string | boolean | undefined>
@@ -68,9 +85,14 @@ const FeatureFlagContext = createContext<FeatureFlags>(getFeatureFlags());
 
 export interface FeatureFlagProviderProps {
   children: ReactNode;
+  /** Optional overrides for initial flags. */
   initialFlags?: Partial<FeatureFlags>;
 }
 
+/**
+ * Context provider for feature flags.
+ * Wraps the application to make feature flags available via `useFeatureFlag`.
+ */
 export const FeatureFlagProvider: React.FC<FeatureFlagProviderProps> = ({ children, initialFlags }) => {
   const flags = useMemo(() => {
     // Re-calculate based on current environment (defaults) but allowing overrides
@@ -86,6 +108,11 @@ export const FeatureFlagProvider: React.FC<FeatureFlagProviderProps> = ({ childr
   );
 };
 
+/**
+ * Hook to check if a specific feature is enabled.
+ * @param key The feature key to check.
+ * @returns True if the feature is enabled.
+ */
 export const useFeatureFlag = (key: keyof FeatureFlags): boolean => {
   const flags = useContext(FeatureFlagContext);
   return flags[key];

@@ -1,5 +1,8 @@
-// @Animatica/engine — Public API
-// Re-exports all public types, components, schemas, and utilities.
+/**
+ * @module @animatica/engine
+ * @description The core engine package for the Animatica animation platform.
+ * Provides the scene graph, animation system, renderer components, and state management.
+ */
 
 // === TYPES ===
 export * from './types/index'
