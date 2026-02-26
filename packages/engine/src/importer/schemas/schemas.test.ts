@@ -14,6 +14,7 @@ import {
     EnvironmentSchema,
     ProjectStateSchema,
     ProjectMetaSchema,
+    MarkerSchema,
 } from './index';
 
 // ---- Valid test data ----
@@ -82,6 +83,13 @@ const validSpeaker = {
     transform: validTransform,
     visible: true,
     properties: { volume: 0.8, loop: true, spatial: false },
+};
+
+const validMarker = {
+    id: 'marker-1',
+    time: 5,
+    label: 'Scene Start',
+    color: '#00ff00',
 };
 
 // ---- Tests ----
@@ -174,14 +182,34 @@ describe('Scene Schemas', () => {
                 },
             ],
             animationTracks: [],
+            markers: [],
+        };
+        expect(TimelineSchema.safeParse(timeline).success).toBe(true);
+    });
+
+    it('validates Timeline with markers', () => {
+        const timeline = {
+            duration: 30,
+            cameraTrack: [],
+            animationTracks: [],
+            markers: [validMarker],
         };
         expect(TimelineSchema.safeParse(timeline).success).toBe(true);
     });
 
     it('rejects zero-duration timeline', () => {
         expect(
-            TimelineSchema.safeParse({ duration: 0, cameraTrack: [], animationTracks: [] }).success,
+            TimelineSchema.safeParse({ duration: 0, cameraTrack: [], animationTracks: [], markers: [] }).success,
         ).toBe(false);
+    });
+
+    it('validates Marker', () => {
+        expect(MarkerSchema.safeParse(validMarker).success).toBe(true);
+    });
+
+    it('rejects invalid Marker', () => {
+        const invalidMarker = { ...validMarker, color: 'invalid-color' };
+        expect(MarkerSchema.safeParse(invalidMarker).success).toBe(false);
     });
 
     it('validates Environment', () => {
@@ -208,7 +236,7 @@ describe('Scene Schemas', () => {
                 skyColor: '#87ceeb',
             },
             actors: [validCamera, validPrimitive],
-            timeline: { duration: 10, cameraTrack: [], animationTracks: [] },
+            timeline: { duration: 10, cameraTrack: [], animationTracks: [], markers: [validMarker] },
             library: { clips: [] },
         };
         expect(ProjectStateSchema.safeParse(project).success).toBe(true);
