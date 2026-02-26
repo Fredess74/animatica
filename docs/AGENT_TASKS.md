@@ -14,7 +14,6 @@ Focus on completing **Batch 3 (Characters)** and the missing **Batch 4 (Viewport
 
 ## High Priority: Core Features
 
-- [ROLE: engine-type-hardener] Review all type definitions in `packages/engine/src/types/index.ts`, remove any `any` usage, add missing interfaces
 - [ROLE: engine-schema-validator] Ensure all Zod schemas in `packages/engine/src/schemas/` match TypeScript interfaces exactly
 - [ROLE: engine-animation-dev] Add missing easing functions (bounce, elastic, back) to `packages/engine/src/animation/easing.ts`
 - [ROLE: engine-test-writer] Write tests for PlaybackController
