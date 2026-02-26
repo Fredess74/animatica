@@ -8,26 +8,14 @@ import { z } from 'zod';
 
 // ---- Primitives ----
 
-/**
- * Zod schema for a 3D vector [x, y, z].
- */
 export const Vector3Schema = z.tuple([z.number(), z.number(), z.number()]);
 
-/**
- * Zod schema for a hex color string.
- */
 export const ColorSchema = z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Must be a hex color like #ff00aa');
 
-/**
- * Zod schema for a UUID v4 string.
- */
 export const UUIDSchema = z.string().min(1, 'UUID cannot be empty');
 
 // ---- Transform ----
 
-/**
- * Zod schema for Transform properties (position, rotation, scale).
- */
 export const TransformSchema = z.object({
     position: Vector3Schema,
     rotation: Vector3Schema,
@@ -36,9 +24,6 @@ export const TransformSchema = z.object({
 
 // ---- Base Actor ----
 
-/**
- * Zod schema for common properties shared by all actors.
- */
 export const BaseActorSchema = z.object({
     id: UUIDSchema,
     name: z.string().min(1),
@@ -50,16 +35,10 @@ export const BaseActorSchema = z.object({
 
 // ---- Character ----
 
-/**
- * Zod schema for character animation states.
- */
 export const AnimationStateSchema = z.enum([
     'idle', 'walk', 'run', 'wave', 'talk', 'dance', 'sit', 'jump',
 ]);
 
-/**
- * Zod schema for morph target influences (0-1).
- */
 export const MorphTargetsSchema = z.object({
     mouthSmile: z.number().min(0).max(1).optional(),
     mouthOpen: z.number().min(0).max(1).optional(),
@@ -73,9 +52,6 @@ export const MorphTargetsSchema = z.object({
     noseSneerRight: z.number().min(0).max(1).optional(),
 });
 
-/**
- * Zod schema for body pose configuration.
- */
 export const BodyPoseSchema = z.object({
     head: Vector3Schema.optional(),
     spine: Vector3Schema.optional(),
@@ -85,18 +61,12 @@ export const BodyPoseSchema = z.object({
     rightLeg: Vector3Schema.optional(),
 });
 
-/**
- * Zod schema for a clothing item.
- */
 export const ClothingItemSchema = z.object({
     type: z.string(),
     color: ColorSchema,
     visible: z.boolean(),
 });
 
-/**
- * Zod schema for clothing slots.
- */
 export const ClothingSlotsSchema = z.object({
     head: z.array(ClothingItemSchema).optional(),
     torso: z.array(ClothingItemSchema).optional(),
@@ -104,9 +74,6 @@ export const ClothingSlotsSchema = z.object({
     legs: z.array(ClothingItemSchema).optional(),
 });
 
-/**
- * Zod schema for a CharacterActor.
- */
 export const CharacterActorSchema = BaseActorSchema.extend({
     type: z.literal('character'),
     animation: AnimationStateSchema,
@@ -118,16 +85,10 @@ export const CharacterActorSchema = BaseActorSchema.extend({
 
 // ---- Primitive ----
 
-/**
- * Zod schema for supported primitive shapes.
- */
 export const PrimitiveShapeSchema = z.enum([
     'box', 'sphere', 'cylinder', 'plane', 'cone', 'torus', 'capsule',
 ]);
 
-/**
- * Zod schema for a PrimitiveActor.
- */
 export const PrimitiveActorSchema = BaseActorSchema.extend({
     type: z.literal('primitive'),
     properties: z.object({
@@ -142,14 +103,8 @@ export const PrimitiveActorSchema = BaseActorSchema.extend({
 
 // ---- Light ----
 
-/**
- * Zod schema for light types.
- */
 export const LightTypeSchema = z.enum(['point', 'spot', 'directional']);
 
-/**
- * Zod schema for a LightActor.
- */
 export const LightActorSchema = BaseActorSchema.extend({
     type: z.literal('light'),
     properties: z.object({
@@ -162,9 +117,6 @@ export const LightActorSchema = BaseActorSchema.extend({
 
 // ---- Camera ----
 
-/**
- * Zod schema for a CameraActor.
- */
 export const CameraActorSchema = BaseActorSchema.extend({
     type: z.literal('camera'),
     properties: z.object({
@@ -176,9 +128,6 @@ export const CameraActorSchema = BaseActorSchema.extend({
 
 // ---- Speaker ----
 
-/**
- * Zod schema for a SpeakerActor.
- */
 export const SpeakerActorSchema = BaseActorSchema.extend({
     type: z.literal('speaker'),
     properties: z.object({
@@ -191,9 +140,6 @@ export const SpeakerActorSchema = BaseActorSchema.extend({
 
 // ---- Union ----
 
-/**
- * Discriminated union schema for any Actor type.
- */
 export const ActorSchema = z.discriminatedUnion('type', [
     CharacterActorSchema,
     PrimitiveActorSchema,

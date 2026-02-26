@@ -1,17 +1,9 @@
-/**
- * Renders primitive shapes like Box, Sphere, Cylinder, etc.
- *
- * @module @animatica/engine/scene
- */
 import React, { useRef } from 'react'
 import * as THREE from 'three'
 import { ThreeEvent } from '@react-three/fiber'
 import { Edges } from '@react-three/drei'
 import { PrimitiveActor } from '../../types'
 
-/**
- * Props for the PrimitiveRenderer component.
- */
 interface PrimitiveRendererProps {
   /** The actor data containing transform, visibility, and properties. */
   actor: PrimitiveActor
@@ -26,7 +18,6 @@ interface PrimitiveRendererProps {
  * Handles selection highlighting with an edges geometry.
  *
  * @component
- * @param props {@link PrimitiveRendererProps}
  * @example
  * ```tsx
  * <PrimitiveRenderer actor={myBoxActor} isSelected={true} />

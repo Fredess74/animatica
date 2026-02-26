@@ -1,17 +1,9 @@
-/**
- * Renders humanoid characters (currently placeholder capsule).
- *
- * @module @animatica/engine/scene
- */
 import { forwardRef } from 'react'
 import * as THREE from 'three'
 import { ThreeEvent } from '@react-three/fiber'
 import { Edges } from '@react-three/drei'
 import { CharacterActor } from '../../types'
 
-/**
- * Props for the CharacterRenderer component.
- */
 interface CharacterRendererProps {
   /** The actor data containing transform, visibility, and properties. */
   actor: CharacterActor
@@ -27,7 +19,6 @@ interface CharacterRendererProps {
  * Handles selection highlighting with an edges geometry.
  *
  * @component
- * @param props {@link CharacterRendererProps}
  * @example
  * ```tsx
  * <CharacterRenderer actor={myCharacterActor} isSelected={true} />

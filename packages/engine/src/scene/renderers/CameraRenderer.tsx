@@ -1,16 +1,8 @@
-/**
- * Renders a perspective camera.
- *
- * @module @animatica/engine/scene
- */
 import React, { useRef } from 'react'
 import * as THREE from 'three'
 import { PerspectiveCamera, useHelper } from '@react-three/drei'
 import { CameraActor } from '../../types'
 
-/**
- * Props for the CameraRenderer component.
- */
 interface CameraRendererProps {
   /** The camera actor data containing transform, visibility, and properties. */
   actor: CameraActor
@@ -25,7 +17,6 @@ interface CameraRendererProps {
  * Can serve as the active viewport or as a visible object in the scene (with helper).
  *
  * @component
- * @param props {@link CameraRendererProps}
  * @example
  * ```tsx
  * <CameraRenderer actor={myCameraActor} isActive={true} />

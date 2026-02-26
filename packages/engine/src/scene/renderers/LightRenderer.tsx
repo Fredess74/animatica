@@ -1,16 +1,8 @@
-/**
- * Renders light sources (Point, Spot, Directional).
- *
- * @module @animatica/engine/scene
- */
 import React, { useRef, useMemo } from 'react'
 import * as THREE from 'three'
 import { useHelper } from '@react-three/drei'
 import { LightActor } from '../../types'
 
-/**
- * Props for the LightRenderer component.
- */
 interface LightRendererProps {
   /** The light actor data containing transform, visibility, and properties. */
   actor: LightActor
@@ -23,7 +15,6 @@ interface LightRendererProps {
  * Handles target positioning for directional and spot lights.
  *
  * @component
- * @param props {@link LightRendererProps}
  * @example
  * ```tsx
  * <LightRenderer actor={myLightActor} showHelper={true} />

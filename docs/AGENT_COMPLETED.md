@@ -11,4 +11,3 @@
 <!-- Agents append completed tasks below this line -->
 - [DONE] [engine-scene-dev] [2026-02-23] Add CharacterRenderer placeholder to packages/engine/src/scene/renderers/
 - [DONE] [editor-style-polisher] [2026-02-23] Add CSS for editor components (panels, timeline, modals) matching design-tokens.css
-- [DONE] [engine-api-docs] [2026-02-23] Add JSDoc comments to all exported functions in packages/engine/src/index.ts

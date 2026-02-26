@@ -4,7 +4,7 @@
  *
  * Supports: number, Vector3 ([x,y,z]), Color (hex string), boolean (step).
  *
- * @module @animatica/engine/animation
+ * @module @animatica/engine/animation/interpolate
  */
 import type { Keyframe, EasingType, Vector3 } from '../types';
 import * as Easing from './easing';
@@ -148,14 +148,6 @@ function interpolateValue(a: unknown, b: unknown, t: number): unknown {
  * @param keyframes Array of keyframes (will be sorted by time).
  * @param time Target time in seconds.
  * @returns Interpolated value or undefined if no keyframes.
- *
- * @example
- * ```ts
- * const value = interpolateKeyframes(
- *   [{ time: 0, value: 0 }, { time: 1, value: 100, easing: 'easeOut' }],
- *   0.5
- * );
- * ```
  */
 export function interpolateKeyframes<T = unknown>(
     keyframes: Keyframe<T>[],
