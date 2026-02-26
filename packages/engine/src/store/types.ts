@@ -1,5 +1,7 @@
 import { Actor, Environment, Timeline, ProjectMeta } from '../types';
 
+export type LoopMode = 'none' | 'loop' | 'pingpong';
+
 /**
  * Playback state for the scene.
  */
@@ -10,6 +12,12 @@ export interface PlaybackState {
   isPlaying: boolean;
   /** Frame rate for playback (e.g., 24, 30, 60). */
   frameRate: number;
+  /** Playback speed multiplier (0.1 - 10.0). */
+  speed: number;
+  /** Playback direction (1 for forward, -1 for backward). */
+  direction: 1 | -1;
+  /** Loop behavior. */
+  loopMode: LoopMode;
 }
 
 /**
