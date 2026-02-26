@@ -10,6 +10,12 @@ export interface PlaybackState {
   isPlaying: boolean;
   /** Frame rate for playback (e.g., 24, 30, 60). */
   frameRate: number;
+  /** Playback speed multiplier (1.0 = normal). */
+  speed: number;
+  /** Playback direction (1 = forward, -1 = reverse). */
+  direction: 1 | -1;
+  /** Loop mode. */
+  loopMode: 'none' | 'loop' | 'pingpong';
 }
 
 /**
