@@ -7,13 +7,13 @@ describe('sceneStore', () => {
     useSceneStore.setState({
       actors: [],
       selectedActorId: null,
-      timeline: { duration: 10, cameraTrack: [], animationTracks: [] },
+      timeline: { duration: 10, cameraTrack: [], animationTracks: [], markers: [] },
       environment: {
           ambientLight: { intensity: 0.5, color: '#ffffff' },
           sun: { position: [10, 10, 10], intensity: 1, color: '#ffffff' },
           skyColor: '#87CEEB',
       },
-      playback: { currentTime: 0, isPlaying: false, frameRate: 24 },
+      playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, direction: 1, loopMode: 'none' },
     });
 
     // Clear undo history

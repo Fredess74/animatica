@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, memo } from 'react'
 import * as THREE from 'three'
 import { PerspectiveCamera, useHelper } from '@react-three/drei'
 import { CameraActor } from '../../types'
@@ -22,7 +22,7 @@ interface CameraRendererProps {
  * <CameraRenderer actor={myCameraActor} isActive={true} />
  * ```
  */
-export const CameraRenderer: React.FC<CameraRendererProps> = ({
+export const CameraRenderer: React.FC<CameraRendererProps> = memo(({
   actor,
   isActive = false,
   showHelper = true,
@@ -52,4 +52,6 @@ export const CameraRenderer: React.FC<CameraRendererProps> = ({
       far={far}
     />
   )
-}
+})
+
+CameraRenderer.displayName = 'CameraRenderer'

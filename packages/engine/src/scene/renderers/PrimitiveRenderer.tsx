@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, memo } from 'react'
 import * as THREE from 'three'
 import { ThreeEvent } from '@react-three/fiber'
 import { Edges } from '@react-three/drei'
@@ -23,7 +23,7 @@ interface PrimitiveRendererProps {
  * <PrimitiveRenderer actor={myBoxActor} isSelected={true} />
  * ```
  */
-export const PrimitiveRenderer: React.FC<PrimitiveRendererProps> = ({
+export const PrimitiveRenderer: React.FC<PrimitiveRendererProps> = memo(({
   actor,
   isSelected = false,
   onClick,
@@ -79,4 +79,6 @@ export const PrimitiveRenderer: React.FC<PrimitiveRendererProps> = ({
       {isSelected && <Edges color="yellow" threshold={15} />}
     </mesh>
   )
-}
+})
+
+PrimitiveRenderer.displayName = 'PrimitiveRenderer'
