@@ -261,4 +261,64 @@ describe('usePlayback', () => {
         // 10 - 0.1 = 9.9
         expect(useSceneStore.getState().playback.currentTime).toBeCloseTo(9.9);
     });
+
+    it('should navigate to next marker', () => {
+        const { result } = renderHook(() => usePlayback());
+        useSceneStore.setState((s) => {
+            s.timeline.markers = [
+                { id: '1', time: 2, label: 'A', color: 'red' },
+                { id: '2', time: 5, label: 'B', color: 'blue' },
+            ];
+            s.playback.currentTime = 1;
+        });
+
+        act(() => {
+            result.current.nextMarker();
+        });
+
+        expect(useSceneStore.getState().playback.currentTime).toBe(2);
+
+        act(() => {
+            result.current.nextMarker();
+        });
+
+        expect(useSceneStore.getState().playback.currentTime).toBe(5);
+
+        act(() => {
+            result.current.nextMarker();
+        });
+
+        // Should go to end of duration (10) if no more markers
+        expect(useSceneStore.getState().playback.currentTime).toBe(10);
+    });
+
+    it('should navigate to previous marker', () => {
+        const { result } = renderHook(() => usePlayback());
+        useSceneStore.setState((s) => {
+            s.timeline.markers = [
+                { id: '1', time: 2, label: 'A', color: 'red' },
+                { id: '2', time: 5, label: 'B', color: 'blue' },
+            ];
+            s.playback.currentTime = 6;
+        });
+
+        act(() => {
+            result.current.prevMarker();
+        });
+
+        expect(useSceneStore.getState().playback.currentTime).toBe(5);
+
+        act(() => {
+            result.current.prevMarker();
+        });
+
+        expect(useSceneStore.getState().playback.currentTime).toBe(2);
+
+        act(() => {
+            result.current.prevMarker();
+        });
+
+        // Should go to 0 if no more markers
+        expect(useSceneStore.getState().playback.currentTime).toBe(0);
+    });
 });
