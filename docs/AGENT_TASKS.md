@@ -26,6 +26,9 @@ Focus on completing **Batch 3 (Characters)** and the missing **Batch 4 (Viewport
 
 - [ROLE: web-integrator] Update `apps/web/app/create/page.tsx` to mount `EditorLayout` and verify full app assembly
 
+- [ROLE: editor-layout-dev] Add responsive breakpoints to EditorLayout for tablet/mobile
+- [ROLE: editor-components-dev] Create shared Button, Input, Select components using design tokens
+- [ROLE: editor-timeline-dev] Wire TimelinePanel to usePlayback hook, add real keyframe rendering
 ## Engine Tasks
 
 - [ROLE: engine-test-writer] Write tests for `PlaybackController.ts` in `packages/engine/src/playback/`

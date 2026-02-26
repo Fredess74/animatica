@@ -9,6 +9,7 @@
 ## Completed Log
 
 <!-- Agents append completed tasks below this line -->
+- [DONE] [editor-viewport-dev] [2026-02-24] Create Viewport component with R3F Canvas + OrbitControls + SceneManager
 - [DONE] [web-api-dev] [2026-02-25] Create API routes for project CRUD operations
 - [DONE] [engine-scene-dev] [2026-02-23] Add SpeakerRenderer and SceneManager tests
 - [DONE] [feature-flag-manager] [2026-02-23] Create feature flag system in packages/engine/src/config/featureFlags.ts
