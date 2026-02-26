@@ -56,7 +56,6 @@
 ## Documentation Tasks
 
 - [ROLE: api-docs-writer] Generate API reference from JSDoc comments
-- [ROLE: readme-updater] Update README.md with current features, quick start guide
 - [ROLE: changelog-writer] Update CHANGELOG.md with recent changes
 - [ROLE: progress-reporter] Update PROGRESS.md and create daily report in `reports/daily/`
 - [ROLE: architecture-diagrammer] Update ARCHITECTURE.md with new components
