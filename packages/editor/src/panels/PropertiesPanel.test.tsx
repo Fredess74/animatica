@@ -2,7 +2,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, cleanup, fireEvent, act } from '@testing-library/react';
 import { PropertiesPanel } from './PropertiesPanel';
-import { useSceneStore, PrimitiveActor } from '@Animatica/engine';
+import { useSceneStore, PrimitiveActor, SpeakerActor } from '@Animatica/engine';
 
 // Mock timer functions
 vi.useFakeTimers();
@@ -12,6 +12,10 @@ afterEach(() => {
     vi.clearAllTimers();
     // Reset store
     useSceneStore.setState({ actors: [], selectedActorId: null });
+    // Clear history if possible (zundo specific)
+    if (useSceneStore.temporal) {
+        useSceneStore.temporal.getState().clear();
+    }
 });
 
 describe('PropertiesPanel', () => {
@@ -27,6 +31,9 @@ describe('PropertiesPanel', () => {
 
     beforeEach(() => {
         useSceneStore.setState(initialStoreState);
+        if (useSceneStore.temporal) {
+            useSceneStore.temporal.getState().clear();
+        }
     });
 
     const createPrimitive = (id: string): PrimitiveActor => ({
@@ -36,6 +43,15 @@ describe('PropertiesPanel', () => {
         visible: true,
         transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
         properties: { shape: 'box', color: '#ff0000', roughness: 0.5, metalness: 0, opacity: 1, wireframe: false }
+    });
+
+    const createSpeaker = (id: string): SpeakerActor => ({
+        id,
+        name: 'Test Speaker',
+        type: 'speaker',
+        visible: true,
+        transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
+        properties: { audioUrl: 'test.mp3', volume: 0.5, loop: false, spatial: true }
     });
 
     it('renders empty state when no actor is selected', () => {
@@ -121,5 +137,67 @@ describe('PropertiesPanel', () => {
 
         const updatedActor = useSceneStore.getState().actors[0] as PrimitiveActor;
         expect(updatedActor.properties.shape).toBe('sphere');
+    });
+
+    it('renders properties for speaker actor', () => {
+        const actor = createSpeaker('speaker_1');
+        useSceneStore.getState().addActor(actor);
+        render(<PropertiesPanel selectedActorId="speaker_1" />);
+
+        expect(screen.getByText('Speaker Settings')).toBeTruthy();
+        expect(screen.getByDisplayValue('test.mp3')).toBeTruthy();
+        expect(screen.getByText('Volume')).toBeTruthy();
+        expect(screen.getByText('Loop')).toBeTruthy();
+        expect(screen.getByText('Spatial Audio')).toBeTruthy();
+    });
+
+    it('updates speaker url with debounce', async () => {
+        const actor = createSpeaker('speaker_1');
+        useSceneStore.getState().addActor(actor);
+        render(<PropertiesPanel selectedActorId="speaker_1" />);
+
+        const urlInput = screen.getByDisplayValue('test.mp3');
+        fireEvent.change(urlInput, { target: { value: 'new.mp3' } });
+
+        act(() => {
+            vi.advanceTimersByTime(350);
+        });
+
+        const updatedActor = useSceneStore.getState().actors[0] as SpeakerActor;
+        expect(updatedActor.properties.audioUrl).toBe('new.mp3');
+    });
+
+    it('undo/redo works via buttons', async () => {
+        const actor = createPrimitive('actor_1');
+        useSceneStore.getState().addActor(actor);
+        // Clear history after adding initial actor so undo doesn't remove it (unless that's desired)
+        // Usually adding actor creates a history entry.
+        // Let's ensure we are testing property change undo.
+
+        render(<PropertiesPanel selectedActorId="actor_1" />);
+
+        // Wait for potential initial render effects
+        act(() => { vi.advanceTimersByTime(100); });
+
+        const nameInput = screen.getByDisplayValue('Test Box');
+        fireEvent.change(nameInput, { target: { value: 'New Name' } });
+
+        act(() => { vi.advanceTimersByTime(350); });
+
+        expect(useSceneStore.getState().actors[0].name).toBe('New Name');
+
+        // Click Undo
+        const undoBtn = screen.getByTitle(/Undo/i);
+        fireEvent.click(undoBtn);
+
+        // Should revert to Test Box
+        expect(useSceneStore.getState().actors[0].name).toBe('Test Box');
+
+        // Click Redo
+        const redoBtn = screen.getByTitle(/Redo/i);
+        fireEvent.click(redoBtn);
+
+        // Should return to New Name
+        expect(useSceneStore.getState().actors[0].name).toBe('New Name');
     });
 });

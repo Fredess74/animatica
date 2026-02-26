@@ -5,7 +5,7 @@
  * @module @animatica/editor/panels/PropertiesPanel
  */
 import React, { useCallback, useRef, useState, useEffect } from 'react';
-import { useSceneStore, Actor, PrimitiveActor, LightActor, CameraActor, CharacterActor } from '@Animatica/engine';
+import { useSceneStore, Actor, PrimitiveActor, LightActor, CameraActor, CharacterActor, SpeakerActor } from '@Animatica/engine';
 
 interface PropertiesPanelProps {
     selectedActorId: string | null;
@@ -247,10 +247,44 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorI
         }
     }, [selectedActorId]);
 
+    // Undo/Redo keyboard shortcuts
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            // Check for Ctrl+Z or Cmd+Z
+            if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+                e.preventDefault();
+                if (e.shiftKey) {
+                    // Redo: Ctrl+Shift+Z
+                    useSceneStore.temporal.getState().redo();
+                } else {
+                    // Undo: Ctrl+Z
+                    useSceneStore.temporal.getState().undo();
+                }
+            }
+            // Check for Ctrl+Y or Cmd+Y (Redo)
+            if ((e.ctrlKey || e.metaKey) && e.key === 'y') {
+                e.preventDefault();
+                useSceneStore.temporal.getState().redo();
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, []);
+
+    const handleUndo = () => useSceneStore.temporal.getState().undo();
+    const handleRedo = () => useSceneStore.temporal.getState().redo();
+
     if (!selectedActorId || !actor) {
         return (
             <div className="panel properties-panel">
-                <h3 className="panel__title">Properties</h3>
+                <div className="panel__header">
+                    <h3 className="panel__title">Properties</h3>
+                    <div className="panel__actions">
+                        <button className="panel__action-btn" onClick={handleUndo} title="Undo (Ctrl+Z)">↩</button>
+                        <button className="panel__action-btn" onClick={handleRedo} title="Redo (Ctrl+Shift+Z)">↪</button>
+                    </div>
+                </div>
                 <div className="retro-stripe retro-stripe--thin" />
                 <div className="panel__empty">
                     <span className="panel__empty-icon">🎯</span>
@@ -269,7 +303,13 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorI
 
     return (
         <div className="panel properties-panel">
-            <h3 className="panel__title">Properties</h3>
+            <div className="panel__header">
+                <h3 className="panel__title">Properties</h3>
+                <div className="panel__actions">
+                    <button className="panel__action-btn" onClick={handleUndo} title="Undo (Ctrl+Z)">↩</button>
+                    <button className="panel__action-btn" onClick={handleRedo} title="Redo (Ctrl+Shift+Z)">↪</button>
+                </div>
+            </div>
             <div className="retro-stripe retro-stripe--thin" />
 
             <div className="prop-section">
@@ -493,6 +533,53 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorI
                         step={0.1}
                         onChange={(speed) => handleUpdate({ animationSpeed: speed })}
                     />
+                </div>
+            )}
+
+            {actor.type === 'speaker' && (
+                <div className="prop-section">
+                    <h4 className="prop-section__title">Speaker Settings</h4>
+                    <TextInput
+                        label="Audio URL"
+                        value={(actor as SpeakerActor).properties.audioUrl || ''}
+                        onChange={(url) => handleUpdate({
+                            properties: { ...(actor as SpeakerActor).properties, audioUrl: url }
+                        })}
+                    />
+                    <SliderInput
+                        label="Volume"
+                        value={(actor as SpeakerActor).properties.volume}
+                        min={0}
+                        max={1}
+                        step={0.01}
+                        onChange={(volume) => handleUpdate({
+                            properties: { ...(actor as SpeakerActor).properties, volume }
+                        })}
+                    />
+                    <div className="prop-field prop-field--checkbox">
+                        <label className="prop-field__label">
+                            <input
+                                type="checkbox"
+                                checked={(actor as SpeakerActor).properties.loop}
+                                onChange={(e) => handleUpdate({
+                                    properties: { ...(actor as SpeakerActor).properties, loop: e.target.checked }
+                                })}
+                            />
+                            Loop
+                        </label>
+                    </div>
+                    <div className="prop-field prop-field--checkbox">
+                        <label className="prop-field__label">
+                            <input
+                                type="checkbox"
+                                checked={(actor as SpeakerActor).properties.spatial}
+                                onChange={(e) => handleUpdate({
+                                    properties: { ...(actor as SpeakerActor).properties, spatial: e.target.checked }
+                                })}
+                            />
+                            Spatial Audio
+                        </label>
+                    </div>
                 </div>
             )}
         </div>
