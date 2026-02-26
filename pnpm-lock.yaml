@@ -215,13 +215,13 @@ importers:
 
   packages/platform:
     dependencies:
+      '@Animatica/engine':
+        specifier: workspace:*
+        version: link:../engine
       '@supabase/supabase-js':
         specifier: ^2.97.0
         version: 2.97.0
     devDependencies:
-      '@Animatica/engine':
-        specifier: workspace:*
-        version: link:../engine
       '@types/react':
         specifier: ^19.2.7
         version: 19.2.14
