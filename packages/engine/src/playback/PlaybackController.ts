@@ -47,14 +47,6 @@ export function usePlayback(): PlaybackControls {
 
     // Subscribe to playback state changes
     const isPlaying = useSceneStore((s) => s.playback.isPlaying);
-    // Sync refs with props
-    useEffect(() => {
-        loopRef.current = loop;
-    }, [loop]);
-
-    useEffect(() => {
-        speedRef.current = speed;
-    }, [speed]);
 
     /**
      * The core animation frame callback.
@@ -98,9 +90,8 @@ export function usePlayback(): PlaybackControls {
                 }
             } else if (direction === -1 && newTime <= 0) {
                  if (loopMode === 'loop') {
-                    // Loop backwards? usually loop wraps to end
-                    // For reverse loop: 0 -> duration
-                    newTime = duration;
+                    // Loop backwards wraps to end
+                    newTime = duration + (newTime % duration);
                 } else if (loopMode === 'pingpong') {
                     newTime = 0;
                     // Reverse direction
@@ -161,7 +152,7 @@ export function usePlayback(): PlaybackControls {
         if (direction === 1 && currentTime >= duration) {
             state.setPlayback({ currentTime: 0, isPlaying: true });
         }
-        // If at start and playing backward, reset to end?
+        // If at start and playing backward, reset to end
         else if (direction === -1 && currentTime <= 0) {
              state.setPlayback({ currentTime: duration, isPlaying: true });
         } else {
