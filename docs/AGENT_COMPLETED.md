@@ -25,3 +25,4 @@
 - [DONE] [editor-modal-dev] [2026-02-24] Improve ScriptConsole/ExportModal and add useKeyboardShortcuts hook
 - [DONE] [conductor] [2026-02-24] Updated task queue for Phase 2 (Characters) and Phase 3 (Editor Viewport)
 - [DONE] [readme-updater] [2026-02-25] Update README.md with current features, quick start guide
+- [DONE] [engine-test-writer] [2024-05-23] Added tests for `setDeepValue` in `packages/engine/src/scene/animationUtils.test.ts`. Fixed syntax errors in `PlaybackController.ts` and re-enabled its tests.

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { applyAnimationToActor, resolveActiveCamera } from './animationUtils';
+import { applyAnimationToActor, resolveActiveCamera, setDeepValue } from './animationUtils';
 import { CameraCut, PrimitiveActor } from '../types';
 
 describe('animationUtils', () => {
@@ -26,6 +26,46 @@ describe('animationUtils', () => {
       expect(resolveActiveCamera(cuts, 7.5)).toBe('cam2');
       expect(resolveActiveCamera(cuts, 10)).toBe('cam1');
       expect(resolveActiveCamera(cuts, 15)).toBe('cam1');
+    });
+  });
+
+  describe('setDeepValue', () => {
+    it('sets value at root', () => {
+        const obj = { a: 1 };
+        const result = setDeepValue(obj, ['a'], 2);
+        expect(result.a).toBe(2);
+        expect(result).not.toBe(obj);
+    });
+
+    it('sets nested value', () => {
+        const obj = { a: { b: 1 } };
+        const result = setDeepValue(obj, ['a', 'b'], 2);
+        expect(result.a.b).toBe(2);
+        expect(result).not.toBe(obj);
+        expect(result.a).not.toBe(obj.a);
+    });
+
+    it('creates nested objects if missing', () => {
+        const obj = {};
+        const result = setDeepValue(obj, ['a', 'b'], 2);
+        expect(result.a.b).toBe(2);
+    });
+
+    it('updates array element by index', () => {
+        const obj = { arr: [1, 2, 3] };
+        const result = setDeepValue(obj, ['arr', '1'], 5);
+        expect(result.arr).toEqual([1, 5, 3]);
+        expect(result.arr).not.toBe(obj.arr);
+        expect(Array.isArray(result.arr)).toBe(true);
+    });
+
+    it('updates property on array (non-numeric index)', () => {
+        const arr: any = [1, 2];
+        arr.customProp = 'test';
+        const result = setDeepValue(arr, ['customProp'], 'updated');
+        expect(result.customProp).toBe('updated');
+        expect(Array.isArray(result)).toBe(true);
+        expect(result[0]).toBe(1);
     });
   });
 

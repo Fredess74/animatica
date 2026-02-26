@@ -17,7 +17,8 @@ Focus on completing **Batch 3 (Characters)** and the missing **Batch 4 (Viewport
 - [ROLE: engine-type-hardener] Review all type definitions in `packages/engine/src/types/index.ts`, remove any `any` usage, add missing interfaces
 - [ROLE: engine-schema-validator] Ensure all Zod schemas in `packages/engine/src/schemas/` match TypeScript interfaces exactly
 - [ROLE: engine-animation-dev] Add missing easing functions (bounce, elastic, back) to `packages/engine/src/animation/easing.ts`
-- [ROLE: engine-test-writer] Write tests for PlaybackController
+- [ROLE: engine-dev] Fix PlaybackController.ts syntax errors (undefined variables)
+- [ROLE: engine-test-writer] Write tests for PlaybackController (BLOCKED by syntax errors)
 - [ROLE: engine-api-docs] Add JSDoc comments to all exported functions in `packages/engine/src/index.ts`
 - [ROLE: character-dev] Implement `packages/engine/src/characters/BoneController.ts` (Map body pose to bone rotations)
 - [ROLE: character-dev] Implement `packages/engine/src/characters/MorphTargets.ts` (Apply facial expressions to mesh)
@@ -37,7 +38,7 @@ Focus on completing **Batch 3 (Characters)** and the missing **Batch 4 (Viewport
 - [ROLE: editor-timeline-dev] Wire TimelinePanel to usePlayback hook, add real keyframe rendering
 ## Engine Tasks
 
-- [ROLE: engine-test-writer] Write tests for `PlaybackController.ts` in `packages/engine/src/playback/`
+- [ROLE: engine-test-writer] Write tests for `PlaybackController.ts` in `packages/engine/src/playback/` (BLOCKED by syntax errors)
 - [ROLE: engine-api-docs] Add JSDoc comments to all exported functions in `packages/engine/src/index.ts`
 - [ROLE: engine-animation-dev] Add missing easing functions (bounce, elastic, back) to `packages/engine/src/animation/easing.ts`
 
