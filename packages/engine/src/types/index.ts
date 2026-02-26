@@ -290,7 +290,7 @@ export type EasingType = 'linear' | 'easeIn' | 'easeOut' | 'easeInOut' | 'step'
  * A single keyframe in an animation track.
  * @template T The type of value being animated.
  */
-export interface Keyframe<T = number | Vector3 | string | boolean> {
+export interface Keyframe<T = unknown> {
   /** Time of the keyframe in seconds. */
   readonly time: number
   /** Value at this keyframe. */
@@ -317,7 +317,7 @@ export interface Marker {
  * An animation track targeting a specific property of an actor.
  * @template T The type of value being animated.
  */
-export interface AnimationTrack<T = number | Vector3 | string | boolean> {
+export interface AnimationTrack<T = unknown> {
   /** ID of the target actor. */
   readonly targetId: UUID
   /** Dot-notation path to the property being animated (e.g., 'transform.position'). */
