@@ -3,6 +3,18 @@ import { renderHook } from '@testing-library/react';
 import { useKeyboardShortcuts } from './useKeyboardShortcuts';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 
+// Mock useSceneStore
+const undoMock = vi.fn();
+vi.mock('@Animatica/engine', () => ({
+  useSceneStore: {
+    temporal: {
+      getState: () => ({
+        undo: undoMock,
+      }),
+    },
+  },
+}));
+
 describe('useKeyboardShortcuts', () => {
   const handlers = {
     onPlayPause: vi.fn(),
@@ -14,6 +26,7 @@ describe('useKeyboardShortcuts', () => {
 
   afterEach(() => {
     vi.clearAllMocks();
+    undoMock.mockClear();
   });
 
   it('triggers onPlayPause when Space is pressed', () => {
@@ -31,13 +44,30 @@ describe('useKeyboardShortcuts', () => {
     expect(event.preventDefault).toHaveBeenCalled();
   });
 
-  it('triggers onUndo when Ctrl+Z is pressed (not in input)', () => {
+  it('triggers onUndo AND store undo when Ctrl+Z is pressed (not in input)', () => {
     renderHook(() => useKeyboardShortcuts(handlers));
     const event = new KeyboardEvent('keydown', { key: 'z', ctrlKey: true });
     vi.spyOn(event, 'preventDefault');
     window.dispatchEvent(event);
     expect(handlers.onUndo).toHaveBeenCalled();
+    expect(undoMock).toHaveBeenCalled();
     expect(event.preventDefault).toHaveBeenCalled();
+  });
+
+  it('does NOT trigger store undo when Ctrl+Z is pressed inside input', () => {
+    renderHook(() => useKeyboardShortcuts(handlers));
+    const input = document.createElement('input');
+    document.body.appendChild(input);
+    input.focus();
+
+    const event = new KeyboardEvent('keydown', { key: 'z', ctrlKey: true });
+    Object.defineProperty(event, 'target', { value: input });
+    window.dispatchEvent(event);
+
+    expect(handlers.onUndo).not.toHaveBeenCalled();
+    expect(undoMock).not.toHaveBeenCalled();
+
+    document.body.removeChild(input);
   });
 
   it('triggers onDelete when Delete is pressed', () => {
@@ -52,7 +82,23 @@ describe('useKeyboardShortcuts', () => {
     expect(handlers.onEscape).toHaveBeenCalled();
   });
 
-  it('does not trigger shortcuts (except Ctrl+S) when inside input', () => {
+  it('triggers onEscape when Escape is pressed INSIDE input', () => {
+    renderHook(() => useKeyboardShortcuts(handlers));
+    const input = document.createElement('input');
+    document.body.appendChild(input);
+    input.focus();
+
+    // Mock event target
+    const event = new KeyboardEvent('keydown', { key: 'Escape' });
+    Object.defineProperty(event, 'target', { value: input });
+    window.dispatchEvent(event);
+
+    expect(handlers.onEscape).toHaveBeenCalled();
+
+    document.body.removeChild(input);
+  });
+
+  it('does not trigger shortcuts (except Ctrl+S and Escape) when inside input', () => {
     renderHook(() => useKeyboardShortcuts(handlers));
     const input = document.createElement('input');
     document.body.appendChild(input);
