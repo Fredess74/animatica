@@ -42,8 +42,8 @@ const ASSET_CATEGORIES: Record<string, AssetItem[]> = {
 export const AssetLibrary: React.FC<AssetLibraryProps> = ({ onActorCreated }) => {
     const [expandedCategory, setExpandedCategory] = useState<string>('Primitives');
 
-    const handleAddActor = (item: AssetItem) => {
-        // In production, this would call useSceneStore.getState().addActor(...)
+    const handleAddActor = (_item: AssetItem) => {
+        // In production, this would call useSceneStore.getState().addActor(...) with _item.defaults
         const id = `actor_${Date.now()}`;
         onActorCreated?.(id);
     };

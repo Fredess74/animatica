@@ -8,15 +8,19 @@
 import React, { useMemo } from 'react';
 import { useSceneStore } from '../store/sceneStore';
 import { evaluateTracksAtTime } from '../animation/interpolate';
+import { applyAnimationToActor, resolveActiveCamera } from './animationUtils';
 import { PrimitiveRenderer } from './renderers/PrimitiveRenderer';
 import { LightRenderer } from './renderers/LightRenderer';
 import { CameraRenderer } from './renderers/CameraRenderer';
+import { CharacterRenderer } from './renderers/CharacterRenderer';
+import { SpeakerRenderer } from './renderers/SpeakerRenderer';
 import type {
     Actor,
     PrimitiveActor,
     LightActor,
     CameraActor,
-    CameraCut,
+    CharacterActor,
+    SpeakerActor,
 } from '../types';
 
 interface SceneManagerProps {
@@ -26,65 +30,6 @@ interface SceneManagerProps {
     onActorSelect?: (actorId: string) => void;
     /** Whether to show debug helpers (light gizmos, camera frustums). */
     showHelpers?: boolean;
-}
-
-/**
- * Resolves which camera should be active at a given time
- * based on the camera track (sorted cuts).
- */
-function resolveActiveCamera(
-    cameraCuts: CameraCut[],
-    currentTime: number,
-): string | null {
-    if (cameraCuts.length === 0) return null;
-
-    const sorted = [...cameraCuts].sort((a, b) => a.time - b.time);
-
-    // Find the latest cut that has already occurred
-    let activeId: string | null = null;
-    for (const cut of sorted) {
-        if (cut.time <= currentTime) {
-            activeId = cut.cameraId;
-        } else {
-            break;
-        }
-    }
-
-    return activeId;
-}
-
-/**
- * Applies interpolated animation values to an actor.
- * Returns a new actor object with the animated properties merged in.
- */
-function applyAnimationToActor(
-    actor: Actor,
-    animatedProps: Map<string, unknown> | undefined,
-): Actor {
-    if (!animatedProps || animatedProps.size === 0) return actor;
-
-    // Deep clone the actor to avoid mutating store
-    const result = JSON.parse(JSON.stringify(actor)) as Actor;
-
-    for (const [property, value] of animatedProps) {
-        // Support dot-notation paths like "transform.position"
-        const parts = property.split('.');
-        let target: Record<string, unknown> = result as unknown as Record<string, unknown>;
-
-        for (let i = 0; i < parts.length - 1; i++) {
-            const part = parts[i];
-            if (target[part] && typeof target[part] === 'object') {
-                target = target[part] as Record<string, unknown>;
-            } else {
-                break;
-            }
-        }
-
-        const lastPart = parts[parts.length - 1];
-        target[lastPart] = value;
-    }
-
-    return result;
 }
 
 /**
@@ -109,10 +54,10 @@ export const SceneManager: React.FC<SceneManagerProps> = ({
     onActorSelect,
     showHelpers = false,
 }) => {
-    const actors = useSceneStore((s: { actors: Actor[] }) => s.actors);
-    const environment = useSceneStore((s: { environment: any }) => s.environment);
-    const timeline = useSceneStore((s: { timeline: any }) => s.timeline);
-    const currentTime = useSceneStore((s: { playback: { currentTime: number } }) => s.playback.currentTime);
+    const actors = useSceneStore((s) => s.actors);
+    const environment = useSceneStore((s) => s.environment);
+    const timeline = useSceneStore((s) => s.timeline);
+    const currentTime = useSceneStore((s) => s.playback.currentTime);
 
     // Evaluate all animation tracks at the current time
     const animationValues = useMemo(
@@ -120,10 +65,16 @@ export const SceneManager: React.FC<SceneManagerProps> = ({
         [timeline.animationTracks, currentTime],
     );
 
-    // Determine the active camera from the camera track
+    // Sort camera cuts only when the track changes, not every frame
+    const sortedCameraCuts = useMemo(
+        () => [...timeline.cameraTrack].sort((a, b) => a.time - b.time),
+        [timeline.cameraTrack]
+    );
+
+    // Determine the active camera from the sorted camera cuts
     const activeCameraId = useMemo(
-        () => resolveActiveCamera(timeline.cameraTrack, currentTime),
-        [timeline.cameraTrack, currentTime],
+        () => resolveActiveCamera(sortedCameraCuts, currentTime),
+        [sortedCameraCuts, currentTime],
     );
 
     // Apply animation values to actors
@@ -153,9 +104,7 @@ export const SceneManager: React.FC<SceneManagerProps> = ({
             {environment.fog && (
                 <fog
                     attach="fog"
-                    color={environment.fog.color}
-                    near={environment.fog.near}
-                    far={environment.fog.far}
+                    args={[environment.fog.color, environment.fog.near, environment.fog.far]}
                 />
             )}
 
@@ -192,12 +141,23 @@ export const SceneManager: React.FC<SceneManagerProps> = ({
                         );
 
                     case 'character':
-                        // TODO: CharacterRenderer not yet implemented
-                        return null;
+                        return (
+                            <CharacterRenderer
+                                key={actor.id}
+                                actor={actor as CharacterActor}
+                                isSelected={actor.id === selectedActorId}
+                                onClick={() => onActorSelect?.(actor.id)}
+                            />
+                        );
 
                     case 'speaker':
-                        // TODO: SpeakerRenderer not yet implemented
-                        return null;
+                        return (
+                            <SpeakerRenderer
+                                key={actor.id}
+                                actor={actor as SpeakerActor}
+                                showHelper={showHelpers || actor.id === selectedActorId}
+                            />
+                        );
 
                     default:
                         return null;

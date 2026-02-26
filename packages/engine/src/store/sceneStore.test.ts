@@ -6,10 +6,20 @@ describe('sceneStore', () => {
   beforeEach(() => {
     useSceneStore.setState({
       actors: [],
-      // Reset is implied by createStore on each test run if not persistent,
-      // but zustand is global, so we need to reset manually or use fresh store.
-      // For now, manual reset of actors is enough as we test actors mostly.
+      selectedActorId: null,
+      timeline: { duration: 10, cameraTrack: [], animationTracks: [], markers: [] },
+      environment: {
+          ambientLight: { intensity: 0.5, color: '#ffffff' },
+          sun: { position: [10, 10, 10], intensity: 1, color: '#ffffff' },
+          skyColor: '#87CEEB',
+      },
+      playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, direction: 1, loopMode: 'none' },
     });
+
+    // Clear undo history
+    if (useSceneStore.temporal) {
+        useSceneStore.temporal.getState().clear();
+    }
   });
 
   const createActor = (id: string, visible = true): PrimitiveActor => ({
@@ -81,5 +91,74 @@ describe('sceneStore', () => {
     useSceneStore.getState().setPlayback({ currentTime: 10 });
     const result = getCurrentTime(useSceneStore.getState());
     expect(result).toBe(10);
+  });
+
+  // New Tests
+
+  it('should set selected actor', () => {
+    useSceneStore.getState().setSelectedActor('1');
+    expect(useSceneStore.getState().selectedActorId).toBe('1');
+  });
+
+  it('should clear selection when actor is removed', () => {
+      const actor = createActor('1');
+      useSceneStore.getState().addActor(actor);
+      useSceneStore.getState().setSelectedActor('1');
+
+      useSceneStore.getState().removeActor('1');
+      expect(useSceneStore.getState().selectedActorId).toBeNull();
+  });
+
+  it('should handle undo/redo', () => {
+      const actor = createActor('1');
+      useSceneStore.getState().addActor(actor);
+      expect(useSceneStore.getState().actors).toHaveLength(1);
+
+      // Undo
+      useSceneStore.temporal.getState().undo();
+      expect(useSceneStore.getState().actors).toHaveLength(0);
+
+      // Redo
+      useSceneStore.temporal.getState().redo();
+      expect(useSceneStore.getState().actors).toHaveLength(1);
+  });
+
+  it('should not undo playback changes', () => {
+      // Set initial playback
+      useSceneStore.getState().setPlayback({ currentTime: 0 });
+
+      // Change playback
+      useSceneStore.getState().setPlayback({ currentTime: 10 });
+      expect(useSceneStore.getState().playback.currentTime).toBe(10);
+
+      const actor = createActor('1');
+      useSceneStore.getState().addActor(actor); // Tracked change
+
+      // Verify history tracked the actor addition
+      expect(useSceneStore.temporal.getState().pastStates.length).toBeGreaterThan(0);
+      const pastStatesCount = useSceneStore.temporal.getState().pastStates.length;
+
+      useSceneStore.getState().setPlayback({ currentTime: 20 }); // Untracked change
+
+      // Verify history didn't grow
+      expect(useSceneStore.temporal.getState().pastStates.length).toBe(pastStatesCount);
+
+      useSceneStore.temporal.getState().undo(); // Should undo addActor
+
+      expect(useSceneStore.getState().actors).toHaveLength(0);
+      expect(useSceneStore.getState().playback.currentTime).toBe(20); // Should remain 20
+  });
+
+  it('should filter actors by type', () => {
+      const primitive = createActor('1');
+      const light: any = { id: '2', type: 'light', visible: true, transform: primitive.transform, properties: { lightType: 'point' } };
+
+      useSceneStore.getState().addActor(primitive);
+      useSceneStore.getState().addActor(light);
+
+      // Simulate useActorsByType logic
+      const result = useSceneStore.getState().actors.filter(a => a.type === 'primitive');
+      expect(result).toHaveLength(1);
+      expect(result[0].id).toBe('1');
   });
 });
