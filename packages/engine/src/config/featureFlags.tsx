@@ -25,41 +25,43 @@ const DEFAULT_FLAGS_PROD: FeatureFlags = {
   cloudSync: false,
 };
 
-// Helper to get raw env value safely
-const getRawEnv = (key: string, env: Record<string, string | boolean | undefined>): string | undefined => {
-  const val = env[key];
-  if (typeof val === 'string') return val;
-  if (typeof val === 'boolean') return val ? 'true' : 'false';
-  return undefined;
+// Helper to parse flag value from env var or override
+const parseFlag = (val: string | boolean | undefined, defaultVal: boolean): boolean => {
+  if (val === 'true' || val === true) return true;
+  if (val === 'false' || val === false) return false;
+  return defaultVal;
 };
 
 export const getFeatureFlags = (
   envMode: string = import.meta.env.MODE,
-  env: Record<string, string | boolean | undefined> = import.meta.env as unknown as Record<string, string | boolean | undefined>
+  overrides?: Record<string, string | boolean>,
+  // Allow injecting source for testing isolation (defaults to import.meta.env)
+  envSource: Record<string, string | boolean | undefined> = import.meta.env as unknown as Record<string, string | boolean | undefined>
 ): FeatureFlags => {
   const isDev = envMode === 'development';
   const defaults = isDev ? DEFAULT_FLAGS_DEV : DEFAULT_FLAGS_PROD;
 
-  const getEnvFlag = (key: string, fallback: boolean): boolean => {
-    // Look for VITE_FEATURE_FLAG_KEY_NAME
-    // We need to convert camelCase to SNAKE_CASE for env vars
-    // e.g. aiPrompts -> AI_PROMPTS
-    const snakeKey = key.replace(/([A-Z])/g, '_$1').toUpperCase();
-    const envKey = `VITE_FEATURE_FLAG_${snakeKey}`;
-
-    const value = getRawEnv(envKey, env);
-
-    if (value === 'true') return true;
-    if (value === 'false') return false;
-    return fallback;
-  };
-
   return {
-    characters: getEnvFlag('characters', defaults.characters),
-    export: getEnvFlag('export', defaults.export),
-    aiPrompts: getEnvFlag('aiPrompts', defaults.aiPrompts),
-    multiplayer: getEnvFlag('multiplayer', defaults.multiplayer),
-    cloudSync: getEnvFlag('cloudSync', defaults.cloudSync),
+    characters: parseFlag(
+      overrides?.VITE_FEATURE_FLAG_CHARACTERS ?? envSource.VITE_FEATURE_FLAG_CHARACTERS,
+      defaults.characters
+    ),
+    export: parseFlag(
+      overrides?.VITE_FEATURE_FLAG_EXPORT ?? envSource.VITE_FEATURE_FLAG_EXPORT,
+      defaults.export
+    ),
+    aiPrompts: parseFlag(
+      overrides?.VITE_FEATURE_FLAG_AI_PROMPTS ?? envSource.VITE_FEATURE_FLAG_AI_PROMPTS,
+      defaults.aiPrompts
+    ),
+    multiplayer: parseFlag(
+      overrides?.VITE_FEATURE_FLAG_MULTIPLAYER ?? envSource.VITE_FEATURE_FLAG_MULTIPLAYER,
+      defaults.multiplayer
+    ),
+    cloudSync: parseFlag(
+      overrides?.VITE_FEATURE_FLAG_CLOUD_SYNC ?? envSource.VITE_FEATURE_FLAG_CLOUD_SYNC,
+      defaults.cloudSync
+    ),
   };
 };
 

@@ -262,6 +262,11 @@ export type Actor = CharacterActor | PrimitiveActor | LightActor | CameraActor |
 export type EasingType = 'linear' | 'easeIn' | 'easeOut' | 'easeInOut' | 'step'
 
 /**
+ * Loop mode for playback.
+ */
+export type LoopMode = 'none' | 'loop' | 'pingpong'
+
+/**
  * A single keyframe in an animation track.
  * @template T The type of value being animated.
  */
