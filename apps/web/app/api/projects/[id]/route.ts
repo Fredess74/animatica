@@ -32,21 +32,16 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
     const { id } = await params;
     const json = await req.json();
 
-    // We attempt to use .partial() if available on the imported schema.
-    // If not (e.g. it's not a ZodObject), we might need another strategy.
-    // Assuming ProjectStateSchema is a ZodObject as it represents the state.
+    // Validate partial updates using the engine schema.
+    // We handle potential Zod version mismatches (Engine v4 vs Web v3) by checking
+    // for the existence of .partial() at runtime.
+    const schema = ProjectStateSchema as any;
     let updates;
-    if ('partial' in ProjectStateSchema && typeof ProjectStateSchema.partial === 'function') {
-        // @ts-ignore - Schema version mismatch might cause TS issues but runtime should work
-        updates = ProjectStateSchema.partial().parse(json);
+
+    if (typeof schema.partial === 'function') {
+      updates = schema.partial().parse(json);
     } else {
-        // Fallback: Validate full object if partial is not supported, or just trust simple validation
-        // But for PUT we usually want to allow partial updates?
-        // Actually, strict PUT means replace. PATCH means update.
-        // Let's assume strict validation for now, or use loose validation if .partial fails.
-        // If the schema is generic, we can't easily make it partial.
-        // We'll try to parse as full state if partial fails or isn't available.
-        updates = ProjectStateSchema.parse(json);
+      updates = schema.parse(json);
     }
 
     const updated = await updateProject(id, updates);

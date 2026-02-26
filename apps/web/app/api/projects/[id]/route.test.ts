@@ -68,6 +68,27 @@ describe('Project Detail API', () => {
       expect(res.status).toBe(200);
       expect(json).toEqual(mockProject);
     });
+
+    it('should fail if nested schema is invalid (shallow partial)', async () => {
+      // ProjectStateSchema.partial() makes 'meta' optional, but if present,
+      // it must fully match ProjectMetaSchema (shallow partial).
+      // version is required in ProjectMetaSchema.
+      const body = {
+        meta: {
+          title: 'Incomplete Meta'
+          // Missing version
+        }
+      };
+
+      const req = new NextRequest('http://localhost/api/projects/1', {
+        method: 'PUT',
+        body: JSON.stringify(body),
+      });
+
+      const res = await PUT(req, { params });
+
+      expect(res.status).toBe(400);
+    });
   });
 
   describe('DELETE /api/projects/[id]', () => {
