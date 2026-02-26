@@ -1,10 +1,3 @@
-/**
- * PlaybackController — Drives animation playback via requestAnimationFrame.
- * Provides a React hook that manages the animation loop, time tracking,
- * and camera cuts for the scene.
- *
- * @module @animatica/engine/playback/PlaybackController
- */
 import { useCallback, useEffect, useRef } from 'react';
 import { useSceneStore, type LoopMode } from '../store/sceneStore';
 
@@ -47,14 +40,6 @@ export function usePlayback(): PlaybackControls {
 
     // Subscribe to playback state changes
     const isPlaying = useSceneStore((s) => s.playback.isPlaying);
-    // Sync refs with props
-    useEffect(() => {
-        loopRef.current = loop;
-    }, [loop]);
-
-    useEffect(() => {
-        speedRef.current = speed;
-    }, [speed]);
 
     /**
      * The core animation frame callback.
@@ -74,20 +59,18 @@ export function usePlayback(): PlaybackControls {
             const { currentTime, speed, direction, loopMode } = state.playback;
 
             // Convert to seconds and apply speed multiplier and direction
-            // Note: speed is magnitude, direction is sign (+1/-1)
             const deltaSec = (deltaMs / 1000) * speed * direction;
-
             let newTime = currentTime + deltaSec;
 
             // Handle boundaries and loop modes
             if (direction === 1 && newTime >= duration) {
                 if (loopMode === 'loop') {
                     newTime = newTime % duration;
+                    state.setPlayback({ currentTime: newTime });
                 } else if (loopMode === 'pingpong') {
                     newTime = duration;
                     // Reverse direction
                     state.setPlayback({ direction: -1, currentTime: newTime });
-                    // Continue loop
                 } else {
                     // 'none': Stop at end
                     newTime = duration;
@@ -99,8 +82,8 @@ export function usePlayback(): PlaybackControls {
             } else if (direction === -1 && newTime <= 0) {
                  if (loopMode === 'loop') {
                     // Loop backwards? usually loop wraps to end
-                    // For reverse loop: 0 -> duration
                     newTime = duration;
+                    state.setPlayback({ currentTime: newTime });
                 } else if (loopMode === 'pingpong') {
                     newTime = 0;
                     // Reverse direction
@@ -113,10 +96,7 @@ export function usePlayback(): PlaybackControls {
                     lastFrameTimeRef.current = null;
                     return;
                 }
-            }
-
-            // Smooth update (no quantization for now to ensure smooth motion)
-            if (Math.abs(newTime - currentTime) > 0.00001) {
+            } else {
                 state.setPlayback({ currentTime: newTime });
             }
 
@@ -130,6 +110,7 @@ export function usePlayback(): PlaybackControls {
     useEffect(() => {
         if (isPlaying) {
             if (rafIdRef.current === null) {
+                // Reset lastFrameTime so the first tick doesn't calculate a huge delta
                 lastFrameTimeRef.current = null;
                 rafIdRef.current = requestAnimationFrame(tick);
             }
@@ -149,9 +130,6 @@ export function usePlayback(): PlaybackControls {
         }
     }, [isPlaying, tick]);
 
-    /**
-     * Starts the animation loop.
-     */
     const play = useCallback(() => {
         const state = useSceneStore.getState();
         const { duration } = state.timeline;
@@ -161,7 +139,7 @@ export function usePlayback(): PlaybackControls {
         if (direction === 1 && currentTime >= duration) {
             state.setPlayback({ currentTime: 0, isPlaying: true });
         }
-        // If at start and playing backward, reset to end?
+        // If at start and playing backward, reset to end
         else if (direction === -1 && currentTime <= 0) {
              state.setPlayback({ currentTime: duration, isPlaying: true });
         } else {
@@ -169,36 +147,21 @@ export function usePlayback(): PlaybackControls {
         }
     }, []);
 
-    /**
-     * Pauses the animation loop.
-     */
     const pause = useCallback(() => {
         useSceneStore.getState().setPlayback({ isPlaying: false });
     }, []);
 
-    /**
-     * Stops playback and resets to time 0.
-     */
     const stop = useCallback(() => {
         useSceneStore.getState().setPlayback({ currentTime: 0, isPlaying: false, direction: 1 });
     }, []);
 
-    /**
-     * Seeks to a specific time in seconds.
-     */
-    const seek = useCallback(
-        (time: number) => {
-            const state = useSceneStore.getState();
-            const { duration } = state.timeline;
-            const clampedTime = Math.max(0, Math.min(time, duration));
-            state.setPlayback({ currentTime: clampedTime });
-        },
-        []
-    );
+    const seek = useCallback((time: number) => {
+        const state = useSceneStore.getState();
+        const { duration } = state.timeline;
+        const clampedTime = Math.max(0, Math.min(time, duration));
+        state.setPlayback({ currentTime: clampedTime });
+    }, []);
 
-    /**
-     * Toggles between play and pause.
-     */
     const toggle = useCallback(() => {
         const playing = useSceneStore.getState().playback.isPlaying;
         if (playing) {
@@ -219,8 +182,8 @@ export function usePlayback(): PlaybackControls {
     const nextFrame = useCallback(() => {
          const state = useSceneStore.getState();
          const { frameRate, currentTime } = state.playback;
-         const { duration } = state.timeline;
          const frameDuration = 1 / (frameRate || 24);
+         const { duration } = state.timeline;
          const newTime = Math.min(duration, currentTime + frameDuration);
          state.setPlayback({ currentTime: newTime, isPlaying: false });
     }, []);
