@@ -18,4 +18,3 @@
 - [DONE] [type-auditor] [2026-02-23] Scan all .ts files for any type, type assertions, missing return types in packages/engine
 - [DONE] [perf-auditor] [2026-02-23] Check for unnecessary re-renders, large bundle imports, missing memoization
 - [DONE] [editor-properties-dev] [2025-02-23] Wire PropertiesPanel to Zustand store (read/write actor properties)
-- [DONE] [ci-guardian] [2025-02-25] Updated CI workflow with matrix testing (Node 20, 22) and strict error handling
