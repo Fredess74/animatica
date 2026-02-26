@@ -17,7 +17,24 @@
   display: flex;
   flex: 1;
   overflow: hidden;
-  height: calc(100vh - 60px - 200px); /* Subtract header and timeline */
+  height: calc(100vh - 60px - 200px); /* Initial calc, but height is now dynamic for timeline */
+  flex-direction: row; /* Explicitly set row direction */
+}
+
+/* Timeline height handling */
+.editor-timeline {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-surface);
+  border-top: 1px solid var(--border-subtle);
+  overflow: hidden;
+  position: relative;
+  /* Height is controlled via inline style in JS, but we need a default or min/max */
+}
+
+.editor-timeline--collapsed {
+  height: 32px !important;
+  background-color: var(--bg-base);
 }
 
 .editor-viewport {
@@ -25,6 +42,8 @@
   position: relative;
   background-color: var(--bg-deep);
   overflow: hidden;
+  /* Ensure it takes remaining space */
+  min-width: 0;
 }
 
 /* ---- Toolbar ---- */
@@ -36,6 +55,7 @@
   padding: 0 var(--space-md);
   background-color: var(--bg-surface);
   border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
 }
 
 .editor-toolbar__brand {
@@ -56,6 +76,10 @@
   letter-spacing: -0.02em;
 }
 
+.editor-toolbar__center {
+  flex: 1;
+}
+
 .editor-toolbar__actions {
   display: flex;
   gap: var(--space-sm);
@@ -64,22 +88,126 @@
 /* ---- Sidebars ---- */
 .editor-sidebar {
   background-color: var(--bg-base);
-  border-right: 1px solid var(--border-subtle);
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  position: relative;
+  flex-shrink: 0; /* Prevent shrinking below set width */
 }
 
 .editor-sidebar--left {
-  width: 280px;
+  /* Width controlled by JS */
   border-right: 1px solid var(--border-subtle);
 }
 
 .editor-sidebar--right {
-  width: 320px;
+  /* Width controlled by JS */
   border-left: 1px solid var(--border-subtle);
   border-right: none;
 }
+
+.editor-sidebar--collapsed {
+  width: 32px !important;
+  align-items: center;
+  background-color: var(--bg-elevated);
+  cursor: pointer;
+}
+
+/* Header controls for collapsing */
+.editor-sidebar__header-controls,
+.editor-timeline__header-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
+  height: 32px;
+}
+
+.editor-sidebar--collapsed .editor-sidebar__header-controls {
+  border-bottom: none;
+  width: 100%;
+  height: 100%;
+}
+
+.editor-timeline__header-controls {
+  border-bottom: none;
+  border-top: 1px solid var(--border-subtle); /* If inside? No, border-top is on main div */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  height: 24px;
+  padding: 0;
+  background: var(--bg-surface);
+}
+
+/* Specific adjustment for timeline content to not be covered by header control */
+.editor-timeline__content {
+  margin-top: 24px;
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.editor-sidebar__toggle,
+.editor-timeline__toggle {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: var(--radius-sm);
+}
+
+.editor-sidebar__toggle:hover,
+.editor-timeline__toggle:hover {
+  color: var(--text-primary);
+  background-color: var(--bg-elevated);
+}
+
+.editor-sidebar__content {
+  flex: 1;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+
+/* ---- Resizers ---- */
+.resizer {
+  background-color: var(--bg-deep);
+  z-index: 10;
+  transition: background-color 0.2s;
+  flex-shrink: 0;
+}
+
+.resizer:hover,
+.resizer:active {
+  background-color: var(--green-600);
+}
+
+.resizer--vertical {
+  width: 4px;
+  cursor: col-resize;
+  border-left: 1px solid var(--border-subtle);
+  border-right: 1px solid var(--border-subtle);
+}
+
+.resizer--horizontal {
+  height: 4px;
+  cursor: row-resize;
+  width: 100%;
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
 
 /* ---- Generic Panel ---- */
 .panel {
@@ -387,4 +515,67 @@
 
 .prop-field__slider:focus::-webkit-slider-thumb {
   box-shadow: 0 0 0 4px var(--color-primary-glow);
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+
+/* Tablet (1024px) */
+@media (max-width: 1024px) {
+  .editor-sidebar--left {
+    width: 240px !important;
+  }
+  .editor-sidebar--right {
+    width: 280px !important; /* Slightly smaller default */
+  }
+  .asset-category__items {
+    grid-template-columns: 1fr; /* Single column */
+  }
+}
+
+/* Mobile (768px) */
+@media (max-width: 768px) {
+  .editor-layout {
+    overflow: auto; /* Allow scrolling on mobile body */
+  }
+
+  .editor-main {
+    flex-direction: column;
+    height: auto;
+    overflow: visible;
+  }
+
+  /* Reset width styles on mobile */
+  .editor-sidebar {
+    width: 100% !important; /* Force full width, overriding JS style */
+    height: auto;
+    max-height: 400px; /* Limit height */
+  }
+
+  .editor-sidebar--collapsed {
+    width: 100% !important;
+    height: 32px !important;
+    flex-direction: row;
+  }
+
+  .editor-sidebar__header-controls {
+    width: 100%;
+    justify-content: flex-start;
+    padding-left: var(--space-md);
+  }
+
+  .editor-viewport {
+    height: 300px; /* Fixed height for viewport on mobile */
+    flex: none;
+  }
+
+  .resizer {
+    display: none; /* Hide resizers on mobile */
+  }
+
+  .editor-timeline {
+    height: auto !important; /* Auto height on mobile */
+    min-height: 200px;
+  }
 }
