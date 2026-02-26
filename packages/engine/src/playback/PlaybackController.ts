@@ -6,7 +6,8 @@
  * @module @animatica/engine/playback/PlaybackController
  */
 import { useCallback, useEffect, useRef } from 'react';
-import { useSceneStore, type LoopMode } from '../store/sceneStore';
+import { useSceneStore } from '../store/sceneStore';
+import { LoopMode } from '../store/types';
 
 /**
  * Return type of the usePlayback hook.
@@ -30,6 +31,10 @@ export interface PlaybackControls {
     nextFrame: () => void;
     /** Move to the previous frame. */
     prevFrame: () => void;
+    /** Move to the next marker. */
+    nextMarker: () => void;
+    /** Move to the previous marker. */
+    prevMarker: () => void;
 }
 
 /**
@@ -47,14 +52,6 @@ export function usePlayback(): PlaybackControls {
 
     // Subscribe to playback state changes
     const isPlaying = useSceneStore((s) => s.playback.isPlaying);
-    // Sync refs with props
-    useEffect(() => {
-        loopRef.current = loop;
-    }, [loop]);
-
-    useEffect(() => {
-        speedRef.current = speed;
-    }, [speed]);
 
     /**
      * The core animation frame callback.
@@ -233,6 +230,34 @@ export function usePlayback(): PlaybackControls {
          state.setPlayback({ currentTime: newTime, isPlaying: false });
     }, []);
 
+    const nextMarker = useCallback(() => {
+        const state = useSceneStore.getState();
+        const { currentTime } = state.playback;
+        const { markers, duration } = state.timeline;
+        const sortedMarkers = [...markers].sort((a, b) => a.time - b.time);
+        const next = sortedMarkers.find(m => m.time > currentTime + 0.001);
+
+        if (next) {
+            state.setPlayback({ currentTime: next.time, isPlaying: false });
+        } else {
+            state.setPlayback({ currentTime: duration, isPlaying: false });
+        }
+    }, []);
+
+    const prevMarker = useCallback(() => {
+        const state = useSceneStore.getState();
+        const { currentTime } = state.playback;
+        const { markers } = state.timeline;
+        const sortedMarkers = [...markers].sort((a, b) => a.time - b.time);
+        const prev = sortedMarkers.slice().reverse().find(m => m.time < currentTime - 0.001);
+
+        if (prev) {
+            state.setPlayback({ currentTime: prev.time, isPlaying: false });
+        } else {
+            state.setPlayback({ currentTime: 0, isPlaying: false });
+        }
+    }, []);
+
     return {
         play,
         pause,
@@ -242,6 +267,8 @@ export function usePlayback(): PlaybackControls {
         setSpeed,
         setLoopMode,
         nextFrame,
-        prevFrame
+        prevFrame,
+        nextMarker,
+        prevMarker
     };
 }
