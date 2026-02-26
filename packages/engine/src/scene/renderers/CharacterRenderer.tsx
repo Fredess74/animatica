@@ -5,10 +5,10 @@
 import React, { useEffect, useRef, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
-import { createProceduralHumanoid } from '../character/CharacterLoader'
-import { CharacterAnimator, createIdleClip, createWalkClip } from '../character/CharacterAnimator'
-import { getPreset } from '../character/CharacterPresets'
-import type { CharacterActor, Vector3 } from '../types'
+import { createProceduralHumanoid } from '../../character/CharacterLoader'
+import { CharacterAnimator, createIdleClip, createWalkClip } from '../../character/CharacterAnimator'
+import { getPreset } from '../../character/CharacterPresets'
+import type { CharacterActor } from '../../types'
 
 interface CharacterRendererProps {
   actor: CharacterActor
@@ -16,7 +16,7 @@ interface CharacterRendererProps {
   onClick?: () => void
 }
 
-export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
+export const CharacterRenderer: React.FC<CharacterRendererProps> = React.memo(({
   actor,
   isSelected = false,
   onClick,
@@ -76,8 +76,7 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     }
   })
 
-  // Selection outline effect (green tint)
-  const outlineColor = isSelected ? '#22C55E' : undefined
+  if (!actor.visible) return null
 
   return (
     <group
@@ -120,4 +119,6 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       )}
     </group>
   )
-}
+})
+
+CharacterRenderer.displayName = 'CharacterRenderer'
