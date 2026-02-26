@@ -26,3 +26,4 @@
 - [DONE] [conductor] [2026-02-24] Updated task queue for Phase 2 (Characters) and Phase 3 (Editor Viewport)
 - [DONE] [readme-updater] [2026-02-25] Update README.md with current features, quick start guide
 - [DONE] [editor-style-polisher] 2026-02-26 Added missing UI styles for Properties and Timeline panels
+- [FIX] [editor-style-polisher] 2026-02-26 Fixed CI failures in PlaybackController and Engine types

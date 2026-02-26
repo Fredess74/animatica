@@ -263,35 +263,26 @@ export const TimelinePanel: React.FC<TimelinePanelProps> = ({ selectedActorId })
                 <div
                     className="timeline-context-menu"
                     style={{
-                        position: 'fixed',
                         top: contextMenu.y,
                         left: contextMenu.x,
-                        background: '#333',
-                        border: '1px solid #555',
-                        padding: '4px 0',
-                        zIndex: 1000,
-                        minWidth: '120px'
                     }}
                     onClick={(e) => e.stopPropagation()}
                 >
                     <button
                         className="timeline-context-menu__item"
                         onClick={deleteKeyframe}
-                        style={{ display: 'block', width: '100%', textAlign: 'left', padding: '4px 12px', background: 'none', border: 'none', color: '#fff', cursor: 'pointer' }}
                     >
                         {t('timeline.deleteKeyframe')}
                     </button>
                     <button
                         className="timeline-context-menu__item"
                         onClick={copyKeyframe}
-                        style={{ display: 'block', width: '100%', textAlign: 'left', padding: '4px 12px', background: 'none', border: 'none', color: '#fff', cursor: 'pointer' }}
                     >
                         {t('timeline.copyKeyframe')}
                     </button>
                     <button
                         className="timeline-context-menu__item"
                         onClick={pasteKeyframe}
-                        style={{ display: 'block', width: '100%', textAlign: 'left', padding: '4px 12px', background: 'none', border: 'none', color: '#fff', cursor: 'pointer' }}
                     >
                         {t('timeline.pasteKeyframe')}
                     </button>
