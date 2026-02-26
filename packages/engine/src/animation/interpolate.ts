@@ -17,6 +17,12 @@ const EASING_MAP: Record<EasingType, (t: number) => number> = {
     easeOut: Easing.easeOut,
     easeInOut: Easing.easeInOut,
     step: Easing.step,
+    bounce: Easing.bounce,
+    elastic: Easing.elastic,
+    spring: Easing.spring,
+    backIn: Easing.backIn,
+    backOut: Easing.backOut,
+    backInOut: Easing.backInOut,
 };
 
 function resolveEasing(type?: EasingType): (t: number) => number {

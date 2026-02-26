@@ -172,6 +172,15 @@ describe('Easing integration', () => {
         expect(interpolateKeyframes(kf, 0.5)).toBe(0);
         expect(interpolateKeyframes(kf, 1)).toBe(100);
     });
+
+    it('backOut easing overshoots', () => {
+        const kf: Keyframe<number>[] = [
+            { time: 0, value: 0 },
+            { time: 1, value: 100, easing: 'backOut' },
+        ];
+        // At 0.8, backOut(0.8) > 1, so value should be > 100
+        expect(interpolateKeyframes(kf, 0.8)).toBeGreaterThan(100);
+    });
 });
 
 describe('evaluateTracksAtTime', () => {
