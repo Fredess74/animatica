@@ -6,35 +6,37 @@
 
 ---
 
-## How It Works
+## Tonight's Plan (2026-02-24)
 
-1. The **Conductor** agent runs first each night and populates this file with tasks
-2. Each agent reads ONLY tasks tagged with its role: `[ROLE: agent-name]`
-3. After completing a task, the agent:
-   - Removes the task line from this file
-   - Appends `- [DONE] [agent-name] [YYYY-MM-DD] task description` to `docs/AGENT_COMPLETED.md`
-4. If no tasks are assigned to your role, check the `[ROLE: any]` section
+Focus on completing **Batch 3 (Characters)** and the missing **Batch 4 (Viewport)** component to enable full scene rendering. Continue with **Batch 5 (Integration)** for export/audio capabilities.
 
 ---
 
+## High Priority: Core Features
+
+- [ROLE: character-dev] Implement `packages/engine/src/characters/BoneController.ts` (Map body pose to bone rotations)
+- [ROLE: character-dev] Implement `packages/engine/src/characters/MorphTargets.ts` (Apply facial expressions to mesh)
+- [ROLE: character-dev] Implement `packages/engine/src/characters/ClothingSystem.ts` (Procedural clothing attachment)
+- [ROLE: character-dev] Create `packages/engine/src/characters/Humanoid.tsx` (Load ReadyPlayerMe GLB, handle idle animation)
+
+- [ROLE: editor-viewport-dev] Create `packages/editor/src/components/Viewport.tsx` (R3F Canvas, SceneManager, OrbitControls, TransformControls)
+
+- [ROLE: integration-dev] Implement `packages/engine/src/export/VideoExporter.tsx` (WebCodecs API or MediaRecorder for canvas capture)
+- [ROLE: integration-dev] Implement `packages/engine/src/audio/AudioEngine.tsx` (Tone.js integration, spatial audio with SpeakerActor)
+
+- [ROLE: web-integrator] Update `apps/web/app/create/page.tsx` to mount `EditorLayout` and verify full app assembly
+
 ## Engine Tasks
 
-- [ROLE: engine-type-hardener] Review all type definitions in `packages/engine/src/types/index.ts`, remove any `any` usage, add missing interfaces
-- [ROLE: engine-schema-validator] Ensure all Zod schemas in `packages/engine/src/schemas/` match TypeScript interfaces exactly
-- [ROLE: engine-animation-dev] Add missing easing functions (bounce, elastic, back) to `packages/engine/src/animation/easing.ts`
-- [ROLE: engine-playback-dev] Add speed controls and loop modes to PlaybackController
-- [ROLE: engine-test-writer] Write tests for PlaybackController
+- [ROLE: engine-test-writer] Write tests for `PlaybackController.ts` in `packages/engine/src/playback/`
 - [ROLE: engine-api-docs] Add JSDoc comments to all exported functions in `packages/engine/src/index.ts`
-
-## Editor Tasks
-
-- [ROLE: editor-layout-dev] Add responsive breakpoints to EditorLayout for tablet/mobile
-- [ROLE: editor-components-dev] Create shared Button, Input, Select components using design tokens
-- [ROLE: editor-timeline-dev] Wire TimelinePanel to usePlayback hook, add real keyframe rendering
-- [ROLE: editor-viewport-dev] Create Viewport component with R3F Canvas + OrbitControls + SceneManager
+- [ROLE: engine-animation-dev] Add missing easing functions (bounce, elastic, back) to `packages/engine/src/animation/easing.ts`
 
 ## Web App Tasks
 
+- [ROLE: web-layout-dev] Refine Next.js app layout with navigation, auth placeholder in `apps/web/app/layout.tsx`
+- [ROLE: web-pages-dev] Create landing page content in `apps/web/app/page.tsx`
+- [ROLE: web-test-writer] Write E2E tests for main user flows (create project, add actor, play)
 - [ROLE: web-layout-dev] Create Next.js app layout with navigation, auth placeholder
 - [ROLE: web-pages-dev] Create landing page, /create route with editor, /explore route
 - [ROLE: web-test-writer] Write E2E tests for main user flows
@@ -43,7 +45,7 @@
 
 - [ROLE: lint-fixer] Run eslint --fix on all packages, fix remaining issues manually
 - [ROLE: security-auditor] Scan for XSS vectors, unsafe innerHTML, unvalidated inputs
-- [ROLE: accessibility-auditor] Add aria-labels, keyboard navigation, screen reader support
+- [ROLE: accessibility-auditor] Add aria-labels, keyboard navigation, screen reader support in Editor panels
 - [ROLE: error-boundary-agent] Add try/catch to all async operations, ErrorBoundary to all canvas components
 
 ## Infrastructure Tasks
