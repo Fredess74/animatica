@@ -5,29 +5,7 @@ import { persist } from 'zustand/middleware';
 import { temporal } from 'zundo';
 import { useShallow } from 'zustand/react/shallow';
 import { Actor, Environment, Timeline, ProjectState, ProjectMeta } from '../types';
-
-/**
- * Loop modes for playback.
- */
-export type LoopMode = 'none' | 'loop' | 'pingpong';
-
-/**
- * Playback state for the scene.
- */
-export interface PlaybackState {
-  /** Current playback time in seconds. */
-  currentTime: number;
-  /** Whether the scene is currently playing. */
-  isPlaying: boolean;
-  /** Frame rate for playback (e.g., 24, 30, 60). */
-  frameRate: number;
-  /** Playback speed multiplier (default: 1.0). */
-  speed: number;
-  /** Playback direction (1 for forward, -1 for backward). */
-  direction: 1 | -1;
-  /** Current loop mode. */
-  loopMode: LoopMode;
-}
+import { LoopMode, PlaybackState } from './types';
 
 /**
  * State and actions for the scene store.
@@ -151,7 +129,7 @@ export const useSceneStore = create<SceneStoreState>()(
 );
 
 // Re-export types
-export type { SceneStoreState, PlaybackState } from './types';
+export type { SceneStoreState, PlaybackState, LoopMode } from './types';
 
 // Selectors
 
