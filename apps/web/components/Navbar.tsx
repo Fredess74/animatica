@@ -2,10 +2,17 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+  const hiddenRoutes = ['/create', '/editor'];
+
+  if (hiddenRoutes.some((route) => pathname?.startsWith(route))) {
+    return null;
+  }
 
   return (
     <nav className="navbar" style={{

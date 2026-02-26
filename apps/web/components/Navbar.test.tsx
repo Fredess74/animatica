@@ -3,8 +3,15 @@ import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { Navbar } from './Navbar';
 
+// Mock next/navigation
+const mockUsePathname = vi.fn();
+vi.mock('next/navigation', () => ({
+  usePathname: () => mockUsePathname(),
+}));
+
 afterEach(() => {
   cleanup();
+  vi.clearAllMocks();
 });
 
 // Mock next/link
@@ -24,6 +31,7 @@ vi.mock('lucide-react', () => ({
 
 describe('Navbar', () => {
   it('renders logo and desktop links', () => {
+    mockUsePathname.mockReturnValue('/');
     render(<Navbar />);
     expect(screen.getByText('Animatica')).toBeTruthy();
 
@@ -35,6 +43,7 @@ describe('Navbar', () => {
   });
 
   it('toggles mobile menu', () => {
+    mockUsePathname.mockReturnValue('/');
     render(<Navbar />);
 
     // Initially mobile menu should not be in document (isOpen is false)
@@ -60,5 +69,11 @@ describe('Navbar', () => {
 
     // Expect 1 again (desktop only)
     expect(screen.getAllByText('Log In').length).toBe(1);
+  });
+
+  it('does not render on /create route', () => {
+    mockUsePathname.mockReturnValue('/create');
+    const { container } = render(<Navbar />);
+    expect(container.firstChild).toBeNull();
   });
 });
