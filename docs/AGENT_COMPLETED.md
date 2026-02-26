@@ -18,4 +18,4 @@
 - [DONE] [type-auditor] [2026-02-23] Scan all .ts files for any type, type assertions, missing return types in packages/engine
 - [DONE] [perf-auditor] [2026-02-23] Check for unnecessary re-renders, large bundle imports, missing memoization
 - [DONE] [editor-properties-dev] [2025-02-23] Wire PropertiesPanel to Zustand store (read/write actor properties)
-- [DONE] [type-auditor] [2026-02-24] Review all type definitions in packages/engine/src/types/index.ts, remove any any usage, add missing interfaces
+- [SUPERSEDED] [type-auditor] [2026-02-24] Review all type definitions in packages/engine/src/types/index.ts (Closed by newer PR)

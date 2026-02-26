@@ -45,7 +45,7 @@ describe('SceneManager', () => {
     vi.clearAllMocks()
 
     // Setup default store mock behavior
-    vi.mocked(useSceneStore).mockImplementation((selector: any) => {
+    ;(useSceneStore as any).mockImplementation((selector: any) => {
       const state = {
         actors: [],
         environment: {
@@ -67,7 +67,7 @@ describe('SceneManager', () => {
 
   it('renders primitive actors', () => {
     const actors = [{ id: '1', type: 'primitive' }]
-    vi.mocked(useSceneStore).mockImplementation((selector: any) => {
+    ;(useSceneStore as any).mockImplementation((selector: any) => {
        const state = {
          actors,
          environment: { ambientLight: {}, sun: {}, skyColor: '#000' },
@@ -83,7 +83,7 @@ describe('SceneManager', () => {
 
   it('renders light actors', () => {
     const actors = [{ id: '2', type: 'light' }]
-    vi.mocked(useSceneStore).mockImplementation((selector: any) => {
+    ;(useSceneStore as any).mockImplementation((selector: any) => {
        const state = {
          actors,
          environment: { ambientLight: {}, sun: {}, skyColor: '#000' },
@@ -99,7 +99,7 @@ describe('SceneManager', () => {
 
   it('renders camera actors', () => {
     const actors = [{ id: '3', type: 'camera' }]
-    vi.mocked(useSceneStore).mockImplementation((selector: any) => {
+    ;(useSceneStore as any).mockImplementation((selector: any) => {
        const state = {
          actors,
          environment: { ambientLight: {}, sun: {}, skyColor: '#000' },
@@ -115,7 +115,7 @@ describe('SceneManager', () => {
 
   it('renders character actors', () => {
     const actors = [{ id: '4', type: 'character' }]
-    vi.mocked(useSceneStore).mockImplementation((selector: any) => {
+    ;(useSceneStore as any).mockImplementation((selector: any) => {
        const state = {
          actors,
          environment: { ambientLight: {}, sun: {}, skyColor: '#000' },
@@ -131,7 +131,7 @@ describe('SceneManager', () => {
 
   it('renders speaker actors', () => {
     const actors = [{ id: '5', type: 'speaker' }]
-    vi.mocked(useSceneStore).mockImplementation((selector: any) => {
+    ;(useSceneStore as any).mockImplementation((selector: any) => {
        const state = {
          actors,
          environment: { ambientLight: {}, sun: {}, skyColor: '#000' },
