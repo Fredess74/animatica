@@ -8,7 +8,7 @@ import * as THREE from 'three'
 import { createProceduralHumanoid } from '../../character/CharacterLoader'
 import { CharacterAnimator, createIdleClip, createWalkClip } from '../../character/CharacterAnimator'
 import { getPreset } from '../../character/CharacterPresets'
-import type { CharacterActor, Vector3 } from '../../types'
+import type { CharacterActor } from '../../types'
 
 interface CharacterRendererProps {
   actor: CharacterActor
@@ -75,9 +75,6 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = React.memo(({
       animatorRef.current.update(delta)
     }
   })
-
-  // Selection outline effect (green tint)
-  const outlineColor = isSelected ? '#22C55E' : undefined
 
   if (!actor.visible) return null
 

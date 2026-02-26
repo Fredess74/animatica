@@ -47,18 +47,18 @@ describe('CharacterRenderer', () => {
 
   it('renders a group with correct transform and a primitive for the rig', () => {
     const Component = (CharacterRenderer as any).type || CharacterRenderer;
-    const result = Component({ actor: mockActor }) as React.ReactElement
+    const result = Component({ actor: mockActor }) as React.ReactElement<any>
 
     expect(result).not.toBeNull()
     expect(result.type).toBe('group')
 
-    const props = result.props as any
+    const props = result.props
     expect(props.position).toEqual([10, 0, 5])
     expect(props.rotation).toEqual([0, Math.PI, 0])
     expect(props.scale).toEqual([1, 1, 1])
 
     // Verify children
-    const children = React.Children.toArray(props.children) as React.ReactElement[]
+    const children = React.Children.toArray(props.children) as React.ReactElement<any>[]
 
     // Should have a primitive child for the humanoid rig
     const primitive = children.find(child => child.type === 'primitive')
@@ -75,8 +75,8 @@ describe('CharacterRenderer', () => {
 
   it('renders selection ring when selected', () => {
     const Component = (CharacterRenderer as any).type || CharacterRenderer;
-    const result = Component({ actor: mockActor, isSelected: true }) as React.ReactElement
-    const children = React.Children.toArray(result.props.children) as React.ReactElement[]
+    const result = Component({ actor: mockActor, isSelected: true }) as React.ReactElement<any>
+    const children = React.Children.toArray(result.props.children) as React.ReactElement<any>[]
 
     // Should find a mesh with ringGeometry
     const selectionRing = children.find(child =>

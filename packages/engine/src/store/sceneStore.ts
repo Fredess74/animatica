@@ -3,10 +3,10 @@ import { immer } from 'zustand/middleware/immer';
 import { persist } from 'zustand/middleware';
 import { temporal } from 'zundo';
 import { useShallow } from 'zustand/react/shallow';
-import { Actor, Environment, Timeline, ProjectState, ProjectMeta } from '../types';
+import { Actor } from '../types';
 
 
-import { SceneStoreState, PlaybackState } from './types';
+import { SceneStoreState } from './types';
 import { createActorsSlice } from './slices/actorsSlice';
 import { createEnvironmentSlice } from './slices/environmentSlice';
 import { createTimelineSlice } from './slices/timelineSlice';
@@ -67,7 +67,7 @@ export const useSceneStore = create<SceneStoreState>()(
 );
 
 // Re-export types
-export type { SceneStoreState, PlaybackState } from './types';
+export type { SceneStoreState, PlaybackState, LoopMode } from './types';
 
 // Selectors
 
