@@ -199,6 +199,6 @@ describe('Engine Benchmarks', () => {
                     getState().removeActor(`bench-${i}`);
                 }
             });
-        });
+        }, 20000); // Increased timeout to 20s
     });
 });

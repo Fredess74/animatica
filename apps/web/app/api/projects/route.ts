@@ -55,6 +55,7 @@ export async function POST(req: NextRequest) {
           duration: 30,
           cameraTrack: [],
           animationTracks: [],
+          markers: [],
         },
         library: { clips: [] },
       };
