@@ -4,50 +4,62 @@ import React, { createContext, useContext, ReactNode, useMemo } from 'react';
 export interface FeatureFlags {
   characters: boolean;
   export: boolean;
-  ai_prompts: boolean;
+  aiPrompts: boolean;
   multiplayer: boolean;
-  cloud_sync: boolean;
+  cloudSync: boolean;
 }
 
 const DEFAULT_FLAGS_DEV: FeatureFlags = {
   characters: true,
   export: true,
-  ai_prompts: true,
+  aiPrompts: true,
   multiplayer: true,
-  cloud_sync: true,
+  cloudSync: true,
 };
 
 const DEFAULT_FLAGS_PROD: FeatureFlags = {
   characters: false,
   export: false,
-  ai_prompts: false,
+  aiPrompts: false,
   multiplayer: false,
-  cloud_sync: false,
+  cloudSync: false,
+};
+
+// Helper to get raw env value safely
+const getRawEnv = (key: string, env: Record<string, string | boolean | undefined>): string | undefined => {
+  const val = env[key];
+  if (typeof val === 'string') return val;
+  if (typeof val === 'boolean') return val ? 'true' : 'false';
+  return undefined;
 };
 
 export const getFeatureFlags = (
   envMode: string = import.meta.env.MODE,
-  // Cast to Record<string, string> because ImportMetaEnv has an index signature but we want to be safe
   env: Record<string, string | boolean | undefined> = import.meta.env as unknown as Record<string, string | boolean | undefined>
 ): FeatureFlags => {
   const isDev = envMode === 'development';
   const defaults = isDev ? DEFAULT_FLAGS_DEV : DEFAULT_FLAGS_PROD;
 
-  const getEnvFlag = (key: string): boolean | undefined => {
-    const envKey = `VITE_FEATURE_FLAG_${key.toUpperCase()}`;
-    // Access as string because env vars are usually strings
-    const value = env[envKey];
+  const getEnvFlag = (key: string, fallback: boolean): boolean => {
+    // Look for VITE_FEATURE_FLAG_KEY_NAME
+    // We need to convert camelCase to SNAKE_CASE for env vars
+    // e.g. aiPrompts -> AI_PROMPTS
+    const snakeKey = key.replace(/([A-Z])/g, '_$1').toUpperCase();
+    const envKey = `VITE_FEATURE_FLAG_${snakeKey}`;
+
+    const value = getRawEnv(envKey, env);
+
     if (value === 'true') return true;
     if (value === 'false') return false;
-    return undefined;
+    return fallback;
   };
 
   return {
-    characters: getEnvFlag('characters') ?? defaults.characters,
-    export: getEnvFlag('export') ?? defaults.export,
-    ai_prompts: getEnvFlag('ai_prompts') ?? defaults.ai_prompts,
-    multiplayer: getEnvFlag('multiplayer') ?? defaults.multiplayer,
-    cloud_sync: getEnvFlag('cloud_sync') ?? defaults.cloud_sync,
+    characters: getEnvFlag('characters', defaults.characters),
+    export: getEnvFlag('export', defaults.export),
+    aiPrompts: getEnvFlag('aiPrompts', defaults.aiPrompts),
+    multiplayer: getEnvFlag('multiplayer', defaults.multiplayer),
+    cloudSync: getEnvFlag('cloudSync', defaults.cloudSync),
   };
 };
 
