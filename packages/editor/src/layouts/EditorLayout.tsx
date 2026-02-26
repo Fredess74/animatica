@@ -7,7 +7,7 @@
  * @module @animatica/editor/layouts/EditorLayout
  */
 import React, { useState, useCallback } from 'react';
-import { useSceneStore, useSelectedActorId, useIsPlaying } from '@Animatica/engine';
+import { useSceneStore } from '@Animatica/engine';
 import { AssetLibrary } from '../panels/AssetLibrary';
 import { PropertiesPanel } from '../panels/PropertiesPanel';
 import { TimelinePanel } from '../panels/TimelinePanel';
@@ -23,8 +23,8 @@ interface EditorLayoutProps {
 
 const EditorContent: React.FC<EditorLayoutProps> = ({ viewport }) => {
     // Use store for selection instead of local state
-    const selectedActorId = useSelectedActorId();
-    const isPlaying = useIsPlaying();
+    const selectedActorId = useSceneStore((state) => state.selectedActorId);
+    const isPlaying = useSceneStore((state) => state.playback.isPlaying);
 
     // Select specific actions to avoid re-rendering on every store change
     const setSelectedActor = useSceneStore((state) => state.setSelectedActor);
