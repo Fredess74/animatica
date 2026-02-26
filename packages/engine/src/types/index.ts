@@ -259,7 +259,18 @@ export type Actor = CharacterActor | PrimitiveActor | LightActor | CameraActor |
 /**
  * Supported easing functions for animation interpolation.
  */
-export type EasingType = 'linear' | 'easeIn' | 'easeOut' | 'easeInOut' | 'step'
+export type EasingType =
+  | 'linear'
+  | 'easeIn'
+  | 'easeOut'
+  | 'easeInOut'
+  | 'step'
+  | 'bounce'
+  | 'elastic'
+  | 'spring'
+  | 'backIn'
+  | 'backOut'
+  | 'backInOut'
 
 /**
  * A single keyframe in an animation track.

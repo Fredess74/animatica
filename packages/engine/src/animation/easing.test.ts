@@ -77,4 +77,36 @@ describe('Easing Functions', () => {
     expect(Easing.step(0.999)).toBe(0);
     expect(Easing.step(1)).toBe(1);
   });
+
+  it('spring', () => {
+    expect(Easing.spring(0)).toBe(0);
+    // As t approaches 1, it should be close to 1
+    expect(Easing.spring(1)).toBeCloseTo(1, 1);
+    // At small t, it should start moving
+    expect(Easing.spring(0.1)).toBeGreaterThan(0);
+  });
+
+  it('backIn', () => {
+    expect(Math.abs(Easing.backIn(0))).toBe(0);
+    expect(Easing.backIn(1)).toBeCloseTo(1);
+    // Should go negative initially
+    expect(Easing.backIn(0.2)).toBeLessThan(0);
+  });
+
+  it('backOut', () => {
+    expect(Easing.backOut(0)).toBeCloseTo(0);
+    expect(Easing.backOut(1)).toBeCloseTo(1);
+    // Should overshoot (go > 1) near the end
+    expect(Easing.backOut(0.8)).toBeGreaterThan(1);
+  });
+
+  it('backInOut', () => {
+    expect(Math.abs(Easing.backInOut(0))).toBe(0);
+    expect(Easing.backInOut(1)).toBe(1);
+    expect(Easing.backInOut(0.5)).toBe(0.5);
+    // Should go negative early
+    expect(Easing.backInOut(0.1)).toBeLessThan(0);
+    // Should overshoot late
+    expect(Easing.backInOut(0.9)).toBeGreaterThan(1);
+  });
 });

@@ -85,6 +85,49 @@ export const elastic = (t: number): number => {
 };
 
 /**
+ * Spring effect easing (gentler than elastic).
+ * @param t Normalized time (0-1).
+ * @returns Eased value.
+ */
+export const spring = (t: number): number => {
+  return 1 - Math.cos(t * 4.5 * Math.PI) * Math.exp(-t * 6);
+};
+
+/**
+ * Back ease-in.
+ * Retracts the motion before shooting to the target.
+ * @param t Normalized time (0-1).
+ * @returns Eased value.
+ */
+export const backIn = (t: number): number => {
+  const s = 1.70158;
+  return t * t * ((s + 1) * t - s);
+};
+
+/**
+ * Back ease-out.
+ * Overshoots the target before retracting.
+ * @param t Normalized time (0-1).
+ * @returns Eased value.
+ */
+export const backOut = (t: number): number => {
+  const s = 1.70158;
+  return --t * t * ((s + 1) * t + s) + 1;
+};
+
+/**
+ * Back ease-in-out.
+ * Retracts, then overshoots.
+ * @param t Normalized time (0-1).
+ * @returns Eased value.
+ */
+export const backInOut = (t: number): number => {
+  const s = 1.70158 * 1.525;
+  if ((t *= 2) < 1) return 0.5 * (t * t * ((s + 1) * t - s));
+  return 0.5 * ((t -= 2) * t * ((s + 1) * t + s) + 2);
+};
+
+/**
  * Step function (returns 0 if t < 1, else 1).
  * Used for instant value changes without interpolation.
  * @param t Normalized time (0-1).

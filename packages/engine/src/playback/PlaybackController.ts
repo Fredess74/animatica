@@ -46,15 +46,23 @@ export function usePlayback(): PlaybackControls {
     const lastFrameTimeRef = useRef<number | null>(null);
 
     // Subscribe to playback state changes
-    const isPlaying = useSceneStore((s) => s.playback.isPlaying);
-    // Sync refs with props
+    const { isPlaying, loopMode, speed, direction } = useSceneStore((s) => s.playback);
+    const loopModeRef = useRef<LoopMode>(loopMode);
+    const speedRef = useRef<number>(speed);
+    const directionRef = useRef<number>(direction);
+
+    // Sync refs with props to avoid re-creating tick callback
     useEffect(() => {
-        loopRef.current = loop;
-    }, [loop]);
+        loopModeRef.current = loopMode;
+    }, [loopMode]);
 
     useEffect(() => {
         speedRef.current = speed;
     }, [speed]);
+
+    useEffect(() => {
+        directionRef.current = direction;
+    }, [direction]);
 
     /**
      * The core animation frame callback.
@@ -71,7 +79,11 @@ export function usePlayback(): PlaybackControls {
 
             const state = useSceneStore.getState();
             const { duration } = state.timeline;
-            const { currentTime, speed, direction, loopMode } = state.playback;
+            const { currentTime } = state.playback;
+
+            const speed = speedRef.current;
+            const direction = directionRef.current;
+            const loopMode = loopModeRef.current;
 
             // Convert to seconds and apply speed multiplier and direction
             // Note: speed is magnitude, direction is sign (+1/-1)

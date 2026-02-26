@@ -25,3 +25,4 @@
 - [DONE] [editor-modal-dev] [2026-02-24] Improve ScriptConsole/ExportModal and add useKeyboardShortcuts hook
 - [DONE] [conductor] [2026-02-24] Updated task queue for Phase 2 (Characters) and Phase 3 (Editor Viewport)
 - [DONE] [readme-updater] [2026-02-25] Update README.md with current features, quick start guide
+- [DONE] [engine-animation-dev] [2026-02-24] Add back, spring easing functions and update types
