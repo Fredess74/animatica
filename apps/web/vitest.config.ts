@@ -12,4 +12,7 @@ export default defineConfig({
     globals: true,
     // Ensure we can resolve workspace packages correctly if needed
   },
+  esbuild: {
+    jsxInject: `import React from 'react'`,
+  },
 });
