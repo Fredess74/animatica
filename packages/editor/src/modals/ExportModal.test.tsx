@@ -1,5 +1,4 @@
 // @vitest-environment jsdom
-import React from 'react';
 import { render, screen, fireEvent, act, cleanup } from '@testing-library/react';
 import { ExportModal } from './ExportModal';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';

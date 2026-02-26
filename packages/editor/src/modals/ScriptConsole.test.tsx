@@ -1,5 +1,4 @@
 // @vitest-environment jsdom
-import React from 'react';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import { ScriptConsole } from './ScriptConsole';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';

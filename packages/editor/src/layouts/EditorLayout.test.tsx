@@ -1,5 +1,4 @@
 // @vitest-environment jsdom
-import React from 'react';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import { EditorLayout } from './EditorLayout';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
@@ -8,7 +7,7 @@ import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
 
 // Mock dependencies
 vi.mock('../components/ToastContext', () => ({
-  ToastProvider: ({ children }: { children: React.ReactNode }) => <div data-testid="toast-provider">{children}</div>,
+  ToastProvider: ({ children }: { children: any }) => <div data-testid="toast-provider">{children}</div>,
   useToast: () => ({ showToast: vi.fn() }),
 }));
 
@@ -29,7 +28,6 @@ vi.mock('@Animatica/engine', () => ({
 
 describe('EditorLayout', () => {
   const mockSetPlayback = vi.fn();
-  const mockRemoveActor = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -38,7 +36,7 @@ describe('EditorLayout', () => {
     (engine.useSceneStore as any).mockReturnValue({
       playback: { isPlaying: false },
       setPlayback: mockSetPlayback,
-      removeActor: mockRemoveActor,
+      removeActor: vi.fn(),
     });
   });
 
