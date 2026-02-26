@@ -3,7 +3,7 @@
  * Provides a React hook that manages the animation loop, time tracking,
  * and camera cuts for the scene.
  *
- * @module @animatica/engine/playback/PlaybackController
+ * @module @Animatica/engine/playback/PlaybackController
  */
 import { useCallback, useEffect, useRef } from 'react';
 import { useSceneStore, type LoopMode } from '../store/sceneStore';
