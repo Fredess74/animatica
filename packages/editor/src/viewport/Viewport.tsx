@@ -5,13 +5,19 @@ import { OrbitControls, TransformControls, Grid } from '@react-three/drei';
 import { SceneManager, useSceneStore } from '@Animatica/engine';
 import { Box, Eye, Monitor, Maximize } from 'lucide-react';
 
+// --- Types ---
+
+interface OrbitControlsRef {
+    enabled: boolean;
+}
+
 // --- Components ---
 
 /**
  * Handles the TransformControls (Gizmo) for the selected actor.
  * Finds the 3D object by name (actor ID) and attaches controls to it.
  */
-const Gizmo: React.FC<{ orbitRef: React.RefObject<any> }> = ({ orbitRef }) => {
+const Gizmo: React.FC<{ orbitRef: React.RefObject<OrbitControlsRef | null> }> = ({ orbitRef }) => {
     const selectedActorId = useSceneStore((s) => s.selectedActorId);
     const updateActor = useSceneStore((s) => s.updateActor);
     const { scene } = useThree();
@@ -24,14 +30,10 @@ const Gizmo: React.FC<{ orbitRef: React.RefObject<any> }> = ({ orbitRef }) => {
             return;
         }
 
-        // We might need a small delay or retry if the object is just being mounted
-        // but typically R3F mounts children before effects run here if structure is static.
-        // Since selection usually happens on click (object exists), it should be fine.
         const obj = scene.getObjectByName(selectedActorId);
         if (obj) {
             setTarget(obj);
         } else {
-            // Fallback or retry logic could go here
             setTarget(undefined);
         }
     }, [selectedActorId, scene]);
@@ -42,17 +44,18 @@ const Gizmo: React.FC<{ orbitRef: React.RefObject<any> }> = ({ orbitRef }) => {
         <TransformControls
             object={target}
             mode="translate" // TODO: Add mode switching (rotate, scale)
-            // @ts-ignore - onDraggingChanged is valid but types are missing
-            onDraggingChanged={(e: any) => {
-                if (orbitRef.current) {
+            // @ts-expect-error - onDraggingChanged is valid but types are missing in drei
+            onDraggingChanged={(e: { value: boolean } | undefined) => {
+                if (orbitRef.current && e) {
                     orbitRef.current.enabled = !e.value;
                 }
             }}
-            onChange={(e: any) => {
-                if (e?.target?.object) {
-                    const obj = e.target.object;
+            onChange={(e: unknown) => {
+                // Type guard for the event
+                const ev = e as { target: { object: THREE.Object3D } };
+                if (ev?.target?.object) {
+                    const obj = ev.target.object;
                     // Sync changes back to store
-                    // We need to convert THREE types to primitives
                     updateActor(selectedActorId, {
                         transform: {
                             position: [obj.position.x, obj.position.y, obj.position.z],
@@ -106,8 +109,7 @@ const CameraToolbar: React.FC<{
     );
 };
 
-// Helper component to access camera from outside canvas via context/props bridge?
-// No, we can put the logic inside a component inside Canvas.
+// Helper component to access camera from outside canvas
 const CameraController: React.FC<{
     viewPosition: [number, number, number] | null;
     setViewPosition: (pos: [number, number, number] | null) => void;

@@ -24,8 +24,6 @@ Focus on completing **Batch 3 (Characters)** and the missing **Batch 4 (Viewport
 - [ROLE: character-dev] Implement `packages/engine/src/characters/ClothingSystem.ts` (Procedural clothing attachment)
 - [ROLE: character-dev] Create `packages/engine/src/characters/Humanoid.tsx` (Load ReadyPlayerMe GLB, handle idle animation)
 
-- [ROLE: editor-viewport-dev] Create `packages/editor/src/components/Viewport.tsx` (R3F Canvas, SceneManager, OrbitControls, TransformControls)
-
 - [ROLE: integration-dev] Implement `packages/engine/src/export/VideoExporter.tsx` (WebCodecs API or MediaRecorder for canvas capture)
 - [ROLE: integration-dev] Implement `packages/engine/src/audio/AudioEngine.tsx` (Tone.js integration, spatial audio with SpeakerActor)
 
@@ -33,7 +31,6 @@ Focus on completing **Batch 3 (Characters)** and the missing **Batch 4 (Viewport
 
 - [ROLE: editor-layout-dev] Add responsive breakpoints to EditorLayout for tablet/mobile
 - [ROLE: editor-components-dev] Create shared Button, Input, Select components using design tokens
-- [ROLE: editor-viewport-dev] Create Viewport component with R3F Canvas + OrbitControls + SceneManager
 - [ROLE: editor-timeline-dev] Wire TimelinePanel to usePlayback hook, add real keyframe rendering
 ## Engine Tasks
 
