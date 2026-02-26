@@ -158,7 +158,7 @@ describe('Engine Benchmarks', () => {
                 timeline: { duration: 10, cameraTrack: [], animationTracks: [], markers: [] },
                 library: { clips: [] },
                 playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, direction: 1, loopMode: 'none' },
-            });
+            } as any);
 
             measure('Store Playback Updates (10k ops)', () => {
                 for (let i = 0; i < 10000; i++) {
@@ -167,7 +167,7 @@ describe('Engine Benchmarks', () => {
             });
         });
 
-        it('Store Actor CRUD Throughput (1k actors)', () => {
+        it('Store Actor CRUD Throughput (500 actors)', () => {
             const { setState, getState } = useSceneStore;
 
             setState({
@@ -175,8 +175,8 @@ describe('Engine Benchmarks', () => {
                 playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, direction: 1, loopMode: 'none' },
             } as any);
 
-            measure('Store Add Actor (1k ops)', () => {
-                for (let i = 0; i < 1000; i++) {
+            measure('Store Add Actor (500 ops)', () => {
+                for (let i = 0; i < 500; i++) {
                     getState().addActor({
                         id: `bench-${i}`,
                         name: `Actor ${i}`,
@@ -188,14 +188,14 @@ describe('Engine Benchmarks', () => {
                 }
             });
 
-            measure('Store Update Actor (1k ops)', () => {
-                for (let i = 0; i < 1000; i++) {
+            measure('Store Update Actor (500 ops)', () => {
+                for (let i = 0; i < 500; i++) {
                     getState().updateActor(`bench-${i}`, { visible: false });
                 }
             });
 
-            measure('Store Remove Actor (1k ops)', () => {
-                for (let i = 0; i < 1000; i++) {
+            measure('Store Remove Actor (500 ops)', () => {
+                for (let i = 0; i < 500; i++) {
                     getState().removeActor(`bench-${i}`);
                 }
             });

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { ProjectStateSchema } from '@Animatica/engine';
+import { ProjectStateSchema, ProjectState } from '@Animatica/engine';
 import { getProjectById, updateProject, deleteProject } from '@/lib/db';
 import { handleError, jsonResponse } from '@/lib/api-utils';
 import { rateLimit } from '@/lib/rate-limit';
@@ -49,7 +49,11 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
         updates = ProjectStateSchema.parse(json);
     }
 
-    const updated = await updateProject(id, updates);
+    // Explicitly cast to Partial<ProjectState> to avoid TS errors when schema inference is strict
+    // but the db function allows partial updates.
+    // The error was "Property 'markers' is missing...".
+    // If updates is validated but missing markers, it's valid for partial update.
+    const updated = await updateProject(id, updates as Partial<ProjectState>);
     if (!updated) {
       return jsonResponse({ error: 'Project not found' }, 404);
     }
