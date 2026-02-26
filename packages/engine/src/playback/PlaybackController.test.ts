@@ -10,9 +10,7 @@ const caf = vi.fn();
 global.requestAnimationFrame = raf;
 global.cancelAnimationFrame = caf;
 
-// TODO: Tests skipped because PlaybackController.ts contains syntax errors (undefined 'loop' and 'speed' variables).
-// Tests should be enabled once the source code is fixed.
-describe.skip('usePlayback', () => {
+describe('usePlayback', () => {
     beforeEach(() => {
         useSceneStore.setState({
             playback: {
