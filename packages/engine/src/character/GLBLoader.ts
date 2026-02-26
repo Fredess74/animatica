@@ -171,18 +171,19 @@ export function parseGLBResult(
  * Convert a GLBLoadResult to a CharacterRig for use by CharacterAnimator.
  */
 export function glbToCharacterRig(result: GLBLoadResult): CharacterRig {
-    // Build bone record
-    const boneRecord: Partial<Record<HumanoidBoneName, THREE.Bone>> = {}
+    // Build bones Map matching CharacterRig type
+    const bonesMap = new Map<string, THREE.Bone>()
     result.bones.forEach((bone, name) => {
-        boneRecord[name] = bone
+        bonesMap.set(name, bone)
     })
 
     return {
         root: result.scene,
-        bones: boneRecord as Record<HumanoidBoneName, THREE.Bone>,
-        skeleton: result.skeleton!,
-        bodyMesh: result.bodyMesh!,
+        bones: bonesMap,
+        skeleton: result.skeleton,
+        bodyMesh: result.bodyMesh,
         morphTargetMap: result.morphTargetMap,
+        animations: result.animations,
     }
 }
 

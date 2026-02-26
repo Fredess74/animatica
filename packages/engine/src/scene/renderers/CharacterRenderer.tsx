@@ -5,12 +5,12 @@
 import React, { useEffect, useRef, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
-import { createProceduralHumanoid } from '../character/CharacterLoader'
-import { CharacterAnimator, createIdleClip, createWalkClip } from '../character/CharacterAnimator'
-import { FaceMorphController } from '../character/FaceMorphController'
-import { EyeController } from '../character/EyeController'
-import { getPreset } from '../character/CharacterPresets'
-import type { CharacterActor } from '../types'
+import { createProceduralHumanoid } from '../../character/CharacterLoader'
+import { CharacterAnimator, createIdleClip, createWalkClip } from '../../character/CharacterAnimator'
+import { FaceMorphController } from '../../character/FaceMorphController'
+import { EyeController } from '../../character/EyeController'
+import { getPreset } from '../../character/CharacterPresets'
+import type { CharacterActor } from '../../types'
 
 interface CharacterRendererProps {
   actor: CharacterActor

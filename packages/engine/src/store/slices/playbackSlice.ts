@@ -11,6 +11,9 @@ export const createPlaybackSlice: StateCreator<
     currentTime: 0,
     isPlaying: false,
     frameRate: 24,
+    speed: 1.0,
+    direction: 1 as const,
+    loopMode: 'none' as const,
   },
 
   setPlayback: (playback) =>

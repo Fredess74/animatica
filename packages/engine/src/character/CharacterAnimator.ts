@@ -487,7 +487,6 @@ export function createJumpClip(duration = 1.0): THREE.AnimationClip {
             hipY = 0.8 - airP * 0.25
         } else {
             // Landing
-            const landP = (p - 0.8) / 0.2
             hipY = 0.55
         }
 
