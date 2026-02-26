@@ -15,12 +15,16 @@ export {
   getCurrentTime,
   useActorById,
   useActorIds,
+  useActorCount,
   useCurrentTime,
   useIsPlaying,
   useSelectedActorId,
   useSelectedActor,
   useActorsByType,
   useActorList,
+  useProjectMeta,
+  useEnvironment,
+  useTimeline,
 } from './store/sceneStore';
 
 // === COMPONENTS (R3F) ===
@@ -47,4 +51,3 @@ export { getAiPrompt, PROMPT_STYLES } from './ai/promptTemplates';
 // === CONFIG ===
 export { FeatureFlagProvider, useFeatureFlag, getFeatureFlags } from './config/featureFlags';
 export type { FeatureFlags } from './config/featureFlags';
-
