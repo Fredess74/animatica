@@ -13,18 +13,21 @@ function loadLicenses() {
     const data = JSON.parse(output);
 
     const pkgToLicense = {};
+    const pkgToVersion = {};
     for (const [licenseName, packages] of Object.entries(data)) {
         for (const pkg of packages) {
             pkgToLicense[pkg.name] = licenseName;
+            pkgToVersion[pkg.name] = pkg.versions ? pkg.versions[0] : 'Unknown';
         }
     }
-    return pkgToLicense;
+    return { pkgToLicense, pkgToVersion };
 }
 
 function main() {
-    const pkgToLicense = loadLicenses();
+    const { pkgToLicense, pkgToVersion } = loadLicenses();
 
-    const allDeps = {};
+    const allDirectDepsMap = {};
+    const directDepsSet = new Set();
 
     for (const pjPath of getPackageJsons()) {
         const pj = JSON.parse(fs.readFileSync(pjPath, 'utf8'));
@@ -37,61 +40,92 @@ function main() {
             if (name.startsWith('@Animatica/') || (typeof version === 'string' && version.startsWith('workspace:'))) {
                 continue;
             }
-            if (!allDeps[name]) {
-                allDeps[name] = new Set();
+            if (!allDirectDepsMap[name]) {
+                allDirectDepsMap[name] = new Set();
             }
-            allDeps[name].add(pj.name || 'root');
+            allDirectDepsMap[name].add(pj.name || 'root');
+            directDepsSet.add(name);
         }
     }
 
-    const sortedDeps = Object.keys(allDeps).sort();
+    const sortedDirectDeps = Object.keys(allDirectDepsMap).sort();
 
-    let table = "| Dependency | License | Flag | Used In |\n";
-    table += "| --- | --- | --- | --- |\n";
+    // Direct Dependencies Table
+    let directTable = "| Dependency | License | Used In |\n";
+    directTable += "| --- | --- | --- |\n";
 
-    const flagged = [];
-
-    for (const dep of sortedDeps) {
+    for (const dep of sortedDirectDeps) {
         const license = pkgToLicense[dep] || 'Unknown';
-        let flag = "";
-        if (license !== 'MIT' && !license.includes('MIT')) {
-            flag = "⚠️ Non-MIT";
-            flagged.push(`- **\`${dep}\`**: ${license}`);
+        const usedIn = Array.from(allDirectDepsMap[dep]).sort().join(', ');
+        directTable += `| ${dep} | ${license} | ${usedIn} |\n`;
+    }
+
+    // All Dependencies and Flagged
+    const everySingleDep = Object.keys(pkgToLicense).filter(d => !d.startsWith('@Animatica/')).sort();
+
+    const flaggedTableRows = [];
+    let allTable = "| Dependency | Version | License |\n";
+    allTable += "| --- | --- | --- |\n";
+
+    for (const dep of everySingleDep) {
+        const license = pkgToLicense[dep] || 'Unknown';
+        const version = pkgToVersion[dep] || 'Unknown';
+
+        if (license !== 'MIT' && !license.includes('MIT') && license !== 'MIT-0') {
+            flaggedTableRows.push(`| ${dep} | ${version} | ${license} | ${directDepsSet.has(dep) ? '**Direct**' : 'Transitive'} |`);
         }
 
-        const usedIn = Array.from(allDeps[dep]).sort().join(', ');
-        table += `| ${dep} | ${license} | ${flag} | ${usedIn} |\n`;
+        allTable += `| ${dep} | ${version} | ${license} |\n`;
     }
+
+    let flaggedTable = "| Dependency | Version | License | Type |\n";
+    flaggedTable += "| --- | --- | --- | --- |\n";
+    flaggedTable += flaggedTableRows.join('\n') + '\n';
 
     const auditPath = path.join(process.cwd(), 'docs/LICENSE_AUDIT.md');
     let auditContent = fs.readFileSync(auditPath, 'utf8');
 
-    // Update Dependency Licenses section
-    // Look for the table or the header
-    const depSectionStart = "## Dependency Licenses\n\nThe following dependencies were audited:\n\n";
-    const depSectionEnd = "\n\n## Flagged Licenses";
-
-    const startIndex = auditContent.indexOf(depSectionStart);
-    const endIndex = auditContent.indexOf(depSectionEnd);
-
-    if (startIndex !== -1 && endIndex !== -1) {
-        auditContent = auditContent.substring(0, startIndex + depSectionStart.length) +
-                       table +
-                       auditContent.substring(endIndex);
-    }
-
     // Update Flagged Licenses section
-    const flaggedSectionStart = "## Flagged Licenses (Non-MIT/Apache-2.0)\n\n";
-    const flaggedSectionEnd = "\n\n## Missing Licenses";
-
+    const flaggedSectionStart = "## Flagged Licenses (Non-MIT)\n\nThe following dependencies have non-MIT licenses:\n\n";
+    const flaggedSectionEnd = "\n\n## Direct Dependencies";
     const fStartIndex = auditContent.indexOf(flaggedSectionStart);
     const fEndIndex = auditContent.indexOf(flaggedSectionEnd);
-
     if (fStartIndex !== -1 && fEndIndex !== -1) {
         auditContent = auditContent.substring(0, fStartIndex + flaggedSectionStart.length) +
-                       flagged.join('\n') +
+                       flaggedTable +
                        auditContent.substring(fEndIndex);
     }
+
+    // Update Direct Dependencies section
+    const directSectionStart = "## Direct Dependencies\n\n";
+    const directSectionEnd = "\n\n## All Dependencies";
+    const dStartIndex = auditContent.indexOf(directSectionStart);
+    const dEndIndex = auditContent.indexOf(directSectionEnd);
+    if (dStartIndex !== -1 && dEndIndex !== -1) {
+        auditContent = auditContent.substring(0, dStartIndex + directSectionStart.length) +
+                       directTable +
+                       auditContent.substring(dEndIndex);
+    }
+
+    // Update All Dependencies section
+    const allSectionStart = "<summary>Click to expand full dependency list</summary>\n\n";
+    const allSectionEnd = "\n\n</details>";
+    const aStartIndex = auditContent.indexOf(allSectionStart);
+    const aEndIndex = auditContent.indexOf(allSectionEnd);
+    if (aStartIndex !== -1 && aEndIndex !== -1) {
+        auditContent = auditContent.substring(0, aStartIndex + allSectionStart.length) +
+                       allTable +
+                       auditContent.substring(aEndIndex);
+    }
+
+    // Update Summary
+    const totalDeps = everySingleDep.length;
+    const directDepsCount = directDepsSet.size;
+    const transitiveDepsCount = totalDeps - directDepsCount;
+
+    auditContent = auditContent.replace(/Total dependencies found: \d+/, `Total dependencies found: ${totalDeps}`);
+    auditContent = auditContent.replace(/Direct dependencies: \d+/, `Direct dependencies: ${directDepsCount}`);
+    auditContent = auditContent.replace(/Transitive dependencies: \d+/, `Transitive dependencies: ${transitiveDepsCount}`);
 
     // Update Date
     const dateRegex = /\*\*Date:\*\* .*/;
