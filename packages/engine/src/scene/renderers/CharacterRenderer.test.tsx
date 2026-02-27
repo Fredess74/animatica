@@ -64,7 +64,7 @@ describe('CharacterRenderer', () => {
     const children = React.Children.toArray(props.children) as React.ReactElement[]
 
     // First child should be the rig root primitive
-    const rigRoot = children[0]
+    const rigRoot = children[0] as any
     expect(rigRoot.type).toBe('primitive')
     expect(rigRoot.props.object).toBeDefined()
   })
