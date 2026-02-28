@@ -82,6 +82,16 @@ export interface MetaSlice {
 }
 
 /**
+ * Asset library state and actions.
+ */
+export interface LibrarySlice {
+  /** Asset library. */
+  library: { clips: unknown[] };
+  /** Sets the asset library. */
+  setLibrary: (library: { clips: unknown[] }) => void;
+}
+
+/**
  * Combined state and actions for the scene store.
  */
 export interface SceneStoreState extends
@@ -89,7 +99,5 @@ export interface SceneStoreState extends
   EnvironmentSlice,
   TimelineSlice,
   PlaybackSlice,
-  MetaSlice {
-  /** Asset library. */
-  library: { clips: unknown[] };
-}
+  MetaSlice,
+  LibrarySlice {}

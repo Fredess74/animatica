@@ -6,7 +6,13 @@
  * @module @animatica/engine/scene/SceneManager
  */
 import React, { useMemo } from 'react';
-import { useSceneStore } from '../store/sceneStore';
+import {
+    useActorList,
+    useEnvironment,
+    useTimelineAnimationTracks,
+    useTimelineCameraTrack,
+    useCurrentTime,
+} from '../store/sceneStore';
 import { evaluateTracksAtTime } from '../animation/interpolate';
 import { applyAnimationToActor, resolveActiveCamera } from './animationUtils';
 import { PrimitiveRenderer } from './renderers/PrimitiveRenderer';
@@ -54,21 +60,22 @@ export const SceneManager: React.FC<SceneManagerProps> = ({
     onActorSelect,
     showHelpers = false,
 }) => {
-    const actors = useSceneStore((s) => s.actors);
-    const environment = useSceneStore((s) => s.environment);
-    const timeline = useSceneStore((s) => s.timeline);
-    const currentTime = useSceneStore((s) => s.playback.currentTime);
+    const actors = useActorList();
+    const environment = useEnvironment();
+    const animationTracks = useTimelineAnimationTracks();
+    const cameraTrack = useTimelineCameraTrack();
+    const currentTime = useCurrentTime();
 
     // Evaluate all animation tracks at the current time
     const animationValues = useMemo(
-        () => evaluateTracksAtTime(timeline.animationTracks, currentTime),
-        [timeline.animationTracks, currentTime],
+        () => evaluateTracksAtTime(animationTracks, currentTime),
+        [animationTracks, currentTime],
     );
 
     // Sort camera cuts only when the track changes, not every frame
     const sortedCameraCuts = useMemo(
-        () => [...timeline.cameraTrack].sort((a, b) => a.time - b.time),
-        [timeline.cameraTrack]
+        () => [...cameraTrack].sort((a, b) => a.time - b.time),
+        [cameraTrack]
     );
 
     // Determine the active camera from the sorted camera cuts
