@@ -98,7 +98,7 @@ describe('CharacterRenderer', () => {
   }
 
   it('renders a group containing the rig root via primitive', () => {
-    // @ts-ignore
+    // @ts-expect-error - CharacterRenderer.type exists on React.memo components
     const result = CharacterRenderer.type.render({ actor: mockActor }, null) as React.ReactElement
 
     expect(result).not.toBeNull()
@@ -120,13 +120,13 @@ describe('CharacterRenderer', () => {
 
   it('renders nothing when visible is false', () => {
     const invisibleActor = { ...mockActor, visible: false }
-    // @ts-ignore
+    // @ts-expect-error - CharacterRenderer.type exists on React.memo components
     const result = CharacterRenderer.type.render({ actor: invisibleActor }, null)
     expect(result).toBeNull()
   })
 
   it('renders selection ring when isSelected is true', () => {
-    // @ts-ignore
+    // @ts-expect-error - CharacterRenderer.type exists on React.memo components
     const result = CharacterRenderer.type.render({ actor: mockActor, isSelected: true }, null) as React.ReactElement
 
     const props = result.props as any
