@@ -8,13 +8,15 @@ import {
     LightRenderer,
     CameraRenderer,
 } from '@Animatica/engine'
+import { useActorList, useSelectedActorId, setSelectedActorSelector } from '@Animatica/engine'
+
 export const SceneRenderer: React.FC = () => {
-    const actors = useSceneStore((s: any) => s.actors)
-    const selectedActorId = useSceneStore((s: any) => s.selectedActorId)
-    const setSelectedActor = useSceneStore((s: any) => s.setSelectedActor)
+    const actors = useActorList()
+    const selectedActorId = useSelectedActorId()
+    const setSelectedActor = useSceneStore(setSelectedActorSelector)
 
     return (
-        <group>
+        <group data-testid="scene-manager">
             {actors.map((actor: any) => (
                 <ActorSwitch
                     key={actor.id}

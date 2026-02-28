@@ -194,3 +194,8 @@ export const useProjectMeta = () =>
  */
 export const useLibrary = () =>
   useSceneStore(useShallow((state) => state.library));
+
+/**
+ * Selector for the setSelectedActor action.
+ */
+export const setSelectedActorSelector = (state: SceneStoreState) => state.setSelectedActor;
