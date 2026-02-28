@@ -33,6 +33,7 @@
         "@types/react": "^19.2.7",
         "@types/three": "^0.182.0",
         "@types/uuid": "^10.0.0",
+        "eslint": "^10.0.2",
         "jsdom": "^28.1.0",
         "react": "^19.2.0",
         "react-dom": "^19.2.0",
