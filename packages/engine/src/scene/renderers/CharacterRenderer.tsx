@@ -28,7 +28,7 @@ export const CharacterRenderer = memo(forwardRef<THREE.Group, CharacterRendererP
   const faceMorphRef = useRef<FaceMorphController | null>(null)
   const eyeControllerRef = useRef<EyeController | null>(null)
 
-  // Use useImperativeHandle to correctly handle external refs, whether they are callbacks or ref objects
+  // Properly forward the ref to the THREE.Group instance
   useImperativeHandle(ref, () => groupRef.current as THREE.Group)
 
   // Build character rig
