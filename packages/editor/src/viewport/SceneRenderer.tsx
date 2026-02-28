@@ -7,17 +7,15 @@ import {
     PrimitiveRenderer,
     LightRenderer,
     CameraRenderer,
-} from '@animatica/engine'
-import type { Actor } from '@animatica/engine'
-
+} from '@Animatica/engine'
 export const SceneRenderer: React.FC = () => {
-    const actors = useSceneStore((s) => s.actors)
-    const selectedActorId = useSceneStore((s) => s.selectedActorId)
-    const setSelectedActor = useSceneStore((s) => s.setSelectedActor)
+    const actors = useSceneStore((s: any) => s.actors)
+    const selectedActorId = useSceneStore((s: any) => s.selectedActorId)
+    const setSelectedActor = useSceneStore((s: any) => s.setSelectedActor)
 
     return (
         <group>
-            {actors.map((actor) => (
+            {actors.map((actor: any) => (
                 <ActorSwitch
                     key={actor.id}
                     actor={actor}
@@ -33,7 +31,7 @@ export const SceneRenderer: React.FC = () => {
  * Routes each actor to the correct renderer based on actor.type.
  */
 const ActorSwitch: React.FC<{
-    actor: Actor
+    actor: any
     isSelected: boolean
     onSelect: () => void
 }> = ({ actor, isSelected, onSelect }) => {

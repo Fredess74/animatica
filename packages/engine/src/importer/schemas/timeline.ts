@@ -36,4 +36,5 @@ export const TimelineSchema = z.object({
     duration: z.number().positive(),
     cameraTrack: z.array(CameraCutSchema),
     animationTracks: z.array(AnimationTrackSchema),
+    markers: z.array(z.any()).optional().default([]),
 });
