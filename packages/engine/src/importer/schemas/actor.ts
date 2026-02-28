@@ -4,7 +4,7 @@ import { CharacterActorSchema } from './character';
 
 /**
  * Zod schemas for various actor types and the main Actor union.
- * @module @animatica/engine/importer/schemas
+ * @module @Animatica/engine/importer/schemas
  */
 
 export const PrimitiveShapeSchema = z.enum([

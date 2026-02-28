@@ -3,7 +3,7 @@ import { UUIDSchema } from './common';
 
 /**
  * Zod schemas for timeline and animation tracks.
- * @module @animatica/engine/importer/schemas
+ * @module @Animatica/engine/importer/schemas
  */
 
 export const EasingTypeSchema = z.enum([

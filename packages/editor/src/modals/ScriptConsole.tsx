@@ -2,7 +2,7 @@
  * ScriptConsole — Modal for JSON scene script input and AI prompt generation.
  * Textarea for JSON, Validate/Build/Copy-Prompt buttons, error display.
  *
- * @module @animatica/editor/modals/ScriptConsole
+ * @module @Animatica/editor/modals/ScriptConsole
  */
 import React, { useState, useCallback } from 'react';
 import { getAiPrompt, validateScript, tryImportScript, useSceneStore } from '@Animatica/engine';

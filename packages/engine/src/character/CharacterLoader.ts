@@ -6,7 +6,7 @@
  * 2. Procedural generation (fallback when no GLB)
  * 3. Preset-based construction
  * 
- * @module @animatica/engine/character
+ * @module @Animatica/engine/character
  */
 import * as THREE from 'three'
 

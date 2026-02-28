@@ -3,7 +3,7 @@
  * Reads actors from the store and delegates rendering to the appropriate component.
  * Handles environment setup (ambient light, sun, sky, fog).
  *
- * @module @animatica/engine/scene/SceneManager
+ * @module @Animatica/engine/scene/SceneManager
  */
 import React, { useMemo } from 'react';
 import { useSceneStore } from '../store/sceneStore';

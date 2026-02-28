@@ -3,7 +3,7 @@
  * All functions accept a normalized time 't' (0 to 1) and return an eased value.
  * While 't' is typically 0-1, it can be outside this range (e.g. for elastic/bounce).
  *
- * @module @animatica/engine/animation/easing
+ * @module @Animatica/engine/animation/easing
  */
 
 /**

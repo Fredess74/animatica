@@ -1,5 +1,5 @@
 /**
- * @module @animatica/editor
+ * @module @Animatica/editor
  * Public API for the Animatica Editor package.
  */
 
