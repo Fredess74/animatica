@@ -7,9 +7,9 @@
 
 This document lists all dependencies used in the project and their licenses. It also flags any non-MIT licenses and checks for the presence of the project's own LICENSE file.
 
-Total dependencies found: 683
-Direct dependencies: 33
-Transitive dependencies: 650
+Total dependencies found: 725
+Direct dependencies: 36
+Transitive dependencies: 689
 
 ## Project License
 
@@ -31,8 +31,17 @@ The following dependencies have non-MIT licenses:
 | @csstools/color-helpers | 6.0.2 | MIT-0 | Transitive |
 | @csstools/css-syntax-patches-for-csstree | 1.0.28 | MIT-0 | Transitive |
 | @dimforge/rapier3d-compat | 0.12.0 | Apache-2.0 | Transitive |
+| @eslint/config-array | 0.23.2 | Apache-2.0 | Transitive |
+| @eslint/config-helpers | 0.5.2 | Apache-2.0 | Transitive |
+| @eslint/core | 1.1.0 | Apache-2.0 | Transitive |
+| @eslint/object-schema | 3.0.2 | Apache-2.0 | Transitive |
+| @eslint/plugin-kit | 0.6.0 | Apache-2.0 | Transitive |
 | @ethereumjs/rlp | 4.0.1 | MPL-2.0 | Transitive |
 | @ethereumjs/util | 8.1.0 | MPL-2.0 | Transitive |
+| @humanfs/core | 0.19.1 | Apache-2.0 | Transitive |
+| @humanfs/node | 0.16.7 | Apache-2.0 | Transitive |
+| @humanwhocodes/module-importer | 1.0.1 | Apache-2.0 | Transitive |
+| @humanwhocodes/retry | 0.4.3 | Apache-2.0 | Transitive |
 | @img/sharp-libvips-linux-x64 | 1.2.4 | LGPL-3.0-or-later | Transitive |
 | @img/sharp-libvips-linuxmusl-x64 | 1.2.4 | LGPL-3.0-or-later | Transitive |
 | @img/sharp-linux-x64 | 0.34.5 | Apache-2.0 | Transitive |
@@ -69,7 +78,12 @@ The following dependencies have non-MIT licenses:
 | electron-to-chromium | 1.5.302 | ISC | Transitive |
 | entities | 6.0.1 | BSD-2-Clause | Transitive |
 | escodegen | 1.8.1 | BSD-2-Clause | Transitive |
+| eslint-scope | 9.1.1 | BSD-2-Clause | Transitive |
+| eslint-visitor-keys | 3.4.3 | Apache-2.0 | Transitive |
+| espree | 11.1.1 | BSD-2-Clause | Transitive |
 | esprima | 2.7.3 | BSD-2-Clause | Transitive |
+| esquery | 1.7.0 | BSD-3-Clause | Transitive |
+| esrecurse | 4.3.0 | BSD-2-Clause | Transitive |
 | estraverse | 1.9.3 | BSD | Transitive |
 | esutils | 2.0.3 | BSD-2-Clause | Transitive |
 | ethereumjs-util | 7.1.5 | MPL-2.0 | Transitive |
@@ -77,6 +91,7 @@ The following dependencies have non-MIT licenses:
 | fast-uri | 3.1.0 | BSD-3-Clause | Transitive |
 | fastq | 1.20.1 | ISC | Transitive |
 | flat | 5.0.2 | BSD-3-Clause | Transitive |
+| flatted | 3.3.3 | ISC | Transitive |
 | fs.realpath | 1.0.0 | ISC | Transitive |
 | get-caller-file | 2.0.5 | ISC | Transitive |
 | ghost-testrpc | 0.0.2 | ISC | Transitive |
@@ -131,6 +146,7 @@ The following dependencies have non-MIT licenses:
 | type-fest | 0.7.1 | (MIT OR CC0-1.0) | Transitive |
 | typescript | 5.9.3 | Apache-2.0 | **Direct** |
 | uglify-js | 3.19.3 | BSD-2-Clause | Transitive |
+| uri-js | 4.4.1 | BSD-2-Clause | Transitive |
 | web3-utils | 1.10.4 | LGPL-3.0 | Transitive |
 | webidl-conversions | 8.0.1 | BSD-2-Clause | Transitive |
 | which | 1.3.1 | ISC | Transitive |
@@ -145,6 +161,7 @@ The following dependencies have non-MIT licenses:
 
 | Dependency | License | Used In |
 | --- | --- | --- |
+| @eslint/js | MIT | Animatica |
 | @nomicfoundation/hardhat-toolbox | MIT | @Animatica/contracts |
 | @openzeppelin/contracts | MIT | @Animatica/contracts |
 | @react-three/drei | MIT | @Animatica/editor, @Animatica/engine |
@@ -159,6 +176,7 @@ The following dependencies have non-MIT licenses:
 | @types/uuid | MIT | @Animatica/engine |
 | @vitejs/plugin-react | MIT | @Animatica/editor |
 | clsx | MIT | @Animatica/editor |
+| eslint | MIT | Animatica |
 | hardhat | MIT | @Animatica/contracts |
 | immer | MIT | @Animatica/engine |
 | jsdom | MIT | @Animatica/editor, @Animatica/engine, @Animatica/web |
@@ -172,6 +190,7 @@ The following dependencies have non-MIT licenses:
 | tone | MIT | @Animatica/engine |
 | turbo | MIT | Animatica |
 | typescript | Apache-2.0 | @Animatica/contracts, @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web, Animatica |
+| typescript-eslint | MIT | Animatica |
 | uuid | MIT | @Animatica/engine |
 | vite | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform |
 | vitest | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web |
@@ -222,6 +241,14 @@ The following dependencies have non-MIT licenses:
 | @csstools/css-tokenizer | 4.0.0 | MIT |
 | @dimforge/rapier3d-compat | 0.12.0 | Apache-2.0 |
 | @esbuild/linux-x64 | 0.27.3 | MIT |
+| @eslint-community/eslint-utils | 4.9.1 | MIT |
+| @eslint-community/regexpp | 4.12.2 | MIT |
+| @eslint/config-array | 0.23.2 | Apache-2.0 |
+| @eslint/config-helpers | 0.5.2 | Apache-2.0 |
+| @eslint/core | 1.1.0 | Apache-2.0 |
+| @eslint/js | 10.0.1 | MIT |
+| @eslint/object-schema | 3.0.2 | Apache-2.0 |
+| @eslint/plugin-kit | 0.6.0 | Apache-2.0 |
 | @ethereumjs/rlp | 4.0.1 | MPL-2.0 |
 | @ethereumjs/util | 8.1.0 | MPL-2.0 |
 | @ethersproject/abi | 5.8.0 | MIT |
@@ -256,6 +283,10 @@ The following dependencies have non-MIT licenses:
 | @ethersproject/wordlists | 5.8.0 | MIT |
 | @exodus/bytes | 1.14.1 | MIT |
 | @fastify/busboy | 2.1.1 | MIT |
+| @humanfs/core | 0.19.1 | Apache-2.0 |
+| @humanfs/node | 0.16.7 | Apache-2.0 |
+| @humanwhocodes/module-importer | 1.0.1 | Apache-2.0 |
+| @humanwhocodes/retry | 0.4.3 | Apache-2.0 |
 | @img/colour | 1.0.0 | MIT |
 | @img/sharp-libvips-linux-x64 | 1.2.4 | LGPL-3.0-or-later |
 | @img/sharp-libvips-linuxmusl-x64 | 1.2.4 | LGPL-3.0-or-later |
@@ -346,9 +377,11 @@ The following dependencies have non-MIT licenses:
 | @types/concat-stream | 1.6.1 | MIT |
 | @types/deep-eql | 4.0.2 | MIT |
 | @types/draco3d | 1.4.10 | MIT |
+| @types/esrecurse | 4.3.1 | MIT |
 | @types/estree | 1.0.8 | MIT |
 | @types/form-data | 0.0.33 | MIT |
 | @types/glob | 7.2.0 | MIT |
+| @types/json-schema | 7.0.15 | MIT |
 | @types/minimatch | 6.0.0 | MIT |
 | @types/mocha | 10.0.10 | MIT |
 | @types/node | 8.10.66 | MIT |
@@ -364,6 +397,14 @@ The following dependencies have non-MIT licenses:
 | @types/three | 0.182.0 | MIT |
 | @types/uuid | 10.0.0 | MIT |
 | @types/webxr | 0.5.24 | MIT |
+| @typescript-eslint/eslint-plugin | 8.25.0 | MIT |
+| @typescript-eslint/parser | 8.25.0 | MIT |
+| @typescript-eslint/scope-manager | 8.25.0 | MIT |
+| @typescript-eslint/type-utils | 8.25.0 | MIT |
+| @typescript-eslint/types | 8.25.0 | MIT |
+| @typescript-eslint/typescript-estree | 8.25.0 | MIT |
+| @typescript-eslint/utils | 8.25.0 | MIT |
+| @typescript-eslint/visitor-keys | 8.25.0 | MIT |
 | @use-gesture/core | 10.3.1 | MIT |
 | @use-gesture/react | 10.3.1 | MIT |
 | @vitejs/plugin-react | 5.1.4 | MIT |
@@ -377,12 +418,13 @@ The following dependencies have non-MIT licenses:
 | @webgpu/types | 0.1.69 | BSD-3-Clause |
 | abbrev | 1.0.9 | ISC |
 | acorn | 8.16.0 | MIT |
+| acorn-jsx | 5.3.2 | MIT |
 | acorn-walk | 8.3.5 | MIT |
 | adm-zip | 0.4.16 | MIT |
 | aes-js | 3.0.0 | MIT |
 | agent-base | 6.0.2 | MIT |
 | aggregate-error | 3.1.0 | MIT |
-| ajv | 8.18.0 | MIT |
+| ajv | 6.14.0 | MIT |
 | amdefine | 1.0.1 | BSD-3-Clause OR MIT |
 | ansi-align | 3.0.1 | ISC |
 | ansi-colors | 4.1.3 | MIT |
@@ -508,7 +550,13 @@ The following dependencies have non-MIT licenses:
 | escalade | 3.2.0 | MIT |
 | escape-string-regexp | 1.0.5 | MIT |
 | escodegen | 1.8.1 | BSD-2-Clause |
+| eslint | 10.0.2 | MIT |
+| eslint-scope | 9.1.1 | BSD-2-Clause |
+| eslint-visitor-keys | 3.4.3 | Apache-2.0 |
+| espree | 11.1.1 | BSD-2-Clause |
 | esprima | 2.7.3 | BSD-2-Clause |
+| esquery | 1.7.0 | BSD-3-Clause |
+| esrecurse | 4.3.0 | BSD-2-Clause |
 | estraverse | 1.9.3 | BSD |
 | estree-walker | 3.0.3 | MIT |
 | esutils | 2.0.3 | BSD-2-Clause |
@@ -522,15 +570,19 @@ The following dependencies have non-MIT licenses:
 | expect-type | 1.3.0 | Apache-2.0 |
 | fast-deep-equal | 3.1.3 | MIT |
 | fast-glob | 3.3.3 | MIT |
+| fast-json-stable-stringify | 2.1.0 | MIT |
 | fast-levenshtein | 2.0.6 | MIT |
 | fast-uri | 3.1.0 | BSD-3-Clause |
 | fastq | 1.20.1 | ISC |
 | fdir | 6.5.0 | MIT |
 | fflate | 0.6.10 | MIT |
+| file-entry-cache | 8.0.0 | MIT |
 | fill-range | 7.1.1 | MIT |
 | find-replace | 3.0.0 | MIT |
 | find-up | 5.0.0 | MIT |
 | flat | 5.0.2 | BSD-3-Clause |
+| flat-cache | 4.0.1 | MIT |
+| flatted | 3.3.3 | ISC |
 | follow-redirects | 1.15.11 | MIT |
 | for-each | 0.3.5 | MIT |
 | form-data | 2.5.5 | MIT |
@@ -554,6 +606,7 @@ The following dependencies have non-MIT licenses:
 | glsl-noise | 0.0.0 | MIT |
 | gopd | 1.2.0 | MIT |
 | graceful-fs | 4.2.11 | ISC |
+| graphemer | 1.4.0 | MIT |
 | handlebars | 4.7.8 | MIT |
 | hardhat | 2.28.6 | MIT |
 | hardhat-gas-reporter | 1.0.10 | MIT |
@@ -580,6 +633,7 @@ The following dependencies have non-MIT licenses:
 | immediate | 3.0.6 | MIT |
 | immer | 10.0.2 | MIT |
 | immutable | 4.3.7 | MIT |
+| imurmurhash | 0.1.4 | MIT |
 | indent-string | 4.0.0 | MIT |
 | inflight | 1.0.6 | ISC |
 | inherits | 2.0.4 | ISC |
@@ -608,13 +662,16 @@ The following dependencies have non-MIT licenses:
 | js-yaml | 3.14.2 | MIT |
 | jsdom | 28.1.0 | MIT |
 | jsesc | 3.1.0 | MIT |
-| json-schema-traverse | 1.0.0 | MIT |
+| json-buffer | 3.0.1 | MIT |
+| json-schema-traverse | 0.4.1 | MIT |
+| json-stable-stringify-without-jsonify | 1.0.1 | MIT |
 | json-stream-stringify | 3.1.6 | MIT |
 | json-stringify-safe | 5.0.1 | ISC |
 | json5 | 2.2.3 | MIT |
 | jsonfile | 4.0.0 | MIT |
 | jsonschema | 1.5.0 | MIT |
 | keccak | 3.0.4 | MIT |
+| keyv | 4.5.4 | MIT |
 | kind-of | 6.0.3 | MIT |
 | kleur | 3.0.3 | MIT |
 | levn | 0.3.0 | MIT |
@@ -659,6 +716,7 @@ The following dependencies have non-MIT licenses:
 | mocha | 10.8.2 | MIT |
 | ms | 2.1.3 | MIT |
 | nanoid | 3.3.11 | MIT |
+| natural-compare | 1.4.0 | MIT |
 | ndjson | 2.0.0 | BSD-3-Clause |
 | neo-async | 2.6.2 | MIT |
 | next | 15.5.12 | MIT |
@@ -809,6 +867,7 @@ The following dependencies have non-MIT licenses:
 | troika-three-text | 0.52.4 | MIT |
 | troika-three-utils | 0.52.4 | MIT |
 | troika-worker-utils | 0.52.0 | MIT |
+| ts-api-utils | 2.4.0 | MIT |
 | ts-command-line-args | 2.5.1 | ISC |
 | ts-essentials | 7.0.3 | MIT |
 | ts-node | 10.9.2 | MIT |
@@ -824,6 +883,7 @@ The following dependencies have non-MIT licenses:
 | typed-array-buffer | 1.0.3 | MIT |
 | typedarray | 0.0.6 | MIT |
 | typescript | 5.9.3 | Apache-2.0 |
+| typescript-eslint | 8.25.0 | MIT |
 | typical | 4.0.0 | MIT |
 | uglify-js | 3.19.3 | BSD-2-Clause |
 | undici | 5.29.0 | MIT |
@@ -831,6 +891,7 @@ The following dependencies have non-MIT licenses:
 | universalify | 0.1.2 | MIT |
 | unpipe | 1.0.0 | MIT |
 | update-browserslist-db | 1.2.3 | MIT |
+| uri-js | 4.4.1 | BSD-2-Clause |
 | use-sync-external-store | 1.6.0 | MIT |
 | utf8 | 3.0.0 | MIT |
 | util-deprecate | 1.0.2 | MIT |
