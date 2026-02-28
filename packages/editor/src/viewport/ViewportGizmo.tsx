@@ -6,7 +6,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import { useThree } from '@react-three/fiber'
 import { TransformControls } from '@react-three/drei'
 import * as THREE from 'three'
-import { useSceneStore } from '@animatica/engine'
+import { useSceneStore } from '@Animatica/engine'
 import type { GizmoMode, TransformSpace } from './Viewport'
 
 interface ViewportGizmoProps {
