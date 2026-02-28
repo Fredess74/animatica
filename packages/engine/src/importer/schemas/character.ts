@@ -3,7 +3,7 @@ import { BaseActorSchema, Vector3Schema, ColorSchema } from './common';
 
 /**
  * Zod schemas for character actors and their specific properties.
- * @module @animatica/engine/importer/schemas
+ * @module @Animatica/engine/importer/schemas
  */
 
 export const AnimationStateSchema = z.enum([

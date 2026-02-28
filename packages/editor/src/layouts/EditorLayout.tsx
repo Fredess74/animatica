@@ -4,7 +4,7 @@
  * bottom bar (Timeline). Dark theme using design-tokens.css.
  * Wraps content in ToastProvider and handles keyboard shortcuts.
  *
- * @module @animatica/editor/layouts/EditorLayout
+ * @module @Animatica/editor/layouts/EditorLayout
  */
 import React, { useState, useCallback } from 'react';
 import { useSceneStore } from '@Animatica/engine';

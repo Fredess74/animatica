@@ -2,7 +2,7 @@
  * ExportModal — Video export configuration and progress dialog.
  * Resolution, FPS, format selection, and export progress bar.
  *
- * @module @animatica/editor/modals/ExportModal
+ * @module @Animatica/editor/modals/ExportModal
  */
 import React, { useState, useCallback } from 'react';
 import { useToast } from '../components/ToastContext';

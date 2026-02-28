@@ -1,6 +1,6 @@
 /**
  * Public API for all Zod validation schemas.
- * @module @animatica/engine/importer/schemas
+ * @module @Animatica/engine/importer/schemas
  */
 
 export * from './common';

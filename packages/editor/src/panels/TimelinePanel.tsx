@@ -2,7 +2,7 @@
  * TimelinePanel — Playback controls and keyframe timeline.
  * Scrubber, play/pause/stop, track list with keyframe diamonds.
  *
- * @module @animatica/editor/panels/TimelinePanel
+ * @module @Animatica/editor/panels/TimelinePanel
  */
 import React, { useState, useCallback, useMemo } from 'react';
 import { useTranslation } from '../i18n/useTranslation';

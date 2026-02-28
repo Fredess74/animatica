@@ -2,7 +2,7 @@
  * PropertiesPanel — Shows and edits properties of the selected actor.
  * Displays transform (position, rotation, scale) and type-specific properties.
  *
- * @module @animatica/editor/panels/PropertiesPanel
+ * @module @Animatica/editor/panels/PropertiesPanel
  */
 import React, { useCallback, useRef, useState, useEffect } from 'react';
 import { useSceneStore, Actor, PrimitiveActor, LightActor, CameraActor, CharacterActor } from '@Animatica/engine';
