@@ -6,6 +6,7 @@ import React, { useEffect, useRef, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { createProceduralHumanoid } from '../../character/CharacterLoader'
+import { BoneController } from '../../character/BoneController'
 import { CharacterAnimator, createIdleClip, createWalkClip } from '../../character/CharacterAnimator'
 import { FaceMorphController } from '../../character/FaceMorphController'
 import { EyeController } from '../../character/EyeController'
@@ -24,6 +25,7 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
   onClick,
 }) => {
   const groupRef = useRef<THREE.Group>(null)
+  const boneControllerRef = useRef<BoneController | null>(null)
   const animatorRef = useRef<CharacterAnimator | null>(null)
   const faceMorphRef = useRef<FaceMorphController | null>(null)
   const eyeControllerRef = useRef<EyeController | null>(null)
@@ -51,6 +53,10 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     // Setup face morph controller
     const faceMorph = new FaceMorphController(rig.bodyMesh, rig.morphTargetMap)
     faceMorphRef.current = faceMorph
+
+    // Setup bone controller
+    const boneController = new BoneController(rig.root)
+    boneControllerRef.current = boneController
 
     // Setup eye controller
     const eyeController = new EyeController()
@@ -82,11 +88,23 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     }
   }, [actor.morphTargets])
 
+  // React to body pose changes
+  useEffect(() => {
+    if (boneControllerRef.current && actor.bodyPose) {
+      boneControllerRef.current.setPose(actor.bodyPose)
+    }
+  }, [actor.bodyPose])
+
   // Frame update — animation, face morphs, eye blinks
   useFrame((_state, delta) => {
     // Skeletal animation
     if (animatorRef.current) {
       animatorRef.current.update(delta)
+    }
+
+    // Body pose updates (applied on top of animation)
+    if (boneControllerRef.current) {
+      boneControllerRef.current.update(delta)
     }
 
     // Face morph blending
@@ -105,6 +123,8 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     }
   })
 
+  if (!actor.visible) return null
+
   return (
     <group
       ref={groupRef}
@@ -112,7 +132,6 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       position={actor.transform.position}
       rotation={actor.transform.rotation}
       scale={actor.transform.scale}
-      visible={actor.visible}
       onClick={(e) => {
         e.stopPropagation()
         onClick?.()
