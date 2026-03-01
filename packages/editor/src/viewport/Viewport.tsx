@@ -16,7 +16,7 @@ import { ViewportOverlay } from './ViewportOverlay'
 import { EnvironmentRenderer } from './EnvironmentRenderer'
 import { useActorPicking } from './hooks/useActorPicking'
 import { useViewportHotkeys } from './hooks/useViewportHotkeys'
-import { useSceneStore } from '@animatica/engine'
+import { useSceneStore, SceneManager } from '@Animatica/engine'
 
 // ---- Types ----
 
@@ -97,7 +97,7 @@ export const Viewport: React.FC<{ className?: string }> = ({ className }) => {
                     {gridVisible && <ViewportGrid />}
 
                     {/* All scene actors */}
-                    <SceneRenderer />
+                    <SceneManager />
 
                     {/* Transform gizmo on selected actor */}
                     <ViewportGizmo
