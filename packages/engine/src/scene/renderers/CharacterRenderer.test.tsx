@@ -12,7 +12,7 @@ vi.mock('react', async () => {
     useMemo: (factory: any) => factory(),
     useEffect: () => {},
     useCallback: (callback: any) => callback,
-    useImperativeHandle: (ref: any, factory: any) => factory(),
+    useImperativeHandle: (_ref: any, factory: any) => factory(),
   }
 })
 
