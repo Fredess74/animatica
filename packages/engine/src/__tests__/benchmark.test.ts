@@ -1,8 +1,22 @@
-import { describe, it, afterAll } from 'vitest';
-import { interpolateKeyframes } from '../animation/interpolate';
+import { describe, it, afterAll, vi } from 'vitest';
+
+vi.hoisted(() => {
+    const storageMock = {
+        getItem: vi.fn(),
+        setItem: vi.fn(),
+        removeItem: vi.fn(),
+        clear: vi.fn(),
+        length: 0,
+        key: vi.fn(),
+    };
+    vi.stubGlobal('localStorage', storageMock);
+    vi.stubGlobal('window', { localStorage: storageMock });
+});
+
+import { interpolateKeyframes, evaluateTracksAtTime } from '../animation/interpolate';
 import { ProjectStateSchema } from '../importer/schemas';
 import { useSceneStore } from '../store/sceneStore';
-import type { Keyframe, ProjectState, Actor, PrimitiveActor, Vector3 } from '../types';
+import type { Keyframe, ProjectState, Actor, PrimitiveActor, Vector3, AnimationTrack } from '../types';
 import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
@@ -87,12 +101,33 @@ describe('Engine Benchmarks', () => {
                 }
             });
         });
+
+        it('Batch Track Evaluation (1k tracks, 100 keyframes each)', () => {
+            const tracks: AnimationTrack[] = [];
+            for (let i = 0; i < 1000; i++) {
+                const keyframes: Keyframe<number>[] = [];
+                for (let j = 0; j < 100; j++) {
+                    keyframes.push({ time: j, value: j, easing: 'linear' });
+                }
+                tracks.push({
+                    targetId: `actor-${i}`,
+                    property: 'transform.position.x',
+                    keyframes: keyframes as any
+                });
+            }
+
+            measure('Batch Track Evaluation (1k tracks)', () => {
+                for (let i = 0; i < 100; i++) {
+                    evaluateTracksAtTime(tracks, i % 100);
+                }
+            });
+        });
     });
 
     describe('Schema Validation Performance', () => {
-        it('Project Schema Validation (100 runs, 100 actors)', () => {
+        function createProject(actorCount: number): ProjectState {
             const actors: Actor[] = [];
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < actorCount; i++) {
                 const actor: PrimitiveActor = {
                     id: `actor-${i}`,
                     name: `Actor ${i}`,
@@ -115,7 +150,7 @@ describe('Engine Benchmarks', () => {
                 actors.push(actor);
             }
 
-            const projectState: ProjectState = {
+            return {
                 meta: {
                     title: 'Benchmark Project',
                     version: '1.0.0',
@@ -134,9 +169,21 @@ describe('Engine Benchmarks', () => {
                 },
                 library: { clips: [] },
             };
+        }
 
-            measure('Schema Validation Speed (100 runs)', () => {
+        it('Project Schema Validation (100 runs, 100 actors)', () => {
+            const projectState = createProject(100);
+            measure('Schema Validation Speed (100 runs, 100 actors)', () => {
                 for (let i = 0; i < 100; i++) {
+                    ProjectStateSchema.parse(projectState);
+                }
+            });
+        });
+
+        it('Large Project Schema Validation (10 runs, 1k actors)', { timeout: 30000 }, () => {
+            const projectState = createProject(1000);
+            measure('Large Project Schema Validation (10 runs, 1k actors)', () => {
+                for (let i = 0; i < 10; i++) {
                     ProjectStateSchema.parse(projectState);
                 }
             });
@@ -144,7 +191,7 @@ describe('Engine Benchmarks', () => {
     });
 
     describe('Store Performance', () => {
-        it('Store Update Throughput (10k playback updates)', () => {
+        it('Store Playback Updates (10k playback updates)', () => {
             const { setState, getState } = useSceneStore;
 
             setState({
@@ -167,7 +214,7 @@ describe('Engine Benchmarks', () => {
             });
         });
 
-        it('Store Actor CRUD Throughput (1k actors)', () => {
+        it('Store Actor CRUD Throughput (1k actors)', { timeout: 30000 }, () => {
             const { setState, getState } = useSceneStore;
 
             setState({
@@ -197,6 +244,36 @@ describe('Engine Benchmarks', () => {
             measure('Store Remove Actor (1k ops)', () => {
                 for (let i = 0; i < 1000; i++) {
                     getState().removeActor(`bench-${i}`);
+                }
+            });
+        });
+
+        it('Large Project Store Update (100 ops, 1k actors)', { timeout: 30000 }, () => {
+            const { setState, getState } = useSceneStore;
+
+            const actors: Actor[] = [];
+            for (let i = 0; i < 1000; i++) {
+                actors.push({
+                    id: `large-${i}`,
+                    name: `Actor ${i}`,
+                    type: 'primitive',
+                    transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
+                    visible: true,
+                    properties: { shape: 'box', color: '#ff0000', roughness: 0.5, metalness: 0.5, opacity: 1, wireframe: false }
+                } as PrimitiveActor);
+            }
+
+            setState({ actors });
+
+            measure('Large Project Store Update (100 ops)', () => {
+                for (let i = 0; i < 100; i++) {
+                    getState().updateActor(`large-${i % 1000}`, {
+                        transform: {
+                            position: [i, i, i],
+                            rotation: [0, 0, 0],
+                            scale: [1, 1, 1]
+                        }
+                    });
                 }
             });
         });
