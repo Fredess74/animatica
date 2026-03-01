@@ -7,7 +7,6 @@
 import React, { Suspense, useCallback, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 import * as THREE from 'three'
-import { SceneRenderer } from './SceneRenderer'
 import { ViewportGrid } from './ViewportGrid'
 import { ViewportControls } from './ViewportControls'
 import { ViewportGizmo } from './ViewportGizmo'

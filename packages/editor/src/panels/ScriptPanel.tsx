@@ -3,7 +3,6 @@
  * Supports standard screenplay blocks: scene heading, action, dialogue, transition.
  */
 import React, { useState, useCallback } from 'react'
-import { useSceneStore } from '@Animatica/engine'
 
 export type ScriptBlockType = 'scene_heading' | 'action' | 'dialogue' | 'parenthetical' | 'transition' | 'note'
 

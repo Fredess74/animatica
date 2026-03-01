@@ -46,15 +46,6 @@ export const ViewportGizmo: React.FC<ViewportGizmoProps> = ({
         return () => clearTimeout(timeout)
     }, [selectedActorId, scene])
 
-    // Determine snap values based on mode
-    const snapValue = snapEnabled
-        ? mode === 'translate'
-            ? SNAP_TRANSLATE
-            : mode === 'rotate'
-                ? SNAP_ROTATE
-                : SNAP_SCALE
-        : undefined
-
     if (!target || !selectedActorId) return null
 
     return (
