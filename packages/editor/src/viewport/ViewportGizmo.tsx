@@ -6,7 +6,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import { useThree } from '@react-three/fiber'
 import { TransformControls } from '@react-three/drei'
 import * as THREE from 'three'
-import { useSceneStore } from '@animatica/engine'
+import { useSceneStore } from '@Animatica/engine'
 import type { GizmoMode, TransformSpace } from './Viewport'
 
 interface ViewportGizmoProps {
@@ -45,15 +45,6 @@ export const ViewportGizmo: React.FC<ViewportGizmoProps> = ({
 
         return () => clearTimeout(timeout)
     }, [selectedActorId, scene])
-
-    // Determine snap values based on mode
-    const snapValue = snapEnabled
-        ? mode === 'translate'
-            ? SNAP_TRANSLATE
-            : mode === 'rotate'
-                ? SNAP_ROTATE
-                : SNAP_SCALE
-        : undefined
 
     if (!target || !selectedActorId) return null
 
