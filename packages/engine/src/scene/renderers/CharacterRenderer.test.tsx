@@ -63,9 +63,9 @@ describe('CharacterRenderer', () => {
     const children = React.Children.toArray(props.children) as React.ReactElement[]
 
     // First child should be the character rig (primitive)
-    const rigPrimitive = children[0]
+    const rigPrimitive = children[0] as React.ReactElement
     expect(rigPrimitive.type).toBe('primitive')
-    expect(rigPrimitive.props.object).toBeDefined()
+    expect((rigPrimitive.props as any).object).toBeDefined()
   })
 
   it('renders nothing when visible is false', () => {
