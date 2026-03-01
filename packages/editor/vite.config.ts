@@ -19,6 +19,10 @@ export default defineConfig({
                 'react',
                 'react-dom',
                 '@Animatica/engine',
+                '@animatica/engine',
+                'three',
+                '@react-three/fiber',
+                '@react-three/drei',
                 'lucide-react',
                 'clsx',
                 'tailwind-merge'
@@ -27,6 +31,7 @@ export default defineConfig({
                 globals: {
                     react: 'React',
                     'react-dom': 'ReactDOM',
+                    three: 'THREE',
                 },
             },
         },
