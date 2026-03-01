@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import React from 'react'
-// @ts-ignore
 import { CharacterRenderer } from './CharacterRenderer'
 import { CharacterActor } from '../../types'
 

@@ -1,5 +1,5 @@
 /**
- * @module @Animatica/engine/character
+ * @module @animatica/engine/character
  * Barrel export for the character system.
  */
 export { extractRig, createProceduralHumanoid, HUMANOID_BONES } from './CharacterLoader'
