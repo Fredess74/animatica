@@ -161,4 +161,28 @@ describe('sceneStore', () => {
       expect(result).toHaveLength(1);
       expect(result[0].id).toBe('1');
   });
+
+  it('should handle library state', () => {
+    const clips = [{ id: 'clip-1', name: 'Wave' }];
+    useSceneStore.getState().setLibrary({ clips });
+    expect(useSceneStore.getState().library.clips).toEqual(clips);
+  });
+
+  it('should provide environment through granular selector', () => {
+    const env = useSceneStore.getState().environment;
+    expect(env).toBeDefined();
+    expect(env.skyColor).toBe('#87CEEB');
+  });
+
+  it('should provide timeline through granular selector', () => {
+    const timeline = useSceneStore.getState().timeline;
+    expect(timeline).toBeDefined();
+    expect(timeline.duration).toBe(10);
+  });
+
+  it('should provide playback through granular selector', () => {
+    const playback = useSceneStore.getState().playback;
+    expect(playback).toBeDefined();
+    expect(playback.currentTime).toBe(0);
+  });
 });
