@@ -15,6 +15,18 @@ This document tracks all open tasks, issues, and feature requests for the Animat
   - [ ] `npm run test` passes without errors.
   - [ ] `npm run typecheck` passes without errors.
 
+### [Task 25] Bug: CharacterRenderer missing memo/forwardRef
+- **Priority:** High
+- **Type:** Bug
+- **Description:** The `CharacterRenderer` component in `@Animatica/engine` is missing `React.memo` and `React.forwardRef` wrappers, which are required by the project's coding standards and expected by its unit tests. This causes test failures.
+- **Acceptance Criteria:**
+  - [x] Component wrapped in `React.memo`.
+  - [x] Component wrapped in `React.forwardRef`.
+  - [x] `useImperativeHandle` used to expose the internal `THREE.Group`.
+  - [x] `useFrame` logic skips updates when `visible` is false.
+  - [x] Component returns `null` when `visible` is false.
+  - [x] All engine tests pass.
+
 ## Status: Backlog
 
 ### [Task 7] Feat: Light Renderer
@@ -102,3 +114,4 @@ This document tracks all open tasks, issues, and feature requests for the Animat
 - **[Task 5] Zustand Store:** Implemented global state management with Immer.
 - **[Task 6] Primitive Renderer:** Implemented basic shape rendering.
 - **[Task 21] Script Importer:** Implemented JSON script import and validation (executed out of order).
+- **[Task 25] Bug: CharacterRenderer missing memo/forwardRef:** Fixed regressions and added tests.
