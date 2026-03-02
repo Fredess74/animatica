@@ -89,19 +89,19 @@ describe('CharacterRenderer', () => {
     // Access the underlying render function from memo(forwardRef)
     // @ts-ignore
     const renderFn = (CharacterRenderer as any).type.render;
-    const result = renderFn({ actor: mockActor }, null) as React.ReactElement
+    const result = renderFn({ actor: mockActor }, null) as any
 
     expect(result).not.toBeNull()
     expect(result.type).toBe('group')
 
-    const props = result.props as any
+    const props = result.props
     expect(props.position).toEqual([10, 0, 5])
     expect(props.rotation).toEqual([0, Math.PI, 0])
     expect(props.scale).toEqual([1, 1, 1])
 
     // Verify children contains rig primitive
-    const children = React.Children.toArray(props.children) as React.ReactElement[]
-    const rig = children.find(c => (c as React.ReactElement).type === 'primitive')
+    const children = React.Children.toArray(props.children) as any[]
+    const rig = children.find(c => c.type === 'primitive')
     expect(rig).toBeDefined()
   })
 
@@ -116,10 +116,10 @@ describe('CharacterRenderer', () => {
   it('renders selection ring when isSelected is true', () => {
     // @ts-ignore
     const renderFn = (CharacterRenderer as any).type.render;
-    const result = renderFn({ actor: mockActor, isSelected: true }, null) as React.ReactElement
-    const children = React.Children.toArray(result.props.children) as React.ReactElement[]
+    const result = renderFn({ actor: mockActor, isSelected: true }, null) as any
+    const children = React.Children.toArray(result.props.children) as any[]
 
-    const ring = children.find(c => (c as React.ReactElement).type === 'mesh' && ((c as React.ReactElement).props as any)['data-testid'] === 'selection-ring')
+    const ring = children.find(c => c.type === 'mesh' && c.props['data-testid'] === 'selection-ring')
     expect(ring).toBeDefined()
   })
 })
