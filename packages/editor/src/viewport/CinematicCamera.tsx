@@ -68,8 +68,6 @@ interface CinematicCameraProps {
  */
 export const CinematicCamera: React.FC<CinematicCameraProps> = ({
     focalLength = 50,
-    aperture = 2.8,
-    focusDistance = 5,
     shake = 'none',
     shakeIntensity = 1,
 }) => {
@@ -85,7 +83,7 @@ export const CinematicCamera: React.FC<CinematicCameraProps> = ({
         return 2 * Math.atan(24 / (2 * focalLength)) * (180 / Math.PI)
     }, [focalLength])
 
-    useFrame((_state, delta) => {
+    useFrame(() => {
         if (!(camera instanceof THREE.PerspectiveCamera)) return
 
         // Smoothly lerp to target FOV

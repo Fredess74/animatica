@@ -55,6 +55,6 @@ describe('AssetLibrary', () => {
         fireEvent.click(boxItem);
 
         expect(onActorCreated).toHaveBeenCalledTimes(1);
-        expect(onActorCreated).toHaveBeenCalledWith(expect.stringMatching(/^actor_\d+$/));
+        expect(onActorCreated).toHaveBeenCalledWith(expect.stringMatching(/^actor_\d+_\w+$/));
     });
 });

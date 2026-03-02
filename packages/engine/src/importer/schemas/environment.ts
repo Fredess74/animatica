@@ -3,7 +3,7 @@ import { Vector3Schema, ColorSchema } from './common';
 
 /**
  * Zod schemas for scene environment settings.
- * @module @animatica/engine/importer/schemas
+ * @module @Animatica/engine/importer/schemas
  */
 
 export const WeatherTypeSchema = z.enum(['none', 'rain', 'snow', 'dust']);
