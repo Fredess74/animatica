@@ -14,7 +14,7 @@ vi.mock('react', async () => {
     useMemo: vi.fn((factory) => factory()),
     useEffect: vi.fn(),
     useCallback: vi.fn((fn) => fn),
-    useImperativeHandle: vi.fn((ref, factory) => factory()),
+    useImperativeHandle: vi.fn((_ref, factory) => factory()),
   }
 })
 
@@ -101,7 +101,7 @@ describe('CharacterRenderer', () => {
 
     // Verify children contains rig primitive
     const children = React.Children.toArray(props.children) as React.ReactElement[]
-    const rig = children.find(c => c.type === 'primitive')
+    const rig = children.find(c => (c as React.ReactElement).type === 'primitive')
     expect(rig).toBeDefined()
   })
 
@@ -119,7 +119,7 @@ describe('CharacterRenderer', () => {
     const result = renderFn({ actor: mockActor, isSelected: true }, null) as React.ReactElement
     const children = React.Children.toArray(result.props.children) as React.ReactElement[]
 
-    const ring = children.find(c => c.type === 'mesh' && (c.props as any)['data-testid'] === 'selection-ring')
+    const ring = children.find(c => (c as React.ReactElement).type === 'mesh' && ((c as React.ReactElement).props as any)['data-testid'] === 'selection-ring')
     expect(ring).toBeDefined()
   })
 })
