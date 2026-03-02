@@ -109,6 +109,9 @@ importers:
       '@Animatica/engine':
         specifier: workspace:*
         version: link:../engine
+      '@eslint/js':
+        specifier: ^9.21.0
+        version: 9.39.3
       '@tailwindcss/postcss':
         specifier: ^4.1.18
         version: 4.2.0
@@ -124,9 +127,27 @@ importers:
       '@types/three':
         specifier: ^0.182.0
         version: 0.182.0
+      '@typescript-eslint/eslint-plugin':
+        specifier: ^8.25.0
+        version: 8.56.1(@typescript-eslint/parser@8.56.1(eslint@9.39.3(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.3(jiti@2.6.1))(typescript@5.9.3)
+      '@typescript-eslint/parser':
+        specifier: ^8.25.0
+        version: 8.56.1(eslint@9.39.3(jiti@2.6.1))(typescript@5.9.3)
       '@vitejs/plugin-react':
         specifier: ^5.1.1
         version: 5.1.4(vite@7.3.1(@types/node@25.3.0)(jiti@2.6.1)(lightningcss@1.31.1))
+      eslint:
+        specifier: ^9.21.0
+        version: 9.39.3(jiti@2.6.1)
+      eslint-plugin-react:
+        specifier: ^7.37.4
+        version: 7.37.5(eslint@9.39.3(jiti@2.6.1))
+      eslint-plugin-react-hooks:
+        specifier: ^5.1.0
+        version: 5.2.0(eslint@9.39.3(jiti@2.6.1))
+      globals:
+        specifier: ^16.0.0
+        version: 16.5.0
       jsdom:
         specifier: ^28.1.0
         version: 28.1.0(@noble/hashes@1.8.0)

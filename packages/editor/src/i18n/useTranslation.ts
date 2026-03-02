@@ -42,7 +42,7 @@ export const useTranslation = () => {
 
             return value;
         },
-        [language]
+        []
     );
 
     return {
