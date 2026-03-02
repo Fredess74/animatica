@@ -1,14 +1,15 @@
 /**
  * CharacterRenderer — R3F component for rendering a character actor.
- * Creates a procedural humanoid (or loads GLB), applies animation, face morphs, and eye tracking.
+ * Creates a procedural humanoid (or loads GLB), applies animation, face morphs, eye tracking, and custom bone poses.
  */
-import React, { useEffect, useRef, useMemo } from 'react'
+import React, { useEffect, useRef, useMemo, memo, forwardRef, useImperativeHandle } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { createProceduralHumanoid } from '../../character/CharacterLoader'
 import { CharacterAnimator, createIdleClip, createWalkClip } from '../../character/CharacterAnimator'
 import { FaceMorphController } from '../../character/FaceMorphController'
 import { EyeController } from '../../character/EyeController'
+import { BoneController } from '../../character/BoneController'
 import { getPreset } from '../../character/CharacterPresets'
 import type { CharacterActor } from '../../types'
 
@@ -18,15 +19,19 @@ interface CharacterRendererProps {
   onClick?: () => void
 }
 
-export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
+export const CharacterRenderer = memo(forwardRef<THREE.Group, CharacterRendererProps>(({
   actor,
   isSelected = false,
   onClick,
-}) => {
+}, ref) => {
   const groupRef = useRef<THREE.Group>(null)
   const animatorRef = useRef<CharacterAnimator | null>(null)
   const faceMorphRef = useRef<FaceMorphController | null>(null)
   const eyeControllerRef = useRef<EyeController | null>(null)
+  const boneControllerRef = useRef<BoneController | null>(null)
+
+  // Forward the internal group ref to the parent via forwardRef
+  useImperativeHandle(ref, () => groupRef.current as THREE.Group)
 
   // Build character rig
   const rig = useMemo(() => {
@@ -38,10 +43,11 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     return createProceduralHumanoid({ skinColor, height, build })
   }, [actor.name])
 
-  // Setup animator
+  // Setup animator and controllers
   useEffect(() => {
     if (!rig.root) return
 
+    // Setup animator
     const animator = new CharacterAnimator(rig.root)
     animator.registerClip('idle', createIdleClip())
     animator.registerClip('walk', createWalkClip())
@@ -55,6 +61,10 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     // Setup eye controller
     const eyeController = new EyeController()
     eyeControllerRef.current = eyeController
+
+    // Setup bone controller (for manual pose overrides)
+    const boneController = new BoneController(rig.bones)
+    boneControllerRef.current = boneController
 
     return () => {
       animator.dispose()
@@ -82,19 +92,24 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     }
   }, [actor.morphTargets])
 
-  // Frame update — animation, face morphs, eye blinks
+  // Frame update — animation, face morphs, eye blinks, and bone poses
   useFrame((_state, delta) => {
-    // Skeletal animation
+    // 1. Skeletal animation (Base layer)
     if (animatorRef.current) {
       animatorRef.current.update(delta)
     }
 
-    // Face morph blending
+    // 2. Bone pose overrides (Additive layer)
+    if (boneControllerRef.current && actor.bodyPose) {
+      boneControllerRef.current.update(actor.bodyPose, delta)
+    }
+
+    // 3. Face morph blending
     if (faceMorphRef.current) {
       faceMorphRef.current.update(delta)
     }
 
-    // Eye auto-blink + look-at
+    // 4. Eye auto-blink + look-at
     if (eyeControllerRef.current && faceMorphRef.current) {
       const headPos = groupRef.current
         ? new THREE.Vector3().setFromMatrixPosition(groupRef.current.matrixWorld)
@@ -105,6 +120,9 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     }
   })
 
+  // Hook compliance: return null AFTER hooks
+  if (!actor.visible) return null
+
   return (
     <group
       ref={groupRef}
@@ -112,7 +130,6 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       position={actor.transform.position}
       rotation={actor.transform.rotation}
       scale={actor.transform.scale}
-      visible={actor.visible}
       onClick={(e) => {
         e.stopPropagation()
         onClick?.()
@@ -135,4 +152,6 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       )}
     </group>
   )
-}
+}))
+
+CharacterRenderer.displayName = 'CharacterRenderer'
