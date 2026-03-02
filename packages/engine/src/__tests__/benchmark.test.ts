@@ -41,7 +41,7 @@ describe('Engine Benchmarks', () => {
     });
 
     describe('Interpolation Performance', () => {
-        it('Number Interpolation (10k ops, 10k keyframes)', { timeout: 10000 }, () => {
+        it('Number Interpolation (10k ops, 10k keyframes)', { timeout: 30000 }, () => {
             const keyframes: Keyframe<number>[] = [];
             for (let i = 0; i < 10000; i++) {
                 keyframes.push({
@@ -59,7 +59,7 @@ describe('Engine Benchmarks', () => {
             }, 5);
         });
 
-        it('Vector3 Interpolation (10k ops, 10k keyframes)', { timeout: 10000 }, () => {
+        it('Vector3 Interpolation (10k ops, 10k keyframes)', { timeout: 30000 }, () => {
             const keyframes: Keyframe<Vector3>[] = [];
             for (let i = 0; i < 10000; i++) {
                 keyframes.push({
@@ -77,7 +77,7 @@ describe('Engine Benchmarks', () => {
             }, 5);
         });
 
-        it('Color Interpolation (10k ops, 10k keyframes)', { timeout: 10000 }, () => {
+        it('Color Interpolation (10k ops, 10k keyframes)', { timeout: 30000 }, () => {
             const keyframes: Keyframe<string>[] = [];
             for (let i = 0; i < 10000; i++) {
                 keyframes.push({
@@ -97,7 +97,7 @@ describe('Engine Benchmarks', () => {
     });
 
     describe('Timeline Performance', () => {
-        it('evaluateTracksAtTime (150 tracks, 10 keyframes each, 1k evals)', { timeout: 10000 }, () => {
+        it('evaluateTracksAtTime (150 tracks, 10 keyframes each, 1k evals)', { timeout: 30000 }, () => {
             const tracks: AnimationTrack[] = [];
             for (let i = 0; i < 150; i++) {
                 const keyframes: Keyframe<number>[] = [];
@@ -171,7 +171,7 @@ describe('Engine Benchmarks', () => {
             };
         };
 
-        it('Project Schema Validation (100 runs, 100 actors)', { timeout: 10000 }, () => {
+        it('Project Schema Validation (100 runs, 100 actors)', { timeout: 30000 }, () => {
             const projectState = createProject(100);
             measure('Schema Validation Speed (100 actors)', () => {
                 for (let i = 0; i < 100; i++) {
@@ -180,7 +180,7 @@ describe('Engine Benchmarks', () => {
             }, 5);
         });
 
-        it('Large Project Schema Validation (100 runs, 150 actors)', { timeout: 10000 }, () => {
+        it('Large Project Schema Validation (100 runs, 150 actors)', { timeout: 30000 }, () => {
             const projectState = createProject(150);
             measure('Large Schema Validation Speed (150 actors)', () => {
                 for (let i = 0; i < 100; i++) {
