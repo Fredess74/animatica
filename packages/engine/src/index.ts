@@ -13,15 +13,22 @@ export {
   getActorById,
   getActiveActors,
   getCurrentTime,
+  useActors,
   useActorById,
   useActorIds,
   useCurrentTime,
   useIsPlaying,
+  usePlaybackState,
+  useEnvironment,
+  useTimeline,
+  useMeta,
+  useLibrary,
   useSelectedActorId,
   useSelectedActor,
   useActorsByType,
   useActorList,
 } from './store/sceneStore';
+export type { SceneStoreState } from './store/sceneStore';
 
 // === COMPONENTS (R3F) ===
 export { PrimitiveRenderer } from './scene/renderers/PrimitiveRenderer'
@@ -55,4 +62,3 @@ export { getAiPrompt, PROMPT_STYLES } from './ai/promptTemplates';
 // === CONFIG ===
 export { FeatureFlagProvider, useFeatureFlag, getFeatureFlags } from './config/featureFlags';
 export type { FeatureFlags } from './config/featureFlags';
-
