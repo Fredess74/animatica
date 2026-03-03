@@ -7,17 +7,17 @@ import {
     PrimitiveRenderer,
     LightRenderer,
     CameraRenderer,
-} from '@animatica/engine'
-import type { Actor } from '@animatica/engine'
+    CharacterRenderer,
+} from '@Animatica/engine'
 
 export const SceneRenderer: React.FC = () => {
-    const actors = useSceneStore((s) => s.actors)
-    const selectedActorId = useSceneStore((s) => s.selectedActorId)
-    const setSelectedActor = useSceneStore((s) => s.setSelectedActor)
+    const actors = useSceneStore((s: any) => s.actors)
+    const selectedActorId = useSceneStore((s: any) => s.selectedActorId)
+    const setSelectedActor = useSceneStore((s: any) => s.setSelectedActor)
 
     return (
         <group>
-            {actors.map((actor) => (
+            {actors.map((actor: any) => (
                 <ActorSwitch
                     key={actor.id}
                     actor={actor}
@@ -33,7 +33,7 @@ export const SceneRenderer: React.FC = () => {
  * Routes each actor to the correct renderer based on actor.type.
  */
 const ActorSwitch: React.FC<{
-    actor: Actor
+    actor: any
     isSelected: boolean
     onSelect: () => void
 }> = ({ actor, isSelected, onSelect }) => {
@@ -53,25 +53,7 @@ const ActorSwitch: React.FC<{
         case 'camera':
             return <CameraRenderer {...commonProps} actor={actor} showHelper={true} />
         case 'character':
-            // TODO: CharacterRenderer - Sprint 3
-            return (
-                <group
-                    name={actor.id}
-                    position={actor.transform.position}
-                    rotation={actor.transform.rotation}
-                    scale={actor.transform.scale}
-                    onClick={(e) => { e.stopPropagation(); onSelect() }}
-                >
-                    {/* Placeholder capsule until CharacterRenderer is ready */}
-                    <mesh castShadow>
-                        <capsuleGeometry args={[0.3, 1.2, 8, 16]} />
-                        <meshStandardMaterial
-                            color={isSelected ? '#22C55E' : '#A3A3A3'}
-                            roughness={0.5}
-                        />
-                    </mesh>
-                </group>
-            )
+            return <CharacterRenderer {...commonProps} actor={actor} />
         case 'speaker':
             return (
                 <group

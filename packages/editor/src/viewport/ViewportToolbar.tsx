@@ -29,7 +29,7 @@ export const ViewportToolbar: React.FC<ViewportToolbarProps> = ({
     return (
         <div style={toolbarStyle}>
             {/* Gizmo mode group */}
-            <div style={groupStyle}>
+            <div style={groupStyle} data-testid="gizmo-toolbar">
                 <ToolBtn
                     label="W"
                     tooltip="Move (W)"
