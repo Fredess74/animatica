@@ -6,6 +6,9 @@ import React from 'react'
 import { Grid } from '@react-three/drei'
 
 export const ViewportGrid: React.FC = () => {
+    const xPosArray = new Float32Array([-100, 0.001, 0, 100, 0.001, 0])
+    const zPosArray = new Float32Array([0, 0.001, -100, 0, 0.001, 100])
+
     return (
         <group>
             {/* Infinite grid on XZ plane */}
@@ -27,9 +30,10 @@ export const ViewportGrid: React.FC = () => {
                 <bufferGeometry>
                     <bufferAttribute
                         attach="attributes-position"
-                        array={new Float32Array([-100, 0.001, 0, 100, 0.001, 0])}
+                        array={xPosArray}
                         count={2}
                         itemSize={3}
+                        args={[xPosArray, 3]}
                     />
                 </bufferGeometry>
                 <lineBasicMaterial color="#EF4444" opacity={0.4} transparent />
@@ -40,9 +44,10 @@ export const ViewportGrid: React.FC = () => {
                 <bufferGeometry>
                     <bufferAttribute
                         attach="attributes-position"
-                        array={new Float32Array([0, 0.001, -100, 0, 0.001, 100])}
+                        array={zPosArray}
                         count={2}
                         itemSize={3}
+                        args={[zPosArray, 3]}
                     />
                 </bufferGeometry>
                 <lineBasicMaterial color="#3B82F6" opacity={0.4} transparent />

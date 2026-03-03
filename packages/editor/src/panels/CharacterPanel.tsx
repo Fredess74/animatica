@@ -2,19 +2,25 @@
  * CharacterPanel — Editor UI for character customization.
  * Provides preset picker, body sliders, expression selector, and animation controls.
  */
-import React, { useState, useCallback } from 'react'
-import { useSceneStore } from '@animatica/engine'
-import { CHARACTER_PRESETS, EXPRESSION_PRESETS } from '@animatica/engine'
-import type { CharacterActor, AnimationState } from '@animatica/engine'
+import React from 'react'
+import {
+    CHARACTER_PRESETS,
+    EXPRESSION_PRESETS,
+    useActors,
+    useSelectedActorId,
+    useSceneStore
+} from '@Animatica/engine'
+import type { CharacterActor, AnimationState, Actor } from '@Animatica/engine'
 
 const ANIMATIONS: AnimationState[] = ['idle', 'walk', 'run', 'wave', 'talk', 'dance', 'sit', 'jump']
 
 export const CharacterPanel: React.FC = () => {
-    const selectedActorId = useSceneStore((s) => s.selectedActorId)
-    const actors = useSceneStore((s) => s.actors)
+    const selectedActorId = useSelectedActorId()
+    const actors = useActors()
+    // Still need store for updateActor until we have a hook for it
     const updateActor = useSceneStore((s) => s.updateActor)
 
-    const selectedActor = actors.find((a) => a.id === selectedActorId) as CharacterActor | undefined
+    const selectedActor = actors.find((a: Actor) => a.id === selectedActorId) as CharacterActor | undefined
 
     if (!selectedActor || selectedActor.type !== 'character') {
         return (
@@ -34,7 +40,7 @@ export const CharacterPanel: React.FC = () => {
             {/* Preset Picker */}
             <Section title="PRESETS">
                 <div style={presetsGridStyle}>
-                    {CHARACTER_PRESETS.map((preset) => (
+                    {CHARACTER_PRESETS.map((preset: any) => (
                         <button
                             key={preset.id}
                             title={preset.name}
@@ -73,7 +79,7 @@ export const CharacterPanel: React.FC = () => {
                                 // Expression is stored in morphTargets
                                 // CharacterRenderer reads this and applies via FaceMorphController
                                 updateActor(selectedActor.id, {
-                                    morphTargets: EXPRESSION_PRESETS[name] as any,
+                                    morphTargets: (EXPRESSION_PRESETS as any)[name] as any,
                                 } as Partial<CharacterActor>)
                             }}
                         >
