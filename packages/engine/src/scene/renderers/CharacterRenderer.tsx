@@ -3,7 +3,7 @@
  * Creates a procedural humanoid (or loads GLB) via Humanoid component,
  * and applies animation, face morphs, and eye tracking.
  */
-import React, { useEffect, useRef, useMemo, useCallback, memo, forwardRef, useImperativeHandle } from 'react'
+import { useEffect, useRef, useMemo, useCallback, memo, forwardRef, useImperativeHandle } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { Humanoid } from '../../character/Humanoid'

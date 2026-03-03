@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import React from 'react'
+import { Suspense } from 'react'
 import { render } from '@testing-library/react'
 import { Humanoid } from './Humanoid'
 import * as THREE from 'three'
@@ -32,9 +32,9 @@ describe('Humanoid', () => {
   it('renders Suspend and GLBHumanoid when URL is provided', () => {
     // We wrap in a custom Suspense because our component uses it
     const { container } = render(
-      <React.Suspense fallback={<div data-testid="loading">Loading...</div>}>
+      <Suspense fallback={<div data-testid="loading">Loading...</div>}>
         <Humanoid url="test.glb" />
-      </React.Suspense>
+      </Suspense>
     )
 
     // It should initially render fallback if useGLTF is mocked to suspend,

@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, forwardRef, Suspense } from 'react'
+import { useMemo, useEffect, forwardRef, Suspense, memo } from 'react'
 import * as THREE from 'three'
 import { useGLTF } from '@react-three/drei'
 import { glbToCharacterRig, parseGLBResult } from './GLBLoader'
@@ -67,7 +67,7 @@ const ProceduralHumanoid = forwardRef<THREE.Group, HumanoidProps>((props, ref) =
  *
  * @component
  */
-export const Humanoid = React.memo(forwardRef<THREE.Group, HumanoidProps>((props, ref) => {
+export const Humanoid = memo(forwardRef<THREE.Group, HumanoidProps>((props, ref) => {
   const { url } = props
 
   // If no URL is provided, jump straight to procedural

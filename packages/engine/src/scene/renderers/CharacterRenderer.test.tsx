@@ -1,12 +1,11 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import React from 'react'
 import { render } from '@testing-library/react'
 import { CharacterRenderer } from './CharacterRenderer'
 import { CharacterActor } from '../../types'
 
 // Mock Humanoid component
 vi.mock('../../character/Humanoid', () => ({
-  Humanoid: vi.fn(({ onRigLoaded }: any) => {
+  Humanoid: vi.fn(() => {
     return <primitive object={{ name: 'mock-rig-root' }} data-testid="humanoid" />
   })
 }))
