@@ -10,6 +10,7 @@ import { createEnvironmentSlice } from './slices/environmentSlice';
 import { createTimelineSlice } from './slices/timelineSlice';
 import { createPlaybackSlice } from './slices/playbackSlice';
 import { createMetaSlice } from './slices/metaSlice';
+import { createLibrarySlice } from './slices/librarySlice';
 
 /**
  * Zustand store for managing the scene state, including actors, timeline, environment, and playback.
@@ -25,7 +26,7 @@ export const useSceneStore = create<SceneStoreState>()(
         ...createTimelineSlice(...a),
         ...createPlaybackSlice(...a),
         ...createMetaSlice(...a),
-        library: { clips: [] },
+        ...createLibrarySlice(...a),
       })),
       {
         name: 'animatica-scene',
@@ -90,6 +91,13 @@ export const getCurrentTime = (state: SceneStoreState): number =>
 // Hooks
 
 /**
+ * Hook to get the list of all actors.
+ * Optimized with useShallow.
+ */
+export const useActors = () =>
+  useSceneStore(useShallow((state) => state.actors));
+
+/**
  * Hook to select a specific actor by ID.
  */
 export const useActorById = (id: string) =>
@@ -115,6 +123,66 @@ export const useIsPlaying = () =>
   useSceneStore((state) => state.playback.isPlaying);
 
 /**
+ * Hook to get the playback state and actions.
+ * Optimized with useShallow.
+ */
+export const usePlaybackState = () =>
+  useSceneStore(
+    useShallow((state) => ({
+      ...state.playback,
+      setPlayback: state.setPlayback,
+    }))
+  );
+
+/**
+ * Hook to get the environment state and actions.
+ * Optimized with useShallow.
+ */
+export const useEnvironment = () =>
+  useSceneStore(
+    useShallow((state) => ({
+      environment: state.environment,
+      setEnvironment: state.setEnvironment,
+    }))
+  );
+
+/**
+ * Hook to get the timeline state and actions.
+ * Optimized with useShallow.
+ */
+export const useTimeline = () =>
+  useSceneStore(
+    useShallow((state) => ({
+      timeline: state.timeline,
+      setTimeline: state.setTimeline,
+    }))
+  );
+
+/**
+ * Hook to get the project metadata state and actions.
+ * Optimized with useShallow.
+ */
+export const useMeta = () =>
+  useSceneStore(
+    useShallow((state) => ({
+      meta: state.meta,
+      setMeta: state.setMeta,
+    }))
+  );
+
+/**
+ * Hook to get the asset library state and actions.
+ * Optimized with useShallow.
+ */
+export const useLibrary = () =>
+  useSceneStore(
+    useShallow((state) => ({
+      library: state.library,
+      setLibrary: state.setLibrary,
+    }))
+  );
+
+/**
  * Hook to get the ID of the currently selected actor.
  */
 export const useSelectedActorId = () =>
@@ -130,11 +198,13 @@ export const useSelectedActor = () =>
 
 /**
  * Hook to get all actors of a specific type.
+ * Optimized with useShallow.
  */
 export const useActorsByType = (type: Actor['type']) =>
   useSceneStore(useShallow((state) => state.actors.filter((a) => a.type === type)));
 
 /**
  * Hook to get the list of all actors.
+ * @deprecated Use useActors instead for optimized re-renders.
  */
 export const useActorList = () => useSceneStore((state) => state.actors);

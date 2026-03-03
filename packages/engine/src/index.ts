@@ -13,10 +13,16 @@ export {
   getActorById,
   getActiveActors,
   getCurrentTime,
+  useActors,
   useActorById,
   useActorIds,
   useCurrentTime,
   useIsPlaying,
+  usePlaybackState,
+  useEnvironment,
+  useTimeline,
+  useMeta,
+  useLibrary,
   useSelectedActorId,
   useSelectedActor,
   useActorsByType,
@@ -55,4 +61,3 @@ export { getAiPrompt, PROMPT_STYLES } from './ai/promptTemplates';
 // === CONFIG ===
 export { FeatureFlagProvider, useFeatureFlag, getFeatureFlags } from './config/featureFlags';
 export type { FeatureFlags } from './config/featureFlags';
-
