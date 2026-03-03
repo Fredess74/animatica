@@ -5,7 +5,7 @@
  *
  * @module @animatica/engine/scene/SceneManager
  */
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useActors, useEnvironment, useTimeline, useCurrentTime } from '../store/sceneStore';
 import { evaluateTracksAtTime } from '../animation/interpolate';
 import { applyAnimationToActor, resolveActiveCamera } from './animationUtils';
