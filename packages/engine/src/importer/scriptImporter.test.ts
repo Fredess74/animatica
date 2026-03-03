@@ -47,6 +47,7 @@ const validProject = {
         duration: 30,
         cameraTrack: [],
         animationTracks: [],
+        markers: [],
     },
     library: { clips: [] },
 };
@@ -84,7 +85,7 @@ describe('validateScript', () => {
                 skyColor: '#87ceeb',
             },
             actors: [],
-            timeline: { duration: 0, cameraTrack: [], animationTracks: [] },
+            timeline: { duration: 0, cameraTrack: [], animationTracks: [], markers: [] },
             library: { clips: [] },
         };
         const result = validateScript(JSON.stringify(invalid));

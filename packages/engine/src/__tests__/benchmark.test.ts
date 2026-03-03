@@ -199,6 +199,6 @@ describe('Engine Benchmarks', () => {
                     getState().removeActor(`bench-${i}`);
                 }
             });
-        });
+        }, 300000); // 5 minutes for slow CI
     });
 });

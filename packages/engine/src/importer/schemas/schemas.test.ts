@@ -174,13 +174,14 @@ describe('Scene Schemas', () => {
                 },
             ],
             animationTracks: [],
+            markers: [],
         };
         expect(TimelineSchema.safeParse(timeline).success).toBe(true);
     });
 
     it('rejects zero-duration timeline', () => {
         expect(
-            TimelineSchema.safeParse({ duration: 0, cameraTrack: [], animationTracks: [] }).success,
+            TimelineSchema.safeParse({ duration: 0, cameraTrack: [], animationTracks: [], markers: [] }).success,
         ).toBe(false);
     });
 
@@ -208,7 +209,7 @@ describe('Scene Schemas', () => {
                 skyColor: '#87ceeb',
             },
             actors: [validCamera, validPrimitive],
-            timeline: { duration: 10, cameraTrack: [], animationTracks: [] },
+            timeline: { duration: 10, cameraTrack: [], animationTracks: [], markers: [] },
             library: { clips: [] },
         };
         expect(ProjectStateSchema.safeParse(project).success).toBe(true);
