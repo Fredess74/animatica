@@ -10,6 +10,7 @@ import { createEnvironmentSlice } from './slices/environmentSlice';
 import { createTimelineSlice } from './slices/timelineSlice';
 import { createPlaybackSlice } from './slices/playbackSlice';
 import { createMetaSlice } from './slices/metaSlice';
+import { createLibrarySlice } from './slices/librarySlice';
 
 /**
  * Zustand store for managing the scene state, including actors, timeline, environment, and playback.
@@ -25,7 +26,7 @@ export const useSceneStore = create<SceneStoreState>()(
         ...createTimelineSlice(...a),
         ...createPlaybackSlice(...a),
         ...createMetaSlice(...a),
-        library: { clips: [] },
+        ...createLibrarySlice(...a),
       })),
       {
         name: 'animatica-scene',
@@ -136,5 +137,45 @@ export const useActorsByType = (type: Actor['type']) =>
 
 /**
  * Hook to get the list of all actors.
+ * Optimized with useShallow to prevent re-renders on unrelated state changes.
+ */
+export const useActors = () => useSceneStore(useShallow((state) => state.actors));
+
+/**
+ * Hook to get all currently visible actors.
+ * Optimized with useShallow.
+ */
+export const useActiveActors = () =>
+  useSceneStore(useShallow((state) => state.actors.filter((a) => a.visible)));
+
+/**
+ * Hook to get the environment settings.
+ */
+export const useEnvironment = () => useSceneStore((state) => state.environment);
+
+/**
+ * Hook to get the timeline configuration.
+ */
+export const useTimeline = () => useSceneStore((state) => state.timeline);
+
+/**
+ * Hook to get the playback state.
+ * Optimized with useShallow.
+ */
+export const usePlaybackState = () => useSceneStore(useShallow((state) => state.playback));
+
+/**
+ * Hook to get project metadata.
+ */
+export const useMeta = () => useSceneStore((state) => state.meta);
+
+/**
+ * Hook to get the asset library.
+ */
+export const useLibrary = () => useSceneStore((state) => state.library);
+
+/**
+ * Hook to get the list of all actors.
+ * @deprecated Use useActors instead.
  */
 export const useActorList = () => useSceneStore((state) => state.actors);
