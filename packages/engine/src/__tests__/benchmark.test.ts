@@ -1,5 +1,5 @@
 import { describe, it, afterAll } from 'vitest';
-import { interpolateKeyframes } from '../animation/interpolate';
+import { interpolateKeyframes, evaluateTracksAtTime } from '../animation/interpolate';
 import { ProjectStateSchema } from '../importer/schemas';
 import { useSceneStore } from '../store/sceneStore';
 import type { Keyframe, ProjectState, Actor, PrimitiveActor, Vector3 } from '../types';
@@ -12,7 +12,19 @@ const __dirname = path.dirname(__filename);
 
 const results: Record<string, string> = {};
 
-function measure(name: string, fn: () => void) {
+function warmup(fn: () => void, iterations = 100) {
+    for (let i = 0; i < iterations; i++) {
+        fn();
+    }
+}
+
+function measure(name: string, fn: () => void, warmupFn?: () => void) {
+    if (warmupFn) {
+        warmup(warmupFn);
+    } else {
+        warmup(fn, 10);
+    }
+
     const start = performance.now();
     fn();
     const end = performance.now();
@@ -21,7 +33,7 @@ function measure(name: string, fn: () => void) {
     console.log(`${name}: ${duration}ms`);
 }
 
-describe('Engine Benchmarks', () => {
+describe('Engine Benchmarks', { timeout: 120000 }, () => {
     afterAll(() => {
         const reportDir = path.resolve(__dirname, '../../../../reports');
         if (!fs.existsSync(reportDir)) {
@@ -87,12 +99,33 @@ describe('Engine Benchmarks', () => {
                 }
             });
         });
+
+        it('Timeline Evaluation (1000 tracks, 10 keyframes each)', () => {
+            const tracks: { targetId: string; property: string; keyframes: Keyframe<number>[] }[] = [];
+            for (let i = 0; i < 1000; i++) {
+                const kfs: Keyframe<number>[] = [];
+                for (let j = 0; j < 10; j++) {
+                    kfs.push({ time: j * 10, value: Math.random(), easing: 'easeInOut' });
+                }
+                tracks.push({
+                    targetId: `actor-${i}`,
+                    property: 'transform.position.x',
+                    keyframes: kfs
+                });
+            }
+
+            measure('Timeline Evaluation (evaluateTracksAtTime)', () => {
+                for (let i = 0; i < 100; i++) {
+                    evaluateTracksAtTime(tracks, Math.random() * 100);
+                }
+            });
+        });
     });
 
     describe('Schema Validation Performance', () => {
-        it('Project Schema Validation (100 runs, 100 actors)', () => {
+        const createProject = (numActors: number): ProjectState => {
             const actors: Actor[] = [];
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < numActors; i++) {
                 const actor: PrimitiveActor = {
                     id: `actor-${i}`,
                     name: `Actor ${i}`,
@@ -115,7 +148,7 @@ describe('Engine Benchmarks', () => {
                 actors.push(actor);
             }
 
-            const projectState: ProjectState = {
+            return {
                 meta: {
                     title: 'Benchmark Project',
                     version: '1.0.0',
@@ -134,8 +167,20 @@ describe('Engine Benchmarks', () => {
                 },
                 library: { clips: [] },
             };
+        };
 
-            measure('Schema Validation Speed (100 runs)', () => {
+        it('Small Project Schema Validation (100 runs, 100 actors)', () => {
+            const projectState = createProject(100);
+            measure('Small Project Schema Validation (100 runs)', () => {
+                for (let i = 0; i < 100; i++) {
+                    ProjectStateSchema.parse(projectState);
+                }
+            });
+        });
+
+        it('Large Project Schema Validation (100 runs, 150 actors)', () => {
+            const projectState = createProject(150);
+            measure('Large Project Schema Validation (100 runs)', () => {
                 for (let i = 0; i < 100; i++) {
                     ProjectStateSchema.parse(projectState);
                 }
@@ -144,7 +189,7 @@ describe('Engine Benchmarks', () => {
     });
 
     describe('Store Performance', () => {
-        it('Store Update Throughput (10k playback updates)', () => {
+        it('Store Playback Updates (10k playback updates)', () => {
             const { setState, getState } = useSceneStore;
 
             setState({
