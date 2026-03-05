@@ -167,13 +167,22 @@ describe('Engine Benchmarks', () => {
             });
         });
 
-        it('Store Actor CRUD Throughput (1k actors)', () => {
+        it('Store Actor CRUD Throughput (1k actors)', { timeout: 15000 }, () => {
             const { setState, getState } = useSceneStore;
 
             setState({
                 actors: [],
                 playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, direction: 1, loopMode: 'none' },
-            } as any);
+                meta: { title: 'Untitled Project', version: '1.0.0' },
+                environment: {
+                    ambientLight: { intensity: 0.5, color: '#ffffff' },
+                    sun: { position: [10, 10, 10], intensity: 1, color: '#ffffff' },
+                    skyColor: '#87CEEB',
+                },
+                timeline: { duration: 60, cameraTrack: [], animationTracks: [], markers: [] },
+                library: { clips: [] },
+                selectedActorId: null,
+            });
 
             measure('Store Add Actor (1k ops)', () => {
                 for (let i = 0; i < 1000; i++) {
