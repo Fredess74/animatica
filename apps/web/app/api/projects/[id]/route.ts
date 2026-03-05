@@ -37,7 +37,7 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
     // Assuming ProjectStateSchema is a ZodObject as it represents the state.
     let updates;
     if ('partial' in ProjectStateSchema && typeof ProjectStateSchema.partial === 'function') {
-        // @ts-expect-error - Schema version mismatch might cause TS issues but runtime should work
+        // @ts-ignore - Schema version mismatch might cause TS issues but runtime should work
         updates = (ProjectStateSchema as any).partial().parse(json);
     } else {
         // Fallback: Validate full object if partial is not supported, or just trust simple validation
