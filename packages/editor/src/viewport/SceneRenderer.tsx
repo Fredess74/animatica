@@ -7,22 +7,21 @@ import {
     PrimitiveRenderer,
     LightRenderer,
     CameraRenderer,
-} from '@animatica/engine'
-import type { Actor } from '@animatica/engine'
+} from '@Animatica/engine'
 
 export const SceneRenderer: React.FC = () => {
-    const actors = useSceneStore((s) => s.actors)
-    const selectedActorId = useSceneStore((s) => s.selectedActorId)
-    const setSelectedActor = useSceneStore((s) => s.setSelectedActor)
+    const actors = useSceneStore((s: any) => s.actors)
+    const selectedActorId = useSceneStore((s: any) => s.selectedActorId)
+    const setSelectedActor = useSceneStore((s: any) => s.setSelectedActor)
 
     return (
         <group>
-            {actors.map((actor) => (
+            {actors.map((actor: any) => (
                 <ActorSwitch
                     key={actor.id}
                     actor={actor}
                     isSelected={actor.id === selectedActorId}
-                    onSelect={() => setSelectedActor(actor.id)}
+                    onSelect={setSelectedActor}
                 />
             ))}
         </group>
@@ -33,25 +32,32 @@ export const SceneRenderer: React.FC = () => {
  * Routes each actor to the correct renderer based on actor.type.
  */
 const ActorSwitch: React.FC<{
-    actor: Actor
+    actor: any
     isSelected: boolean
-    onSelect: () => void
+    onSelect: (id: string) => void
 }> = ({ actor, isSelected, onSelect }) => {
     if (!actor.visible) return null
 
     const commonProps = {
         actor,
         isSelected,
-        onClick: onSelect,
     }
 
     switch (actor.type) {
         case 'primitive':
-            return <PrimitiveRenderer {...commonProps} actor={actor} />
+            return <PrimitiveRenderer {...commonProps} actor={actor} onClick={() => onSelect(actor.id)} />
         case 'light':
-            return <LightRenderer {...commonProps} actor={actor} showHelper={true} />
+            return (
+                <group onClick={(e: any) => { e.stopPropagation(); onSelect(actor.id) }}>
+                    <LightRenderer {...commonProps} actor={actor} showHelper={true} />
+                </group>
+            )
         case 'camera':
-            return <CameraRenderer {...commonProps} actor={actor} showHelper={true} />
+            return (
+                <group onClick={(e: any) => { e.stopPropagation(); onSelect(actor.id) }}>
+                    <CameraRenderer {...commonProps} actor={actor} showHelper={true} />
+                </group>
+            )
         case 'character':
             // TODO: CharacterRenderer - Sprint 3
             return (
@@ -60,7 +66,7 @@ const ActorSwitch: React.FC<{
                     position={actor.transform.position}
                     rotation={actor.transform.rotation}
                     scale={actor.transform.scale}
-                    onClick={(e) => { e.stopPropagation(); onSelect() }}
+                    onClick={(e: any) => { e.stopPropagation(); onSelect(actor.id) }}
                 >
                     {/* Placeholder capsule until CharacterRenderer is ready */}
                     <mesh castShadow>
@@ -77,7 +83,7 @@ const ActorSwitch: React.FC<{
                 <group
                     name={actor.id}
                     position={actor.transform.position}
-                    onClick={(e) => { e.stopPropagation(); onSelect() }}
+                    onClick={(e: any) => { e.stopPropagation(); onSelect(actor.id) }}
                 >
                     {/* Speaker icon placeholder */}
                     <mesh>
