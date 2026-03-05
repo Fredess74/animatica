@@ -13,13 +13,20 @@ export {
   getActorById,
   getActiveActors,
   getCurrentTime,
+  useActors,
+  useActiveActors,
   useActorById,
   useActorIds,
   useCurrentTime,
+  usePlaybackState,
   useIsPlaying,
   useSelectedActorId,
   useSelectedActor,
   useActorsByType,
+  useEnvironment,
+  useTimeline,
+  useMeta,
+  useLibrary,
   useActorList,
 } from './store/sceneStore';
 
@@ -55,4 +62,3 @@ export { getAiPrompt, PROMPT_STYLES } from './ai/promptTemplates';
 // === CONFIG ===
 export { FeatureFlagProvider, useFeatureFlag, getFeatureFlags } from './config/featureFlags';
 export type { FeatureFlags } from './config/featureFlags';
-

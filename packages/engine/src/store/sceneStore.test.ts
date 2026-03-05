@@ -14,6 +14,8 @@ describe('sceneStore', () => {
           skyColor: '#87CEEB',
       },
       playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, direction: 1, loopMode: 'none' },
+      meta: { title: 'Untitled Project', version: '1.0.0' },
+      library: { clips: [] },
     });
 
     // Clear undo history
@@ -65,6 +67,17 @@ describe('sceneStore', () => {
   it('should set playback', () => {
     useSceneStore.getState().setPlayback({ currentTime: 5 });
     expect(useSceneStore.getState().playback.currentTime).toBe(5);
+  });
+
+  it('should set meta', () => {
+    useSceneStore.getState().setMeta({ title: 'New Title' });
+    expect(useSceneStore.getState().meta.title).toBe('New Title');
+  });
+
+  it('should set library', () => {
+    const clips = [{ id: 'clip-1', name: 'Clip 1' }];
+    useSceneStore.getState().setLibrary({ clips });
+    expect(useSceneStore.getState().library.clips).toEqual(clips);
   });
 
   it('should get actor by id selector', () => {
