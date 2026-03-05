@@ -30,6 +30,7 @@ export const ViewportGrid: React.FC = () => {
                         array={new Float32Array([-100, 0.001, 0, 100, 0.001, 0])}
                         count={2}
                         itemSize={3}
+                        args={[new Float32Array([-100, 0.001, 0, 100, 0.001, 0]), 3]}
                     />
                 </bufferGeometry>
                 <lineBasicMaterial color="#EF4444" opacity={0.4} transparent />
@@ -43,6 +44,7 @@ export const ViewportGrid: React.FC = () => {
                         array={new Float32Array([0, 0.001, -100, 0, 0.001, 100])}
                         count={2}
                         itemSize={3}
+                        args={[new Float32Array([0, 0.001, -100, 0, 0.001, 100]), 3]}
                     />
                 </bufferGeometry>
                 <lineBasicMaterial color="#3B82F6" opacity={0.4} transparent />
