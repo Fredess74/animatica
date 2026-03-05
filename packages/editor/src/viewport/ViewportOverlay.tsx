@@ -3,11 +3,11 @@
  * Shows FPS, camera info, and transform readout for selected actor.
  */
 import React from 'react'
-import { useSceneStore } from '@animatica/engine'
+import { useSceneStore } from '@Animatica/engine'
 
 export const ViewportOverlay: React.FC = () => {
-    const selectedActor = useSceneStore((s) =>
-        s.selectedActorId ? s.actors.find((a) => a.id === s.selectedActorId) : null
+    const selectedActor = useSceneStore((s: any) =>
+        s.selectedActorId ? s.actors.find((a: any) => a.id === s.selectedActorId) : null
     )
 
     return (
@@ -24,7 +24,7 @@ export const ViewportOverlay: React.FC = () => {
                     <Row
                         label="Rot"
                         values={selectedActor.transform.rotation.map(
-                            (r) => Math.round(r * (180 / Math.PI) * 10) / 10
+                            (r: number) => Math.round(r * (180 / Math.PI) * 10) / 10
                         ) as [number, number, number]}
                         color="var(--text-secondary, #A3A3A3)"
                     />

@@ -10,8 +10,15 @@ vi.mock('react', async () => {
   return {
     ...actual,
     useRef: () => ({ current: null }),
+    useImperativeHandle: vi.fn(),
+    useEffect: vi.fn(),
+    useMemo: (factory: any) => factory(),
   }
 })
+
+vi.mock('@react-three/fiber', () => ({
+  useFrame: vi.fn(),
+}))
 
 // Mock the Edges component from @react-three/drei
 vi.mock('@react-three/drei', () => ({
@@ -56,28 +63,12 @@ describe('CharacterRenderer', () => {
     // Verify children
     const children = React.Children.toArray(props.children) as React.ReactElement[]
 
-    // First child should be the main mesh (capsule)
-    const mainMesh = children[0]
-    expect(mainMesh.type).toBe('mesh')
+    // First child should be the main rig root (primitive)
+    const mainRig = children[0]
+    expect(mainRig.type).toBe('primitive')
 
-    const mainMeshProps = mainMesh.props as any
-    const meshChildren = React.Children.toArray(mainMeshProps.children) as React.ReactElement[]
-
-    // Check geometry
-    const geometry = meshChildren.find((child) => child.type === 'capsuleGeometry')
-    expect(geometry).toBeDefined()
-
-    const geometryProps = geometry?.props as any
-    // Check args: radius 0.5, length 1.8
-    expect(geometryProps?.args?.[0]).toBe(0.5)
-    expect(geometryProps?.args?.[1]).toBe(1.8)
-
-    // Check material
-    const material = meshChildren.find((child) => child.type === 'meshStandardMaterial')
-    expect(material).toBeDefined()
-
-    const materialProps = material?.props as any
-    expect(materialProps?.color).toBe('#ff00aa') // The placeholder color
+    const mainRigProps = mainRig.props as any
+    expect(mainRigProps.object).toBeDefined()
   })
 
   it('renders nothing when visible is false', () => {
@@ -93,7 +84,7 @@ describe('CharacterRenderer', () => {
     const props = result.props as any
     const children = React.Children.toArray(props.children) as React.ReactElement[]
 
-    // Second child should be the face mesh
+    // Second child should be the face indicator mesh
     const faceMesh = children[1]
     expect(faceMesh.type).toBe('mesh')
     const faceMeshProps = faceMesh.props as any
