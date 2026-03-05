@@ -1,3 +1,4 @@
+"use client";
 /**
  * SceneManager — Orchestrates all scene renderers based on the Zustand store.
  * Reads actors from the store and delegates rendering to the appropriate component.
