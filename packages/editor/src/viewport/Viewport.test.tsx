@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { render, screen, fireEvent, cleanup } from '@testing-library/react'
+import { render, screen, cleanup } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { Viewport } from './Viewport'
 import React from 'react'
@@ -44,20 +44,35 @@ vi.mock('@react-three/drei', () => ({
 }))
 
 // Mock Engine
-vi.mock('@Animatica/engine', () => ({
-  SceneManager: () => <div data-testid="scene-manager" />,
-  useSceneStore: (selector: any) => selector({
+vi.mock('@Animatica/engine', () => {
+  const state = {
     selectedActorId: 'test-actor-id',
     setSelectedActor: mocks.mockSetSelectedActor,
     updateActor: mocks.mockUpdateActor,
-    playback: { isPlaying: false },
+    playback: { isPlaying: false, currentTime: 0 },
     actors: [],
     environment: {
       sun: { position: [0, 0, 0] },
       ambientLight: { intensity: 1, color: '#ffffff' },
     },
-  }),
-}))
+    timeline: { duration: 60, animationTracks: [], cameraTrack: [] },
+  };
+
+  return {
+    SceneManager: () => <div data-testid="scene-manager" />,
+    useSceneStore: Object.assign(
+      (selector: any) => selector ? selector(state) : state,
+      { getState: () => state, setState: vi.fn() }
+    ),
+    useIsPlaying: vi.fn(() => false),
+    useSelectedActorId: vi.fn(() => state.selectedActorId),
+    useActors: vi.fn(() => state.actors),
+    useEnvironment: vi.fn(() => state.environment),
+    useTimeline: vi.fn(() => state.timeline),
+    usePlaybackState: vi.fn(() => state.playback),
+    useCurrentTime: vi.fn(() => state.playback.currentTime),
+  };
+})
 
 describe('Viewport', () => {
   beforeEach(() => {
