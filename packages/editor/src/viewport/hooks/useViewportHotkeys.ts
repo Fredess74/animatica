@@ -3,7 +3,7 @@
  * Must be called inside a Canvas component.
  */
 import { useEffect } from 'react'
-import { useSceneStore } from '@animatica/engine'
+import { useSceneStore } from '@Animatica/engine'
 import type { GizmoMode } from '../Viewport'
 
 interface HotkeyOptions {

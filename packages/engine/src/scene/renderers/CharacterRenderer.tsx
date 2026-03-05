@@ -1,3 +1,4 @@
+"use client";
 /**
  * CharacterRenderer — R3F component for rendering a character actor.
  * Creates a procedural humanoid (or loads GLB), applies animation, face morphs, and eye tracking.
@@ -18,7 +19,7 @@ interface CharacterRendererProps {
   onClick?: () => void
 }
 
-export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
+export const CharacterRenderer: React.FC<CharacterRendererProps> = React.memo(({
   actor,
   isSelected = false,
   onClick,
@@ -135,4 +136,4 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       )}
     </group>
   )
-}
+})
