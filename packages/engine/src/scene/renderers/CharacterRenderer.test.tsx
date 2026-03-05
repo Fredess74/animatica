@@ -65,7 +65,7 @@ describe('CharacterRenderer', () => {
     const children = React.Children.toArray(props.children) as React.ReactElement[]
 
     // First child should be the rig root (primitive object={rig.root})
-    const rigRoot = children[0]
+    const rigRoot = children[0] as any
     expect(rigRoot.type).toBe('primitive')
     expect(rigRoot.props.object).toBeDefined()
   })
@@ -84,7 +84,7 @@ describe('CharacterRenderer', () => {
     const children = React.Children.toArray(props.children) as React.ReactElement[]
 
     // Second child (after rig primitive) should be the selection ring
-    const selectionRing = children.find(child => (child as any).type === 'mesh') as React.ReactElement
+    const selectionRing = children.find(child => (child as any).type === 'mesh') as any
     expect(selectionRing).toBeDefined()
     expect(selectionRing.props.children[0].type).toBe('ringGeometry')
   })
