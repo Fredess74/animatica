@@ -11,13 +11,13 @@ import {
 import type { Actor } from '@Animatica/engine'
 
 export const SceneRenderer: React.FC = () => {
-    const actors = useSceneStore((s) => s.actors)
+    const actors = useSceneStore((s: any) => s.actors)
     const selectedActorId = useSceneStore((s) => s.selectedActorId)
     const setSelectedActor = useSceneStore((s) => s.setSelectedActor)
 
     return (
         <group>
-            {actors.map((actor) => (
+            {actors.map((actor: any) => (
                 <ActorSwitch
                     key={actor.id}
                     actor={actor}
