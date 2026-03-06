@@ -24,11 +24,19 @@ vi.mock('@react-three/fiber', async () => {
   const actual = await vi.importActual('@react-three/fiber')
   return {
     ...actual,
-    Canvas: ({ children }: { children: React.ReactNode }) => <div data-testid="canvas">{children}</div>,
+    Canvas: ({ children, onCreated }: any) => {
+      // Trigger onCreated to satisfy any initialization logic
+      React.useEffect(() => {
+        if (onCreated) onCreated({ gl: { outputColorSpace: '' } })
+      }, [])
+      return <div data-testid="canvas">{children}</div>
+    },
     useThree: () => ({
       scene: { getObjectByName: mocks.mockGetObjectByName },
-      camera: { position: { set: vi.fn() }, lookAt: vi.fn() }
+      camera: { position: { set: vi.fn() }, lookAt: vi.fn() },
+      gl: { domElement: document.createElement('canvas') },
     }),
+    useFrame: () => {},
   }
 })
 
@@ -37,15 +45,35 @@ vi.mock('@react-three/drei', () => ({
   OrbitControls: () => <div data-testid="orbit-controls" />,
   TransformControls: () => <div data-testid="transform-controls" />,
   Grid: () => <div data-testid="grid" />,
+  Sky: () => <div data-testid="sky" />,
+  ContactShadows: () => <div data-testid="contact-shadows" />,
+  Environment: () => <div data-testid="environment" />,
+}))
+
+// Mock SceneRenderer
+vi.mock('./SceneRenderer', () => ({
+  SceneRenderer: () => <div data-testid="scene-manager" />,
 }))
 
 // Mock Engine
 vi.mock('@Animatica/engine', () => ({
-  SceneManager: () => <div data-testid="scene-manager" />,
   useSceneStore: (selector: any) => selector({
     selectedActorId: 'test-actor-id',
     setSelectedActor: mocks.mockSetSelectedActor,
     updateActor: mocks.mockUpdateActor,
+    playback: { isPlaying: false },
+    actors: [
+        {
+            id: 'test-actor-id',
+            name: 'Test Actor',
+            transform: { position: [0,0,0], rotation: [0,0,0], scale: [1,1,1] }
+        }
+    ],
+    environment: {
+      ambientLight: { intensity: 0.5, color: '#ffffff' },
+      sun: { intensity: 1, color: '#ffffff', position: [10, 10, 10] },
+      skyColor: '#88ccff',
+    },
   }),
 }))
 
@@ -87,7 +115,7 @@ describe('Viewport', () => {
     expect(topButton).toBeTruthy()
   })
 
-  it('renders gizmo when object is found', () => {
+  it('renders gizmo when object is found', async () => {
     // Mock found object
     mocks.mockGetObjectByName.mockReturnValue({
         position: { x: 0, y: 0, z: 0 },
@@ -97,6 +125,7 @@ describe('Viewport', () => {
 
     render(<Viewport />)
 
-    expect(screen.getByTestId('transform-controls')).toBeTruthy()
+    // Wait for the timeout in ViewportGizmo
+    expect(await screen.findByTestId('transform-controls')).toBeTruthy()
   })
 })
