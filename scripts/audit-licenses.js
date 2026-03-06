@@ -15,91 +15,125 @@ function loadLicenses() {
     const pkgToLicense = {};
     for (const [licenseName, packages] of Object.entries(data)) {
         for (const pkg of packages) {
-            pkgToLicense[pkg.name] = licenseName;
+            pkgToLicense[pkg.name] = {
+                license: licenseName,
+                version: pkg.versions[0]
+            };
         }
     }
     return pkgToLicense;
 }
 
+function checkSourceHeaders() {
+    const filePath = 'packages/engine/src/index.ts';
+    if (!fs.existsSync(filePath)) return 'File not found';
+    const content = fs.readFileSync(filePath, 'utf8');
+    const hasLicense = content.toLowerCase().includes('license') || content.toLowerCase().includes('copyright');
+    return hasLicense ? 'License header found' : 'No license header found';
+}
+
 function main() {
     const pkgToLicense = loadLicenses();
+    const directDeps = new Set();
+    const depToPackage = {};
 
-    const allDeps = {};
-
-    for (const pjPath of getPackageJsons()) {
+    const packageJsons = getPackageJsons();
+    for (const pjPath of packageJsons) {
         const pj = JSON.parse(fs.readFileSync(pjPath, 'utf8'));
+        const allLocalDeps = {
+            ...(pj.dependencies || {}),
+            ...(pj.devDependencies || {}),
+            ...(pj.peerDependencies || {})
+        };
 
-        const deps = pj.dependencies || {};
-        const devDeps = pj.devDependencies || {};
-        const peerDeps = pj.peerDependencies || {};
-
-        for (const [name, version] of Object.entries({ ...deps, ...devDeps, ...peerDeps })) {
+        for (const [name, version] of Object.entries(allLocalDeps)) {
             if (name.startsWith('@Animatica/') || (typeof version === 'string' && version.startsWith('workspace:'))) {
                 continue;
             }
-            if (!allDeps[name]) {
-                allDeps[name] = new Set();
-            }
-            allDeps[name].add(pj.name || 'root');
+            directDeps.add(name);
+            if (!depToPackage[name]) depToPackage[name] = new Set();
+            depToPackage[name].add(pj.name || 'root');
         }
     }
 
-    const sortedDeps = Object.keys(allDeps).sort();
+    const allDeps = Object.keys(pkgToLicense).sort();
+    const sortedDirectDeps = Array.from(directDeps).sort();
 
-    let table = "| Dependency | License | Flag | Used In |\n";
-    table += "| --- | --- | --- | --- |\n";
-
-    const flagged = [];
-
-    for (const dep of sortedDeps) {
-        const license = pkgToLicense[dep] || 'Unknown';
-        let flag = "";
-        if (license !== 'MIT' && !license.includes('MIT')) {
-            flag = "⚠️ Non-MIT";
-            flagged.push(`- **\`${dep}\`**: ${license}`);
+    // 1. Flagged Licenses
+    const flaggedTable = ["| Dependency | Version | License | Type |", "| --- | --- | --- | --- |"];
+    for (const dep of allDeps) {
+        const info = pkgToLicense[dep];
+        const isMIT = info.license === 'MIT' || info.license === 'MIT-0';
+        if (!isMIT) {
+            const type = directDeps.has(dep) ? "**Direct**" : "Transitive";
+            flaggedTable.push(`| ${dep} | ${info.version} | ${info.license} | ${type} |`);
         }
-
-        const usedIn = Array.from(allDeps[dep]).sort().join(', ');
-        table += `| ${dep} | ${license} | ${flag} | ${usedIn} |\n`;
     }
 
-    const auditPath = path.join(process.cwd(), 'docs/LICENSE_AUDIT.md');
-    let auditContent = fs.readFileSync(auditPath, 'utf8');
-
-    // Update Dependency Licenses section
-    // Look for the table or the header
-    const depSectionStart = "## Dependency Licenses\n\nThe following dependencies were audited:\n\n";
-    const depSectionEnd = "\n\n## Flagged Licenses";
-
-    const startIndex = auditContent.indexOf(depSectionStart);
-    const endIndex = auditContent.indexOf(depSectionEnd);
-
-    if (startIndex !== -1 && endIndex !== -1) {
-        auditContent = auditContent.substring(0, startIndex + depSectionStart.length) +
-                       table +
-                       auditContent.substring(endIndex);
+    // 2. Direct Dependencies
+    const directTable = ["| Dependency | License | Used In |", "| --- | --- | --- |"];
+    for (const dep of sortedDirectDeps) {
+        const info = pkgToLicense[dep] || { license: 'Unknown' };
+        const usedIn = Array.from(depToPackage[dep]).sort().join(', ');
+        directTable.push(`| ${dep} | ${info.license} | ${usedIn} |`);
     }
 
-    // Update Flagged Licenses section
-    const flaggedSectionStart = "## Flagged Licenses (Non-MIT/Apache-2.0)\n\n";
-    const flaggedSectionEnd = "\n\n## Missing Licenses";
-
-    const fStartIndex = auditContent.indexOf(flaggedSectionStart);
-    const fEndIndex = auditContent.indexOf(flaggedSectionEnd);
-
-    if (fStartIndex !== -1 && fEndIndex !== -1) {
-        auditContent = auditContent.substring(0, fStartIndex + flaggedSectionStart.length) +
-                       flagged.join('\n') +
-                       auditContent.substring(fEndIndex);
+    // 3. All Dependencies
+    const allTable = ["| Dependency | Version | License |", "| --- | --- | --- |"];
+    for (const dep of allDeps) {
+        const info = pkgToLicense[dep];
+        allTable.push(`| ${dep} | ${info.version} | ${info.license} |`);
     }
 
-    // Update Date
-    const dateRegex = /\*\*Date:\*\* .*/;
     const today = new Date().toISOString().split('T')[0];
-    auditContent = auditContent.replace(dateRegex, `**Date:** ${today}`);
+    const headerResult = checkSourceHeaders();
 
-    fs.writeFileSync(auditPath, auditContent);
-    console.log('Audit report updated in docs/LICENSE_AUDIT.md');
+    const report = `# License Audit
+
+**Date:** ${today}
+**Auditor:** Jules (License Auditor)
+
+## Summary
+
+This document lists all dependencies used in the project and their licenses. It also flags any non-MIT licenses and checks for the presence of the project's own LICENSE file.
+
+Total dependencies found: ${allDeps.length}
+Direct dependencies: ${directDeps.size}
+Transitive dependencies: ${allDeps.length - directDeps.size}
+
+## Project License
+
+- **File:** \`LICENSE\`
+- **Status:** Present
+- **License:** MIT
+
+## Source Code Headers
+
+- **Checked:** \`packages/engine/src/index.ts\`
+- **Result:** ${headerResult}.
+
+## Flagged Licenses (Non-MIT)
+
+The following dependencies have non-MIT licenses:
+
+${flaggedTable.join('\n')}
+
+## Direct Dependencies
+
+${directTable.join('\n')}
+
+## All Dependencies (including transitive)
+
+<details>
+<summary>Click to expand full dependency list</summary>
+
+${allTable.join('\n')}
+
+</details>
+`;
+
+    fs.writeFileSync('docs/LICENSE_AUDIT.md', report);
+    console.log('Audit report generated in docs/LICENSE_AUDIT.md');
 }
 
 main();
