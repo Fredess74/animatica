@@ -22,6 +22,7 @@ export {
   useActorsByType,
   useActorList,
 } from './store/sceneStore';
+export type { SceneStoreState, PlaybackState, LoopMode } from './store/types';
 
 // === COMPONENTS (R3F) ===
 export { PrimitiveRenderer } from './scene/renderers/PrimitiveRenderer'

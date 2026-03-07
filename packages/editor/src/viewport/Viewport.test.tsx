@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { render, screen, fireEvent, cleanup } from '@testing-library/react'
+import { render, screen, cleanup, act } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { Viewport } from './Viewport'
 import React from 'react'
@@ -17,6 +17,8 @@ const mocks = vi.hoisted(() => ({
   mockSetSelectedActor: vi.fn(),
   mockUpdateActor: vi.fn(),
   mockGetObjectByName: vi.fn(),
+  mockRemoveActor: vi.fn(),
+  mockSetPlayback: vi.fn(),
 }))
 
 // Mock R3F
@@ -27,7 +29,8 @@ vi.mock('@react-three/fiber', async () => {
     Canvas: ({ children }: { children: React.ReactNode }) => <div data-testid="canvas">{children}</div>,
     useThree: () => ({
       scene: { getObjectByName: mocks.mockGetObjectByName },
-      camera: { position: { set: vi.fn() }, lookAt: vi.fn() }
+      camera: { position: { set: vi.fn() }, lookAt: vi.fn() },
+      gl: { domElement: {} }
     }),
   }
 })
@@ -35,8 +38,11 @@ vi.mock('@react-three/fiber', async () => {
 // Mock Drei
 vi.mock('@react-three/drei', () => ({
   OrbitControls: () => <div data-testid="orbit-controls" />,
-  TransformControls: () => <div data-testid="transform-controls" />,
+  TransformControls: ({ object }: any) => object ? <div data-testid="transform-controls">Active</div> : null,
   Grid: () => <div data-testid="grid" />,
+  Sky: () => <div data-testid="sky" />,
+  ContactShadows: () => <div data-testid="contact-shadows" />,
+  Environment: () => <div data-testid="environment" />,
 }))
 
 // Mock Engine
@@ -46,17 +52,30 @@ vi.mock('@Animatica/engine', () => ({
     selectedActorId: 'test-actor-id',
     setSelectedActor: mocks.mockSetSelectedActor,
     updateActor: mocks.mockUpdateActor,
+    removeActor: mocks.mockRemoveActor,
+    setPlayback: mocks.mockSetPlayback,
+    actors: [{ id: 'test-actor-id', name: 'Test Actor', type: 'character', visible: true, transform: { position: [0,0,0], rotation: [0,0,0], scale: [1,1,1] } }],
+    environment: {
+        sun: { position: [0, 10, 0], intensity: 1, color: '#ffffff' },
+        ambientLight: { intensity: 0.5, color: '#ffffff' }
+    },
+    playback: { isPlaying: false }
   }),
+  PrimitiveRenderer: () => null,
+  LightRenderer: () => null,
+  CameraRenderer: () => null,
 }))
 
 describe('Viewport', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    vi.useFakeTimers()
     // Default: object not found
     mocks.mockGetObjectByName.mockReturnValue(undefined)
   })
 
   afterEach(() => {
+    vi.useRealTimers()
     cleanup()
   })
 
@@ -66,36 +85,31 @@ describe('Viewport', () => {
     expect(screen.getByTestId('canvas')).toBeTruthy()
     expect(screen.getByTestId('orbit-controls')).toBeTruthy()
     expect(screen.getByTestId('grid')).toBeTruthy()
-    expect(screen.getByTestId('scene-manager')).toBeTruthy()
   })
 
-  it('renders the camera toolbar', () => {
+  it('renders the transform toolbar', () => {
     render(<Viewport />)
 
-    expect(screen.getByTitle('Top View')).toBeTruthy()
-    expect(screen.getByTitle('Front View')).toBeTruthy()
-    expect(screen.getByTitle('Side View')).toBeTruthy()
-    expect(screen.getByTitle('Perspective View')).toBeTruthy()
+    expect(screen.getByTitle('Move (W)')).toBeTruthy()
+    expect(screen.getByTitle('Rotate (E)')).toBeTruthy()
+    expect(screen.getByTitle('Scale (R)')).toBeTruthy()
   })
 
-  it('attempts to change camera view when toolbar button clicked', () => {
-    render(<Viewport />)
-
-    const topButton = screen.getByTitle('Top View')
-    fireEvent.click(topButton)
-
-    expect(topButton).toBeTruthy()
-  })
-
-  it('renders gizmo when object is found', () => {
+  it('renders gizmo when object is found', async () => {
     // Mock found object
     mocks.mockGetObjectByName.mockReturnValue({
+        name: 'test-actor-id',
         position: { x: 0, y: 0, z: 0 },
         rotation: { x: 0, y: 0, z: 0 },
         scale: { x: 1, y: 1, z: 1 }
     })
 
     render(<Viewport />)
+
+    // Advance timers for the useEffect timeout in ViewportGizmo
+    act(() => {
+        vi.advanceTimersByTime(100)
+    })
 
     expect(screen.getByTestId('transform-controls')).toBeTruthy()
   })

@@ -4,10 +4,10 @@
  */
 import { useCallback } from 'react'
 import { useThree } from '@react-three/fiber'
-import { useSceneStore } from '@animatica/engine'
+import { useSceneStore, type SceneStoreState } from '@Animatica/engine'
 
 export const useActorPicking = () => {
-    const setSelectedActor = useSceneStore((s) => s.setSelectedActor)
+    const setSelectedActor = useSceneStore((s: SceneStoreState) => s.setSelectedActor)
     const { gl } = useThree()
 
     // Listen for missed clicks (clicking empty space)
@@ -19,8 +19,14 @@ export const useActorPicking = () => {
     const canvas = gl.domElement
     if (canvas) {
         canvas.onpointerdown = (e: PointerEvent) => {
-            // Only deselect on left click on empty space
-            // Actor clicks are handled by individual actor onClick handlers
+            // Only deselect on left click (button 0) on empty space
+            // In R3F, individual actors handle their own onClick,
+            // so if a click reaches the canvas it was likely a "miss".
+            if (e.button === 0) {
+                 handlePointerMissed()
+            }
         }
     }
+
+    return { setSelectedActor, handlePointerMissed }
 }
