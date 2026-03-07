@@ -7,17 +7,18 @@ import {
     PrimitiveRenderer,
     LightRenderer,
     CameraRenderer,
+    type SceneStoreState,
+    type Actor
 } from '@Animatica/engine'
-import type { Actor } from '@Animatica/engine'
 
 export const SceneRenderer: React.FC = () => {
-    const actors = useSceneStore((s: any) => s.actors)
-    const selectedActorId = useSceneStore((s: any) => s.selectedActorId)
-    const setSelectedActor = useSceneStore((s: any) => s.setSelectedActor)
+    const actors = useSceneStore((s: SceneStoreState) => s.actors)
+    const selectedActorId = useSceneStore((s: SceneStoreState) => s.selectedActorId)
+    const setSelectedActor = useSceneStore((s: SceneStoreState) => s.setSelectedActor)
 
     return (
         <group>
-            {actors.map((actor: any) => (
+            {actors.map((actor) => (
                 <ActorSwitch
                     key={actor.id}
                     actor={actor}
@@ -47,11 +48,11 @@ const ActorSwitch: React.FC<{
 
     switch (actor.type) {
         case 'primitive':
-            return <PrimitiveRenderer {...commonProps} actor={actor as any} />
+            return <PrimitiveRenderer {...commonProps} actor={actor} />
         case 'light':
-            return <LightRenderer {...commonProps} actor={actor as any} showHelper={true} />
+            return <LightRenderer {...commonProps} actor={actor} showHelper={true} />
         case 'camera':
-            return <CameraRenderer {...commonProps} actor={actor as any} showHelper={true} />
+            return <CameraRenderer {...commonProps} actor={actor} showHelper={true} />
         case 'character':
             // TODO: CharacterRenderer - Sprint 3
             return (

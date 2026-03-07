@@ -3,7 +3,7 @@
  * Must be called inside a Canvas component.
  */
 import { useEffect } from 'react'
-import { useSceneStore } from '@Animatica/engine'
+import { useSceneStore, type SceneStoreState } from '@Animatica/engine'
 import type { GizmoMode } from '../Viewport'
 
 interface HotkeyOptions {
@@ -15,11 +15,11 @@ export const useViewportHotkeys = ({
     onGizmoModeChange,
     onTransformSpaceToggle,
 }: HotkeyOptions) => {
-    const removeActor = useSceneStore((s: any) => s.removeActor)
-    const selectedActorId = useSceneStore((s: any) => s.selectedActorId)
-    const setSelectedActor = useSceneStore((s: any) => s.setSelectedActor)
-    const setPlayback = useSceneStore((s: any) => s.setPlayback)
-    const isPlaying = useSceneStore((s: any) => s.playback.isPlaying)
+    const removeActor = useSceneStore((s: SceneStoreState) => s.removeActor)
+    const selectedActorId = useSceneStore((s: SceneStoreState) => s.selectedActorId)
+    const setSelectedActor = useSceneStore((s: SceneStoreState) => s.setSelectedActor)
+    const setPlayback = useSceneStore((s: SceneStoreState) => s.setPlayback)
+    const isPlaying = useSceneStore((s: SceneStoreState) => s.playback.isPlaying)
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {

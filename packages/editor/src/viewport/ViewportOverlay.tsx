@@ -3,11 +3,11 @@
  * Shows FPS, camera info, and transform readout for selected actor.
  */
 import React from 'react'
-import { useSceneStore } from '@Animatica/engine'
+import { useSceneStore, type SceneStoreState } from '@Animatica/engine'
 
 export const ViewportOverlay: React.FC = () => {
-    const selectedActor = useSceneStore((s: any) =>
-        s.selectedActorId ? s.actors.find((a: any) => a.id === s.selectedActorId) : null
+    const selectedActor = useSceneStore((s: SceneStoreState) =>
+        s.selectedActorId ? s.actors.find((a) => a.id === s.selectedActorId) : null
     )
 
     return (

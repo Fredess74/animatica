@@ -6,7 +6,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import { useThree } from '@react-three/fiber'
 import { TransformControls } from '@react-three/drei'
 import * as THREE from 'three'
-import { useSceneStore } from '@Animatica/engine'
+import { useSceneStore, type SceneStoreState } from '@Animatica/engine'
 import type { GizmoMode, TransformSpace } from './Viewport'
 
 interface ViewportGizmoProps {
@@ -24,8 +24,8 @@ export const ViewportGizmo: React.FC<ViewportGizmoProps> = ({
     space,
     snapEnabled,
 }) => {
-    const selectedActorId = useSceneStore((s: any) => s.selectedActorId)
-    const updateActor = useSceneStore((s: any) => s.updateActor)
+    const selectedActorId = useSceneStore((s: SceneStoreState) => s.selectedActorId)
+    const updateActor = useSceneStore((s: SceneStoreState) => s.updateActor)
     const { scene } = useThree()
     const [target, setTarget] = useState<THREE.Object3D | null>(null)
     const controlsRef = useRef<any>(null)
