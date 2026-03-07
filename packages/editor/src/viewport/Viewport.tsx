@@ -16,7 +16,7 @@ import { ViewportOverlay } from './ViewportOverlay'
 import { EnvironmentRenderer } from './EnvironmentRenderer'
 import { useActorPicking } from './hooks/useActorPicking'
 import { useViewportHotkeys } from './hooks/useViewportHotkeys'
-import { useSceneStore } from '@animatica/engine'
+import { useSceneStore } from '@Animatica/engine'
 
 // ---- Types ----
 

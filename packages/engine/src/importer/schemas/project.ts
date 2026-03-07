@@ -5,7 +5,7 @@ import { TimelineSchema } from './timeline';
 
 /**
  * Zod schemas for project metadata and full project state.
- * @module @animatica/engine/importer/schemas
+ * @module @Animatica/engine/importer/schemas
  */
 
 export const ProjectMetaSchema = z.object({

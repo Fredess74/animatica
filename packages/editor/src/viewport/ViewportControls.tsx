@@ -1,9 +1,9 @@
 /**
  * ViewportControls — Camera orbit/pan/zoom controls with view preset support.
  */
-import React, { useRef, useCallback, useEffect } from 'react'
-import { useThree } from '@react-three/fiber'
+import React, { useRef, useCallback } from 'react'
 import { OrbitControls } from '@react-three/drei'
+import { useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 
 const VIEW_POSITIONS: Record<string, [number, number, number]> = {
