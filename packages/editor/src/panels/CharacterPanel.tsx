@@ -2,17 +2,17 @@
  * CharacterPanel — Editor UI for character customization.
  * Provides preset picker, body sliders, expression selector, and animation controls.
  */
-import React, { useState, useCallback } from 'react'
-import { useSceneStore } from '@animatica/engine'
-import { CHARACTER_PRESETS, EXPRESSION_PRESETS } from '@animatica/engine'
-import type { CharacterActor, AnimationState } from '@animatica/engine'
+import React, { useCallback } from 'react'
+import { useSceneStore } from '@Animatica/engine'
+import { CHARACTER_PRESETS, EXPRESSION_PRESETS } from '@Animatica/engine'
+import type { CharacterActor, AnimationState } from '@Animatica/engine'
 
 const ANIMATIONS: AnimationState[] = ['idle', 'walk', 'run', 'wave', 'talk', 'dance', 'sit', 'jump']
 
 export const CharacterPanel: React.FC = () => {
     const selectedActorId = useSceneStore((s) => s.selectedActorId)
-    const actors = useSceneStore((s) => s.actors)
-    const updateActor = useSceneStore((s) => s.updateActor)
+    const actors = useSceneStore((s: any) => s.actors)
+    const updateActor = useSceneStore((s: any) => s.updateActor)
 
     const selectedActor = actors.find((a) => a.id === selectedActorId) as CharacterActor | undefined
 

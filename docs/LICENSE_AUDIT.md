@@ -1,15 +1,13 @@
 # License Audit
 
-**Date:** 2026-02-25
+**Date:** 2026-03-07
 **Auditor:** Jules (License Auditor)
 
 ## Summary
 
-This document lists all dependencies used in the project and their licenses. It also flags any non-MIT licenses and checks for the presence of the project's own LICENSE file.
-
-Total dependencies found: 687
+Total dependencies found: 683
 Direct dependencies: 33
-Transitive dependencies: 654
+Transitive dependencies: 650
 
 ## Project License
 
@@ -20,123 +18,124 @@ Transitive dependencies: 654
 ## Source Code Headers
 
 - **Checked:** `packages/engine/src/index.ts`
-- **Result:** No license header found.
+- **Result:** No license header found
 
 ## Flagged Licenses (Non-MIT)
 
 The following dependencies have non-MIT licenses:
 
-| Dependency | Version | License | Type |
+| Dependency | License | Type |
 | --- | --- | --- |
-| @dimforge/rapier3d-compat | 0.12.0 | Apache-2.0 | Transitive |
-| @ethereumjs/rlp | 4.0.1 | MPL-2.0 | Transitive |
-| @ethereumjs/util | 8.1.0 | MPL-2.0 | Transitive |
-| @img/sharp-libvips-linux-x64 | 1.2.4 | LGPL-3.0-or-later | Transitive |
-| @img/sharp-libvips-linuxmusl-x64 | 1.2.4 | LGPL-3.0-or-later | Transitive |
-| @img/sharp-linux-x64 | 0.34.5 | Apache-2.0 | Transitive |
-| @img/sharp-linuxmusl-x64 | 0.34.5 | Apache-2.0 | Transitive |
-| @mediapipe/tasks-vision | 0.10.17 | Apache-2.0 | Transitive |
-| @sentry/core | 5.30.0 | BSD-3-Clause | Transitive |
-| @sentry/hub | 5.30.0 | BSD-3-Clause | Transitive |
-| @sentry/minimal | 5.30.0 | BSD-3-Clause | Transitive |
-| @sentry/node | 5.30.0 | BSD-3-Clause | Transitive |
-| @sentry/types | 5.30.0 | BSD-3-Clause | Transitive |
-| @sentry/utils | 5.30.0 | BSD-3-Clause | Transitive |
-| @swc/helpers | 0.5.15 | Apache-2.0 | Transitive |
-| @webgpu/types | 0.1.69 | BSD-3-Clause | Transitive |
-| abbrev | 1.0.9 | ISC | Transitive |
-| ansi-align | 3.0.1 | ISC | Transitive |
-| antlr4ts | 0.5.0-alpha.4 | BSD-3-Clause | Transitive |
-| anymatch | 3.1.3 | ISC | Transitive |
-| argparse | 2.0.1 | Python-2.0 | Transitive |
-| aria-query | 5.3.0 | Apache-2.0 | Transitive |
-| at-least-node | 1.0.0 | ISC | Transitive |
-| baseline-browser-mapping | 2.10.0 | Apache-2.0 | Transitive |
-| browser-stdout | 1.3.1 | ISC | Transitive |
-| caniuse-lite | 1.0.30001770 | CC-BY-4.0 | Transitive |
-| caseless | 0.12.0 | Apache-2.0 | Transitive |
-| chai-as-promised | 7.1.2 | WTFPL | Transitive |
-| charenc | 0.0.2 | BSD-3-Clause | Transitive |
-| cliui | 7.0.4 | ISC | Transitive |
-| crypt | 0.0.2 | BSD-3-Clause | Transitive |
-| detect-libc | 2.1.2 | Apache-2.0 | Transitive |
-| diff | 4.0.4 | BSD-3-Clause | Transitive |
-| difflib | 0.2.4 | PSF | Transitive |
-| draco3d | 1.5.7 | Apache-2.0 | Transitive |
-| electron-to-chromium | 1.5.302 | ISC | Transitive |
-| entities | 6.0.1 | BSD-2-Clause | Transitive |
-| escodegen | 1.8.1 | BSD-2-Clause | Transitive |
-| esprima | 2.7.3 | BSD-2-Clause | Transitive |
-| estraverse | 1.9.3 | BSD | Transitive |
-| esutils | 2.0.3 | BSD-2-Clause | Transitive |
-| ethereumjs-util | 7.1.5 | MPL-2.0 | Transitive |
-| expect-type | 1.3.0 | Apache-2.0 | Transitive |
-| fast-uri | 3.1.0 | BSD-3-Clause | Transitive |
-| fastq | 1.20.1 | ISC | Transitive |
-| flat | 5.0.2 | BSD-3-Clause | Transitive |
-| fs.realpath | 1.0.0 | ISC | Transitive |
-| get-caller-file | 2.0.5 | ISC | Transitive |
-| ghost-testrpc | 0.0.2 | ISC | Transitive |
-| glob | 5.0.15 | ISC | Transitive |
-| glob-parent | 5.1.2 | ISC | Transitive |
-| graceful-fs | 4.2.11 | ISC | Transitive |
-| hls.js | 1.6.15 | Apache-2.0 | Transitive |
-| ieee754 | 1.2.1 | BSD-3-Clause | Transitive |
-| inflight | 1.0.6 | ISC | Transitive |
-| inherits | 2.0.4 | ISC | Transitive |
-| ini | 1.3.8 | ISC | Transitive |
-| isexe | 2.0.0 | ISC | Transitive |
-| json-stringify-safe | 5.0.1 | ISC | Transitive |
-| lightningcss | 1.31.1 | MPL-2.0 | Transitive |
-| lightningcss-linux-x64-gnu | 1.31.1 | MPL-2.0 | Transitive |
-| lightningcss-linux-x64-musl | 1.31.1 | MPL-2.0 | Transitive |
-| lru-cache | 5.1.1 | ISC | Transitive |
-| lru-cache | 11.2.6 | BlueOak-1.0.0 | Transitive |
-| lucide-react | 0.563.0 | ISC | **Direct** |
-| make-error | 1.3.6 | ISC | Transitive |
-| mdn-data | 2.12.2 | CC0-1.0 | Transitive |
-| minimalistic-assert | 1.0.1 | ISC | Transitive |
-| minimatch | 3.1.3 | ISC | Transitive |
-| minimatch | 10.2.2 | BlueOak-1.0.0 | Transitive |
-| ndjson | 2.0.0 | BSD-3-Clause | Transitive |
-| nopt | 3.0.6 | ISC | Transitive |
-| once | 1.4.0 | ISC | Transitive |
-| parse-cache-control | 1.0.1 | BSD | Transitive |
-| picocolors | 1.1.1 | ISC | Transitive |
-| potpack | 1.0.2 | ISC | Transitive |
-| promise-worker-transferable | 1.0.4 | Apache-2.0 | Transitive |
-| qs | 6.15.0 | BSD-3-Clause | Transitive |
-| rlp | 2.2.7 | MPL-2.0 | Transitive |
-| saxes | 6.0.0 | ISC | Transitive |
-| sc-istanbul | 0.4.6 | BSD-3-Clause | Transitive |
-| semver | 5.7.2 | ISC | Transitive |
-| serialize-javascript | 6.0.2 | BSD-3-Clause | Transitive |
-| setprototypeof | 1.2.0 | ISC | Transitive |
-| sha1 | 1.1.1 | BSD-3-Clause | Transitive |
-| sharp | 0.34.5 | Apache-2.0 | Transitive |
-| shelljs | 0.8.5 | BSD-3-Clause | Transitive |
-| siginfo | 2.0.0 | ISC | Transitive |
-| solidity-coverage | 0.8.17 | ISC | Transitive |
-| source-map | 0.6.1 | BSD-3-Clause | Transitive |
-| source-map | 0.2.0 | BSD | Transitive |
-| source-map-js | 1.2.1 | BSD-3-Clause | Transitive |
-| split2 | 3.2.2 | ISC | Transitive |
-| sprintf-js | 1.0.3 | BSD-3-Clause | Transitive |
-| table | 6.9.0 | BSD-3-Clause | Transitive |
-| tough-cookie | 6.0.0 | BSD-3-Clause | Transitive |
-| ts-command-line-args | 2.5.1 | ISC | Transitive |
-| tslib | 1.14.1 | 0BSD | Transitive |
-| typescript | 5.9.3 | Apache-2.0 | **Direct** |
-| uglify-js | 3.19.3 | BSD-2-Clause | Transitive |
-| web3-utils | 1.10.4 | LGPL-3.0 | Transitive |
-| webidl-conversions | 8.0.1 | BSD-2-Clause | Transitive |
-| which | 1.3.1 | ISC | Transitive |
-| workerpool | 6.5.1 | Apache-2.0 | Transitive |
-| wrappy | 1.0.2 | ISC | Transitive |
-| xml-name-validator | 5.0.0 | Apache-2.0 | Transitive |
-| y18n | 5.0.8 | ISC | Transitive |
-| yallist | 3.1.1 | ISC | Transitive |
-| yargs-parser | 20.2.9 | ISC | Transitive |
+| @dimforge/rapier3d-compat | Apache-2.0 | Transitive |
+| @ethereumjs/rlp | MPL-2.0 | Transitive |
+| @ethereumjs/util | MPL-2.0 | Transitive |
+| @img/sharp-libvips-linux-x64 | LGPL-3.0-or-later | Transitive |
+| @img/sharp-libvips-linuxmusl-x64 | LGPL-3.0-or-later | Transitive |
+| @img/sharp-linux-x64 | Apache-2.0 | Transitive |
+| @img/sharp-linuxmusl-x64 | Apache-2.0 | Transitive |
+| @mediapipe/tasks-vision | Apache-2.0 | Transitive |
+| @sentry/core | BSD-3-Clause | Transitive |
+| @sentry/hub | BSD-3-Clause | Transitive |
+| @sentry/minimal | BSD-3-Clause | Transitive |
+| @sentry/node | BSD-3-Clause | Transitive |
+| @sentry/types | BSD-3-Clause | Transitive |
+| @sentry/utils | BSD-3-Clause | Transitive |
+| @swc/helpers | Apache-2.0 | Transitive |
+| @webgpu/types | BSD-3-Clause | Transitive |
+| abbrev | ISC | Transitive |
+| amdefine | BSD-3-Clause OR MIT | Transitive |
+| ansi-align | ISC | Transitive |
+| antlr4ts | BSD-3-Clause | Transitive |
+| anymatch | ISC | Transitive |
+| argparse | Python-2.0 | Transitive |
+| aria-query | Apache-2.0 | Transitive |
+| at-least-node | ISC | Transitive |
+| baseline-browser-mapping | Apache-2.0 | Transitive |
+| browser-stdout | ISC | Transitive |
+| caniuse-lite | CC-BY-4.0 | Transitive |
+| caseless | Apache-2.0 | Transitive |
+| chai-as-promised | WTFPL | Transitive |
+| charenc | BSD-3-Clause | Transitive |
+| cliui | ISC | Transitive |
+| crypt | BSD-3-Clause | Transitive |
+| detect-libc | Apache-2.0 | Transitive |
+| diff | BSD-3-Clause | Transitive |
+| difflib | PSF | Transitive |
+| draco3d | Apache-2.0 | Transitive |
+| electron-to-chromium | ISC | Transitive |
+| entities | BSD-2-Clause | Transitive |
+| escodegen | BSD-2-Clause | Transitive |
+| esprima | BSD-2-Clause | Transitive |
+| estraverse | BSD | Transitive |
+| esutils | BSD-2-Clause | Transitive |
+| ethereumjs-util | MPL-2.0 | Transitive |
+| expect-type | Apache-2.0 | Transitive |
+| fast-uri | BSD-3-Clause | Transitive |
+| fastq | ISC | Transitive |
+| flat | BSD-3-Clause | Transitive |
+| fs.realpath | ISC | Transitive |
+| get-caller-file | ISC | Transitive |
+| ghost-testrpc | ISC | Transitive |
+| glob | ISC | Transitive |
+| glob-parent | ISC | Transitive |
+| graceful-fs | ISC | Transitive |
+| hls.js | Apache-2.0 | Transitive |
+| ieee754 | BSD-3-Clause | Transitive |
+| inflight | ISC | Transitive |
+| inherits | ISC | Transitive |
+| ini | ISC | Transitive |
+| isexe | ISC | Transitive |
+| json-stringify-safe | ISC | Transitive |
+| lightningcss | MPL-2.0 | Transitive |
+| lightningcss-linux-x64-gnu | MPL-2.0 | Transitive |
+| lightningcss-linux-x64-musl | MPL-2.0 | Transitive |
+| lru-cache | BlueOak-1.0.0 | Transitive |
+| lucide-react | ISC | **Direct** |
+| make-error | ISC | Transitive |
+| mdn-data | CC0-1.0 | Transitive |
+| minimalistic-assert | ISC | Transitive |
+| minimatch | BlueOak-1.0.0 | Transitive |
+| ndjson | BSD-3-Clause | Transitive |
+| nopt | ISC | Transitive |
+| once | ISC | Transitive |
+| parse-cache-control | BSD | Transitive |
+| picocolors | ISC | Transitive |
+| potpack | ISC | Transitive |
+| promise-worker-transferable | Apache-2.0 | Transitive |
+| qs | BSD-3-Clause | Transitive |
+| rlp | MPL-2.0 | Transitive |
+| saxes | ISC | Transitive |
+| sc-istanbul | BSD-3-Clause | Transitive |
+| semver | ISC | Transitive |
+| serialize-javascript | BSD-3-Clause | Transitive |
+| setprototypeof | ISC | Transitive |
+| sha.js | (MIT AND BSD-3-Clause) | Transitive |
+| sha1 | BSD-3-Clause | Transitive |
+| sharp | Apache-2.0 | Transitive |
+| shelljs | BSD-3-Clause | Transitive |
+| siginfo | ISC | Transitive |
+| solidity-coverage | ISC | Transitive |
+| source-map | BSD | Transitive |
+| source-map-js | BSD-3-Clause | Transitive |
+| split2 | ISC | Transitive |
+| sprintf-js | BSD-3-Clause | Transitive |
+| string-format | WTFPL OR MIT | Transitive |
+| table | BSD-3-Clause | Transitive |
+| tough-cookie | BSD-3-Clause | Transitive |
+| ts-command-line-args | ISC | Transitive |
+| tslib | 0BSD | Transitive |
+| type-fest | (MIT OR CC0-1.0) | Transitive |
+| typescript | Apache-2.0 | **Direct** |
+| uglify-js | BSD-2-Clause | Transitive |
+| web3-utils | LGPL-3.0 | Transitive |
+| webidl-conversions | BSD-2-Clause | Transitive |
+| which | ISC | Transitive |
+| workerpool | Apache-2.0 | Transitive |
+| wrappy | ISC | Transitive |
+| xml-name-validator | Apache-2.0 | Transitive |
+| y18n | ISC | Transitive |
+| yallist | ISC | Transitive |
+| yargs-parser | ISC | Transitive |
 
 ## Direct Dependencies
 
@@ -144,7 +143,7 @@ The following dependencies have non-MIT licenses:
 | --- | --- | --- |
 | @nomicfoundation/hardhat-toolbox | MIT | @Animatica/contracts |
 | @openzeppelin/contracts | MIT | @Animatica/contracts |
-| @react-three/drei | MIT | @Animatica/engine |
+| @react-three/drei | MIT | @Animatica/editor, @Animatica/engine |
 | @react-three/fiber | MIT | @Animatica/editor, @Animatica/engine, @Animatica/web |
 | @tailwindcss/postcss | MIT | @Animatica/editor |
 | @testing-library/dom | MIT | @Animatica/web |
@@ -152,7 +151,7 @@ The following dependencies have non-MIT licenses:
 | @types/node | MIT | @Animatica/engine |
 | @types/react | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web |
 | @types/react-dom | MIT | @Animatica/editor, @Animatica/platform, @Animatica/web |
-| @types/three | MIT | @Animatica/engine |
+| @types/three | MIT | @Animatica/editor, @Animatica/engine |
 | @types/uuid | MIT | @Animatica/engine |
 | @vitejs/plugin-react | MIT | @Animatica/editor |
 | clsx | MIT | @Animatica/editor |
@@ -172,7 +171,7 @@ The following dependencies have non-MIT licenses:
 | uuid | MIT | @Animatica/engine |
 | vite | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform |
 | vitest | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web |
-| zod | MIT | @Animatica/engine |
+| zod | MIT | @Animatica/engine, @Animatica/web |
 | zundo | MIT | @Animatica/engine |
 | zustand | MIT | @Animatica/engine |
 
@@ -181,694 +180,690 @@ The following dependencies have non-MIT licenses:
 <details>
 <summary>Click to expand full dependency list</summary>
 
-| Dependency | Version | License |
-| --- | --- | --- |
-| @acemir/cssom | 0.9.31 | MIT |
-| @adraffy/ens-normalize | 1.10.1 | MIT |
-| @alloc/quick-lru | 5.2.0 | MIT |
-| @asamuzakjp/css-color | 5.0.0 | MIT |
-| @asamuzakjp/dom-selector | 6.8.1 | MIT |
-| @asamuzakjp/nwsapi | 2.3.9 | MIT |
-| @babel/code-frame | 7.29.0 | MIT |
-| @babel/compat-data | 7.29.0 | MIT |
-| @babel/core | 7.29.0 | MIT |
-| @babel/generator | 7.29.1 | MIT |
-| @babel/helper-compilation-targets | 7.28.6 | MIT |
-| @babel/helper-globals | 7.28.0 | MIT |
-| @babel/helper-module-imports | 7.28.6 | MIT |
-| @babel/helper-module-transforms | 7.28.6 | MIT |
-| @babel/helper-plugin-utils | 7.28.6 | MIT |
-| @babel/helper-string-parser | 7.27.1 | MIT |
-| @babel/helper-validator-identifier | 7.28.5 | MIT |
-| @babel/helper-validator-option | 7.27.1 | MIT |
-| @babel/helpers | 7.28.6 | MIT |
-| @babel/parser | 7.29.0 | MIT |
-| @babel/plugin-transform-react-jsx-self | 7.27.1 | MIT |
-| @babel/plugin-transform-react-jsx-source | 7.27.1 | MIT |
-| @babel/runtime | 7.28.6 | MIT |
-| @babel/template | 7.28.6 | MIT |
-| @babel/traverse | 7.29.0 | MIT |
-| @babel/types | 7.29.0 | MIT |
-| @bramus/specificity | 2.4.2 | MIT |
-| @cspotcode/source-map-support | 0.8.1 | MIT |
-| @csstools/color-helpers | 6.0.2 | MIT-0 |
-| @csstools/css-calc | 3.1.1 | MIT |
-| @csstools/css-color-parser | 4.0.2 | MIT |
-| @csstools/css-parser-algorithms | 4.0.0 | MIT |
-| @csstools/css-syntax-patches-for-csstree | 1.0.28 | MIT-0 |
-| @csstools/css-tokenizer | 4.0.0 | MIT |
-| @dimforge/rapier3d-compat | 0.12.0 | Apache-2.0 |
-| @esbuild/linux-x64 | 0.27.3 | MIT |
-| @ethereumjs/rlp | 4.0.1 | MPL-2.0 |
-| @ethereumjs/util | 8.1.0 | MPL-2.0 |
-| @ethersproject/abi | 5.8.0 | MIT |
-| @ethersproject/abstract-provider | 5.8.0 | MIT |
-| @ethersproject/abstract-signer | 5.8.0 | MIT |
-| @ethersproject/address | 5.6.1 | MIT |
-| @ethersproject/base64 | 5.8.0 | MIT |
-| @ethersproject/basex | 5.8.0 | MIT |
-| @ethersproject/bignumber | 5.8.0 | MIT |
-| @ethersproject/bytes | 5.8.0 | MIT |
-| @ethersproject/constants | 5.8.0 | MIT |
-| @ethersproject/contracts | 5.8.0 | MIT |
-| @ethersproject/hash | 5.8.0 | MIT |
-| @ethersproject/hdnode | 5.8.0 | MIT |
-| @ethersproject/json-wallets | 5.8.0 | MIT |
-| @ethersproject/keccak256 | 5.8.0 | MIT |
-| @ethersproject/logger | 5.8.0 | MIT |
-| @ethersproject/networks | 5.8.0 | MIT |
-| @ethersproject/pbkdf2 | 5.8.0 | MIT |
-| @ethersproject/properties | 5.8.0 | MIT |
-| @ethersproject/providers | 5.8.0 | MIT |
-| @ethersproject/random | 5.8.0 | MIT |
-| @ethersproject/rlp | 5.8.0 | MIT |
-| @ethersproject/sha2 | 5.8.0 | MIT |
-| @ethersproject/signing-key | 5.8.0 | MIT |
-| @ethersproject/solidity | 5.8.0 | MIT |
-| @ethersproject/strings | 5.8.0 | MIT |
-| @ethersproject/transactions | 5.8.0 | MIT |
-| @ethersproject/units | 5.8.0 | MIT |
-| @ethersproject/wallet | 5.8.0 | MIT |
-| @ethersproject/web | 5.8.0 | MIT |
-| @ethersproject/wordlists | 5.8.0 | MIT |
-| @exodus/bytes | 1.14.1 | MIT |
-| @fastify/busboy | 2.1.1 | MIT |
-| @img/colour | 1.0.0 | MIT |
-| @img/sharp-libvips-linux-x64 | 1.2.4 | LGPL-3.0-or-later |
-| @img/sharp-libvips-linuxmusl-x64 | 1.2.4 | LGPL-3.0-or-later |
-| @img/sharp-linux-x64 | 0.34.5 | Apache-2.0 |
-| @img/sharp-linuxmusl-x64 | 0.34.5 | Apache-2.0 |
-| @jridgewell/gen-mapping | 0.3.13 | MIT |
-| @jridgewell/remapping | 2.3.5 | MIT |
-| @jridgewell/resolve-uri | 3.1.2 | MIT |
-| @jridgewell/sourcemap-codec | 1.5.5 | MIT |
-| @jridgewell/trace-mapping | 0.3.9 | MIT |
-| @mediapipe/tasks-vision | 0.10.17 | Apache-2.0 |
-| @monogrid/gainmap-js | 3.4.0 | MIT |
-| @next/env | 15.5.12 | MIT |
-| @next/swc-linux-x64-gnu | 15.5.12 | MIT |
-| @next/swc-linux-x64-musl | 15.5.12 | MIT |
-| @noble/curves | 1.2.0 | MIT |
-| @noble/hashes | 1.2.0 | MIT |
-| @noble/secp256k1 | 1.7.1 | MIT |
-| @nodelib/fs.scandir | 2.1.5 | MIT |
-| @nodelib/fs.stat | 2.0.5 | MIT |
-| @nodelib/fs.walk | 1.2.8 | MIT |
-| @nomicfoundation/edr | 0.12.0-next.23 | MIT |
-| @nomicfoundation/edr-darwin-arm64 | 0.12.0-next.23 | MIT |
-| @nomicfoundation/edr-darwin-x64 | 0.12.0-next.23 | MIT |
-| @nomicfoundation/edr-linux-arm64-gnu | 0.12.0-next.23 | MIT |
-| @nomicfoundation/edr-linux-arm64-musl | 0.12.0-next.23 | MIT |
-| @nomicfoundation/edr-linux-x64-gnu | 0.12.0-next.23 | MIT |
-| @nomicfoundation/edr-linux-x64-musl | 0.12.0-next.23 | MIT |
-| @nomicfoundation/edr-win32-x64-msvc | 0.12.0-next.23 | MIT |
-| @nomicfoundation/hardhat-chai-matchers | 2.1.0 | MIT |
-| @nomicfoundation/hardhat-ethers | 3.1.3 | MIT |
-| @nomicfoundation/hardhat-ignition | 0.15.16 | MIT |
-| @nomicfoundation/hardhat-ignition-ethers | 0.15.17 | MIT |
-| @nomicfoundation/hardhat-network-helpers | 1.1.2 | MIT |
-| @nomicfoundation/hardhat-toolbox | 5.0.0 | MIT |
-| @nomicfoundation/hardhat-verify | 2.1.3 | MIT |
-| @nomicfoundation/ignition-core | 0.15.15 | MIT |
-| @nomicfoundation/ignition-ui | 0.15.13 | MIT |
-| @nomicfoundation/solidity-analyzer | 0.1.2 | MIT |
-| @nomicfoundation/solidity-analyzer-darwin-arm64 | 0.1.2 | MIT |
-| @nomicfoundation/solidity-analyzer-darwin-x64 | 0.1.2 | MIT |
-| @nomicfoundation/solidity-analyzer-linux-arm64-gnu | 0.1.2 | MIT |
-| @nomicfoundation/solidity-analyzer-linux-arm64-musl | 0.1.2 | MIT |
-| @nomicfoundation/solidity-analyzer-linux-x64-gnu | 0.1.2 | MIT |
-| @nomicfoundation/solidity-analyzer-linux-x64-musl | 0.1.2 | MIT |
-| @nomicfoundation/solidity-analyzer-win32-x64-msvc | 0.1.2 | MIT |
-| @openzeppelin/contracts | 5.4.0 | MIT |
-| @react-three/drei | 10.7.7 | MIT |
-| @react-three/fiber | 9.5.0 | MIT |
-| @rolldown/pluginutils | 1.0.0-rc.3 | MIT |
-| @rollup/rollup-linux-x64-gnu | 4.58.0 | MIT |
-| @rollup/rollup-linux-x64-musl | 4.58.0 | MIT |
-| @scure/base | 1.1.9 | MIT |
-| @scure/bip32 | 1.1.5 | MIT |
-| @scure/bip39 | 1.1.1 | MIT |
-| @sentry/core | 5.30.0 | BSD-3-Clause |
-| @sentry/hub | 5.30.0 | BSD-3-Clause |
-| @sentry/minimal | 5.30.0 | BSD-3-Clause |
-| @sentry/node | 5.30.0 | BSD-3-Clause |
-| @sentry/tracing | 5.30.0 | MIT |
-| @sentry/types | 5.30.0 | BSD-3-Clause |
-| @sentry/utils | 5.30.0 | BSD-3-Clause |
-| @solidity-parser/parser | 0.14.5 | MIT |
-| @standard-schema/spec | 1.1.0 | MIT |
-| @swc/helpers | 0.5.15 | Apache-2.0 |
-| @tailwindcss/node | 4.2.0 | MIT |
-| @tailwindcss/oxide | 4.2.0 | MIT |
-| @tailwindcss/oxide-linux-x64-gnu | 4.2.0 | MIT |
-| @tailwindcss/oxide-linux-x64-musl | 4.2.0 | MIT |
-| @tailwindcss/postcss | 4.2.0 | MIT |
-| @testing-library/dom | 10.4.1 | MIT |
-| @testing-library/react | 16.3.2 | MIT |
-| @tsconfig/node10 | 1.0.12 | MIT |
-| @tsconfig/node12 | 1.0.11 | MIT |
-| @tsconfig/node14 | 1.0.3 | MIT |
-| @tsconfig/node16 | 1.0.4 | MIT |
-| @tweenjs/tween.js | 23.1.3 | MIT |
-| @typechain/ethers-v6 | 0.5.1 | MIT |
-| @typechain/hardhat | 9.1.0 | MIT |
-| @types/aria-query | 5.0.4 | MIT |
-| @types/babel__core | 7.20.5 | MIT |
-| @types/babel__generator | 7.27.0 | MIT |
-| @types/babel__template | 7.4.4 | MIT |
-| @types/babel__traverse | 7.28.0 | MIT |
-| @types/bn.js | 5.2.0 | MIT |
-| @types/chai | 5.2.3 | MIT |
-| @types/chai-as-promised | 7.1.8 | MIT |
-| @types/concat-stream | 1.6.1 | MIT |
-| @types/deep-eql | 4.0.2 | MIT |
-| @types/draco3d | 1.4.10 | MIT |
-| @types/estree | 1.0.8 | MIT |
-| @types/form-data | 0.0.33 | MIT |
-| @types/glob | 7.2.0 | MIT |
-| @types/minimatch | 6.0.0 | MIT |
-| @types/mocha | 10.0.10 | MIT |
-| @types/node | 8.10.66 | MIT |
-| @types/offscreencanvas | 2019.7.3 | MIT |
-| @types/pbkdf2 | 3.1.2 | MIT |
-| @types/prettier | 2.7.3 | MIT |
-| @types/qs | 6.14.0 | MIT |
-| @types/react | 19.2.14 | MIT |
-| @types/react-dom | 19.2.3 | MIT |
-| @types/react-reconciler | 0.28.9 | MIT |
-| @types/secp256k1 | 4.0.7 | MIT |
-| @types/stats.js | 0.17.4 | MIT |
-| @types/three | 0.182.0 | MIT |
-| @types/uuid | 10.0.0 | MIT |
-| @types/webxr | 0.5.24 | MIT |
-| @use-gesture/core | 10.3.1 | MIT |
-| @use-gesture/react | 10.3.1 | MIT |
-| @vitejs/plugin-react | 5.1.4 | MIT |
-| @vitest/expect | 4.0.18 | MIT |
-| @vitest/mocker | 4.0.18 | MIT |
-| @vitest/pretty-format | 4.0.18 | MIT |
-| @vitest/runner | 4.0.18 | MIT |
-| @vitest/snapshot | 4.0.18 | MIT |
-| @vitest/spy | 4.0.18 | MIT |
-| @vitest/utils | 4.0.18 | MIT |
-| @webgpu/types | 0.1.69 | BSD-3-Clause |
-| abbrev | 1.0.9 | ISC |
-| acorn | 8.16.0 | MIT |
-| acorn-walk | 8.3.5 | MIT |
-| adm-zip | 0.4.16 | MIT |
-| aes-js | 3.0.0 | MIT |
-| agent-base | 6.0.2 | MIT |
-| aggregate-error | 3.1.0 | MIT |
-| ajv | 8.18.0 | MIT |
-| amdefine | 1.0.1 | BSD-3-Clause OR MIT |
-| ansi-align | 3.0.1 | ISC |
-| ansi-colors | 4.1.3 | MIT |
-| ansi-escapes | 4.3.2 | MIT |
-| ansi-regex | 3.0.1 | MIT |
-| ansi-styles | 3.2.1 | MIT |
-| antlr4ts | 0.5.0-alpha.4 | BSD-3-Clause |
-| anymatch | 3.1.3 | ISC |
-| arg | 4.1.3 | MIT |
-| argparse | 1.0.10 | MIT |
-| argparse | 2.0.1 | Python-2.0 |
-| aria-query | 5.3.0 | Apache-2.0 |
-| array-back | 3.1.0 | MIT |
-| array-union | 2.1.0 | MIT |
-| array-uniq | 1.0.3 | MIT |
-| asap | 2.0.6 | MIT |
-| assertion-error | 2.0.1 | MIT |
-| astral-regex | 2.0.0 | MIT |
-| async | 1.5.2 | MIT |
-| asynckit | 0.4.0 | MIT |
-| at-least-node | 1.0.0 | ISC |
-| automation-events | 7.1.15 | MIT |
-| available-typed-arrays | 1.0.7 | MIT |
-| axios | 1.13.5 | MIT |
-| balanced-match | 1.0.2 | MIT |
-| base-x | 3.0.11 | MIT |
-| base64-js | 1.5.1 | MIT |
-| baseline-browser-mapping | 2.10.0 | Apache-2.0 |
-| bech32 | 1.1.4 | MIT |
-| bidi-js | 1.0.3 | MIT |
-| binary-extensions | 2.3.0 | MIT |
-| blakejs | 1.2.1 | MIT |
-| bn.js | 4.11.6 | MIT |
-| boxen | 5.1.2 | MIT |
-| brace-expansion | 1.1.12 | MIT |
-| braces | 3.0.3 | MIT |
-| brorand | 1.1.0 | MIT |
-| browser-stdout | 1.3.1 | ISC |
-| browserify-aes | 1.2.0 | MIT |
-| browserslist | 4.28.1 | MIT |
-| bs58 | 4.0.1 | MIT |
-| bs58check | 2.1.2 | MIT |
-| buffer | 6.0.3 | MIT |
-| buffer-from | 1.1.2 | MIT |
-| buffer-xor | 1.0.3 | MIT |
-| bytes | 3.1.2 | MIT |
-| call-bind | 1.0.8 | MIT |
-| call-bind-apply-helpers | 1.0.2 | MIT |
-| call-bound | 1.0.4 | MIT |
-| camelcase | 6.3.0 | MIT |
-| camera-controls | 3.1.2 | MIT |
-| caniuse-lite | 1.0.30001770 | CC-BY-4.0 |
-| caseless | 0.12.0 | Apache-2.0 |
-| cbor | 8.1.0 | MIT |
-| chai | 6.2.2 | MIT |
-| chai-as-promised | 7.1.2 | WTFPL |
-| chalk | 2.4.2 | MIT |
-| charenc | 0.0.2 | BSD-3-Clause |
-| check-error | 1.0.3 | MIT |
-| chokidar | 3.6.0 | MIT |
-| ci-info | 2.0.0 | MIT |
-| cipher-base | 1.0.7 | MIT |
-| clean-stack | 2.2.0 | MIT |
-| cli-boxes | 2.2.1 | MIT |
-| cli-table3 | 0.5.1 | MIT |
-| client-only | 0.0.1 | MIT |
-| cliui | 7.0.4 | ISC |
-| clsx | 2.1.1 | MIT |
-| color-convert | 1.9.3 | MIT |
-| color-name | 1.1.3 | MIT |
-| colors | 1.4.0 | MIT |
-| combined-stream | 1.0.8 | MIT |
-| command-exists | 1.2.9 | MIT |
-| command-line-args | 5.2.1 | MIT |
-| command-line-usage | 6.1.3 | MIT |
-| commander | 8.3.0 | MIT |
-| concat-map | 0.0.1 | MIT |
-| concat-stream | 1.6.2 | MIT |
-| convert-source-map | 2.0.0 | MIT |
-| cookie | 0.4.2 | MIT |
-| core-util-is | 1.0.3 | MIT |
-| create-hash | 1.2.0 | MIT |
-| create-hmac | 1.1.7 | MIT |
-| create-require | 1.1.1 | MIT |
-| cross-env | 7.0.3 | MIT |
-| cross-spawn | 7.0.6 | MIT |
-| crypt | 0.0.2 | BSD-3-Clause |
-| css-tree | 3.1.0 | MIT |
-| cssstyle | 6.1.0 | MIT |
-| csstype | 3.2.3 | MIT |
-| data-urls | 7.0.0 | MIT |
-| death | 1.1.0 | MIT |
-| debug | 4.4.3 | MIT |
-| decamelize | 4.0.0 | MIT |
-| decimal.js | 10.6.0 | MIT |
-| deep-eql | 4.1.4 | MIT |
-| deep-extend | 0.6.0 | MIT |
-| deep-is | 0.1.4 | MIT |
-| define-data-property | 1.1.4 | MIT |
-| delayed-stream | 1.0.0 | MIT |
-| depd | 2.0.0 | MIT |
-| dequal | 2.0.3 | MIT |
-| detect-gpu | 5.0.70 | MIT |
-| detect-libc | 2.1.2 | Apache-2.0 |
-| diff | 4.0.4 | BSD-3-Clause |
-| difflib | 0.2.4 | PSF |
-| dir-glob | 3.0.1 | MIT |
-| dom-accessibility-api | 0.5.16 | MIT |
-| draco3d | 1.5.7 | Apache-2.0 |
-| dunder-proto | 1.0.1 | MIT |
-| electron-to-chromium | 1.5.302 | ISC |
-| elliptic | 6.6.1 | MIT |
-| emoji-regex | 8.0.0 | MIT |
-| enhanced-resolve | 5.19.0 | MIT |
-| enquirer | 2.4.1 | MIT |
-| entities | 6.0.1 | BSD-2-Clause |
-| env-paths | 2.2.1 | MIT |
-| es-define-property | 1.0.1 | MIT |
-| es-errors | 1.3.0 | MIT |
-| es-module-lexer | 1.7.0 | MIT |
-| es-object-atoms | 1.1.1 | MIT |
-| es-set-tostringtag | 2.1.0 | MIT |
-| esbuild | 0.27.3 | MIT |
-| escalade | 3.2.0 | MIT |
-| escape-string-regexp | 1.0.5 | MIT |
-| escodegen | 1.8.1 | BSD-2-Clause |
-| esprima | 2.7.3 | BSD-2-Clause |
-| estraverse | 1.9.3 | BSD |
-| estree-walker | 3.0.3 | MIT |
-| esutils | 2.0.3 | BSD-2-Clause |
-| eth-gas-reporter | 0.2.27 | MIT |
-| ethereum-bloom-filters | 1.2.0 | MIT |
-| ethereum-cryptography | 0.1.3 | MIT |
-| ethereumjs-util | 7.1.5 | MPL-2.0 |
-| ethers | 5.8.0 | MIT |
-| ethjs-unit | 0.1.6 | MIT |
-| evp_bytestokey | 1.0.3 | MIT |
-| expect-type | 1.3.0 | Apache-2.0 |
-| fast-deep-equal | 3.1.3 | MIT |
-| fast-glob | 3.3.3 | MIT |
-| fast-levenshtein | 2.0.6 | MIT |
-| fast-uri | 3.1.0 | BSD-3-Clause |
-| fastq | 1.20.1 | ISC |
-| fdir | 6.5.0 | MIT |
-| fflate | 0.6.10 | MIT |
-| fill-range | 7.1.1 | MIT |
-| find-replace | 3.0.0 | MIT |
-| find-up | 5.0.0 | MIT |
-| flat | 5.0.2 | BSD-3-Clause |
-| follow-redirects | 1.15.11 | MIT |
-| for-each | 0.3.5 | MIT |
-| form-data | 2.5.5 | MIT |
-| fp-ts | 1.19.3 | MIT |
-| fs-extra | 7.0.1 | MIT |
-| fs-readdir-recursive | 1.1.0 | MIT |
-| fs.realpath | 1.0.0 | ISC |
-| function-bind | 1.1.2 | MIT |
-| gensync | 1.0.0-beta.2 | MIT |
-| get-caller-file | 2.0.5 | ISC |
-| get-func-name | 2.0.2 | MIT |
-| get-intrinsic | 1.3.0 | MIT |
-| get-port | 3.2.0 | MIT |
-| get-proto | 1.0.1 | MIT |
-| ghost-testrpc | 0.0.2 | ISC |
-| glob | 5.0.15 | ISC |
-| glob-parent | 5.1.2 | ISC |
-| global-modules | 2.0.0 | MIT |
-| global-prefix | 3.0.0 | MIT |
-| globby | 10.0.2 | MIT |
-| glsl-noise | 0.0.0 | MIT |
-| gopd | 1.2.0 | MIT |
-| graceful-fs | 4.2.11 | ISC |
-| handlebars | 4.7.8 | MIT |
-| hardhat | 2.28.6 | MIT |
-| hardhat-gas-reporter | 1.0.10 | MIT |
-| has-flag | 1.0.0 | MIT |
-| has-property-descriptors | 1.0.2 | MIT |
-| has-symbols | 1.1.0 | MIT |
-| has-tostringtag | 1.0.2 | MIT |
-| hash-base | 3.1.2 | MIT |
-| hash.js | 1.1.7 | MIT |
-| hasown | 2.0.2 | MIT |
-| he | 1.2.0 | MIT |
-| heap | 0.2.7 | MIT |
-| hls.js | 1.6.15 | Apache-2.0 |
-| hmac-drbg | 1.0.1 | MIT |
-| html-encoding-sniffer | 6.0.0 | MIT |
-| http-basic | 8.1.3 | MIT |
-| http-errors | 2.0.1 | MIT |
-| http-proxy-agent | 7.0.2 | MIT |
-| http-response-object | 3.0.2 | MIT |
-| https-proxy-agent | 5.0.1 | MIT |
-| iconv-lite | 0.4.24 | MIT |
-| ieee754 | 1.2.1 | BSD-3-Clause |
-| ignore | 5.3.2 | MIT |
-| immediate | 3.0.6 | MIT |
-| immer | 10.0.2 | MIT |
-| immutable | 4.3.7 | MIT |
-| indent-string | 4.0.0 | MIT |
-| inflight | 1.0.6 | ISC |
-| inherits | 2.0.4 | ISC |
-| ini | 1.3.8 | ISC |
-| interpret | 1.4.0 | MIT |
-| io-ts | 1.10.4 | MIT |
-| is-binary-path | 2.1.0 | MIT |
-| is-callable | 1.2.7 | MIT |
-| is-core-module | 2.16.1 | MIT |
-| is-extglob | 2.1.1 | MIT |
-| is-fullwidth-code-point | 2.0.0 | MIT |
-| is-glob | 4.0.3 | MIT |
-| is-hex-prefixed | 1.0.0 | MIT |
-| is-number | 7.0.0 | MIT |
-| is-plain-obj | 2.1.0 | MIT |
-| is-potential-custom-element-name | 1.0.1 | MIT |
-| is-promise | 2.2.2 | MIT |
-| is-typed-array | 1.1.15 | MIT |
-| is-unicode-supported | 0.1.0 | MIT |
-| isarray | 1.0.0 | MIT |
-| isexe | 2.0.0 | ISC |
-| its-fine | 2.0.0 | MIT |
-| jiti | 2.6.1 | MIT |
-| js-sha3 | 0.8.0 | MIT |
-| js-tokens | 4.0.0 | MIT |
-| js-yaml | 3.14.2 | MIT |
-| jsdom | 28.1.0 | MIT |
-| jsesc | 3.1.0 | MIT |
-| json-schema-traverse | 1.0.0 | MIT |
-| json-stream-stringify | 3.1.6 | MIT |
-| json-stringify-safe | 5.0.1 | ISC |
-| json5 | 2.2.3 | MIT |
-| jsonfile | 4.0.0 | MIT |
-| jsonschema | 1.5.0 | MIT |
-| keccak | 3.0.4 | MIT |
-| kind-of | 6.0.3 | MIT |
-| kleur | 3.0.3 | MIT |
-| levn | 0.3.0 | MIT |
-| lie | 3.3.0 | MIT |
-| lightningcss | 1.31.1 | MPL-2.0 |
-| lightningcss-linux-x64-gnu | 1.31.1 | MPL-2.0 |
-| lightningcss-linux-x64-musl | 1.31.1 | MPL-2.0 |
-| locate-path | 6.0.0 | MIT |
-| lodash | 4.17.21 | MIT |
-| lodash.camelcase | 4.3.0 | MIT |
-| lodash.clonedeep | 4.5.0 | MIT |
-| lodash.isequal | 4.5.0 | MIT |
-| lodash.truncate | 4.4.2 | MIT |
-| log-symbols | 4.1.0 | MIT |
-| lru_map | 0.3.3 | MIT |
-| lru-cache | 5.1.1 | ISC |
-| lru-cache | 11.2.6 | BlueOak-1.0.0 |
-| lucide-react | 0.563.0 | ISC |
-| lz-string | 1.5.0 | MIT |
-| maath | 0.10.8 | MIT |
-| magic-string | 0.30.21 | MIT |
-| make-error | 1.3.6 | ISC |
-| markdown-table | 1.1.3 | MIT |
-| math-intrinsics | 1.1.0 | MIT |
-| md5.js | 1.3.5 | MIT |
-| mdn-data | 2.12.2 | CC0-1.0 |
-| memorystream | 0.3.1 | MIT |
-| merge2 | 1.4.1 | MIT |
-| meshline | 3.3.1 | MIT |
-| meshoptimizer | 0.22.0 | MIT |
-| micro-eth-signer | 0.14.0 | MIT |
-| micro-ftch | 0.3.1 | MIT |
-| micro-packed | 0.7.3 | MIT |
-| micromatch | 4.0.8 | MIT |
-| mime-db | 1.52.0 | MIT |
-| mime-types | 2.1.35 | MIT |
-| minimalistic-assert | 1.0.1 | ISC |
-| minimalistic-crypto-utils | 1.0.1 | MIT |
-| minimatch | 3.1.3 | ISC |
-| minimatch | 10.2.2 | BlueOak-1.0.0 |
-| minimist | 1.2.8 | MIT |
-| mkdirp | 0.5.6 | MIT |
-| mnemonist | 0.38.5 | MIT |
-| mocha | 10.8.2 | MIT |
-| ms | 2.1.3 | MIT |
-| nanoid | 3.3.11 | MIT |
-| ndjson | 2.0.0 | BSD-3-Clause |
-| neo-async | 2.6.2 | MIT |
-| next | 15.5.12 | MIT |
-| node-addon-api | 2.0.2 | MIT |
-| node-emoji | 1.11.0 | MIT |
-| node-gyp-build | 4.8.4 | MIT |
-| node-releases | 2.0.27 | MIT |
-| nofilter | 3.1.0 | MIT |
-| nopt | 3.0.6 | ISC |
-| normalize-path | 3.0.0 | MIT |
-| number-to-bn | 1.7.0 | MIT |
-| object-assign | 4.1.1 | MIT |
-| object-inspect | 1.13.4 | MIT |
-| obliterator | 2.0.5 | MIT |
-| obug | 2.1.1 | MIT |
-| once | 1.4.0 | ISC |
-| optionator | 0.8.3 | MIT |
-| ordinal | 1.0.3 | MIT |
-| os-tmpdir | 1.0.2 | MIT |
-| p-limit | 3.1.0 | MIT |
-| p-locate | 5.0.0 | MIT |
-| p-map | 4.0.0 | MIT |
-| parse-cache-control | 1.0.1 | BSD |
-| parse5 | 8.0.0 | MIT |
-| path-exists | 4.0.0 | MIT |
-| path-is-absolute | 1.0.1 | MIT |
-| path-key | 3.1.1 | MIT |
-| path-parse | 1.0.7 | MIT |
-| path-type | 4.0.0 | MIT |
-| pathe | 2.0.3 | MIT |
-| pbkdf2 | 3.1.5 | MIT |
-| picocolors | 1.1.1 | ISC |
-| picomatch | 2.3.1 | MIT |
-| pify | 4.0.1 | MIT |
-| possible-typed-array-names | 1.1.0 | MIT |
-| postcss | 8.4.31 | MIT |
-| potpack | 1.0.2 | ISC |
-| prelude-ls | 1.1.2 | MIT |
-| prettier | 2.8.8 | MIT |
-| pretty-format | 27.5.1 | MIT |
-| process-nextick-args | 2.0.1 | MIT |
-| promise | 8.3.0 | MIT |
-| promise-worker-transferable | 1.0.4 | Apache-2.0 |
-| prompts | 2.4.2 | MIT |
-| proxy-from-env | 1.1.0 | MIT |
-| punycode | 2.3.1 | MIT |
-| qs | 6.15.0 | BSD-3-Clause |
-| queue-microtask | 1.2.3 | MIT |
-| randombytes | 2.1.0 | MIT |
-| raw-body | 2.5.3 | MIT |
-| react | 19.2.4 | MIT |
-| react-dom | 19.2.4 | MIT |
-| react-is | 17.0.2 | MIT |
-| react-refresh | 0.18.0 | MIT |
-| react-use-measure | 2.1.7 | MIT |
-| readable-stream | 2.3.8 | MIT |
-| readdirp | 3.6.0 | MIT |
-| rechoir | 0.6.2 | MIT |
-| recursive-readdir | 2.2.3 | MIT |
-| reduce-flatten | 2.0.0 | MIT |
-| req-cwd | 2.0.0 | MIT |
-| req-from | 2.0.0 | MIT |
-| require-directory | 2.1.1 | MIT |
-| require-from-string | 2.0.2 | MIT |
-| resolve | 1.1.7 | MIT |
-| resolve-from | 3.0.0 | MIT |
-| reusify | 1.1.0 | MIT |
-| ripemd160 | 2.0.3 | MIT |
-| rlp | 2.2.7 | MPL-2.0 |
-| rollup | 4.58.0 | MIT |
-| run-parallel | 1.2.0 | MIT |
-| safe-buffer | 5.1.2 | MIT |
-| safer-buffer | 2.1.2 | MIT |
-| saxes | 6.0.0 | ISC |
-| sc-istanbul | 0.4.6 | BSD-3-Clause |
-| scheduler | 0.27.0 | MIT |
-| scrypt-js | 3.0.1 | MIT |
-| secp256k1 | 4.0.4 | MIT |
-| semver | 5.7.2 | ISC |
-| serialize-javascript | 6.0.2 | BSD-3-Clause |
-| set-function-length | 1.2.2 | MIT |
-| setimmediate | 1.0.5 | MIT |
-| setprototypeof | 1.2.0 | ISC |
-| sha.js | 2.4.12 | (MIT AND BSD-3-Clause) |
-| sha1 | 1.1.1 | BSD-3-Clause |
-| sharp | 0.34.5 | Apache-2.0 |
-| shebang-command | 2.0.0 | MIT |
-| shebang-regex | 3.0.0 | MIT |
-| shelljs | 0.8.5 | BSD-3-Clause |
-| side-channel | 1.1.0 | MIT |
-| side-channel-list | 1.0.0 | MIT |
-| side-channel-map | 1.0.1 | MIT |
-| side-channel-weakmap | 1.0.2 | MIT |
-| siginfo | 2.0.0 | ISC |
-| sisteransi | 1.0.5 | MIT |
-| slash | 3.0.0 | MIT |
-| slice-ansi | 4.0.0 | MIT |
-| solc | 0.8.26 | MIT |
-| solidity-coverage | 0.8.17 | ISC |
-| source-map | 0.6.1 | BSD-3-Clause |
-| source-map | 0.2.0 | BSD |
-| source-map-js | 1.2.1 | BSD-3-Clause |
-| source-map-support | 0.5.21 | MIT |
-| split2 | 3.2.2 | ISC |
-| sprintf-js | 1.0.3 | BSD-3-Clause |
-| stackback | 0.0.2 | MIT |
-| stacktrace-parser | 0.1.11 | MIT |
-| standardized-audio-context | 25.3.77 | MIT |
-| stats-gl | 2.4.2 | MIT |
-| stats.js | 0.17.0 | MIT |
-| statuses | 2.0.2 | MIT |
-| std-env | 3.10.0 | MIT |
-| string_decoder | 1.1.1 | MIT |
-| string-format | 2.0.0 | WTFPL OR MIT |
-| string-width | 2.1.1 | MIT |
-| strip-ansi | 4.0.0 | MIT |
-| strip-hex-prefix | 1.0.0 | MIT |
-| strip-json-comments | 3.1.1 | MIT |
-| styled-jsx | 5.1.6 | MIT |
-| supports-color | 3.2.3 | MIT |
-| supports-preserve-symlinks-flag | 1.0.0 | MIT |
-| suspend-react | 0.1.3 | MIT |
-| symbol-tree | 3.2.4 | MIT |
-| sync-request | 6.1.0 | MIT |
-| sync-rpc | 1.3.6 | MIT |
-| table | 6.9.0 | BSD-3-Clause |
-| table-layout | 1.0.2 | MIT |
-| tailwind-merge | 3.5.0 | MIT |
-| tailwindcss | 4.2.0 | MIT |
-| tapable | 2.3.0 | MIT |
-| then-request | 6.0.2 | MIT |
-| three | 0.182.0 | MIT |
-| three-mesh-bvh | 0.8.3 | MIT |
-| three-stdlib | 2.36.1 | MIT |
-| through2 | 4.0.2 | MIT |
-| tinybench | 2.9.0 | MIT |
-| tinyexec | 1.0.2 | MIT |
-| tinyglobby | 0.2.15 | MIT |
-| tinyrainbow | 3.0.3 | MIT |
-| tldts | 7.0.23 | MIT |
-| tldts-core | 7.0.23 | MIT |
-| tmp | 0.0.33 | MIT |
-| to-buffer | 1.2.2 | MIT |
-| to-regex-range | 5.0.1 | MIT |
-| toidentifier | 1.0.1 | MIT |
-| tone | 15.1.22 | MIT |
-| tough-cookie | 6.0.0 | BSD-3-Clause |
-| tr46 | 6.0.0 | MIT |
-| troika-three-text | 0.52.4 | MIT |
-| troika-three-utils | 0.52.4 | MIT |
-| troika-worker-utils | 0.52.0 | MIT |
-| ts-command-line-args | 2.5.1 | ISC |
-| ts-essentials | 7.0.3 | MIT |
-| ts-node | 10.9.2 | MIT |
-| tslib | 1.14.1 | 0BSD |
-| tsort | 0.0.1 | MIT |
-| tunnel-rat | 0.1.2 | MIT |
-| turbo | 2.8.10 | MIT |
-| turbo-linux-64 | 2.8.10 | MIT |
-| type-check | 0.3.2 | MIT |
-| type-detect | 4.1.0 | MIT |
-| type-fest | 0.7.1 | (MIT OR CC0-1.0) |
-| typechain | 8.3.2 | MIT |
-| typed-array-buffer | 1.0.3 | MIT |
-| typedarray | 0.0.6 | MIT |
-| typescript | 5.9.3 | Apache-2.0 |
-| typical | 4.0.0 | MIT |
-| uglify-js | 3.19.3 | BSD-2-Clause |
-| undici | 5.29.0 | MIT |
-| undici-types | 6.19.8 | MIT |
-| universalify | 0.1.2 | MIT |
-| unpipe | 1.0.0 | MIT |
-| update-browserslist-db | 1.2.3 | MIT |
-| use-sync-external-store | 1.6.0 | MIT |
-| utf8 | 3.0.0 | MIT |
-| util-deprecate | 1.0.2 | MIT |
-| utility-types | 3.11.0 | MIT |
-| uuid | 8.3.2 | MIT |
-| v8-compile-cache-lib | 3.0.1 | MIT |
-| vite | 7.3.1 | MIT |
-| vitest | 4.0.18 | MIT |
-| w3c-xmlserializer | 5.0.0 | MIT |
-| web3-utils | 1.10.4 | LGPL-3.0 |
-| webgl-constants | 1.1.1 | MIT |
-| webgl-sdf-generator | 1.1.1 | MIT |
-| webidl-conversions | 8.0.1 | BSD-2-Clause |
-| whatwg-mimetype | 5.0.0 | MIT |
-| whatwg-url | 16.0.1 | MIT |
-| which | 1.3.1 | ISC |
-| which-typed-array | 1.1.20 | MIT |
-| why-is-node-running | 2.3.0 | MIT |
-| widest-line | 3.1.0 | MIT |
-| word-wrap | 1.2.5 | MIT |
-| wordwrap | 1.0.0 | MIT |
-| wordwrapjs | 4.0.1 | MIT |
-| workerpool | 6.5.1 | Apache-2.0 |
-| wrap-ansi | 7.0.0 | MIT |
-| wrappy | 1.0.2 | ISC |
-| ws | 7.5.10 | MIT |
-| xml-name-validator | 5.0.0 | Apache-2.0 |
-| xmlchars | 2.2.0 | MIT |
-| y18n | 5.0.8 | ISC |
-| yallist | 3.1.1 | ISC |
-| yargs | 16.2.0 | MIT |
-| yargs-parser | 20.2.9 | ISC |
-| yargs-unparser | 2.0.0 | MIT |
-| yn | 3.1.1 | MIT |
-| yocto-queue | 0.1.0 | MIT |
-| zod | 4.3.6 | MIT |
-| zundo | 2.3.0 | MIT |
-| zustand | 4.5.7 | MIT |
+| Dependency | License |
+| --- | --- |
+| @acemir/cssom | MIT |
+| @adraffy/ens-normalize | MIT |
+| @alloc/quick-lru | MIT |
+| @asamuzakjp/css-color | MIT |
+| @asamuzakjp/dom-selector | MIT |
+| @asamuzakjp/nwsapi | MIT |
+| @babel/code-frame | MIT |
+| @babel/compat-data | MIT |
+| @babel/core | MIT |
+| @babel/generator | MIT |
+| @babel/helper-compilation-targets | MIT |
+| @babel/helper-globals | MIT |
+| @babel/helper-module-imports | MIT |
+| @babel/helper-module-transforms | MIT |
+| @babel/helper-plugin-utils | MIT |
+| @babel/helper-string-parser | MIT |
+| @babel/helper-validator-identifier | MIT |
+| @babel/helper-validator-option | MIT |
+| @babel/helpers | MIT |
+| @babel/parser | MIT |
+| @babel/plugin-transform-react-jsx-self | MIT |
+| @babel/plugin-transform-react-jsx-source | MIT |
+| @babel/runtime | MIT |
+| @babel/template | MIT |
+| @babel/traverse | MIT |
+| @babel/types | MIT |
+| @bramus/specificity | MIT |
+| @cspotcode/source-map-support | MIT |
+| @csstools/color-helpers | MIT-0 |
+| @csstools/css-calc | MIT |
+| @csstools/css-color-parser | MIT |
+| @csstools/css-parser-algorithms | MIT |
+| @csstools/css-syntax-patches-for-csstree | MIT-0 |
+| @csstools/css-tokenizer | MIT |
+| @dimforge/rapier3d-compat | Apache-2.0 |
+| @esbuild/linux-x64 | MIT |
+| @ethereumjs/rlp | MPL-2.0 |
+| @ethereumjs/util | MPL-2.0 |
+| @ethersproject/abi | MIT |
+| @ethersproject/abstract-provider | MIT |
+| @ethersproject/abstract-signer | MIT |
+| @ethersproject/address | MIT |
+| @ethersproject/base64 | MIT |
+| @ethersproject/basex | MIT |
+| @ethersproject/bignumber | MIT |
+| @ethersproject/bytes | MIT |
+| @ethersproject/constants | MIT |
+| @ethersproject/contracts | MIT |
+| @ethersproject/hash | MIT |
+| @ethersproject/hdnode | MIT |
+| @ethersproject/json-wallets | MIT |
+| @ethersproject/keccak256 | MIT |
+| @ethersproject/logger | MIT |
+| @ethersproject/networks | MIT |
+| @ethersproject/pbkdf2 | MIT |
+| @ethersproject/properties | MIT |
+| @ethersproject/providers | MIT |
+| @ethersproject/random | MIT |
+| @ethersproject/rlp | MIT |
+| @ethersproject/sha2 | MIT |
+| @ethersproject/signing-key | MIT |
+| @ethersproject/solidity | MIT |
+| @ethersproject/strings | MIT |
+| @ethersproject/transactions | MIT |
+| @ethersproject/units | MIT |
+| @ethersproject/wallet | MIT |
+| @ethersproject/web | MIT |
+| @ethersproject/wordlists | MIT |
+| @exodus/bytes | MIT |
+| @fastify/busboy | MIT |
+| @img/colour | MIT |
+| @img/sharp-libvips-linux-x64 | LGPL-3.0-or-later |
+| @img/sharp-libvips-linuxmusl-x64 | LGPL-3.0-or-later |
+| @img/sharp-linux-x64 | Apache-2.0 |
+| @img/sharp-linuxmusl-x64 | Apache-2.0 |
+| @jridgewell/gen-mapping | MIT |
+| @jridgewell/remapping | MIT |
+| @jridgewell/resolve-uri | MIT |
+| @jridgewell/sourcemap-codec | MIT |
+| @jridgewell/trace-mapping | MIT |
+| @mediapipe/tasks-vision | Apache-2.0 |
+| @monogrid/gainmap-js | MIT |
+| @next/env | MIT |
+| @next/swc-linux-x64-gnu | MIT |
+| @next/swc-linux-x64-musl | MIT |
+| @noble/curves | MIT |
+| @noble/hashes | MIT |
+| @noble/secp256k1 | MIT |
+| @nodelib/fs.scandir | MIT |
+| @nodelib/fs.stat | MIT |
+| @nodelib/fs.walk | MIT |
+| @nomicfoundation/edr | MIT |
+| @nomicfoundation/edr-darwin-arm64 | MIT |
+| @nomicfoundation/edr-darwin-x64 | MIT |
+| @nomicfoundation/edr-linux-arm64-gnu | MIT |
+| @nomicfoundation/edr-linux-arm64-musl | MIT |
+| @nomicfoundation/edr-linux-x64-gnu | MIT |
+| @nomicfoundation/edr-linux-x64-musl | MIT |
+| @nomicfoundation/edr-win32-x64-msvc | MIT |
+| @nomicfoundation/hardhat-chai-matchers | MIT |
+| @nomicfoundation/hardhat-ethers | MIT |
+| @nomicfoundation/hardhat-ignition | MIT |
+| @nomicfoundation/hardhat-ignition-ethers | MIT |
+| @nomicfoundation/hardhat-network-helpers | MIT |
+| @nomicfoundation/hardhat-toolbox | MIT |
+| @nomicfoundation/hardhat-verify | MIT |
+| @nomicfoundation/ignition-core | MIT |
+| @nomicfoundation/ignition-ui | MIT |
+| @nomicfoundation/solidity-analyzer | MIT |
+| @nomicfoundation/solidity-analyzer-darwin-arm64 | MIT |
+| @nomicfoundation/solidity-analyzer-darwin-x64 | MIT |
+| @nomicfoundation/solidity-analyzer-linux-arm64-gnu | MIT |
+| @nomicfoundation/solidity-analyzer-linux-arm64-musl | MIT |
+| @nomicfoundation/solidity-analyzer-linux-x64-gnu | MIT |
+| @nomicfoundation/solidity-analyzer-linux-x64-musl | MIT |
+| @nomicfoundation/solidity-analyzer-win32-x64-msvc | MIT |
+| @openzeppelin/contracts | MIT |
+| @react-three/drei | MIT |
+| @react-three/fiber | MIT |
+| @rolldown/pluginutils | MIT |
+| @rollup/rollup-linux-x64-gnu | MIT |
+| @rollup/rollup-linux-x64-musl | MIT |
+| @scure/base | MIT |
+| @scure/bip32 | MIT |
+| @scure/bip39 | MIT |
+| @sentry/core | BSD-3-Clause |
+| @sentry/hub | BSD-3-Clause |
+| @sentry/minimal | BSD-3-Clause |
+| @sentry/node | BSD-3-Clause |
+| @sentry/tracing | MIT |
+| @sentry/types | BSD-3-Clause |
+| @sentry/utils | BSD-3-Clause |
+| @solidity-parser/parser | MIT |
+| @standard-schema/spec | MIT |
+| @swc/helpers | Apache-2.0 |
+| @tailwindcss/node | MIT |
+| @tailwindcss/oxide | MIT |
+| @tailwindcss/oxide-linux-x64-gnu | MIT |
+| @tailwindcss/oxide-linux-x64-musl | MIT |
+| @tailwindcss/postcss | MIT |
+| @testing-library/dom | MIT |
+| @testing-library/react | MIT |
+| @tsconfig/node10 | MIT |
+| @tsconfig/node12 | MIT |
+| @tsconfig/node14 | MIT |
+| @tsconfig/node16 | MIT |
+| @tweenjs/tween.js | MIT |
+| @typechain/ethers-v6 | MIT |
+| @typechain/hardhat | MIT |
+| @types/aria-query | MIT |
+| @types/babel__core | MIT |
+| @types/babel__generator | MIT |
+| @types/babel__template | MIT |
+| @types/babel__traverse | MIT |
+| @types/bn.js | MIT |
+| @types/chai | MIT |
+| @types/chai-as-promised | MIT |
+| @types/concat-stream | MIT |
+| @types/deep-eql | MIT |
+| @types/draco3d | MIT |
+| @types/estree | MIT |
+| @types/form-data | MIT |
+| @types/glob | MIT |
+| @types/minimatch | MIT |
+| @types/mocha | MIT |
+| @types/node | MIT |
+| @types/offscreencanvas | MIT |
+| @types/pbkdf2 | MIT |
+| @types/prettier | MIT |
+| @types/qs | MIT |
+| @types/react | MIT |
+| @types/react-dom | MIT |
+| @types/react-reconciler | MIT |
+| @types/secp256k1 | MIT |
+| @types/stats.js | MIT |
+| @types/three | MIT |
+| @types/uuid | MIT |
+| @types/webxr | MIT |
+| @use-gesture/core | MIT |
+| @use-gesture/react | MIT |
+| @vitejs/plugin-react | MIT |
+| @vitest/expect | MIT |
+| @vitest/mocker | MIT |
+| @vitest/pretty-format | MIT |
+| @vitest/runner | MIT |
+| @vitest/snapshot | MIT |
+| @vitest/spy | MIT |
+| @vitest/utils | MIT |
+| @webgpu/types | BSD-3-Clause |
+| abbrev | ISC |
+| acorn | MIT |
+| acorn-walk | MIT |
+| adm-zip | MIT |
+| aes-js | MIT |
+| agent-base | MIT |
+| aggregate-error | MIT |
+| ajv | MIT |
+| amdefine | BSD-3-Clause OR MIT |
+| ansi-align | ISC |
+| ansi-colors | MIT |
+| ansi-escapes | MIT |
+| ansi-regex | MIT |
+| ansi-styles | MIT |
+| antlr4ts | BSD-3-Clause |
+| anymatch | ISC |
+| arg | MIT |
+| argparse | Python-2.0 |
+| aria-query | Apache-2.0 |
+| array-back | MIT |
+| array-union | MIT |
+| array-uniq | MIT |
+| asap | MIT |
+| assertion-error | MIT |
+| astral-regex | MIT |
+| async | MIT |
+| asynckit | MIT |
+| at-least-node | ISC |
+| automation-events | MIT |
+| available-typed-arrays | MIT |
+| axios | MIT |
+| balanced-match | MIT |
+| base-x | MIT |
+| base64-js | MIT |
+| baseline-browser-mapping | Apache-2.0 |
+| bech32 | MIT |
+| bidi-js | MIT |
+| binary-extensions | MIT |
+| blakejs | MIT |
+| bn.js | MIT |
+| boxen | MIT |
+| brace-expansion | MIT |
+| braces | MIT |
+| brorand | MIT |
+| browser-stdout | ISC |
+| browserify-aes | MIT |
+| browserslist | MIT |
+| bs58 | MIT |
+| bs58check | MIT |
+| buffer | MIT |
+| buffer-from | MIT |
+| buffer-xor | MIT |
+| bytes | MIT |
+| call-bind | MIT |
+| call-bind-apply-helpers | MIT |
+| call-bound | MIT |
+| camelcase | MIT |
+| camera-controls | MIT |
+| caniuse-lite | CC-BY-4.0 |
+| caseless | Apache-2.0 |
+| cbor | MIT |
+| chai | MIT |
+| chai-as-promised | WTFPL |
+| chalk | MIT |
+| charenc | BSD-3-Clause |
+| check-error | MIT |
+| chokidar | MIT |
+| ci-info | MIT |
+| cipher-base | MIT |
+| clean-stack | MIT |
+| cli-boxes | MIT |
+| cli-table3 | MIT |
+| client-only | MIT |
+| cliui | ISC |
+| clsx | MIT |
+| color-convert | MIT |
+| color-name | MIT |
+| colors | MIT |
+| combined-stream | MIT |
+| command-exists | MIT |
+| command-line-args | MIT |
+| command-line-usage | MIT |
+| commander | MIT |
+| concat-map | MIT |
+| concat-stream | MIT |
+| convert-source-map | MIT |
+| cookie | MIT |
+| core-util-is | MIT |
+| create-hash | MIT |
+| create-hmac | MIT |
+| create-require | MIT |
+| cross-env | MIT |
+| cross-spawn | MIT |
+| crypt | BSD-3-Clause |
+| css-tree | MIT |
+| cssstyle | MIT |
+| csstype | MIT |
+| data-urls | MIT |
+| death | MIT |
+| debug | MIT |
+| decamelize | MIT |
+| decimal.js | MIT |
+| deep-eql | MIT |
+| deep-extend | MIT |
+| deep-is | MIT |
+| define-data-property | MIT |
+| delayed-stream | MIT |
+| depd | MIT |
+| dequal | MIT |
+| detect-gpu | MIT |
+| detect-libc | Apache-2.0 |
+| diff | BSD-3-Clause |
+| difflib | PSF |
+| dir-glob | MIT |
+| dom-accessibility-api | MIT |
+| draco3d | Apache-2.0 |
+| dunder-proto | MIT |
+| electron-to-chromium | ISC |
+| elliptic | MIT |
+| emoji-regex | MIT |
+| enhanced-resolve | MIT |
+| enquirer | MIT |
+| entities | BSD-2-Clause |
+| env-paths | MIT |
+| es-define-property | MIT |
+| es-errors | MIT |
+| es-module-lexer | MIT |
+| es-object-atoms | MIT |
+| es-set-tostringtag | MIT |
+| esbuild | MIT |
+| escalade | MIT |
+| escape-string-regexp | MIT |
+| escodegen | BSD-2-Clause |
+| esprima | BSD-2-Clause |
+| estraverse | BSD |
+| estree-walker | MIT |
+| esutils | BSD-2-Clause |
+| eth-gas-reporter | MIT |
+| ethereum-bloom-filters | MIT |
+| ethereum-cryptography | MIT |
+| ethereumjs-util | MPL-2.0 |
+| ethers | MIT |
+| ethjs-unit | MIT |
+| evp_bytestokey | MIT |
+| expect-type | Apache-2.0 |
+| fast-deep-equal | MIT |
+| fast-glob | MIT |
+| fast-levenshtein | MIT |
+| fast-uri | BSD-3-Clause |
+| fastq | ISC |
+| fdir | MIT |
+| fflate | MIT |
+| fill-range | MIT |
+| find-replace | MIT |
+| find-up | MIT |
+| flat | BSD-3-Clause |
+| follow-redirects | MIT |
+| for-each | MIT |
+| form-data | MIT |
+| fp-ts | MIT |
+| fs-extra | MIT |
+| fs-readdir-recursive | MIT |
+| fs.realpath | ISC |
+| function-bind | MIT |
+| gensync | MIT |
+| get-caller-file | ISC |
+| get-func-name | MIT |
+| get-intrinsic | MIT |
+| get-port | MIT |
+| get-proto | MIT |
+| ghost-testrpc | ISC |
+| glob | ISC |
+| glob-parent | ISC |
+| global-modules | MIT |
+| global-prefix | MIT |
+| globby | MIT |
+| glsl-noise | MIT |
+| gopd | MIT |
+| graceful-fs | ISC |
+| handlebars | MIT |
+| hardhat | MIT |
+| hardhat-gas-reporter | MIT |
+| has-flag | MIT |
+| has-property-descriptors | MIT |
+| has-symbols | MIT |
+| has-tostringtag | MIT |
+| hash-base | MIT |
+| hash.js | MIT |
+| hasown | MIT |
+| he | MIT |
+| heap | MIT |
+| hls.js | Apache-2.0 |
+| hmac-drbg | MIT |
+| html-encoding-sniffer | MIT |
+| http-basic | MIT |
+| http-errors | MIT |
+| http-proxy-agent | MIT |
+| http-response-object | MIT |
+| https-proxy-agent | MIT |
+| iconv-lite | MIT |
+| ieee754 | BSD-3-Clause |
+| ignore | MIT |
+| immediate | MIT |
+| immer | MIT |
+| immutable | MIT |
+| indent-string | MIT |
+| inflight | ISC |
+| inherits | ISC |
+| ini | ISC |
+| interpret | MIT |
+| io-ts | MIT |
+| is-binary-path | MIT |
+| is-callable | MIT |
+| is-core-module | MIT |
+| is-extglob | MIT |
+| is-fullwidth-code-point | MIT |
+| is-glob | MIT |
+| is-hex-prefixed | MIT |
+| is-number | MIT |
+| is-plain-obj | MIT |
+| is-potential-custom-element-name | MIT |
+| is-promise | MIT |
+| is-typed-array | MIT |
+| is-unicode-supported | MIT |
+| isarray | MIT |
+| isexe | ISC |
+| its-fine | MIT |
+| jiti | MIT |
+| js-sha3 | MIT |
+| js-tokens | MIT |
+| js-yaml | MIT |
+| jsdom | MIT |
+| jsesc | MIT |
+| json-schema-traverse | MIT |
+| json-stream-stringify | MIT |
+| json-stringify-safe | ISC |
+| json5 | MIT |
+| jsonfile | MIT |
+| jsonschema | MIT |
+| keccak | MIT |
+| kind-of | MIT |
+| kleur | MIT |
+| levn | MIT |
+| lie | MIT |
+| lightningcss | MPL-2.0 |
+| lightningcss-linux-x64-gnu | MPL-2.0 |
+| lightningcss-linux-x64-musl | MPL-2.0 |
+| locate-path | MIT |
+| lodash | MIT |
+| lodash.camelcase | MIT |
+| lodash.clonedeep | MIT |
+| lodash.isequal | MIT |
+| lodash.truncate | MIT |
+| log-symbols | MIT |
+| lru-cache | BlueOak-1.0.0 |
+| lru_map | MIT |
+| lucide-react | ISC |
+| lz-string | MIT |
+| maath | MIT |
+| magic-string | MIT |
+| make-error | ISC |
+| markdown-table | MIT |
+| math-intrinsics | MIT |
+| md5.js | MIT |
+| mdn-data | CC0-1.0 |
+| memorystream | MIT |
+| merge2 | MIT |
+| meshline | MIT |
+| meshoptimizer | MIT |
+| micro-eth-signer | MIT |
+| micro-ftch | MIT |
+| micro-packed | MIT |
+| micromatch | MIT |
+| mime-db | MIT |
+| mime-types | MIT |
+| minimalistic-assert | ISC |
+| minimalistic-crypto-utils | MIT |
+| minimatch | BlueOak-1.0.0 |
+| minimist | MIT |
+| mkdirp | MIT |
+| mnemonist | MIT |
+| mocha | MIT |
+| ms | MIT |
+| nanoid | MIT |
+| ndjson | BSD-3-Clause |
+| neo-async | MIT |
+| next | MIT |
+| node-addon-api | MIT |
+| node-emoji | MIT |
+| node-gyp-build | MIT |
+| node-releases | MIT |
+| nofilter | MIT |
+| nopt | ISC |
+| normalize-path | MIT |
+| number-to-bn | MIT |
+| object-assign | MIT |
+| object-inspect | MIT |
+| obliterator | MIT |
+| obug | MIT |
+| once | ISC |
+| optionator | MIT |
+| ordinal | MIT |
+| os-tmpdir | MIT |
+| p-limit | MIT |
+| p-locate | MIT |
+| p-map | MIT |
+| parse-cache-control | BSD |
+| parse5 | MIT |
+| path-exists | MIT |
+| path-is-absolute | MIT |
+| path-key | MIT |
+| path-parse | MIT |
+| path-type | MIT |
+| pathe | MIT |
+| pbkdf2 | MIT |
+| picocolors | ISC |
+| picomatch | MIT |
+| pify | MIT |
+| possible-typed-array-names | MIT |
+| postcss | MIT |
+| potpack | ISC |
+| prelude-ls | MIT |
+| prettier | MIT |
+| pretty-format | MIT |
+| process-nextick-args | MIT |
+| promise | MIT |
+| promise-worker-transferable | Apache-2.0 |
+| prompts | MIT |
+| proxy-from-env | MIT |
+| punycode | MIT |
+| qs | BSD-3-Clause |
+| queue-microtask | MIT |
+| randombytes | MIT |
+| raw-body | MIT |
+| react | MIT |
+| react-dom | MIT |
+| react-is | MIT |
+| react-refresh | MIT |
+| react-use-measure | MIT |
+| readable-stream | MIT |
+| readdirp | MIT |
+| rechoir | MIT |
+| recursive-readdir | MIT |
+| reduce-flatten | MIT |
+| req-cwd | MIT |
+| req-from | MIT |
+| require-directory | MIT |
+| require-from-string | MIT |
+| resolve | MIT |
+| resolve-from | MIT |
+| reusify | MIT |
+| ripemd160 | MIT |
+| rlp | MPL-2.0 |
+| rollup | MIT |
+| run-parallel | MIT |
+| safe-buffer | MIT |
+| safer-buffer | MIT |
+| saxes | ISC |
+| sc-istanbul | BSD-3-Clause |
+| scheduler | MIT |
+| scrypt-js | MIT |
+| secp256k1 | MIT |
+| semver | ISC |
+| serialize-javascript | BSD-3-Clause |
+| set-function-length | MIT |
+| setimmediate | MIT |
+| setprototypeof | ISC |
+| sha.js | (MIT AND BSD-3-Clause) |
+| sha1 | BSD-3-Clause |
+| sharp | Apache-2.0 |
+| shebang-command | MIT |
+| shebang-regex | MIT |
+| shelljs | BSD-3-Clause |
+| side-channel | MIT |
+| side-channel-list | MIT |
+| side-channel-map | MIT |
+| side-channel-weakmap | MIT |
+| siginfo | ISC |
+| sisteransi | MIT |
+| slash | MIT |
+| slice-ansi | MIT |
+| solc | MIT |
+| solidity-coverage | ISC |
+| source-map | BSD |
+| source-map-js | BSD-3-Clause |
+| source-map-support | MIT |
+| split2 | ISC |
+| sprintf-js | BSD-3-Clause |
+| stackback | MIT |
+| stacktrace-parser | MIT |
+| standardized-audio-context | MIT |
+| stats-gl | MIT |
+| stats.js | MIT |
+| statuses | MIT |
+| std-env | MIT |
+| string-format | WTFPL OR MIT |
+| string-width | MIT |
+| string_decoder | MIT |
+| strip-ansi | MIT |
+| strip-hex-prefix | MIT |
+| strip-json-comments | MIT |
+| styled-jsx | MIT |
+| supports-color | MIT |
+| supports-preserve-symlinks-flag | MIT |
+| suspend-react | MIT |
+| symbol-tree | MIT |
+| sync-request | MIT |
+| sync-rpc | MIT |
+| table | BSD-3-Clause |
+| table-layout | MIT |
+| tailwind-merge | MIT |
+| tailwindcss | MIT |
+| tapable | MIT |
+| then-request | MIT |
+| three | MIT |
+| three-mesh-bvh | MIT |
+| three-stdlib | MIT |
+| through2 | MIT |
+| tinybench | MIT |
+| tinyexec | MIT |
+| tinyglobby | MIT |
+| tinyrainbow | MIT |
+| tldts | MIT |
+| tldts-core | MIT |
+| tmp | MIT |
+| to-buffer | MIT |
+| to-regex-range | MIT |
+| toidentifier | MIT |
+| tone | MIT |
+| tough-cookie | BSD-3-Clause |
+| tr46 | MIT |
+| troika-three-text | MIT |
+| troika-three-utils | MIT |
+| troika-worker-utils | MIT |
+| ts-command-line-args | ISC |
+| ts-essentials | MIT |
+| ts-node | MIT |
+| tslib | 0BSD |
+| tsort | MIT |
+| tunnel-rat | MIT |
+| turbo | MIT |
+| turbo-linux-64 | MIT |
+| type-check | MIT |
+| type-detect | MIT |
+| type-fest | (MIT OR CC0-1.0) |
+| typechain | MIT |
+| typed-array-buffer | MIT |
+| typedarray | MIT |
+| typescript | Apache-2.0 |
+| typical | MIT |
+| uglify-js | BSD-2-Clause |
+| undici | MIT |
+| undici-types | MIT |
+| universalify | MIT |
+| unpipe | MIT |
+| update-browserslist-db | MIT |
+| use-sync-external-store | MIT |
+| utf8 | MIT |
+| util-deprecate | MIT |
+| utility-types | MIT |
+| uuid | MIT |
+| v8-compile-cache-lib | MIT |
+| vite | MIT |
+| vitest | MIT |
+| w3c-xmlserializer | MIT |
+| web3-utils | LGPL-3.0 |
+| webgl-constants | MIT |
+| webgl-sdf-generator | MIT |
+| webidl-conversions | BSD-2-Clause |
+| whatwg-mimetype | MIT |
+| whatwg-url | MIT |
+| which | ISC |
+| which-typed-array | MIT |
+| why-is-node-running | MIT |
+| widest-line | MIT |
+| word-wrap | MIT |
+| wordwrap | MIT |
+| wordwrapjs | MIT |
+| workerpool | Apache-2.0 |
+| wrap-ansi | MIT |
+| wrappy | ISC |
+| ws | MIT |
+| xml-name-validator | Apache-2.0 |
+| xmlchars | MIT |
+| y18n | ISC |
+| yallist | ISC |
+| yargs | MIT |
+| yargs-parser | ISC |
+| yargs-unparser | MIT |
+| yn | MIT |
+| yocto-queue | MIT |
+| zod | MIT |
+| zundo | MIT |
+| zustand | MIT |
 
 </details>
