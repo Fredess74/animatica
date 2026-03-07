@@ -4,7 +4,7 @@
  *
  * Supports: number, Vector3 ([x,y,z]), Color (hex string), boolean (step).
  *
- * @module @animatica/engine/animation/interpolate
+ * @module @Animatica/engine/animation/interpolate
  */
 import type { Keyframe, EasingType, Vector3 } from '../types';
 import * as Easing from './easing';

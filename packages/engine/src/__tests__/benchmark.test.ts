@@ -114,7 +114,7 @@ describe('Engine Benchmarks', () => {
         });
 
         it('Timeline Evaluation (100 tracks, 10 keyframes each)', () => {
-            const tracks: { targetId: string; property: string; keyframes: Keyframe<number>[] }[] = [];
+            const tracks: { targetId: string; property: string; keyframes: Keyframe<any>[] }[] = [];
             for (let i = 0; i < 100; i++) {
                 const keyframes: Keyframe<number>[] = [];
                 for (let j = 0; j < 10; j++) {
@@ -134,7 +134,7 @@ describe('Engine Benchmarks', () => {
             measure('Timeline Evaluation (1k ops)', () => {
                 for (let i = 0; i < 1000; i++) {
                     const t = Math.random() * 100;
-                    evaluateTracksAtTime(tracks as any, t);
+                    evaluateTracksAtTime(tracks, t);
                 }
             });
         });

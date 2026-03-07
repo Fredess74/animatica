@@ -86,6 +86,8 @@ export const CharacterRenderer = React.memo(React.forwardRef<THREE.Group, Charac
 
   // Frame update — animation, face morphs, eye blinks
   useFrame((_state, delta) => {
+    if (!actor.visible) return
+
     // Skeletal animation
     if (animatorRef.current) {
       animatorRef.current.update(delta)
@@ -106,6 +108,8 @@ export const CharacterRenderer = React.memo(React.forwardRef<THREE.Group, Charac
       faceMorphRef.current.setImmediate(eyeValues)
     }
   })
+
+  if (!actor.visible) return null
 
   return (
     <group
