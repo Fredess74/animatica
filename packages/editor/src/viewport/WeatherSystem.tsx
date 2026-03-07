@@ -1,124 +1,68 @@
 /**
- * WeatherSystem — Particle-based weather effects for the viewport.
- * Supports rain, snow, and dust with configurable intensity.
+ * WeatherSystem — Visual effects for rain and snow.
+ * Particle-based system using R3F.
  */
-import React, { useRef, useMemo } from 'react'
+import React, { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
+import { useSceneStore } from '@Animatica/engine'
 
-export type WeatherType = 'none' | 'rain' | 'snow' | 'dust'
+const PARTICLE_COUNT = 1500
 
-interface WeatherSystemProps {
-    type: WeatherType
-    intensity?: number // 0-1
-}
+export type WeatherType = 'clear' | 'rain' | 'snow'
 
-const PARTICLE_COUNT = 2000
-const BOUNDS = 20 // spread area
-
-/**
- * Generate initial particle positions.
- */
-function createParticlePositions(count: number): Float32Array {
-    const positions = new Float32Array(count * 3)
-    for (let i = 0; i < count; i++) {
-        positions[i * 3] = (Math.random() - 0.5) * BOUNDS
-        positions[i * 3 + 1] = Math.random() * BOUNDS
-        positions[i * 3 + 2] = (Math.random() - 0.5) * BOUNDS
-    }
-    return positions
-}
-
-/**
- * WeatherSystem renders particles that fall/float based on weather type.
- */
-export const WeatherSystem: React.FC<WeatherSystemProps> = ({
-    type,
-    intensity = 0.5,
-}) => {
+export const WeatherSystem: React.FC = () => {
+    const weather = useSceneStore((s) => s.environment.weather)
     const pointsRef = useRef<THREE.Points>(null)
 
-    const positions = useMemo(() => createParticlePositions(PARTICLE_COUNT), [])
-
-    // Config per weather type
-    const config = useMemo(() => {
-        switch (type) {
-            case 'rain':
-                return {
-                    speed: 8 * intensity,
-                    size: 0.03,
-                    color: '#8899bb',
-                    opacity: 0.6 * intensity,
-                    drift: 0.2,
-                }
-            case 'snow':
-                return {
-                    speed: 1.5 * intensity,
-                    size: 0.06,
-                    color: '#ffffff',
-                    opacity: 0.8 * intensity,
-                    drift: 1.5,
-                }
-            case 'dust':
-                return {
-                    speed: 0.3 * intensity,
-                    size: 0.04,
-                    color: '#c4a46a',
-                    opacity: 0.4 * intensity,
-                    drift: 3.0,
-                }
-            default:
-                return null
-        }
-    }, [type, intensity])
-
-    useFrame((_state, delta) => {
-        if (!pointsRef.current || !config) return
-
-        const geo = pointsRef.current.geometry
-        const posAttr = geo.getAttribute('position') as THREE.BufferAttribute
-        const arr = posAttr.array as Float32Array
+    const particles = useMemo(() => {
+        const pos = new Float32Array(PARTICLE_COUNT * 3)
+        const vel = new Float32Array(PARTICLE_COUNT)
 
         for (let i = 0; i < PARTICLE_COUNT; i++) {
-            const i3 = i * 3
+            pos[i * 3] = (Math.random() - 0.5) * 40
+            pos[i * 3 + 1] = Math.random() * 20
+            pos[i * 3 + 2] = (Math.random() - 0.5) * 40
+            vel[i] = 0.1 + Math.random() * 0.2
+        }
 
-            // Y — fall
-            arr[i3 + 1] -= config.speed * delta
+        return { pos, vel }
+    }, [])
 
-            // X/Z — drift
-            arr[i3] += Math.sin(Date.now() * 0.001 + i) * config.drift * delta * 0.1
-            arr[i3 + 2] += Math.cos(Date.now() * 0.001 + i * 0.7) * config.drift * delta * 0.1
+    useFrame((_state, delta) => {
+        if (!pointsRef.current || weather.type === 'clear') return
 
-            // Respawn at top
-            if (arr[i3 + 1] < -2) {
-                arr[i3 + 1] = BOUNDS
-                arr[i3] = (Math.random() - 0.5) * BOUNDS
-                arr[i3 + 2] = (Math.random() - 0.5) * BOUNDS
+        const positions = pointsRef.current.geometry.attributes.position.array as Float32Array
+        const speedMultiplier = weather.intensity * (weather.type === 'rain' ? 2.0 : 0.5)
+
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+            positions[i * 3 + 1] -= particles.vel[i] * speedMultiplier * delta * 60
+
+            if (positions[i * 3 + 1] < 0) {
+                positions[i * 3 + 1] = 20
             }
         }
 
-        posAttr.needsUpdate = true
+        pointsRef.current.geometry.attributes.position.needsUpdate = true
     })
 
-    if (!config || type === 'none') return null
+    if (weather.type === 'clear') return null
 
     return (
         <points ref={pointsRef}>
             <bufferGeometry>
-                <bufferAttribute
+                <bufferAttribute args={[new Float32Array(0), 3]} args={[new Float32Array(0), 3]} args={[new Float32Array(0), 3]}
                     attach="attributes-position"
                     count={PARTICLE_COUNT}
-                    array={positions}
+                    array={particles.pos}
                     itemSize={3}
                 />
             </bufferGeometry>
             <pointsMaterial
-                size={config.size}
-                color={config.color}
+                size={weather.type === 'rain' ? 0.05 : 0.15}
+                color={weather.type === 'rain' ? '#A5C9FF' : '#FFFFFF'}
                 transparent
-                opacity={config.opacity}
-                sizeAttenuation
-                depthWrite={false}
+                opacity={0.6 * weather.intensity}
             />
         </points>
     )
