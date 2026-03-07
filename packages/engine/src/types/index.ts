@@ -149,6 +149,8 @@ export interface CharacterActor extends BaseActor {
   bodyPose: BodyPose
   /** Equipped clothing items. */
   clothing: ClothingSlots
+  /** URL to an external GLB model (e.g. ReadyPlayerMe). */
+  modelUrl?: string
 }
 
 // ---- Primitive ----
