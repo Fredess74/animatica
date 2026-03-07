@@ -1,7 +1,7 @@
 /**
  * ViewportControls — Camera orbit/pan/zoom controls with view preset support.
  */
-import React, { useRef, useCallback, useEffect } from 'react'
+import React, { useRef, useCallback } from 'react'
 import { useThree } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 import * as THREE from 'three'

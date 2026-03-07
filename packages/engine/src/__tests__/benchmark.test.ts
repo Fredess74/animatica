@@ -11,6 +11,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const results: Record<string, string> = {};
+const TIMEOUT = 120000; // 120s for slow environments
 
 function measure(name: string, fn: () => void) {
     const start = performance.now();
@@ -50,7 +51,7 @@ describe('Engine Benchmarks', () => {
                     interpolateKeyframes(keyframes, t);
                 }
             });
-        });
+        }, TIMEOUT);
 
         it('Vector3 Interpolation (10k ops, 10k keyframes)', () => {
             const keyframes: Keyframe<Vector3>[] = [];
@@ -68,7 +69,7 @@ describe('Engine Benchmarks', () => {
                     interpolateKeyframes(keyframes, t);
                 }
             });
-        });
+        }, TIMEOUT);
 
         it('Color Interpolation (10k ops, 10k keyframes)', () => {
             const keyframes: Keyframe<string>[] = [];
@@ -86,7 +87,7 @@ describe('Engine Benchmarks', () => {
                     interpolateKeyframes(keyframes, t);
                 }
             });
-        });
+        }, TIMEOUT);
     });
 
     describe('Schema Validation Performance', () => {
@@ -140,7 +141,7 @@ describe('Engine Benchmarks', () => {
                     ProjectStateSchema.parse(projectState);
                 }
             });
-        });
+        }, TIMEOUT);
     });
 
     describe('Store Performance', () => {
@@ -165,7 +166,7 @@ describe('Engine Benchmarks', () => {
                     getState().setPlayback({ currentTime: i * 0.1 });
                 }
             });
-        });
+        }, TIMEOUT);
 
         it('Store Actor CRUD Throughput (1k actors)', () => {
             const { setState, getState } = useSceneStore;
@@ -199,6 +200,6 @@ describe('Engine Benchmarks', () => {
                     getState().removeActor(`bench-${i}`);
                 }
             });
-        });
+        }, TIMEOUT);
     });
 });

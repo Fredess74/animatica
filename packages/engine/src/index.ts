@@ -10,6 +10,7 @@ export * from './importer/schemas/index'
 // === STORE ===
 export {
   useSceneStore,
+  type SceneStoreState,
   getActorById,
   getActiveActors,
   getCurrentTime,
