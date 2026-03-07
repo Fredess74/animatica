@@ -18,11 +18,13 @@ export const useActorPicking = () => {
     // Attach to canvas element
     const canvas = gl.domElement
     if (canvas) {
-        canvas.onpointerdown = (_e: PointerEvent) => {
-            // Only deselect on left click on empty space
-            // Actor clicks are handled by individual actor onClick handlers
-            // In a full R3F app, use pointerMissed on Canvas or similar
-            // For now we keep this placeholder and the handlePointerMissed for tests/future
+        canvas.onpointerdown = (e: PointerEvent) => {
+            // Only deselect on left click (button 0) on empty space
+            // In R3F, individual actors handle their own onClick,
+            // so if a click reaches the canvas it was likely a "miss".
+            if (e.button === 0) {
+                 handlePointerMissed()
+            }
         }
     }
 

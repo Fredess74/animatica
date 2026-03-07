@@ -46,6 +46,15 @@ export const ViewportGizmo: React.FC<ViewportGizmoProps> = ({
         return () => clearTimeout(timeout)
     }, [selectedActorId, scene])
 
+    // Determine snap values based on mode
+    const snapValue = snapEnabled
+        ? mode === 'translate'
+            ? SNAP_TRANSLATE
+            : mode === 'rotate'
+                ? SNAP_ROTATE
+                : SNAP_SCALE
+        : undefined
+
     if (!target || !selectedActorId) return null
 
     return (
@@ -54,9 +63,9 @@ export const ViewportGizmo: React.FC<ViewportGizmoProps> = ({
             object={target}
             mode={mode}
             space={space}
-            translationSnap={snapEnabled ? SNAP_TRANSLATE : null}
-            rotationSnap={snapEnabled ? SNAP_ROTATE : null}
-            scaleSnap={snapEnabled ? SNAP_SCALE : null}
+            translationSnap={mode === 'translate' ? snapValue : null}
+            rotationSnap={mode === 'rotate' ? snapValue : null}
+            scaleSnap={mode === 'scale' ? snapValue : null}
             size={0.8}
             onObjectChange={() => {
                 if (!target) return

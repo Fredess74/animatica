@@ -3,8 +3,15 @@
  * Provides preset picker, body sliders, expression selector, and animation controls.
  */
 import React from 'react'
-import { useSceneStore, type SceneStoreState, type CharacterActor, type AnimationState } from '@Animatica/engine'
-import { CHARACTER_PRESETS, EXPRESSION_PRESETS } from '@Animatica/engine'
+import {
+    useSceneStore,
+    type SceneStoreState,
+    type CharacterActor,
+    type AnimationState,
+    CHARACTER_PRESETS,
+    EXPRESSION_PRESETS,
+    type CharacterPreset
+} from '@Animatica/engine'
 
 const ANIMATIONS: AnimationState[] = ['idle', 'walk', 'run', 'wave', 'talk', 'dance', 'sit', 'jump']
 
@@ -33,7 +40,7 @@ export const CharacterPanel: React.FC = () => {
             {/* Preset Picker */}
             <Section title="PRESETS">
                 <div style={presetsGridStyle}>
-                    {CHARACTER_PRESETS.map((preset: any) => (
+                    {CHARACTER_PRESETS.map((preset: CharacterPreset) => (
                         <button
                             key={preset.id}
                             title={preset.name}
