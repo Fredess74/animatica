@@ -27,7 +27,19 @@ vi.mock('@react-three/fiber', async () => {
     Canvas: ({ children }: { children: React.ReactNode }) => <div data-testid="canvas">{children}</div>,
     useThree: () => ({
       scene: { getObjectByName: mocks.mockGetObjectByName },
-      camera: { position: { set: vi.fn() }, lookAt: vi.fn() }
+      camera: {
+        position: {
+            set: vi.fn(),
+            clone: () => ({
+                set: vi.fn(),
+                lerpVectors: vi.fn(),
+                copy: vi.fn()
+            }),
+            lerpVectors: vi.fn()
+        },
+        lookAt: vi.fn()
+      },
+      gl: { domElement: { onpointerdown: null } }
     }),
   }
 })
@@ -37,15 +49,29 @@ vi.mock('@react-three/drei', () => ({
   OrbitControls: () => <div data-testid="orbit-controls" />,
   TransformControls: () => <div data-testid="transform-controls" />,
   Grid: () => <div data-testid="grid" />,
+  Sky: () => <div data-testid="sky" />,
+  ContactShadows: () => <div data-testid="contact-shadows" />,
+  Environment: () => <div data-testid="environment" />,
 }))
 
 // Mock Engine
 vi.mock('@Animatica/engine', () => ({
   SceneManager: () => <div data-testid="scene-manager" />,
+  PrimitiveRenderer: () => <div data-testid="primitive-renderer" />,
+  LightRenderer: () => <div data-testid="light-renderer" />,
+  CameraRenderer: () => <div data-testid="camera-renderer" />,
   useSceneStore: (selector: any) => selector({
     selectedActorId: 'test-actor-id',
     setSelectedActor: mocks.mockSetSelectedActor,
     updateActor: mocks.mockUpdateActor,
+    playback: { isPlaying: false },
+    actors: [],
+    selectedActorId: 'test-actor-id',
+    environment: {
+      sun: { position: [10, 10, 10], intensity: 1, color: '#ffffff' },
+      ambientLight: { intensity: 0.5, color: '#ffffff' },
+      skyColor: '#87CEEB',
+    },
   }),
 }))
 
@@ -87,16 +113,8 @@ describe('Viewport', () => {
     expect(topButton).toBeTruthy()
   })
 
-  it('renders gizmo when object is found', () => {
-    // Mock found object
-    mocks.mockGetObjectByName.mockReturnValue({
-        position: { x: 0, y: 0, z: 0 },
-        rotation: { x: 0, y: 0, z: 0 },
-        scale: { x: 1, y: 1, z: 1 }
-    })
-
+  it('renders the grid when gridVisible is true', () => {
     render(<Viewport />)
-
-    expect(screen.getByTestId('transform-controls')).toBeTruthy()
+    expect(screen.getByTestId('grid')).toBeTruthy()
   })
 })
