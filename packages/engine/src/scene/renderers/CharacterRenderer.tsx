@@ -2,7 +2,7 @@
  * CharacterRenderer — R3F component for rendering a character actor.
  * Orchestrates the character rig (Humanoid), animations, facial expressions, and eye tracking.
  */
-import React, { useEffect, useRef, memo, forwardRef, useImperativeHandle } from 'react'
+import { useEffect, useRef, memo, forwardRef, useImperativeHandle } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { FaceMorphController } from '../../character/FaceMorphController'

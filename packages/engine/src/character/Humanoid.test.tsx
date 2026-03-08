@@ -1,6 +1,5 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import React from 'react'
 import { Humanoid } from './Humanoid'
 import * as THREE from 'three'
 

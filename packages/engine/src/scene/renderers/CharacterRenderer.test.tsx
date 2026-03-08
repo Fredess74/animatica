@@ -1,5 +1,4 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import React from 'react'
 // @ts-ignore
 import { CharacterRenderer } from './CharacterRenderer'
 import { CharacterActor } from '../../types'
@@ -66,7 +65,7 @@ describe('CharacterRenderer', () => {
     expect(props.scale).toEqual([1, 1, 1])
 
     // Verify children
-    const children = React.Children.toArray(props.children) as React.ReactElement[]
+    const children = Array.isArray(props.children) ? props.children : [props.children]
     const humanoid = children.find((c: any) => c.type.name === 'Humanoid' || c.props.name === 'humanoid')
     expect(humanoid).toBeDefined()
   })
