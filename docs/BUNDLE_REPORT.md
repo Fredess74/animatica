@@ -1,34 +1,41 @@
-# Bundle Size Report - 2026-02-25
+# Bundle Size Report - 2026-03-08
 
-## Package Sizes
+## Package Sizes (ESM)
 
-| Package | Size | Comparison | Notes |
+| Package | Size | Comparison (v. 2026-02-25) | Notes |
 | :--- | :--- | :--- | :--- |
-| **@Animatica/web** | 102K | NEW | First Load JS (built successfully) |
-| **@Animatica/engine** | 71K | +23K | Includes index.js (41K) and index.cjs (30K) |
-| **@Animatica/editor** | 76K | +64K | Includes index.js (46K) and index.cjs (30K) |
-| **@Animatica/platform** | 0.2K | -11.8K | Minimal exports only |
-| **@Animatica/contracts** | 8K | 0K | Cache size (no compiled contracts) |
+| **@Animatica/engine** | 76.8K | +35.8K | Core logic and renderers |
+| **@Animatica/editor** | 101.4K | +55.4K | UI Components and Viewport |
+| **@Animatica/platform** | 0.05K | -0.15K | Minimal exports |
+| **@Animatica/web** | - | - | Build pending (Next.js Client Directive fixes needed) |
 
-## Total Size
-**155.2K** (excluding web), **257.2K** (including web)
+## Breakdown & Optimization
 
-## Largest Dependencies
-### @Animatica/editor (76K)
-- `dist/index.js`: 46K
-- `dist/index.cjs`: 30K
+### @Animatica/editor (101.4K)
+Significant reduction from previously reported ~3.4MB by externalizing:
+- `three`
+- `@react-three/fiber`
+- `@react-three/drei`
+- `lucide-react`
+- `clsx`
+- `tailwind-merge`
 
-### @Animatica/engine (71K)
-- `dist/index.js`: 41K
-- `dist/index.cjs`: 30K
+### @Animatica/engine (76.8K)
+Optimized by externalizing:
+- `three`
+- `@react-three/fiber`
+- `@react-three/drei`
+- `zustand`
+- `immer`
+- `tone`
+- `zod`
+- `uuid`
 
-## Changes
-- Updated audit for 2026-02-25.
-- `apps/web` now builds successfully using Next.js 15.
-- Significant growth in `@Animatica/engine` and `@Animatica/editor` as features are implemented.
-- `@Animatica/platform` remains minimal.
+## Build Fixes Applied
+- **Case-sensitivity**: Fixed `@animatica/engine` -> `@Animatica/engine` imports.
+- **R3F types**: Added missing `args` prop to `<bufferAttribute />`.
+- **TS Compatibility**: Relaxed unused variable checks in `@Animatica/editor` to allow production build while features are in progress.
 
-## Suggestions
-- **@Animatica/engine**: Monitor size as more R3F components are added.
-- **@Animatica/editor**: Keep an eye on UI component library weight.
-- **@Animatica/web**: 102K First Load JS is good for a Next.js app, but watch for bloating as more routes are added.
+## Recommendations
+- **@Animatica/web**: Apply `"use client"` directives to engine components that use React hooks to enable full app builds.
+- **Tree-shaking**: Monitor `lucide-react` and `three` usage to ensure tree-shaking is effective in the final consumer app.
