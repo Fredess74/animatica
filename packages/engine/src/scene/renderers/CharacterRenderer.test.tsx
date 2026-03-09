@@ -87,12 +87,12 @@ describe('CharacterRenderer', () => {
   it('renders a group containing primitive rig with correct transform', () => {
     // Call the component function directly
     // @ts-ignore
-    const result = CharacterRenderer({ actor: mockActor }) as React.ReactElement
+    const result = CharacterRenderer({ actor: mockActor }) as any
 
     expect(result).not.toBeNull()
     expect(result.type).toBe('group')
 
-    const props = result.props as any
+    const props = result.props
     expect(props.position).toEqual([10, 0, 5])
     expect(props.rotation).toEqual([0, Math.PI, 0])
     expect(props.scale).toEqual([1, 1, 1])
@@ -109,14 +109,14 @@ describe('CharacterRenderer', () => {
   it('honors visibility prop', () => {
     const invisibleActor = { ...mockActor, visible: false }
     // @ts-ignore
-    const result = CharacterRenderer({ actor: invisibleActor }) as React.ReactElement
+    const result = CharacterRenderer({ actor: invisibleActor }) as any
     // Updated assertion to match component implementation: it passes visible to group
     expect(result.props.visible).toBe(false)
   })
 
   it('renders selection indicator ring when isSelected is true', () => {
     // @ts-ignore
-    const result = CharacterRenderer({ actor: mockActor, isSelected: true }) as React.ReactElement
+    const result = CharacterRenderer({ actor: mockActor, isSelected: true }) as any
     const children = React.Children.toArray(result.props.children) as React.ReactElement[]
 
     const selectionRing = children.find((child: any) =>

@@ -233,6 +233,7 @@ const TextInput: React.FC<{ label: string; value: string; onChange: (v: string) 
                 className="prop-field__input prop-field__input--text"
                 value={localValue}
                 onChange={(e) => handleChange(e.target.value)}
+                data-testid="actor-name-input"
             />
         </div>
     );
