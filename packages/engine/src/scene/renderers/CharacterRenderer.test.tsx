@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import React from 'react'
 import { CharacterRenderer } from './CharacterRenderer'
 import { CharacterActor } from '../../types'
+import { ReactElement } from 'react'
 
 // Mock react
 vi.mock('react', async () => {
@@ -35,15 +35,15 @@ describe('CharacterRenderer', () => {
 
   it('renders a group with correct transform', () => {
     // @ts-ignore
-    const result = CharacterRenderer({ actor: mockActor })
+    const result = CharacterRenderer({ actor: mockActor }) as ReactElement
 
     expect(result).not.toBeNull()
-    expect(result.type).toBe('group')
+    expect(result?.type).toBe('group')
 
-    const props = result.props as any
-    expect(props.position).toEqual([10, 0, 5])
-    expect(props.rotation).toEqual([0, Math.PI, 0])
-    expect(props.scale).toEqual([1, 1, 1])
+    const props = result?.props as any
+    expect(props?.position).toEqual([10, 0, 5])
+    expect(props?.rotation).toEqual([0, Math.PI, 0])
+    expect(props?.scale).toEqual([1, 1, 1])
   })
 
   it('renders nothing when visible is false', () => {
