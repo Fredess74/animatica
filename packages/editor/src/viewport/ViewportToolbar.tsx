@@ -4,6 +4,7 @@
  */
 import React from 'react'
 import type { GizmoMode, TransformSpace } from './Viewport'
+import { useCameraPreset } from './ViewportControls'
 
 interface ViewportToolbarProps {
     gizmoMode: GizmoMode
@@ -26,6 +27,8 @@ export const ViewportToolbar: React.FC<ViewportToolbarProps> = ({
     gridVisible,
     onGridToggle,
 }) => {
+    const { goToPreset } = useCameraPreset()
+
     return (
         <div style={toolbarStyle}>
             {/* Gizmo mode group */}
@@ -74,6 +77,34 @@ export const ViewportToolbar: React.FC<ViewportToolbarProps> = ({
                     active={gridVisible}
                     onClick={onGridToggle}
                     icon="⊞"
+                />
+            </div>
+
+            {/* Camera Presets */}
+            <div style={groupStyle}>
+                <ToolBtn
+                    tooltip="Perspective View"
+                    active={false}
+                    onClick={() => goToPreset('perspective')}
+                    icon="🏠"
+                />
+                <ToolBtn
+                    tooltip="Top View"
+                    active={false}
+                    onClick={() => goToPreset('top')}
+                    icon="⤒"
+                />
+                <ToolBtn
+                    tooltip="Front View"
+                    active={false}
+                    onClick={() => goToPreset('front')}
+                    icon="⮕"
+                />
+                <ToolBtn
+                    tooltip="Side View"
+                    active={false}
+                    onClick={() => goToPreset('right')}
+                    icon="➞"
                 />
             </div>
         </div>

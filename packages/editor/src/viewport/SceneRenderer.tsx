@@ -7,17 +7,18 @@ import {
     PrimitiveRenderer,
     LightRenderer,
     CameraRenderer,
-} from '@animatica/engine'
-import type { Actor } from '@animatica/engine'
+    type SceneStoreState,
+} from '@Animatica/engine'
+import type { Actor } from '@Animatica/engine'
 
 export const SceneRenderer: React.FC = () => {
-    const actors = useSceneStore((s) => s.actors)
-    const selectedActorId = useSceneStore((s) => s.selectedActorId)
-    const setSelectedActor = useSceneStore((s) => s.setSelectedActor)
+    const actors = useSceneStore((s: SceneStoreState) => s.actors)
+    const selectedActorId = useSceneStore((s: SceneStoreState) => s.selectedActorId)
+    const setSelectedActor = useSceneStore((s: SceneStoreState) => s.setSelectedActor)
 
     return (
         <group>
-            {actors.map((actor) => (
+            {actors.map((actor: Actor) => (
                 <ActorSwitch
                     key={actor.id}
                     actor={actor}
