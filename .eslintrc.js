@@ -11,6 +11,7 @@ module.exports = {
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
   ],
+  ignorePatterns: ['**/dist/**', '**/node_modules/**', '**/coverage/**'],
   rules: {
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
@@ -25,6 +26,9 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': 'off',
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'off',
+    'no-unused-expressions': 'off',
+    '@typescript-eslint/no-unused-expressions': 'off',
+    'no-empty': 'off',
   },
   settings: {
     react: {

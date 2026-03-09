@@ -8,12 +8,12 @@ import {
     LightRenderer,
     CameraRenderer,
 } from '@Animatica/engine'
-import type { Actor, SceneState } from '@Animatica/engine'
+import type { Actor, SceneStoreState } from '@Animatica/engine'
 
 export const SceneRenderer: React.FC = () => {
-    const actors = useSceneStore((s: SceneState) => s.actors)
-    const selectedActorId = useSceneStore((s: SceneState) => s.selectedActorId)
-    const setSelectedActor = useSceneStore((s: SceneState) => s.setSelectedActor)
+    const actors = useSceneStore((s: SceneStoreState) => s.actors)
+    const selectedActorId = useSceneStore((s: SceneStoreState) => s.selectedActorId)
+    const setSelectedActor = useSceneStore((s: SceneStoreState) => s.setSelectedActor)
 
     return (
         <group>

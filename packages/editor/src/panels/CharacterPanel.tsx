@@ -5,14 +5,14 @@
 import React from 'react'
 import { useSceneStore } from '@Animatica/engine'
 import { CHARACTER_PRESETS, EXPRESSION_PRESETS } from '@Animatica/engine'
-import type { CharacterActor, AnimationState, SceneState } from '@Animatica/engine'
+import type { CharacterActor, AnimationState, SceneStoreState } from '@Animatica/engine'
 
 const ANIMATIONS: AnimationState[] = ['idle', 'walk', 'run', 'wave', 'talk', 'dance', 'sit', 'jump']
 
 export const CharacterPanel: React.FC = () => {
-    const selectedActorId = useSceneStore((s: SceneState) => s.selectedActorId)
-    const actors = useSceneStore((s: SceneState) => s.actors)
-    const updateActor = useSceneStore((s: SceneState) => s.updateActor)
+    const selectedActorId = useSceneStore((s: SceneStoreState) => s.selectedActorId)
+    const actors = useSceneStore((s: SceneStoreState) => s.actors)
+    const updateActor = useSceneStore((s: SceneStoreState) => s.updateActor)
 
     const selectedActor = actors.find((a: any) => a.id === selectedActorId) as CharacterActor | undefined
 

@@ -17,7 +17,7 @@ import { EnvironmentRenderer } from './EnvironmentRenderer'
 import { useActorPicking } from './hooks/useActorPicking'
 import { useViewportHotkeys } from './hooks/useViewportHotkeys'
 import { useSceneStore } from '@Animatica/engine'
-import type { SceneState } from '@Animatica/engine'
+import type { SceneStoreState } from '@Animatica/engine'
 
 // ---- Types ----
 
@@ -40,7 +40,7 @@ export const Viewport: React.FC<{ className?: string }> = ({ className }) => {
     const [snapEnabled, setSnapEnabled] = useState(false)
     const [gridVisible, setGridVisible] = useState(true)
 
-    const isPlaying = useSceneStore((s: SceneState) => s.playback.isPlaying)
+    const isPlaying = useSceneStore((s: SceneStoreState) => s.playback.isPlaying)
 
     const toggleSnap = useCallback(() => setSnapEnabled((v) => !v), [])
     const toggleGrid = useCallback(() => setGridVisible((v) => !v), [])
