@@ -50,21 +50,8 @@ interface PostprocessingProps {
 export const PostprocessingPipeline: React.FC<PostprocessingProps> = ({
     bloom = true,
     bloomIntensity = 0.3,
-    bloomThreshold = 0.8,
-    ssao = true,
-    ssaoRadius = 5,
-    ssaoIntensity = 0.5,
-    vignette = true,
-    vignetteOffset = 0.3,
-    vignetteDarkness = 0.5,
-    filmGrain = false,
-    filmGrainIntensity = 0.05,
-    depthOfField = false,
-    dofFocusDistance = 5,
-    dofFocalLength = 50,
-    dofBokehScale = 2,
 }) => {
-    const { gl, scene, camera } = useThree()
+    const { gl } = useThree()
 
     // Configure renderer for cinematic output
     useMemo(() => {

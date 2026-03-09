@@ -2,7 +2,7 @@
  * JSON Scene Importer — parses, validates, and imports scene scripts.
  * Supports reading from raw JSON strings or JSON files.
  *
- * @module @animatica/engine/importer
+ * @module @Animatica/engine/importer
  */
 import { ProjectStateSchema } from './schemas/project';
 import type { ProjectState, ValidationResult } from '../types';

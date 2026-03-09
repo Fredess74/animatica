@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 /**
  * Common Zod schemas used across different engine modules.
- * @module @animatica/engine/importer/schemas
+ * @module @Animatica/engine/importer/schemas
  */
 
 export const Vector3Schema = z.tuple([z.number(), z.number(), z.number()]);

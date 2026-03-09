@@ -3,7 +3,7 @@
  * Provides a React hook that manages the animation loop, time tracking,
  * and camera cuts for the scene.
  *
- * @module @animatica/engine/playback/PlaybackController
+ * @module @Animatica/engine/playback/PlaybackController
  */
 import { useCallback, useEffect, useRef } from 'react';
 import { useSceneStore } from '../store/sceneStore';
@@ -54,7 +54,7 @@ export function usePlayback(): PlaybackControls {
      * Calculates delta time and advances the store's currentTime.
      */
     const tick = useCallback(
-        (timestamp: number) => {
+        function tick(timestamp: number) {
             if (lastFrameTimeRef.current === null) {
                 lastFrameTimeRef.current = timestamp;
             }
