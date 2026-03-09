@@ -4,10 +4,10 @@
  */
 import { useCallback } from 'react'
 import { useThree } from '@react-three/fiber'
-import { useSceneStore } from '@animatica/engine'
+import { useSceneStore, type SceneStoreState } from '@Animatica/engine'
 
 export const useActorPicking = () => {
-    const setSelectedActor = useSceneStore((s) => s.setSelectedActor)
+    const setSelectedActor = useSceneStore((s: SceneStoreState) => s.setSelectedActor)
     const { gl } = useThree()
 
     // Listen for missed clicks (clicking empty space)
@@ -20,7 +20,9 @@ export const useActorPicking = () => {
     if (canvas) {
         canvas.onpointerdown = (e: PointerEvent) => {
             // Only deselect on left click on empty space
-            // Actor clicks are handled by individual actor onClick handlers
+            if (e.button === 0) {
+                handlePointerMissed()
+            }
         }
     }
 }

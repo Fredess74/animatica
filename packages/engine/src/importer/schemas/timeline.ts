@@ -24,6 +24,13 @@ export const AnimationTrackSchema = z.object({
 
 export const TransitionTypeSchema = z.enum(['cut', 'dissolve', 'fade']);
 
+export const MarkerSchema = z.object({
+    id: UUIDSchema,
+    time: z.number().min(0),
+    label: z.string().min(1),
+    color: z.string().regex(/^#[0-9a-fA-F]{6}$/),
+});
+
 export const CameraCutSchema = z.object({
     id: UUIDSchema,
     time: z.number().min(0),
@@ -36,4 +43,5 @@ export const TimelineSchema = z.object({
     duration: z.number().positive(),
     cameraTrack: z.array(CameraCutSchema),
     animationTracks: z.array(AnimationTrackSchema),
+    markers: z.array(MarkerSchema).default([]),
 });

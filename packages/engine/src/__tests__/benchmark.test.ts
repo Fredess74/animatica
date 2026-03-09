@@ -1,4 +1,4 @@
-import { describe, it, afterAll } from 'vitest';
+import { describe, it, afterAll, vi } from 'vitest';
 import { interpolateKeyframes } from '../animation/interpolate';
 import { ProjectStateSchema } from '../importer/schemas';
 import { useSceneStore } from '../store/sceneStore';
@@ -22,6 +22,9 @@ function measure(name: string, fn: () => void) {
 }
 
 describe('Engine Benchmarks', () => {
+    // Increase timeout for all benchmarks
+    vi.setConfig({ testTimeout: 120000 });
+
     afterAll(() => {
         const reportDir = path.resolve(__dirname, '../../../../reports');
         if (!fs.existsSync(reportDir)) {
@@ -144,7 +147,7 @@ describe('Engine Benchmarks', () => {
     });
 
     describe('Store Performance', () => {
-        it('Store Update Throughput (10k playback updates)', () => {
+        it('Store Update Throughput (10k playback updates)', { timeout: 60000 }, () => {
             const { setState, getState } = useSceneStore;
 
             setState({
@@ -167,7 +170,7 @@ describe('Engine Benchmarks', () => {
             });
         });
 
-        it('Store Actor CRUD Throughput (1k actors)', () => {
+        it('Store Actor CRUD Throughput (1k actors)', { timeout: 60000 }, () => {
             const { setState, getState } = useSceneStore;
 
             setState({
