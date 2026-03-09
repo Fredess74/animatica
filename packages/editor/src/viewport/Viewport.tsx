@@ -2,7 +2,7 @@
  * Viewport — Main 3D canvas container for the Animatica editor.
  * Renders the scene with postprocessing, controls, grid, and gizmo.
  * 
- * @module @animatica/editor/viewport
+ * @module @Animatica/editor/viewport
  */
 import React, { Suspense, useCallback, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
@@ -16,7 +16,8 @@ import { ViewportOverlay } from './ViewportOverlay'
 import { EnvironmentRenderer } from './EnvironmentRenderer'
 import { useActorPicking } from './hooks/useActorPicking'
 import { useViewportHotkeys } from './hooks/useViewportHotkeys'
-import { useSceneStore } from '@animatica/engine'
+import { useSceneStore } from '@Animatica/engine'
+import type { SceneStoreState } from '@Animatica/engine'
 
 // ---- Types ----
 
@@ -39,7 +40,7 @@ export const Viewport: React.FC<{ className?: string }> = ({ className }) => {
     const [snapEnabled, setSnapEnabled] = useState(false)
     const [gridVisible, setGridVisible] = useState(true)
 
-    const isPlaying = useSceneStore((s) => s.playback.isPlaying)
+    const isPlaying = useSceneStore((s: SceneStoreState) => s.playback.isPlaying)
 
     const toggleSnap = useCallback(() => setSnapEnabled((v) => !v), [])
     const toggleGrid = useCallback(() => setGridVisible((v) => !v), [])

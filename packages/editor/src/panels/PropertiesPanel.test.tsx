@@ -67,7 +67,7 @@ describe('PropertiesPanel', () => {
         useSceneStore.getState().addActor(actor);
         render(<PropertiesPanel selectedActorId="actor_1" />);
 
-        const nameInput = screen.getByDisplayValue('Test Box');
+        const nameInput = screen.getByTestId('actor-name-input');
         fireEvent.change(nameInput, { target: { value: 'New Name' } });
 
         // Local state updates immediately

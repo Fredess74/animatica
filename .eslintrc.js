@@ -1,0 +1,38 @@
+module.exports = {
+  root: true,
+  env: {
+    browser: true,
+    es2022: true,
+    node: true,
+  },
+  parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint', 'react', 'react-hooks'],
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+  ],
+  ignorePatterns: ['**/dist/**', '**/node_modules/**', '**/coverage/**'],
+  rules: {
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': 'off',
+    'react/react-in-jsx-scope': 'off',
+    'react/prop-types': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
+    'react/no-unescaped-entities': 'off',
+    'react/no-unknown-property': 'off',
+    '@typescript-eslint/ban-ts-comment': 'off',
+    'prefer-const': 'off',
+    'no-use-before-define': 'off',
+    '@typescript-eslint/no-use-before-define': 'off',
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'off',
+    'no-unused-expressions': 'off',
+    '@typescript-eslint/no-unused-expressions': 'off',
+    'no-empty': 'off',
+  },
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  },
+};
