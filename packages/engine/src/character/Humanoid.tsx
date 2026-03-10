@@ -3,6 +3,7 @@ import { useGLTF } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { extractRig, createProceduralHumanoid } from './CharacterLoader'
+import type { CharacterRig } from './CharacterLoader'
 import {
   CharacterAnimator,
   createIdleClip,
@@ -22,12 +23,19 @@ import type { CharacterActor } from '../types'
 interface HumanoidProps {
   /** The character actor data. */
   actor: CharacterActor
+  /** Ref to the parent group for world position tracking. */
+  parentRef?: React.RefObject<THREE.Group | null>
 }
 
 /**
  * Custom hook to manage character controllers (animation, face morphs, eyes).
  */
-function useHumanoidControllers(rig: any, actor: CharacterActor, animations: THREE.AnimationClip[] = []) {
+function useHumanoidControllers(
+  rig: CharacterRig,
+  actor: CharacterActor,
+  animations: THREE.AnimationClip[] = [],
+  parentRef?: React.RefObject<THREE.Group | null>
+) {
   const animatorRef = useRef<CharacterAnimator | null>(null)
   const faceMorphRef = useRef<FaceMorphController | null>(null)
   const eyeControllerRef = useRef<EyeController | null>(null)
@@ -85,7 +93,10 @@ function useHumanoidControllers(rig: any, actor: CharacterActor, animations: THR
     faceMorphRef.current?.update(delta)
 
     if (eyeControllerRef.current && faceMorphRef.current) {
-      const eyeValues = eyeControllerRef.current.update(delta)
+      const headPos = parentRef?.current
+        ? new THREE.Vector3().setFromMatrixPosition(parentRef.current.matrixWorld)
+        : undefined
+      const eyeValues = eyeControllerRef.current.update(delta, headPos)
       faceMorphRef.current.setImmediate(eyeValues)
     }
   })
@@ -95,11 +106,11 @@ function useHumanoidControllers(rig: any, actor: CharacterActor, animations: THR
  * Internal component to handle GLB loading and animation setup.
  * Separated to allow Suspense wrapping for the GLB fetch.
  */
-const GLBHumanoid: React.FC<HumanoidProps> = ({ actor }) => {
+const GLBHumanoid: React.FC<HumanoidProps> = ({ actor, parentRef }) => {
   const { scene, animations } = useGLTF(actor.modelUrl!)
   const rig = useMemo(() => extractRig(scene as THREE.Group, animations), [scene, animations])
 
-  useHumanoidControllers(rig, actor, animations)
+  useHumanoidControllers(rig, actor, animations, parentRef)
 
   return <primitive object={rig.root} />
 }
@@ -108,7 +119,7 @@ const GLBHumanoid: React.FC<HumanoidProps> = ({ actor }) => {
  * Internal component for procedural humanoid fallback.
  * Used when no modelUrl is provided or as a Suspense fallback.
  */
-const ProceduralHumanoid: React.FC<HumanoidProps> = ({ actor }) => {
+const ProceduralHumanoid: React.FC<HumanoidProps> = ({ actor, parentRef }) => {
   const rig = useMemo(() => {
     const preset = getPreset(actor.name.toLowerCase())
     const skinColor = preset?.body.skinColor || '#D4A27C'
@@ -118,7 +129,7 @@ const ProceduralHumanoid: React.FC<HumanoidProps> = ({ actor }) => {
     return createProceduralHumanoid({ skinColor, height, build })
   }, [actor.name])
 
-  useHumanoidControllers(rig, actor)
+  useHumanoidControllers(rig, actor, [], parentRef)
 
   return <primitive object={rig.root} />
 }
@@ -127,14 +138,14 @@ const ProceduralHumanoid: React.FC<HumanoidProps> = ({ actor }) => {
  * Humanoid — Core character component.
  * Loads an external GLB model if modelUrl is provided, otherwise renders a procedural rig.
  */
-export const Humanoid: React.FC<HumanoidProps> = ({ actor }) => {
+export const Humanoid: React.FC<HumanoidProps> = ({ actor, parentRef }) => {
   if (actor.modelUrl) {
     return (
-      <Suspense fallback={<ProceduralHumanoid actor={actor} />}>
-        <GLBHumanoid actor={actor} />
+      <Suspense fallback={<ProceduralHumanoid actor={actor} parentRef={parentRef} />}>
+        <GLBHumanoid actor={actor} parentRef={parentRef} />
       </Suspense>
     )
   }
 
-  return <ProceduralHumanoid actor={actor} />
+  return <ProceduralHumanoid actor={actor} parentRef={parentRef} />
 }

@@ -2,7 +2,7 @@
  * CharacterRenderer — R3F component for rendering a character actor.
  * Orchestrates character actors by delegating rigging and animation to the <Humanoid /> component.
  */
-import React, { useImperativeHandle, forwardRef, memo, useRef } from 'react'
+import { useImperativeHandle, forwardRef, memo, useRef } from 'react'
 import * as THREE from 'three'
 import { Humanoid } from '../../character/Humanoid'
 import type { CharacterActor } from '../../types'
@@ -42,7 +42,7 @@ export const CharacterRenderer = memo(
         }}
       >
         {/* Delegate humanoid rendering (GLB or Procedural) */}
-        <Humanoid actor={actor} />
+        <Humanoid actor={actor} parentRef={groupRef} />
 
         {/* Selection indicator ring */}
         {isSelected && (

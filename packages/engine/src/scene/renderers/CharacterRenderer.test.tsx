@@ -28,7 +28,7 @@ vi.mock('@react-three/drei', () => ({
 
 // Mock Humanoid component
 vi.mock('../../character/Humanoid', () => ({
-  Humanoid: ({ actor }: { actor: CharacterActor }) => <primitive object={{}} name="humanoid-rig" />
+  Humanoid: () => <primitive object={{}} name="humanoid-rig" />
 }))
 
 describe('CharacterRenderer', () => {
@@ -87,7 +87,7 @@ describe('CharacterRenderer', () => {
     const children = React.Children.toArray(props.children) as React.ReactElement[]
 
     // Second child should be the selection ring mesh
-    const selectionRing = children[1] as React.ReactElement
+    const selectionRing = children[1] as any
     expect(selectionRing.type).toBe('mesh')
 
     const ringMaterial = (React.Children.toArray(selectionRing.props.children) as any[])
