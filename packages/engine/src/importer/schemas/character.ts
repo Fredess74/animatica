@@ -52,4 +52,5 @@ export const CharacterActorSchema = BaseActorSchema.extend({
     morphTargets: MorphTargetsSchema,
     bodyPose: BodyPoseSchema,
     clothing: ClothingSlotsSchema,
+    modelUrl: z.string().url().optional(),
 });
