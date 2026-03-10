@@ -1,5 +1,5 @@
 import { describe, it, afterAll } from 'vitest';
-import { interpolateKeyframes } from '../animation/interpolate';
+import { interpolateKeyframes, evaluateTracksAtTime } from '../animation/interpolate';
 import { ProjectStateSchema } from '../importer/schemas';
 import { useSceneStore } from '../store/sceneStore';
 import type { Keyframe, ProjectState, Actor, PrimitiveActor, Vector3 } from '../types';
@@ -12,7 +12,13 @@ const __dirname = path.dirname(__filename);
 
 const results: Record<string, string> = {};
 
+/**
+ * Measures the execution time of a function after a warmup phase.
+ */
 function measure(name: string, fn: () => void) {
+    // Warmup to trigger JIT optimization
+    fn();
+
     const start = performance.now();
     fn();
     const end = performance.now();
@@ -87,12 +93,54 @@ describe('Engine Benchmarks', () => {
                 }
             });
         });
+
+        it('Boolean Interpolation (10k ops, 10k keyframes)', () => {
+            const keyframes: Keyframe<boolean>[] = [];
+            for (let i = 0; i < 10000; i++) {
+                keyframes.push({
+                    time: i,
+                    value: i % 2 === 0,
+                    easing: 'step',
+                });
+            }
+
+            measure('Boolean Interpolation (10k ops)', () => {
+                for (let i = 0; i < 10000; i++) {
+                    const t = Math.random() * 10000;
+                    interpolateKeyframes(keyframes, t);
+                }
+            });
+        });
+    });
+
+    describe('Timeline Performance', () => {
+        it('Timeline Evaluation (10k ops, 100 tracks)', () => {
+            const tracks = [];
+            for (let i = 0; i < 100; i++) {
+                const keyframes = [];
+                for (let k = 0; k < 10; k++) {
+                    keyframes.push({ time: k, value: Math.random(), easing: 'linear' });
+                }
+                tracks.push({
+                    targetId: `actor-${i}`,
+                    property: 'transform.position.x',
+                    keyframes
+                });
+            }
+
+            measure('Timeline Evaluation (10k ops)', () => {
+                for (let i = 0; i < 100; i++) {
+                    const t = Math.random() * 10;
+                    evaluateTracksAtTime(tracks, t);
+                }
+            });
+        });
     });
 
     describe('Schema Validation Performance', () => {
-        it('Project Schema Validation (100 runs, 100 actors)', () => {
+        it('Project Schema Validation (100 runs, 200 actors)', () => {
             const actors: Actor[] = [];
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < 200; i++) {
                 const actor: PrimitiveActor = {
                     id: `actor-${i}`,
                     name: `Actor ${i}`,
@@ -118,7 +166,7 @@ describe('Engine Benchmarks', () => {
             const projectState: ProjectState = {
                 meta: {
                     title: 'Benchmark Project',
-                    version: '1.0.0',
+                    version: '0.1.0',
                 },
                 environment: {
                     ambientLight: { intensity: 0.5, color: '#ffffff' },
@@ -135,7 +183,7 @@ describe('Engine Benchmarks', () => {
                 library: { clips: [] },
             };
 
-            measure('Schema Validation Speed (100 runs)', () => {
+            measure('Schema Validation Speed (100 runs, 200 actors)', () => {
                 for (let i = 0; i < 100; i++) {
                     ProjectStateSchema.parse(projectState);
                 }
@@ -148,7 +196,7 @@ describe('Engine Benchmarks', () => {
             const { setState, getState } = useSceneStore;
 
             setState({
-                meta: { title: 'Reset', version: '1.0.0' },
+                meta: { title: 'Reset', version: '0.1.0' },
                 environment: {
                     ambientLight: { intensity: 0.5, color: '#ffffff' },
                     sun: { position: [10, 10, 10], intensity: 1, color: '#ffffff' },
@@ -201,4 +249,4 @@ describe('Engine Benchmarks', () => {
             });
         });
     });
-});
+}, 120000);
