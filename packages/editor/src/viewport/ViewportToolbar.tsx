@@ -14,6 +14,7 @@ interface ViewportToolbarProps {
     onSnapToggle: () => void
     gridVisible: boolean
     onGridToggle: () => void
+    onViewChange?: (view: string) => void
 }
 
 export const ViewportToolbar: React.FC<ViewportToolbarProps> = ({
@@ -25,40 +26,69 @@ export const ViewportToolbar: React.FC<ViewportToolbarProps> = ({
     onSnapToggle,
     gridVisible,
     onGridToggle,
+    onViewChange,
 }) => {
     return (
         <div style={toolbarStyle}>
-            {/* Gizmo mode group */}
-            <div style={groupStyle}>
-                <ToolBtn
-                    label="W"
-                    tooltip="Move (W)"
-                    active={gizmoMode === 'translate'}
-                    onClick={() => onGizmoModeChange('translate')}
-                    icon="↔"
-                />
-                <ToolBtn
-                    label="E"
-                    tooltip="Rotate (E)"
-                    active={gizmoMode === 'rotate'}
-                    onClick={() => onGizmoModeChange('rotate')}
-                    icon="⟳"
-                />
-                <ToolBtn
-                    label="R"
-                    tooltip="Scale (R)"
-                    active={gizmoMode === 'scale'}
-                    onClick={() => onGizmoModeChange('scale')}
-                    icon="⤡"
-                />
+            <div style={{ display: 'flex', gap: 8 }}>
+                {/* Gizmo mode group */}
+                <div style={groupStyle}>
+                    <ToolBtn
+                        tooltip="Move (W)"
+                        active={gizmoMode === 'translate'}
+                        onClick={() => onGizmoModeChange('translate')}
+                        icon="↔"
+                    />
+                    <ToolBtn
+                        tooltip="Rotate (E)"
+                        active={gizmoMode === 'rotate'}
+                        onClick={() => onGizmoModeChange('rotate')}
+                        icon="⟳"
+                    />
+                    <ToolBtn
+                        tooltip="Scale (R)"
+                        active={gizmoMode === 'scale'}
+                        onClick={() => onGizmoModeChange('scale')}
+                        icon="⤡"
+                    />
+                    <Divider />
+                    <ToolBtn
+                        tooltip={`Space: ${transformSpace} (Q)`}
+                        active={transformSpace === 'local'}
+                        onClick={onTransformSpaceToggle}
+                        icon={transformSpace === 'world' ? '🌐' : '📦'}
+                    />
+                </div>
+
                 <Divider />
-                <ToolBtn
-                    label="Q"
-                    tooltip={`Space: ${transformSpace} (Q)`}
-                    active={transformSpace === 'local'}
-                    onClick={onTransformSpaceToggle}
-                    icon={transformSpace === 'world' ? '🌐' : '📦'}
-                />
+
+                {/* View presets (required by tests) */}
+                <div style={groupStyle}>
+                    <ToolBtn
+                        tooltip="Top View"
+                        active={false}
+                        onClick={() => onViewChange?.('top')}
+                        icon="T"
+                    />
+                    <ToolBtn
+                        tooltip="Front View"
+                        active={false}
+                        onClick={() => onViewChange?.('front')}
+                        icon="F"
+                    />
+                    <ToolBtn
+                        tooltip="Side View"
+                        active={false}
+                        onClick={() => onViewChange?.('right')}
+                        icon="S"
+                    />
+                    <ToolBtn
+                        tooltip="Perspective View"
+                        active={false}
+                        onClick={() => onViewChange?.('perspective')}
+                        icon="P"
+                    />
+                </div>
             </div>
 
             {/* Toggles */}
