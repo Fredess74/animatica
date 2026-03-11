@@ -3,6 +3,7 @@
  * Rendered as a 40px strip above the 3D canvas.
  */
 import React from 'react'
+import { useCameraPreset } from './ViewportControls'
 import type { GizmoMode, TransformSpace } from './Viewport'
 
 interface ViewportToolbarProps {
@@ -26,8 +27,39 @@ export const ViewportToolbar: React.FC<ViewportToolbarProps> = ({
     gridVisible,
     onGridToggle,
 }) => {
+    const { goToPreset } = useCameraPreset()
+
     return (
         <div style={toolbarStyle}>
+            {/* Camera presets group */}
+            <div style={groupStyle}>
+                <ToolBtn
+                    tooltip="Top View"
+                    active={false}
+                    onClick={() => goToPreset('top')}
+                    icon="T"
+                />
+                <ToolBtn
+                    tooltip="Front View"
+                    active={false}
+                    onClick={() => goToPreset('front')}
+                    icon="F"
+                />
+                <ToolBtn
+                    tooltip="Side View"
+                    active={false}
+                    onClick={() => goToPreset('right')}
+                    icon="S"
+                />
+                <ToolBtn
+                    tooltip="Perspective View"
+                    active={false}
+                    onClick={() => goToPreset('perspective')}
+                    icon="P"
+                />
+                <Divider />
+            </div>
+
             {/* Gizmo mode group */}
             <div style={groupStyle}>
                 <ToolBtn

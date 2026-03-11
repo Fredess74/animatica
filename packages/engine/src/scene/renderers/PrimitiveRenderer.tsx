@@ -1,4 +1,4 @@
-import React, { useRef, memo } from 'react'
+import { useRef, memo } from 'react'
 import * as THREE from 'three'
 import { ThreeEvent } from '@react-three/fiber'
 import { Edges } from '@react-three/drei'
