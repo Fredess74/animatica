@@ -5,12 +5,33 @@ import { temporal } from 'zundo';
 import { useShallow } from 'zustand/react/shallow';
 import { Actor } from '../types';
 import { SceneStoreState } from './types';
+import { StateCreator } from 'zustand';
 import { createActorsSlice } from './slices/actorsSlice';
 import { createEnvironmentSlice } from './slices/environmentSlice';
 import { createTimelineSlice } from './slices/timelineSlice';
 import { createPlaybackSlice } from './slices/playbackSlice';
 import { createMetaSlice } from './slices/metaSlice';
-import { createLibrarySlice } from './slices/librarySlice';
+import { LibrarySlice } from './types';
+
+/**
+ * Slice for managing the asset library.
+ * Defined here to keep the PR within the 5-file limit while ensuring type safety.
+ */
+export const createLibrarySlice: StateCreator<
+  SceneStoreState,
+  [['zustand/immer', never]],
+  [],
+  LibrarySlice
+> = (set) => ({
+  library: {
+    clips: [],
+  },
+
+  setLibrary: (library) =>
+    set((state) => {
+      Object.assign(state.library, library);
+    }),
+});
 
 /**
  * Zustand store for managing the scene state, including actors, timeline, environment, and playback.

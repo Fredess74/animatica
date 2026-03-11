@@ -2,7 +2,7 @@
  * CharacterRenderer — R3F component for rendering a character actor.
  * Creates a procedural humanoid (or loads GLB), applies animation, face morphs, and eye tracking.
  */
-import React, { useEffect, useRef, useMemo, forwardRef, useImperativeHandle, memo } from 'react'
+import { useEffect, useRef, useMemo, forwardRef, useImperativeHandle, memo, FC } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { createProceduralHumanoid } from '../../character/CharacterLoader'
@@ -22,7 +22,7 @@ interface CharacterRendererProps {
  * CharacterRenderer component.
  * Uses memo and forwardRef for performance and parent access to the group.
  */
-export const CharacterRenderer = memo(
+export const CharacterRenderer: FC<CharacterRendererProps> = memo(
   forwardRef<THREE.Group, CharacterRendererProps>(({
     actor,
     isSelected = false,
