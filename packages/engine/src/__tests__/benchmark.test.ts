@@ -125,9 +125,9 @@ describe('Engine Benchmarks', () => {
         });
 
         it('Evaluate Tracks (100 tracks, 1k ops)', () => {
-            const tracks = [];
+            const tracks: { targetId: string; property: string; keyframes: Keyframe<number>[] }[] = [];
             for (let i = 0; i < 100; i++) {
-                const keyframes = [];
+                const keyframes: Keyframe<number>[] = [];
                 for (let j = 0; j < 10; j++) {
                     keyframes.push({ time: j, value: j, easing: 'linear' });
                 }
@@ -140,7 +140,7 @@ describe('Engine Benchmarks', () => {
 
             const bench = () => {
                 for (let i = 0; i < 1000; i++) {
-                    evaluateTracksAtTime(tracks as any, Math.random() * 10);
+                    evaluateTracksAtTime(tracks as any[], Math.random() * 10);
                 }
             };
 
