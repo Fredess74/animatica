@@ -89,7 +89,7 @@ describe('CharacterRenderer', () => {
     const selectionIndicator = children[1] as React.ReactElement
     expect(selectionIndicator.type).toBe('mesh')
 
-    const indicatorChildren = React.Children.toArray(selectionIndicator.props.children) as React.ReactElement[]
+    const indicatorChildren = React.Children.toArray((selectionIndicator.props as any).children) as React.ReactElement[]
     const ringGeo = indicatorChildren.find(c => c.type === 'ringGeometry')
     expect(ringGeo).toBeDefined()
 
