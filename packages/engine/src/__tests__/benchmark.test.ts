@@ -22,6 +22,9 @@ function measure(name: string, fn: () => void) {
 }
 
 describe('Engine Benchmarks', () => {
+    // Increase timeout for heavy performance tests
+    const benchmarkTimeout = 30000;
+
     afterAll(() => {
         const reportDir = path.resolve(__dirname, '../../../../reports');
         if (!fs.existsSync(reportDir)) {
@@ -34,7 +37,7 @@ describe('Engine Benchmarks', () => {
     });
 
     describe('Interpolation Performance', () => {
-        it('Number Interpolation (10k ops, 10k keyframes)', () => {
+        it('Number Interpolation (10k ops, 10k keyframes)', { timeout: benchmarkTimeout }, () => {
             const keyframes: Keyframe<number>[] = [];
             for (let i = 0; i < 10000; i++) {
                 keyframes.push({
@@ -52,7 +55,7 @@ describe('Engine Benchmarks', () => {
             });
         });
 
-        it('Vector3 Interpolation (10k ops, 10k keyframes)', () => {
+        it('Vector3 Interpolation (10k ops, 10k keyframes)', { timeout: benchmarkTimeout }, () => {
             const keyframes: Keyframe<Vector3>[] = [];
             for (let i = 0; i < 10000; i++) {
                 keyframes.push({
@@ -70,7 +73,7 @@ describe('Engine Benchmarks', () => {
             });
         });
 
-        it('Color Interpolation (10k ops, 10k keyframes)', () => {
+        it('Color Interpolation (10k ops, 10k keyframes)', { timeout: benchmarkTimeout }, () => {
             const keyframes: Keyframe<string>[] = [];
             for (let i = 0; i < 10000; i++) {
                 keyframes.push({
@@ -90,7 +93,7 @@ describe('Engine Benchmarks', () => {
     });
 
     describe('Schema Validation Performance', () => {
-        it('Project Schema Validation (100 runs, 100 actors)', () => {
+        it('Project Schema Validation (100 runs, 100 actors)', { timeout: benchmarkTimeout }, () => {
             const actors: Actor[] = [];
             for (let i = 0; i < 100; i++) {
                 const actor: PrimitiveActor = {
@@ -144,7 +147,7 @@ describe('Engine Benchmarks', () => {
     });
 
     describe('Store Performance', () => {
-        it('Store Update Throughput (10k playback updates)', () => {
+        it('Store Update Throughput (10k playback updates)', { timeout: benchmarkTimeout }, () => {
             const { setState, getState } = useSceneStore;
 
             setState({
@@ -167,7 +170,7 @@ describe('Engine Benchmarks', () => {
             });
         });
 
-        it('Store Actor CRUD Throughput (1k actors)', () => {
+        it('Store Actor CRUD Throughput (1k actors)', { timeout: benchmarkTimeout }, () => {
             const { setState, getState } = useSceneStore;
 
             setState({
