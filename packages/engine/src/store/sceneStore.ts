@@ -10,6 +10,7 @@ import { createEnvironmentSlice } from './slices/environmentSlice';
 import { createTimelineSlice } from './slices/timelineSlice';
 import { createPlaybackSlice } from './slices/playbackSlice';
 import { createMetaSlice } from './slices/metaSlice';
+import { createLibrarySlice } from './slices/librarySlice';
 
 /**
  * Zustand store for managing the scene state, including actors, timeline, environment, and playback.
@@ -25,7 +26,7 @@ export const useSceneStore = create<SceneStoreState>()(
         ...createTimelineSlice(...a),
         ...createPlaybackSlice(...a),
         ...createMetaSlice(...a),
-        library: { clips: [] },
+        ...createLibrarySlice(...a),
       })),
       {
         name: 'animatica-scene',
@@ -115,6 +116,12 @@ export const useIsPlaying = () =>
   useSceneStore((state) => state.playback.isPlaying);
 
 /**
+ * Hook to get the full playback state.
+ */
+export const usePlaybackState = () =>
+  useSceneStore((state) => state.playback);
+
+/**
  * Hook to get the ID of the currently selected actor.
  */
 export const useSelectedActorId = () =>
@@ -138,3 +145,42 @@ export const useActorsByType = (type: Actor['type']) =>
  * Hook to get the list of all actors.
  */
 export const useActorList = () => useSceneStore((state) => state.actors);
+
+/**
+ * Hook to get the environment settings.
+ */
+export const useEnvironment = () => useSceneStore((state) => state.environment);
+
+/**
+ * Hook to get the timeline configuration.
+ */
+export const useTimeline = () => useSceneStore((state) => state.timeline);
+
+/**
+ * Hook to get the project metadata.
+ */
+export const useMeta = () => useSceneStore((state) => state.meta);
+
+/**
+ * Hook to get the asset library.
+ */
+export const useLibrary = () => useSceneStore((state) => state.library);
+
+/**
+ * Hook to get all store actions in a stable object.
+ * Uses useShallow to ensure the object reference only changes if actions are redefined.
+ */
+export const useSceneActions = () =>
+  useSceneStore(
+    useShallow((state) => ({
+      addActor: state.addActor,
+      removeActor: state.removeActor,
+      updateActor: state.updateActor,
+      setSelectedActor: state.setSelectedActor,
+      setEnvironment: state.setEnvironment,
+      setTimeline: state.setTimeline,
+      setPlayback: state.setPlayback,
+      setMeta: state.setMeta,
+      setLibrary: state.setLibrary,
+    }))
+  );

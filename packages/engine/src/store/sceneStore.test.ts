@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { useSceneStore, getActorById, getActiveActors, getCurrentTime } from './sceneStore';
+import { renderHook } from '@testing-library/react';
+import { useSceneStore, getActorById, getActiveActors, getCurrentTime, useSceneActions } from './sceneStore';
 import { PrimitiveActor } from '../types';
 
 describe('sceneStore', () => {
@@ -160,5 +161,27 @@ describe('sceneStore', () => {
       const result = useSceneStore.getState().actors.filter(a => a.type === 'primitive');
       expect(result).toHaveLength(1);
       expect(result[0].id).toBe('1');
+  });
+
+  it('should provide stable actions via useSceneActions', () => {
+    const { result, rerender } = renderHook(() => useSceneActions());
+
+    const actions1 = result.current;
+    expect(actions1.addActor).toBeDefined();
+    expect(actions1.setEnvironment).toBeDefined();
+    expect(actions1.setLibrary).toBeDefined();
+
+    // Trigger a state change that shouldn't change actions
+    useSceneStore.getState().setPlayback({ currentTime: 10 });
+    rerender();
+
+    const actions2 = result.current;
+    expect(actions1).toBe(actions2); // Stability check via useShallow
+  });
+
+  it('should set library state', () => {
+    useSceneStore.getState().setLibrary({ clips: [{ id: 'clip-1' }] });
+    expect(useSceneStore.getState().library.clips).toHaveLength(1);
+    expect((useSceneStore.getState().library.clips[0] as any).id).toBe('clip-1');
   });
 });
