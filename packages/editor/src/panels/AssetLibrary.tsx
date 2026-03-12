@@ -2,7 +2,7 @@
  * AssetLibrary — Categorized panel for adding actors to the scene.
  * Categories: Primitives, Lights, Cameras, Characters, Effects.
  *
- * @module @animatica/editor/panels/AssetLibrary
+ * @module @Animatica/editor/panels/AssetLibrary
  */
 import React, { useState } from 'react';
 

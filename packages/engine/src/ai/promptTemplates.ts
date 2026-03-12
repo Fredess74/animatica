@@ -1,7 +1,7 @@
 /**
  * AI Prompt Generation Module.
  * Defines style presets and generates structured prompts for LLMs to create scene scripts.
- * @module @animatica/engine/ai
+ * @module @Animatica/engine/ai
  */
 
 /**
