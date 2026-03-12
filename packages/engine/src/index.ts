@@ -17,10 +17,16 @@ export {
   useActorIds,
   useCurrentTime,
   useIsPlaying,
+  usePlaybackState,
   useSelectedActorId,
   useSelectedActor,
   useActorsByType,
   useActorList,
+  useEnvironment,
+  useTimeline,
+  useMeta,
+  useLibrary,
+  useSceneActions,
 } from './store/sceneStore';
 
 // === COMPONENTS (R3F) ===
