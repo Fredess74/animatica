@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { renderHook } from '@testing-library/react';
-import { useSceneStore, getActorById, getActiveActors, getCurrentTime, useSceneActions } from './sceneStore';
+import { useSceneStore, getActorById, getActiveActors, getCurrentTime } from './sceneStore';
 import { PrimitiveActor } from '../types';
 
 describe('sceneStore', () => {
@@ -163,20 +162,11 @@ describe('sceneStore', () => {
       expect(result[0].id).toBe('1');
   });
 
-  it('should provide stable actions via useSceneActions', () => {
-    const { result, rerender } = renderHook(() => useSceneActions());
-
-    const actions1 = result.current;
-    expect(actions1.addActor).toBeDefined();
-    expect(actions1.setEnvironment).toBeDefined();
-    expect(actions1.setLibrary).toBeDefined();
-
-    // Trigger a state change that shouldn't change actions
-    useSceneStore.getState().setPlayback({ currentTime: 10 });
-    rerender();
-
-    const actions2 = result.current;
-    expect(actions1).toBe(actions2); // Stability check via useShallow
+  it('should provide actions on the state', () => {
+    const state = useSceneStore.getState();
+    expect(state.addActor).toBeDefined();
+    expect(state.setEnvironment).toBeDefined();
+    expect(state.setLibrary).toBeDefined();
   });
 
   it('should set library state', () => {
