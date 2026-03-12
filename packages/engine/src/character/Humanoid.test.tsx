@@ -1,6 +1,5 @@
 // @vitest-environment jsdom
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import React from 'react';
+import { describe, it, expect, vi } from 'vitest';
 import { render } from '@testing-library/react';
 import { Humanoid } from './Humanoid';
 import { CharacterActor } from '../types';

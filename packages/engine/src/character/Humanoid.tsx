@@ -3,11 +3,11 @@
  * It can load an external GLB (e.g. Ready Player Me) or use a procedural fallback.
  * Manages skeletal animation, facial morphs, and eye tracking.
  */
-import React, { useMemo, useEffect, useRef, Suspense } from 'react';
+import { useMemo, useEffect, useRef, Suspense } from 'react';
 import * as THREE from 'three';
 import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-import { createProceduralHumanoid, extractRig } from './CharacterLoader';
+import { CharacterRig, createProceduralHumanoid, extractRig } from './CharacterLoader';
 import {
     CharacterAnimator,
     createIdleClip,
@@ -35,14 +35,14 @@ const _tempVector = new THREE.Vector3();
 /**
  * Shared logic for both GLB and Procedural humanoids.
  */
-function useHumanoidControllers(rig: any, actor: CharacterActor, groupRef: React.RefObject<THREE.Group | null>) {
+function useHumanoidControllers(rig: CharacterRig | null, actor: CharacterActor, groupRef: React.RefObject<THREE.Group | null>) {
     const animatorRef = useRef<CharacterAnimator | null>(null);
     const faceMorphRef = useRef<FaceMorphController | null>(null);
     const eyeControllerRef = useRef<EyeController | null>(null);
 
-    // Initialize controllers
+    // Initialize controllers once when rig changes
     useEffect(() => {
-        if (!rig.root) return;
+        if (!rig || !rig.root) return;
 
         const animator = new CharacterAnimator(rig.root);
         // Register standard clips
@@ -62,6 +62,7 @@ function useHumanoidControllers(rig: any, actor: CharacterActor, groupRef: React
             });
         }
 
+        // Start initial animation
         animator.play(actor.animation || 'idle');
         animatorRef.current = animator;
 
@@ -75,10 +76,13 @@ function useHumanoidControllers(rig: any, actor: CharacterActor, groupRef: React
 
         return () => {
             animator.dispose();
+            animatorRef.current = null;
+            faceMorphRef.current = null;
+            eyeControllerRef.current = null;
         };
-    }, [rig, actor.animation]); // Re-init if rig changes or initial animation
+    }, [rig]);
 
-    // React to animation changes
+    // React to animation changes (separate from initialization)
     useEffect(() => {
         if (animatorRef.current && actor.animation) {
             animatorRef.current.play(actor.animation);
@@ -101,6 +105,9 @@ function useHumanoidControllers(rig: any, actor: CharacterActor, groupRef: React
 
     // Update loop
     useFrame((_state, delta) => {
+        // Optimization: skip updates if character is not visible
+        if (!actor.visible) return;
+
         if (animatorRef.current) {
             animatorRef.current.update(delta);
         }
@@ -118,7 +125,7 @@ function useHumanoidControllers(rig: any, actor: CharacterActor, groupRef: React
         }
 
         // Apply body pose
-        if (actor.bodyPose && rig.bones) {
+        if (actor.bodyPose && rig && rig.bones) {
             Object.entries(actor.bodyPose).forEach(([boneName, rotation]) => {
                 const bone = rig.bones.get(boneName);
                 if (bone && rotation) {
@@ -161,13 +168,13 @@ const ProceduralHumanoid: React.FC<HumanoidProps> = ({ actor }) => {
     const groupRef = useRef<THREE.Group>(null);
 
     const rig = useMemo(() => {
-        const preset = getPreset(actor.id) || getPreset('default-human');
+        const preset = getPreset(actor.name.toLowerCase()) || getPreset('default-human');
         const skinColor = preset?.body.skinColor || '#D4A27C';
         const height = preset?.body.height || 1.0;
         const build = preset?.body.build || 0.5;
 
         return createProceduralHumanoid({ skinColor, height, build });
-    }, [actor.id]);
+    }, [actor.name]);
 
     useHumanoidControllers(rig, actor, groupRef);
 

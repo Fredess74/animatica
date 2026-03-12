@@ -49,7 +49,7 @@ describe('CharacterRenderer', () => {
     expect(result).not.toBeNull()
     expect(result.type).toBe('group')
 
-    const props = result.props as any
+    const props = result.props as { position: number[], rotation: number[], scale: number[], visible: boolean, children: React.ReactNode }
     expect(props.position).toEqual([10, 0, 5])
     expect(props.rotation).toEqual([0, Math.PI, 0])
     expect(props.scale).toEqual([1, 1, 1])
@@ -67,20 +67,20 @@ describe('CharacterRenderer', () => {
     const invisibleActor = { ...mockActor, visible: false }
     // @ts-ignore
     const result = CharacterRenderer.type.render({ actor: invisibleActor }, null) as React.ReactElement
-    expect(result.props.visible).toBe(false)
+    expect((result.props as { visible: boolean }).visible).toBe(false)
   })
 
   it('renders selection ring when isSelected is true', () => {
      // @ts-ignore
     const result = CharacterRenderer.type.render({ actor: mockActor, isSelected: true }, null) as React.ReactElement
-    const props = result.props as any
+    const props = result.props as { children: React.ReactNode }
     const children = React.Children.toArray(props.children) as React.ReactElement[]
 
     // Second child should be the selection ring mesh
     const selectionRing = children[1]
     expect(selectionRing.type).toBe('mesh')
 
-    const meshChildren = React.Children.toArray(selectionRing.props.children) as React.ReactElement[]
-    expect(meshChildren.some(c => c.type === 'ringGeometry')).toBe(true)
+    const meshChildren = React.Children.toArray((selectionRing.props as { children: React.ReactNode }).children) as React.ReactElement[]
+    expect(meshChildren.some(c => (c as React.ReactElement).type === 'ringGeometry')).toBe(true)
   })
 })
