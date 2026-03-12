@@ -1,7 +1,7 @@
 /**
  * Core type definitions for the Animatica Engine.
  * This module exports all data models, interfaces, and utility types used throughout the engine.
- * @module @animatica/engine/types
+ * @module @Animatica/engine/types
  */
 
 /**
