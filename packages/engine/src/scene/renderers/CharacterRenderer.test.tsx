@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import React from 'react'
 import { CharacterRenderer } from './CharacterRenderer'
 import { CharacterActor } from '../../types'
+import { Children, ReactElement } from 'react'
 
 // Mock react to bypass hooks checks when calling component directly
 vi.mock('react', async () => {
@@ -50,7 +50,7 @@ describe('CharacterRenderer', () => {
 
   it('renders a group containing capsule mesh with correct transform', () => {
     // @ts-ignore
-    const result = CharacterRenderer.type.render({ actor: mockActor }, null) as React.ReactElement
+    const result = (CharacterRenderer as any).type.render({ actor: mockActor }, null) as ReactElement
 
     expect(result).not.toBeNull()
     expect(result.type).toBe('group')
@@ -61,7 +61,7 @@ describe('CharacterRenderer', () => {
     expect(props.scale).toEqual([1, 1, 1])
 
     // Verify children
-    const children = React.Children.toArray(props.children) as React.ReactElement[]
+    const children = Children.toArray(props.children) as ReactElement[]
 
     // The first child is now rig.root primitive
     const primitive = children[0]
@@ -71,21 +71,21 @@ describe('CharacterRenderer', () => {
   it('renders nothing when visible is false', () => {
     const invisibleActor = { ...mockActor, visible: false }
     // @ts-ignore
-    const result = CharacterRenderer.type.render({ actor: invisibleActor }, null)
+    const result = (CharacterRenderer as any).type.render({ actor: invisibleActor }, null)
     expect(result).toBeNull()
   })
 
   it('renders selection indicator ring when selected', () => {
      // @ts-ignore
-    const result = CharacterRenderer.type.render({ actor: mockActor, isSelected: true }, null) as React.ReactElement
+    const result = (CharacterRenderer as any).type.render({ actor: mockActor, isSelected: true }, null) as ReactElement
     const props = result.props as any
-    const children = React.Children.toArray(props.children) as React.ReactElement[]
+    const children = Children.toArray(props.children) as ReactElement[]
 
     // Second child should be the selection ring mesh
-    const selectionRing = children[1] as React.ReactElement
+    const selectionRing = children[1]
     expect(selectionRing.type).toBe('mesh')
 
-    const ringChildren = React.Children.toArray(selectionRing.props.children) as React.ReactElement[]
+    const ringChildren = Children.toArray((selectionRing.props as any).children) as ReactElement[]
     expect(ringChildren.some(c => c.type === 'ringGeometry')).toBe(true)
   })
 })
