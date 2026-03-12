@@ -125,22 +125,22 @@ describe('Engine Benchmarks', () => {
         });
 
         it('Evaluate Tracks (100 tracks, 1k ops)', () => {
-            const tracks: { targetId: string; property: string; keyframes: Keyframe<number>[] }[] = [];
+            const trackList: { targetId: string; property: string; keyframes: Keyframe<any>[] }[] = [];
             for (let i = 0; i < 100; i++) {
-                const keyframes: Keyframe<number>[] = [];
+                const kfs: Keyframe<any>[] = [];
                 for (let j = 0; j < 10; j++) {
-                    keyframes.push({ time: j, value: j, easing: 'linear' });
+                    kfs.push({ time: j, value: j, easing: 'linear' });
                 }
-                tracks.push({
+                trackList.push({
                     targetId: `actor-${i}`,
                     property: 'position.x',
-                    keyframes
+                    keyframes: kfs
                 });
             }
 
             const bench = () => {
                 for (let i = 0; i < 1000; i++) {
-                    evaluateTracksAtTime(tracks as any[], Math.random() * 10);
+                    evaluateTracksAtTime(trackList as any, Math.random() * 10);
                 }
             };
 
@@ -178,7 +178,7 @@ describe('Engine Benchmarks', () => {
             return {
                 meta: {
                     title: 'Benchmark Project',
-                    version: '1.0.0',
+                    version: '0.1.0',
                 },
                 environment: {
                     ambientLight: { intensity: 0.5, color: '#ffffff' },
@@ -228,7 +228,7 @@ describe('Engine Benchmarks', () => {
             const { setState, getState } = useSceneStore;
 
             setState({
-                meta: { title: 'Reset', version: '1.0.0' },
+                meta: { title: 'Reset', version: '0.1.0' },
                 environment: {
                     ambientLight: { intensity: 0.5, color: '#ffffff' },
                     sun: { position: [10, 10, 10], intensity: 1, color: '#ffffff' },
