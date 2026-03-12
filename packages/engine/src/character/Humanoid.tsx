@@ -3,7 +3,7 @@
  * It can load an external GLB (e.g. Ready Player Me) or use a procedural fallback.
  * Manages skeletal animation, facial morphs, and eye tracking.
  */
-import { useMemo, useEffect, useRef, Suspense } from 'react';
+import { useMemo, useEffect, useRef, Suspense, type RefObject } from 'react';
 import * as THREE from 'three';
 import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
@@ -35,7 +35,7 @@ const _tempVector = new THREE.Vector3();
 /**
  * Shared logic for both GLB and Procedural humanoids.
  */
-function useHumanoidControllers(rig: CharacterRig | null, actor: CharacterActor, groupRef: React.RefObject<THREE.Group | null>) {
+function useHumanoidControllers(rig: CharacterRig | null, actor: CharacterActor, groupRef: RefObject<THREE.Group | null>) {
     const animatorRef = useRef<CharacterAnimator | null>(null);
     const faceMorphRef = useRef<FaceMorphController | null>(null);
     const eyeControllerRef = useRef<EyeController | null>(null);
