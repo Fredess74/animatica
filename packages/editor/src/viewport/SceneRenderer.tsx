@@ -3,17 +3,19 @@
  */
 import React from 'react'
 import {
-    useSceneStore,
+    useActorList,
+    useSelectedActorId,
+    useSceneActions,
     PrimitiveRenderer,
     LightRenderer,
     CameraRenderer,
-} from '@animatica/engine'
-import type { Actor } from '@animatica/engine'
+} from '@Animatica/engine'
+import type { Actor } from '@Animatica/engine'
 
 export const SceneRenderer: React.FC = () => {
-    const actors = useSceneStore((s) => s.actors)
-    const selectedActorId = useSceneStore((s) => s.selectedActorId)
-    const setSelectedActor = useSceneStore((s) => s.setSelectedActor)
+    const actors = useActorList()
+    const selectedActorId = useSelectedActorId()
+    const { setSelectedActor } = useSceneActions()
 
     return (
         <group>

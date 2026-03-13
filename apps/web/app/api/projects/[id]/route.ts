@@ -49,7 +49,7 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
         updates = ProjectStateSchema.parse(json);
     }
 
-    const updated = await updateProject(id, updates);
+    const updated = await updateProject(id, updates as any);
     if (!updated) {
       return jsonResponse({ error: 'Project not found' }, 404);
     }

@@ -1,5 +1,20 @@
+/**
+ * @vitest-environment jsdom
+ */
 import { describe, it, expect, beforeEach } from 'vitest';
-import { useSceneStore, getActorById, getActiveActors, getCurrentTime } from './sceneStore';
+import { renderHook } from '@testing-library/react';
+import {
+  useSceneStore,
+  getActorById,
+  getActiveActors,
+  getCurrentTime,
+  useSceneActions,
+  useEnvironment,
+  useTimeline,
+  useMeta,
+  useLibrary,
+  usePlaybackState,
+} from './sceneStore';
 import { PrimitiveActor } from '../types';
 
 describe('sceneStore', () => {
@@ -14,6 +29,8 @@ describe('sceneStore', () => {
           skyColor: '#87CEEB',
       },
       playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, direction: 1, loopMode: 'none' },
+      meta: { title: 'Untitled Project', version: '1.0.0' },
+      library: { clips: [] },
     });
 
     // Clear undo history
@@ -160,5 +177,42 @@ describe('sceneStore', () => {
       const result = useSceneStore.getState().actors.filter(a => a.type === 'primitive');
       expect(result).toHaveLength(1);
       expect(result[0].id).toBe('1');
+  });
+
+  describe('Hooks', () => {
+    it('useSceneActions should provide a stable reference', () => {
+      const { result, rerender } = renderHook(() => useSceneActions());
+      const firstResult = result.current;
+
+      useSceneStore.getState().setPlayback({ currentTime: 1 });
+      rerender();
+
+      expect(result.current).toBe(firstResult);
+    });
+
+    it('useEnvironment should return correct environment state', () => {
+      const { result } = renderHook(() => useEnvironment());
+      expect(result.current).toEqual(useSceneStore.getState().environment);
+    });
+
+    it('useTimeline should return correct timeline state', () => {
+      const { result } = renderHook(() => useTimeline());
+      expect(result.current).toEqual(useSceneStore.getState().timeline);
+    });
+
+    it('useMeta should return correct meta state', () => {
+      const { result } = renderHook(() => useMeta());
+      expect(result.current).toEqual(useSceneStore.getState().meta);
+    });
+
+    it('useLibrary should return correct library state', () => {
+      const { result } = renderHook(() => useLibrary());
+      expect(result.current).toEqual(useSceneStore.getState().library);
+    });
+
+    it('usePlaybackState should return correct playback state', () => {
+      const { result } = renderHook(() => usePlaybackState());
+      expect(result.current).toEqual(useSceneStore.getState().playback);
+    });
   });
 });

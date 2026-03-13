@@ -18,11 +18,12 @@ interface CharacterRendererProps {
   onClick?: () => void
 }
 
-export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
-  actor,
-  isSelected = false,
-  onClick,
-}) => {
+export const CharacterRenderer = React.memo(
+  React.forwardRef<THREE.Group, CharacterRendererProps>(({
+    actor,
+    isSelected = false,
+    onClick,
+  }, ref) => {
   const groupRef = useRef<THREE.Group>(null)
   const animatorRef = useRef<CharacterAnimator | null>(null)
   const faceMorphRef = useRef<FaceMorphController | null>(null)
@@ -105,9 +106,21 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     }
   })
 
+  // Rules of Hooks: Always call all hooks before early returns
+  if (!actor.visible) return null;
+
   return (
     <group
-      ref={groupRef}
+      ref={(node) => {
+        // Handle both local and forwarded refs
+        // @ts-ignore
+        groupRef.current = node;
+        if (typeof ref === 'function') {
+          ref(node);
+        } else if (ref) {
+          (ref as React.MutableRefObject<THREE.Group | null>).current = node;
+        }
+      }}
       name={actor.id}
       position={actor.transform.position}
       rotation={actor.transform.rotation}
@@ -135,4 +148,6 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       )}
     </group>
   )
-}
+}))
+
+CharacterRenderer.displayName = 'CharacterRenderer'
