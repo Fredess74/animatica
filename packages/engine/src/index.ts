@@ -21,7 +21,14 @@ export {
   useSelectedActor,
   useActorsByType,
   useActorList,
+  useSceneActions,
+  useEnvironment,
+  useTimeline,
+  useMeta,
+  useLibrary,
+  usePlaybackState,
 } from './store/sceneStore';
+export type { SceneStoreState } from './store/sceneStore';
 
 // === COMPONENTS (R3F) ===
 export { PrimitiveRenderer } from './scene/renderers/PrimitiveRenderer'

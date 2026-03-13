@@ -3,12 +3,10 @@
  * Shows FPS, camera info, and transform readout for selected actor.
  */
 import React from 'react'
-import { useSceneStore } from '@animatica/engine'
+import { useSelectedActor } from '@Animatica/engine'
 
 export const ViewportOverlay: React.FC = () => {
-    const selectedActor = useSceneStore((s) =>
-        s.selectedActorId ? s.actors.find((a) => a.id === s.selectedActorId) : null
-    )
+    const selectedActor = useSelectedActor()
 
     return (
         <div style={overlayContainerStyle}>
