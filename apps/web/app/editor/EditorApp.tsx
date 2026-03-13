@@ -5,8 +5,7 @@
  * Separated from page.tsx to enable dynamic import (no SSR).
  */
 import React from 'react';
-import { EditorLayout } from '@Animatica/editor';
-import { Viewport } from '@Animatica/editor';
+import { EditorLayout, Viewport } from '@Animatica/editor';
 
 export default function EditorApp() {
     return (
