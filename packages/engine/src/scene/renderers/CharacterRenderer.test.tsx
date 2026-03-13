@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import React from 'react'
-import * as THREE from 'three'
 // @ts-ignore
 import { CharacterRenderer } from './CharacterRenderer'
 import { CharacterActor } from '../../types'
@@ -48,12 +47,12 @@ describe('CharacterRenderer', () => {
     // Access the render function directly from the memo/forwardRef component
     // @ts-ignore
     const render = CharacterRenderer.type.render
-    const result = render({ actor: mockActor }, null) as React.ReactElement
+    const result = render({ actor: mockActor }, null) as any
 
     expect(result).not.toBeNull()
     expect(result.type).toBe('group')
 
-    const props = result.props as any
+    const props = result.props
     expect(props.position).toEqual([10, 0, 5])
     expect(props.rotation).toEqual([0, Math.PI, 0])
     expect(props.scale).toEqual([1, 1, 1])
@@ -71,14 +70,14 @@ describe('CharacterRenderer', () => {
     const invisibleActor = { ...mockActor, visible: false }
     // @ts-ignore
     const render = CharacterRenderer.type.render
-    const result = render({ actor: invisibleActor }, null) as React.ReactElement
+    const result = render({ actor: invisibleActor }, null) as any
     expect(result.props.visible).toBe(false)
   })
 
   it('renders selection indicator when isSelected is true', () => {
     // @ts-ignore
     const render = CharacterRenderer.type.render
-    const result = render({ actor: mockActor, isSelected: true }, null) as React.ReactElement
+    const result = render({ actor: mockActor, isSelected: true }, null) as any
     const children = React.Children.toArray(result.props.children) as React.ReactElement[]
 
     const selectionIndicator = children.find(c => (c as any).type === 'mesh')
