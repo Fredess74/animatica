@@ -10,8 +10,17 @@ vi.mock('react', async () => {
   return {
     ...actual,
     useRef: () => ({ current: null }),
+    useMemo: (fn: any) => fn(),
+    useEffect: () => {},
+    forwardRef: (comp: any) => ({ type: { render: comp } }),
+    memo: (comp: any) => comp,
   }
 })
+
+// Mock @react-three/fiber
+vi.mock('@react-three/fiber', () => ({
+  useFrame: () => {},
+}))
 
 // Mock the Edges component from @react-three/drei
 vi.mock('@react-three/drei', () => ({
@@ -56,28 +65,9 @@ describe('CharacterRenderer', () => {
     // Verify children
     const children = React.Children.toArray(props.children) as React.ReactElement[]
 
-    // First child should be the main mesh (capsule)
-    const mainMesh = children[0]
-    expect(mainMesh.type).toBe('mesh')
-
-    const mainMeshProps = mainMesh.props as any
-    const meshChildren = React.Children.toArray(mainMeshProps.children) as React.ReactElement[]
-
-    // Check geometry
-    const geometry = meshChildren.find((child) => child.type === 'capsuleGeometry')
-    expect(geometry).toBeDefined()
-
-    const geometryProps = geometry?.props as any
-    // Check args: radius 0.5, length 1.8
-    expect(geometryProps?.args?.[0]).toBe(0.5)
-    expect(geometryProps?.args?.[1]).toBe(1.8)
-
-    // Check material
-    const material = meshChildren.find((child) => child.type === 'meshStandardMaterial')
-    expect(material).toBeDefined()
-
-    const materialProps = material?.props as any
-    expect(materialProps?.color).toBe('#ff00aa') // The placeholder color
+    // First child should be the rig root primitive
+    const rigRoot = children[0]
+    expect(rigRoot.type).toBe('primitive')
   })
 
   it('renders nothing when visible is false', () => {
@@ -93,10 +83,9 @@ describe('CharacterRenderer', () => {
     const props = result.props as any
     const children = React.Children.toArray(props.children) as React.ReactElement[]
 
-    // Second child should be the face mesh
-    const faceMesh = children[1]
-    expect(faceMesh.type).toBe('mesh')
-    const faceMeshProps = faceMesh.props as any
-    expect(faceMeshProps?.position?.[2]).toBe(0.4)
+    // Selection indicator or rig children?
+    // In current implementation: [primitive, (optional) selection indicator]
+    // The test was expecting a face mesh as second child, but procedural rig is now just a primitive object.
+    expect(children[0].type).toBe('primitive')
   })
 })
