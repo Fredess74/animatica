@@ -7,8 +7,8 @@ import {
     PrimitiveRenderer,
     LightRenderer,
     CameraRenderer,
-} from '@animatica/engine'
-import type { Actor } from '@animatica/engine'
+} from '@Animatica/engine'
+import type { Actor } from '@Animatica/engine'
 
 export const SceneRenderer: React.FC = () => {
     const actors = useSceneStore((s) => s.actors)
