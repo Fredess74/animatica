@@ -2,13 +2,14 @@
  * CharacterRenderer — R3F component for rendering a character actor.
  * Creates a procedural humanoid (or loads GLB), applies animation, face morphs, and eye tracking.
  */
-import React, { useEffect, useRef, useMemo } from 'react'
+import React, { useEffect, useRef, useMemo, Suspense } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { createProceduralHumanoid } from '../../character/CharacterLoader'
 import { CharacterAnimator, createIdleClip, createWalkClip } from '../../character/CharacterAnimator'
 import { FaceMorphController } from '../../character/FaceMorphController'
 import { EyeController } from '../../character/EyeController'
+import { Humanoid } from '../../character/Humanoid'
 import { getPreset } from '../../character/CharacterPresets'
 import type { CharacterActor } from '../../types'
 
@@ -18,12 +19,13 @@ interface CharacterRendererProps {
   onClick?: () => void
 }
 
-export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
-  actor,
-  isSelected = false,
-  onClick,
-}) => {
-  const groupRef = useRef<THREE.Group>(null)
+/**
+ * ProceduralHumanoid — Fallback character when no modelUrl is provided.
+ */
+const ProceduralHumanoid: React.FC<{
+  actor: CharacterActor
+  groupRef: React.RefObject<THREE.Group | null>
+}> = ({ actor, groupRef }) => {
   const animatorRef = useRef<CharacterAnimator | null>(null)
   const faceMorphRef = useRef<FaceMorphController | null>(null)
   const eyeControllerRef = useRef<EyeController | null>(null)
@@ -75,35 +77,41 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     }
   }, [actor.animationSpeed])
 
-  // React to morph target / expression changes from CharacterPanel
+  // React to morph target / expression changes
   useEffect(() => {
     if (faceMorphRef.current && actor.morphTargets) {
       faceMorphRef.current.setTarget(actor.morphTargets as any)
     }
   }, [actor.morphTargets])
 
-  // Frame update — animation, face morphs, eye blinks
+  // Frame update
   useFrame((_state, delta) => {
-    // Skeletal animation
     if (animatorRef.current) {
       animatorRef.current.update(delta)
     }
 
-    // Face morph blending
     if (faceMorphRef.current) {
       faceMorphRef.current.update(delta)
     }
 
-    // Eye auto-blink + look-at
     if (eyeControllerRef.current && faceMorphRef.current) {
       const headPos = groupRef.current
         ? new THREE.Vector3().setFromMatrixPosition(groupRef.current.matrixWorld)
         : undefined
       const eyeValues = eyeControllerRef.current.update(delta, headPos)
-      // Apply eye morph values on top of expression
       faceMorphRef.current.setImmediate(eyeValues)
     }
   })
+
+  return <primitive object={rig.root} />
+}
+
+export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
+  actor,
+  isSelected = false,
+  onClick,
+}) => {
+  const groupRef = useRef<THREE.Group>(null)
 
   return (
     <group
@@ -118,8 +126,14 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
         onClick?.()
       }}
     >
-      {/* Character rig */}
-      <primitive object={rig.root} />
+      {/* Character rig: GLB if URL exists, otherwise procedural */}
+      <Suspense fallback={<ProceduralHumanoid actor={actor} groupRef={groupRef} />}>
+        {actor.modelUrl ? (
+          <Humanoid actor={actor} groupRef={groupRef} />
+        ) : (
+          <ProceduralHumanoid actor={actor} groupRef={groupRef} />
+        )}
+      </Suspense>
 
       {/* Selection indicator ring */}
       {isSelected && (
