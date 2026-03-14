@@ -1,5 +1,5 @@
 import { describe, it, afterAll } from 'vitest';
-import { interpolateKeyframes } from '../animation/interpolate';
+import { interpolateKeyframes, evaluateTracksAtTime } from '../animation/interpolate';
 import { ProjectStateSchema } from '../importer/schemas';
 import { useSceneStore } from '../store/sceneStore';
 import type { Keyframe, ProjectState, Actor, PrimitiveActor, Vector3 } from '../types';
@@ -11,6 +11,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const results: Record<string, string> = {};
+
+function warmup(fn: () => void, iterations = 1000) {
+    for (let i = 0; i < iterations; i++) {
+        fn();
+    }
+}
 
 function measure(name: string, fn: () => void) {
     const start = performance.now();
@@ -33,7 +39,7 @@ describe('Engine Benchmarks', () => {
         );
     });
 
-    describe('Interpolation Performance', () => {
+    describe('Interpolation Performance', { timeout: 120000 }, () => {
         it('Number Interpolation (10k ops, 10k keyframes)', () => {
             const keyframes: Keyframe<number>[] = [];
             for (let i = 0; i < 10000; i++) {
@@ -44,6 +50,7 @@ describe('Engine Benchmarks', () => {
                 });
             }
 
+            warmup(() => interpolateKeyframes(keyframes, Math.random() * 10000));
             measure('Number Interpolation (10k ops)', () => {
                 for (let i = 0; i < 10000; i++) {
                     const t = Math.random() * 10000;
@@ -62,6 +69,7 @@ describe('Engine Benchmarks', () => {
                 });
             }
 
+            warmup(() => interpolateKeyframes(keyframes, Math.random() * 10000));
             measure('Vector3 Interpolation (10k ops)', () => {
                 for (let i = 0; i < 10000; i++) {
                     const t = Math.random() * 10000;
@@ -80,6 +88,7 @@ describe('Engine Benchmarks', () => {
                 });
             }
 
+            warmup(() => interpolateKeyframes(keyframes, Math.random() * 10000));
             measure('Color Interpolation (10k ops)', () => {
                 for (let i = 0; i < 10000; i++) {
                     const t = Math.random() * 10000;
@@ -87,12 +96,53 @@ describe('Engine Benchmarks', () => {
                 }
             });
         });
+
+        it('Boolean Interpolation (10k ops, 10k keyframes)', () => {
+            const keyframes: Keyframe<boolean>[] = [];
+            for (let i = 0; i < 10000; i++) {
+                keyframes.push({
+                    time: i,
+                    value: i % 2 === 0,
+                    easing: 'step',
+                });
+            }
+
+            warmup(() => interpolateKeyframes(keyframes, Math.random() * 10000));
+            measure('Boolean Interpolation (10k ops)', () => {
+                for (let i = 0; i < 10000; i++) {
+                    const t = Math.random() * 10000;
+                    interpolateKeyframes(keyframes, t);
+                }
+            });
+        });
+
+        it('evaluateTracksAtTime (1k tracks, 100 keyframes each)', () => {
+            const tracks: { targetId: string; property: string; keyframes: Keyframe<number>[] }[] = [];
+            for (let i = 0; i < 1000; i++) {
+                const keyframes: Keyframe<number>[] = [];
+                for (let j = 0; j < 100; j++) {
+                    keyframes.push({ time: j, value: j, easing: 'linear' });
+                }
+                tracks.push({
+                    targetId: `actor-${i}`,
+                    property: 'transform.position.x',
+                    keyframes
+                });
+            }
+
+            warmup(() => evaluateTracksAtTime(tracks, 50));
+            measure('evaluateTracksAtTime (1k tracks)', () => {
+                for (let i = 0; i < 100; i++) {
+                    evaluateTracksAtTime(tracks, i % 100);
+                }
+            });
+        });
     });
 
-    describe('Schema Validation Performance', () => {
-        it('Project Schema Validation (100 runs, 100 actors)', () => {
+    describe('Schema Validation Performance', { timeout: 120000 }, () => {
+        function createLargeProject(actorCount: number): ProjectState {
             const actors: Actor[] = [];
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < actorCount; i++) {
                 const actor: PrimitiveActor = {
                     id: `actor-${i}`,
                     name: `Actor ${i}`,
@@ -115,7 +165,7 @@ describe('Engine Benchmarks', () => {
                 actors.push(actor);
             }
 
-            const projectState: ProjectState = {
+            return {
                 meta: {
                     title: 'Benchmark Project',
                     version: '1.0.0',
@@ -134,17 +184,33 @@ describe('Engine Benchmarks', () => {
                 },
                 library: { clips: [] },
             };
+        }
 
+        it('Project Schema Validation (100 runs, 100 actors)', () => {
+            const projectState = createLargeProject(100);
+
+            warmup(() => ProjectStateSchema.parse(projectState), 10);
             measure('Schema Validation Speed (100 runs)', () => {
                 for (let i = 0; i < 100; i++) {
                     ProjectStateSchema.parse(projectState);
                 }
             });
         });
+
+        it('Large Project Schema Validation (10 runs, 200 actors)', () => {
+            const projectState = createLargeProject(200);
+
+            warmup(() => ProjectStateSchema.parse(projectState), 5);
+            measure('Large Project Schema Validation (10 runs)', () => {
+                for (let i = 0; i < 10; i++) {
+                    ProjectStateSchema.parse(projectState);
+                }
+            });
+        });
     });
 
-    describe('Store Performance', () => {
-        it('Store Update Throughput (10k playback updates)', () => {
+    describe('Store Performance', { timeout: 120000 }, () => {
+        it('Store Playback Updates (10k playback updates)', () => {
             const { setState, getState } = useSceneStore;
 
             setState({
@@ -160,6 +226,7 @@ describe('Engine Benchmarks', () => {
                 playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, direction: 1, loopMode: 'none' },
             });
 
+            warmup(() => getState().setPlayback({ currentTime: 1 }), 100);
             measure('Store Playback Updates (10k ops)', () => {
                 for (let i = 0; i < 10000; i++) {
                     getState().setPlayback({ currentTime: i * 0.1 });
