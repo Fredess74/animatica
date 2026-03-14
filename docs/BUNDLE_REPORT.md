@@ -9,7 +9,7 @@ This report provides a breakdown of the bundle sizes for the Animatica monorepo 
 
 | Package/App | Status | Size (Raw) | Size (Gzip) |
 | :--- | :--- | :--- | :--- |
-| `@Animatica/engine` | ✅ Success | 78.60 kB | 22.21 kB |
+| `@Animatica/engine` | ✅ Success | 78.75 kB | 22.32 kB |
 | `@Animatica/editor` | ✅ Success | 2.18 MB | 476.59 kB |
 | `@Animatica/platform` | ✅ Success | 0.06 kB | 0.08 kB |
 | `@Animatica/contracts` | ✅ Success | - | - |
@@ -22,8 +22,8 @@ This report provides a breakdown of the bundle sizes for the Animatica monorepo 
 ### `@Animatica/engine`
 The core engine package is built as an ES module using Vite.
 - **Location:** `packages/engine/dist/index.js`
-- **Raw Size:** 78.60 kB
-- **Gzip Size:** 22.21 kB
+- **Raw Size:** 78.75 kB
+- **Gzip Size:** 22.32 kB
 
 ### `@Animatica/editor`
 The editor UI package is built as an ES module using Vite.
@@ -49,6 +49,7 @@ The Next.js application.
 1. **Fix Case-Sensitivity:** Updated all imports of `@animatica/engine` to `@Animatica/engine` in `packages/editor` to match workspace naming conventions.
 2. **Next.js Readiness:** Added `"use client"` directives to core engine modules that use React hooks or browser APIs, enabling their use in Next.js Server Components.
 3. **Workspace Resolution:** Configured `packages/editor/package.json` with a `main` entry point to allow correct resolution by the Next.js compiler.
+4. **CI Robustness:** Resolved `import.meta.env` TypeScript errors and updated `CharacterRenderer.test.tsx` to properly mock React hooks for the `memo(forwardRef(...))` structure.
 
 ---
 
