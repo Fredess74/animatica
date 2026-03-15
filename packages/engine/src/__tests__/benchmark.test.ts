@@ -1,5 +1,5 @@
 import { describe, it, afterAll } from 'vitest';
-import { interpolateKeyframes } from '../animation/interpolate';
+import { interpolateKeyframes, evaluateTracksAtTime } from '../animation/interpolate';
 import { ProjectStateSchema } from '../importer/schemas';
 import { useSceneStore } from '../store/sceneStore';
 import type { Keyframe, ProjectState, Actor, PrimitiveActor, Vector3 } from '../types';
@@ -21,7 +21,13 @@ function measure(name: string, fn: () => void) {
     console.log(`${name}: ${duration}ms`);
 }
 
-describe('Engine Benchmarks', () => {
+function warmup(fn: () => void, runs = 100) {
+    for (let i = 0; i < runs; i++) {
+        fn();
+    }
+}
+
+describe('Engine Benchmarks', { timeout: 120000 }, () => {
     afterAll(() => {
         const reportDir = path.resolve(__dirname, '../../../../reports');
         if (!fs.existsSync(reportDir)) {
@@ -80,7 +86,25 @@ describe('Engine Benchmarks', () => {
                 });
             }
 
-            measure('Color Interpolation (10k ops)', () => {
+            measure('Color Interpolation (10k)', () => {
+                for (let i = 0; i < 10000; i++) {
+                    const t = Math.random() * 10000;
+                    interpolateKeyframes(keyframes, t);
+                }
+            });
+        });
+
+        it('Boolean Interpolation (10k ops, 10k keyframes)', () => {
+            const keyframes: Keyframe<boolean>[] = [];
+            for (let i = 0; i < 10000; i++) {
+                keyframes.push({
+                    time: i,
+                    value: i % 2 === 0,
+                    easing: 'step',
+                });
+            }
+
+            measure('Boolean Interpolation (10k)', () => {
                 for (let i = 0; i < 10000; i++) {
                     const t = Math.random() * 10000;
                     interpolateKeyframes(keyframes, t);
@@ -89,10 +113,35 @@ describe('Engine Benchmarks', () => {
         });
     });
 
+    describe('Timeline Evaluation Performance', () => {
+        it('evaluateTracksAtTime (1k tracks, 100 kfs each)', () => {
+            const tracks: { targetId: string; property: string; keyframes: Keyframe<number>[] }[] = [];
+            for (let i = 0; i < 1000; i++) {
+                const keyframes: Keyframe<number>[] = [];
+                for (let j = 0; j < 100; j++) {
+                    keyframes.push({ time: j, value: j, easing: 'linear' });
+                }
+                tracks.push({
+                    targetId: `actor-${i}`,
+                    property: 'position.x',
+                    keyframes,
+                });
+            }
+
+            warmup(() => evaluateTracksAtTime(tracks, Math.random() * 100));
+
+            measure('Timeline Evaluation (1k tracks)', () => {
+                for (let i = 0; i < 100; i++) {
+                    evaluateTracksAtTime(tracks, Math.random() * 100);
+                }
+            });
+        });
+    });
+
     describe('Schema Validation Performance', () => {
-        it('Project Schema Validation (100 runs, 100 actors)', () => {
+        it('Project Schema Validation (100 runs, 200 actors)', () => {
             const actors: Actor[] = [];
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < 200; i++) {
                 const actor: PrimitiveActor = {
                     id: `actor-${i}`,
                     name: `Actor ${i}`,
@@ -135,7 +184,7 @@ describe('Engine Benchmarks', () => {
                 library: { clips: [] },
             };
 
-            measure('Schema Validation Speed (100 runs)', () => {
+            measure('Schema Validation (100 runs, 200 actors)', () => {
                 for (let i = 0; i < 100; i++) {
                     ProjectStateSchema.parse(projectState);
                 }
