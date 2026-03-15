@@ -9,94 +9,141 @@ function getPackageJsons() {
 
 function loadLicenses() {
     console.log('Running pnpm licenses list --json...');
-    const output = execSync('pnpm licenses list --json', { maxBuffer: 20 * 1024 * 1024 }).toString();
+    const output = execSync('pnpm licenses list --json', { maxBuffer: 50 * 1024 * 1024 }).toString();
     const data = JSON.parse(output);
 
-    const pkgToLicense = {};
+    const allPackages = [];
     for (const [licenseName, packages] of Object.entries(data)) {
         for (const pkg of packages) {
-            pkgToLicense[pkg.name] = licenseName;
+            allPackages.push({
+                name: pkg.name,
+                version: pkg.versions[0], // Taking the first version if multiple
+                license: licenseName
+            });
         }
     }
-    return pkgToLicense;
+    return allPackages;
 }
 
 function main() {
-    const pkgToLicense = loadLicenses();
+    const allPackages = loadLicenses();
+    const pkgToInfo = {};
+    allPackages.forEach(p => {
+        pkgToInfo[p.name] = p;
+    });
 
-    const allDeps = {};
+    const directDepsMap = {}; // depName -> Set of packageNames using it
 
     for (const pjPath of getPackageJsons()) {
         const pj = JSON.parse(fs.readFileSync(pjPath, 'utf8'));
+        const pjName = pj.name || 'root';
 
-        const deps = pj.dependencies || {};
-        const devDeps = pj.devDependencies || {};
-        const peerDeps = pj.peerDependencies || {};
+        const deps = { ...pj.dependencies, ...pj.devDependencies, ...pj.peerDependencies };
 
-        for (const [name, version] of Object.entries({ ...deps, ...devDeps, ...peerDeps })) {
+        for (const [name, version] of Object.entries(deps)) {
             if (name.startsWith('@Animatica/') || (typeof version === 'string' && version.startsWith('workspace:'))) {
                 continue;
             }
-            if (!allDeps[name]) {
-                allDeps[name] = new Set();
+            if (!directDepsMap[name]) {
+                directDepsMap[name] = new Set();
             }
-            allDeps[name].add(pj.name || 'root');
+            directDepsMap[name].add(pjName);
         }
     }
 
-    const sortedDeps = Object.keys(allDeps).sort();
+    const directDepNames = Object.keys(directDepsMap).sort();
+    const transitiveDepCount = allPackages.length - directDepNames.length;
 
-    let table = "| Dependency | License | Flag | Used In |\n";
-    table += "| --- | --- | --- | --- |\n";
+    // 1. Summary
+    const summary = `Total dependencies found: ${allPackages.length}
+Direct dependencies: ${directDepNames.length}
+Transitive dependencies: ${transitiveDepCount}`;
 
-    const flagged = [];
+    // 4. Flagged Licenses (Non-MIT)
+    let flaggedTable = "| Dependency | Version | License | Type |\n| --- | --- | --- | --- |\n";
+    const flaggedPackages = allPackages.filter(p => {
+        const l = p.license.toUpperCase();
+        return l !== 'MIT' && !l.includes('MIT');
+    }).sort((a, b) => a.name.localeCompare(b.name));
 
-    for (const dep of sortedDeps) {
-        const license = pkgToLicense[dep] || 'Unknown';
-        let flag = "";
-        if (license !== 'MIT' && !license.includes('MIT')) {
-            flag = "⚠️ Non-MIT";
-            flagged.push(`- **\`${dep}\`**: ${license}`);
-        }
+    for (const p of flaggedPackages) {
+        const type = directDepsMap[p.name] ? "**Direct**" : "Transitive";
+        flaggedTable += `| ${p.name} | ${p.version} | ${p.license} | ${type} |\n`;
+    }
 
-        const usedIn = Array.from(allDeps[dep]).sort().join(', ');
-        table += `| ${dep} | ${license} | ${flag} | ${usedIn} |\n`;
+    // 5. Direct Dependencies
+    let directTable = "| Dependency | License | Used In |\n| --- | --- | --- | --- |\n";
+    for (const name of directDepNames) {
+        const info = pkgToInfo[name] || { license: 'Unknown' };
+        const usedIn = Array.from(directDepsMap[name]).sort().join(', ');
+        directTable += `| ${name} | ${info.license} | ${usedIn} |\n`;
+    }
+
+    // 6. All Dependencies (including transitive)
+    let allTable = "| Dependency | Version | License |\n| --- | --- | --- |\n";
+    const sortedPackages = [...allPackages].sort((a, b) => a.name.localeCompare(b.name));
+    for (const p of sortedPackages) {
+        allTable += `| ${p.name} | ${p.version} | ${p.license} |\n`;
     }
 
     const auditPath = path.join(process.cwd(), 'docs/LICENSE_AUDIT.md');
     let auditContent = fs.readFileSync(auditPath, 'utf8');
 
-    // Update Dependency Licenses section
-    // Look for the table or the header
-    const depSectionStart = "## Dependency Licenses\n\nThe following dependencies were audited:\n\n";
-    const depSectionEnd = "\n\n## Flagged Licenses";
-
-    const startIndex = auditContent.indexOf(depSectionStart);
-    const endIndex = auditContent.indexOf(depSectionEnd);
-
-    if (startIndex !== -1 && endIndex !== -1) {
-        auditContent = auditContent.substring(0, startIndex + depSectionStart.length) +
-                       table +
-                       auditContent.substring(endIndex);
-    }
-
-    // Update Flagged Licenses section
-    const flaggedSectionStart = "## Flagged Licenses (Non-MIT/Apache-2.0)\n\n";
-    const flaggedSectionEnd = "\n\n## Missing Licenses";
-
-    const fStartIndex = auditContent.indexOf(flaggedSectionStart);
-    const fEndIndex = auditContent.indexOf(flaggedSectionEnd);
-
-    if (fStartIndex !== -1 && fEndIndex !== -1) {
-        auditContent = auditContent.substring(0, fStartIndex + flaggedSectionStart.length) +
-                       flagged.join('\n') +
-                       auditContent.substring(fEndIndex);
-    }
-
     // Update Date
-    const dateRegex = /\*\*Date:\*\* .*/;
     const today = new Date().toISOString().split('T')[0];
-    auditContent = auditContent.replace(dateRegex, `**Date:** ${today}`);
+    auditContent = auditContent.replace(/\*\*Date:\*\* .*/, `**Date:** ${today}`);
+
+    // Helper to replace section content
+    function replaceSection(content, header, newBody) {
+        const lines = content.split('\n');
+        let startIndex = -1;
+        let endIndex = -1;
+
+        for (let i = 0; i < lines.length; i++) {
+            if (lines[i].trim() === header) {
+                startIndex = i + 1;
+                // Skip empty lines after header
+                while (startIndex < lines.length && lines[startIndex].trim() === '') {
+                    startIndex++;
+                }
+                break;
+            }
+        }
+
+        if (startIndex !== -1) {
+            for (let i = startIndex; i < lines.length; i++) {
+                if (lines[i].startsWith('## ')) {
+                    endIndex = i;
+                    break;
+                }
+            }
+            if (endIndex === -1) endIndex = lines.length;
+
+            const before = lines.slice(0, startIndex);
+            const after = lines.slice(endIndex);
+            return [...before, newBody, ...after].join('\n');
+        }
+        return content;
+    }
+
+    auditContent = replaceSection(auditContent, '## Summary', summary + '\n');
+    auditContent = replaceSection(auditContent, '## Flagged Licenses (Non-MIT)', flaggedTable);
+    auditContent = replaceSection(auditContent, '## Direct Dependencies', directTable);
+
+    // All Dependencies is special because of <details>
+    const allSectionHeader = '## All Dependencies (including transitive)';
+    const allStartMarker = '<details>\n<summary>Click to expand full dependency list</summary>\n\n';
+    const allEndMarker = '\n</details>';
+
+    const allSectionIndex = auditContent.indexOf(allSectionHeader);
+    if (allSectionIndex !== -1) {
+        const markerPos = auditContent.indexOf(allStartMarker, allSectionIndex);
+        if (markerPos !== -1) {
+            const before = auditContent.substring(0, markerPos + allStartMarker.length);
+            const after = auditContent.substring(auditContent.indexOf(allEndMarker, allSectionIndex));
+            auditContent = before + allTable + after;
+        }
+    }
 
     fs.writeFileSync(auditPath, auditContent);
     console.log('Audit report updated in docs/LICENSE_AUDIT.md');
