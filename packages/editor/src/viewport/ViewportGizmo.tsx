@@ -28,6 +28,9 @@ export const ViewportGizmo: React.FC<ViewportGizmoProps> = ({
     const selectedActorId = useSceneStore((s: { selectedActorId: string | null }) => s.selectedActorId)
     const updateActor = useSceneStore((s: { updateActor: (id: string, updates: Partial<Actor>) => void }) => s.updateActor)
     const { scene } = useThree()
+
+    if (!selectedActorId) return null
+
     const [target, setTarget] = useState<THREE.Object3D | null>(null)
     const controlsRef = useRef<any>(null)
 
