@@ -4,60 +4,6 @@ This document tracks all open tasks, issues, and feature requests for the Animat
 
 ## Status: In Progress
 
-### [Task 2] Refactor: Move Zod Schemas
-- **Priority:** High
-- **Type:** Refactor
-- **Description:** Move the Zod schema definitions from `packages/engine/src/schemas/` to `packages/engine/src/importer/schemas/` to align with the project structure defined in `JULES_GUIDE.md`. Update all import references accordingly.
-- **Acceptance Criteria:**
-  - [ ] `packages/engine/src/importer/schemas/` directory exists.
-  - [ ] All schema files are moved to the new location.
-  - [ ] All imports in the codebase are updated to the new path.
-  - [ ] `npm run test` passes without errors.
-  - [ ] `npm run typecheck` passes without errors.
-
-## Status: Backlog
-
-### [Task 7] Feat: Light Renderer
-- **Priority:** High
-- **Type:** Feature (Rendering)
-- **Description:** Implement the `LightRenderer` component in `packages/engine/src/scene/renderers/LightRenderer.tsx`. This component should render PointLight, SpotLight, and DirectionalLight based on the actor's properties. It must also include a visible helper gizmo when in editor mode.
-- **Acceptance Criteria:**
-  - [ ] Renders `PointLight`, `SpotLight`, and `DirectionalLight` correctly based on actor type.
-  - [ ] Updates light properties (color, intensity, position) from the store.
-  - [ ] Displays a helper gizmo (e.g., `PointLightHelper`) when `isSelected` is true or in editor debug mode.
-  - [ ] Unit tests pass.
-
-### [Task 8] Feat: Camera Renderer
-- **Priority:** High
-- **Type:** Feature (Rendering)
-- **Description:** Implement the `CameraRenderer` component in `packages/engine/src/scene/renderers/CameraRenderer.tsx`. It should manage the `PerspectiveCamera` for the "rec view" and render a camera helper (frustum wireframe) in the editor view.
-- **Acceptance Criteria:**
-  - [ ] Renders a `PerspectiveCamera` with `makeDefault` when active.
-  - [ ] Renders a `CameraHelper` to visualize the frustum when not active (or in debug mode).
-  - [ ] Updates camera transform and FOV from the store.
-  - [ ] Unit tests pass.
-
-### [Task 9] Feat: Scene Manager
-- **Priority:** High
-- **Type:** Feature (Core)
-- **Description:** Implement the `SceneManager` component in `packages/engine/src/scene/SceneManager.tsx`. This component acts as the orchestrator, reading actors from the store and dispatching them to the correct renderer (Primitive, Light, Camera, Character). It also handles global environment settings like ambient light, fog, and grid.
-- **Acceptance Criteria:**
-  - [ ] Subscribes to `useEngineStore` to get the list of actors.
-  - [ ] Maps each actor to its corresponding renderer component.
-  - [ ] Renders global environment (ambient light, sun light, fog, grid) based on store state.
-  - [ ] Integration tests verify actors appear in the scene.
-
-### [Task 10] Feat: Playback Controller
-- **Priority:** High
-- **Type:** Feature (Animation)
-- **Description:** Implement the `PlaybackController` component in `packages/engine/src/animation/PlaybackController.tsx`. This component uses the R3F `useFrame` hook to advance `currentTime` when playing, apply the Keyframe Engine to all tracks, and update actors in the store.
-- **Acceptance Criteria:**
-  - [ ] Implements `useFrame` loop.
-  - [ ] Advances `currentTime` in the store when `isPlaying` is true.
-  - [ ] Interpolates values for all tracks using `KeyframeEngine`.
-  - [ ] Updates actor properties in the store for the current frame.
-  - [ ] Supports pause and seek operations.
-
 ### [Task 11] Feat: Humanoid Base
 - **Priority:** Medium
 - **Type:** Feature (Character)
@@ -67,6 +13,8 @@ This document tracks all open tasks, issues, and feature requests for the Animat
   - [ ] Handles loading states (loading spinner/placeholder).
   - [ ] Handles error states (fallback mesh).
   - [ ] Plays a default idle animation if available.
+
+## Status: Backlog
 
 ### [Task 12] Feat: Bone Controller
 - **Priority:** Medium
@@ -97,8 +45,13 @@ This document tracks all open tasks, issues, and feature requests for the Animat
 ## Status: Done
 
 - **[Task 1] Types & Interfaces:** Defined core TypeScript interfaces.
+- **[Task 2] Refactor: Move Zod Schemas:** Moved Zod schema definitions to `packages/engine/src/importer/schemas/`.
 - **[Task 3] Easing Functions:** Implemented standard easing functions.
 - **[Task 4] Keyframe Engine:** Implemented keyframe interpolation logic.
 - **[Task 5] Zustand Store:** Implemented global state management with Immer.
 - **[Task 6] Primitive Renderer:** Implemented basic shape rendering.
+- **[Task 7] Light Renderer:** Implemented basic light rendering.
+- **[Task 8] Camera Renderer:** Implemented basic camera rendering.
+- **[Task 9] Scene Manager:** Implemented central scene management.
+- **[Task 10] Playback Controller:** Implemented animation playback loop.
 - **[Task 21] Script Importer:** Implemented JSON script import and validation (executed out of order).
