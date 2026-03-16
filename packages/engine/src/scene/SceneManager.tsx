@@ -6,7 +6,15 @@
  * @module @animatica/engine/scene/SceneManager
  */
 import React, { useMemo } from 'react';
-import { useSceneStore } from '../store/sceneStore';
+import {
+    useActorList,
+    useAmbientLight,
+    useSun,
+    useSkyColor,
+    useFog,
+    useTimeline,
+    useCurrentTime,
+} from '../store/sceneStore';
 import { evaluateTracksAtTime } from '../animation/interpolate';
 import { applyAnimationToActor, resolveActiveCamera } from './animationUtils';
 import { PrimitiveRenderer } from './renderers/PrimitiveRenderer';
@@ -33,31 +41,48 @@ interface SceneManagerProps {
 }
 
 /**
- * SceneManager — the main scene orchestrator.
- * Reads actors, timeline, and environment from the Zustand store
- * and renders everything using the appropriate renderer components.
- *
- * @component
- * @example
- * ```tsx
- * <Canvas>
- *   <SceneManager
- *     selectedActorId={selectedId}
- *     onActorSelect={(id) => setSelectedId(id)}
- *     showHelpers={true}
- *   />
- * </Canvas>
- * ```
+ * SceneEnvironment — Renders lights, sky, and fog.
+ * Isolated from currentTime updates to prevent unnecessary re-renders.
  */
-export const SceneManager: React.FC<SceneManagerProps> = ({
+const SceneEnvironment: React.FC = () => {
+    const ambientLight = useAmbientLight();
+    const sun = useSun();
+    const skyColor = useSkyColor();
+    const fog = useFog();
+
+    return (
+        <>
+            <ambientLight intensity={ambientLight.intensity} color={ambientLight.color} />
+            <directionalLight
+                position={sun.position as unknown as [number, number, number]}
+                intensity={sun.intensity}
+                color={sun.color}
+                castShadow
+            />
+            <color attach="background" args={[skyColor]} />
+            {fog && <fog attach="fog" args={[fog.color, fog.near, fog.far]} />}
+        </>
+    );
+};
+
+interface SceneActorsProps {
+    selectedActorId?: string;
+    onActorSelect?: (actorId: string) => void;
+    showHelpers?: boolean;
+}
+
+/**
+ * SceneActors — Renders all animated actors.
+ * Subscribes to currentTime for high-frequency updates.
+ */
+const SceneActors: React.FC<SceneActorsProps> = ({
     selectedActorId,
     onActorSelect,
     showHelpers = false,
 }) => {
-    const actors = useSceneStore((s) => s.actors);
-    const environment = useSceneStore((s) => s.environment);
-    const timeline = useSceneStore((s) => s.timeline);
-    const currentTime = useSceneStore((s) => s.playback.currentTime);
+    const actors = useActorList();
+    const timeline = useTimeline();
+    const currentTime = useCurrentTime();
 
     // Evaluate all animation tracks at the current time
     const animationValues = useMemo(
@@ -68,7 +93,7 @@ export const SceneManager: React.FC<SceneManagerProps> = ({
     // Sort camera cuts only when the track changes, not every frame
     const sortedCameraCuts = useMemo(
         () => [...timeline.cameraTrack].sort((a, b) => a.time - b.time),
-        [timeline.cameraTrack]
+        [timeline.cameraTrack],
     );
 
     // Determine the active camera from the sorted camera cuts
@@ -88,27 +113,6 @@ export const SceneManager: React.FC<SceneManagerProps> = ({
 
     return (
         <>
-            {/* === Environment === */}
-            <ambientLight
-                intensity={environment.ambientLight.intensity}
-                color={environment.ambientLight.color}
-            />
-            <directionalLight
-                position={environment.sun.position as unknown as [number, number, number]}
-                intensity={environment.sun.intensity}
-                color={environment.sun.color}
-                castShadow
-            />
-            <color attach="background" args={[environment.skyColor]} />
-
-            {environment.fog && (
-                <fog
-                    attach="fog"
-                    args={[environment.fog.color, environment.fog.near, environment.fog.far]}
-                />
-            )}
-
-            {/* === Actors === */}
             {animatedActors.map((actor: Actor) => {
                 switch (actor.type) {
                     case 'primitive':
@@ -163,6 +167,40 @@ export const SceneManager: React.FC<SceneManagerProps> = ({
                         return null;
                 }
             })}
+        </>
+    );
+};
+
+/**
+ * SceneManager — the main scene orchestrator.
+ * Reads actors, timeline, and environment from the Zustand store
+ * and renders everything using the appropriate renderer components.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Canvas>
+ *   <SceneManager
+ *     selectedActorId={selectedId}
+ *     onActorSelect={(id) => setSelectedId(id)}
+ *     showHelpers={true}
+ *   />
+ * </Canvas>
+ * ```
+ */
+export const SceneManager: React.FC<SceneManagerProps> = ({
+    selectedActorId,
+    onActorSelect,
+    showHelpers = false,
+}) => {
+    return (
+        <>
+            <SceneEnvironment />
+            <SceneActors
+                selectedActorId={selectedActorId}
+                onActorSelect={onActorSelect}
+                showHelpers={showHelpers}
+            />
         </>
     );
 };

@@ -138,3 +138,65 @@ export const useActorsByType = (type: Actor['type']) =>
  * Hook to get the list of all actors.
  */
 export const useActorList = () => useSceneStore((state) => state.actors);
+
+/**
+ * Hook to get the current environment settings.
+ */
+export const useEnvironment = () => useSceneStore((state) => state.environment);
+
+/**
+ * Hook to get the ambient light settings.
+ */
+export const useAmbientLight = () => useSceneStore((state) => state.environment.ambientLight);
+
+/**
+ * Hook to get the sun (directional light) settings.
+ */
+export const useSun = () => useSceneStore((state) => state.environment.sun);
+
+/**
+ * Hook to get the sky color.
+ */
+export const useSkyColor = () => useSceneStore((state) => state.environment.skyColor);
+
+/**
+ * Hook to get the fog settings.
+ */
+export const useFog = () => useSceneStore((state) => state.environment.fog);
+
+/**
+ * Hook to get the complete timeline state.
+ */
+export const useTimeline = () => useSceneStore((state) => state.timeline);
+
+/**
+ * Hook to get the animation tracks from the timeline.
+ */
+export const useAnimationTracks = () => useSceneStore((state) => state.timeline.animationTracks);
+
+/**
+ * Hook to get the camera track from the timeline.
+ */
+export const useCameraTrack = () => useSceneStore((state) => state.timeline.cameraTrack);
+
+/**
+ * Hook to get the timeline metadata (duration, markers).
+ * Optimized with useShallow to prevent re-renders when tracks change.
+ */
+export const useTimelineMetadata = () =>
+  useSceneStore(
+    useShallow((state) => ({
+      duration: state.timeline.duration,
+      markers: state.timeline.markers,
+    }))
+  );
+
+/**
+ * Hook to get the complete playback state.
+ */
+export const usePlaybackState = () => useSceneStore((state) => state.playback);
+
+/**
+ * Hook to get the project metadata.
+ */
+export const useMeta = () => useSceneStore((state) => state.meta);
