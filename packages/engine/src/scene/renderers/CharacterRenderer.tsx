@@ -2,10 +2,10 @@
  * CharacterRenderer — R3F component for rendering a character actor.
  * Creates a procedural humanoid (or loads GLB), applies animation, face morphs, and eye tracking.
  */
-import React, { useEffect, useRef, useMemo } from 'react'
+import React, { useEffect, useRef, useMemo, memo, forwardRef, useImperativeHandle } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
-import { createProceduralHumanoid } from '../../character/CharacterLoader'
+import { createProceduralHumanoid, CharacterRig } from '../../character/CharacterLoader'
 import { CharacterAnimator, createIdleClip, createWalkClip } from '../../character/CharacterAnimator'
 import { FaceMorphController } from '../../character/FaceMorphController'
 import { EyeController } from '../../character/EyeController'
@@ -18,27 +18,27 @@ interface CharacterRendererProps {
   onClick?: () => void
 }
 
-export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
-  actor,
-  isSelected = false,
-  onClick,
-}) => {
-  const groupRef = useRef<THREE.Group>(null)
-  const animatorRef = useRef<CharacterAnimator | null>(null)
-  const faceMorphRef = useRef<FaceMorphController | null>(null)
-  const eyeControllerRef = useRef<EyeController | null>(null)
+export const CharacterRenderer = memo(
+  forwardRef<CharacterRig, CharacterRendererProps>(({ actor, isSelected = false, onClick }, ref) => {
+    const groupRef = useRef<THREE.Group>(null)
+    const animatorRef = useRef<CharacterAnimator | null>(null)
+    const faceMorphRef = useRef<FaceMorphController | null>(null)
+    const eyeControllerRef = useRef<EyeController | null>(null)
 
-  // Build character rig
-  const rig = useMemo(() => {
-    const preset = getPreset(actor.name.toLowerCase())
-    const skinColor = preset?.body.skinColor || '#D4A27C'
-    const height = preset?.body.height || 1.0
-    const build = preset?.body.build || 0.5
+    // Build character rig
+    const rig = useMemo(() => {
+      const preset = getPreset(actor.name.toLowerCase())
+      const skinColor = preset?.body.skinColor || '#D4A27C'
+      const height = preset?.body.height || 1.0
+      const build = preset?.body.build || 0.5
 
-    return createProceduralHumanoid({ skinColor, height, build })
-  }, [actor.name])
+      return createProceduralHumanoid({ skinColor, height, build })
+    }, [actor.name])
 
-  // Setup animator
+    // Expose rig to parent via ref
+    useImperativeHandle(ref, () => rig, [rig])
+
+    // Setup animator
   useEffect(() => {
     if (!rig.root) return
 
@@ -82,57 +82,62 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     }
   }, [actor.morphTargets])
 
-  // Frame update — animation, face morphs, eye blinks
-  useFrame((_state, delta) => {
-    // Skeletal animation
-    if (animatorRef.current) {
-      animatorRef.current.update(delta)
-    }
+    // Frame update — animation, face morphs, eye blinks
+    useFrame((_state, delta) => {
+      // Skeletal animation
+      if (animatorRef.current) {
+        animatorRef.current.update(delta)
+      }
 
-    // Face morph blending
-    if (faceMorphRef.current) {
-      faceMorphRef.current.update(delta)
-    }
+      // Face morph blending
+      if (faceMorphRef.current) {
+        faceMorphRef.current.update(delta)
+      }
 
-    // Eye auto-blink + look-at
-    if (eyeControllerRef.current && faceMorphRef.current) {
-      const headPos = groupRef.current
-        ? new THREE.Vector3().setFromMatrixPosition(groupRef.current.matrixWorld)
-        : undefined
-      const eyeValues = eyeControllerRef.current.update(delta, headPos)
-      // Apply eye morph values on top of expression
-      faceMorphRef.current.setImmediate(eyeValues)
-    }
+      // Eye auto-blink + look-at
+      if (eyeControllerRef.current && faceMorphRef.current) {
+        const headPos = groupRef.current
+          ? new THREE.Vector3().setFromMatrixPosition(groupRef.current.matrixWorld)
+          : undefined
+        const eyeValues = eyeControllerRef.current.update(delta, headPos)
+        // Apply eye morph values on top of expression
+        faceMorphRef.current.setImmediate(eyeValues)
+      }
+    })
+
+    if (!actor.visible) return null
+
+    return (
+      <group
+        ref={groupRef}
+        name={actor.id}
+        position={actor.transform.position}
+        rotation={actor.transform.rotation}
+        scale={actor.transform.scale}
+        visible={actor.visible}
+        onClick={(e) => {
+          e.stopPropagation()
+          onClick?.()
+        }}
+      >
+        {/* Character rig */}
+        <primitive object={rig.root} />
+
+        {/* Selection indicator ring */}
+        {isSelected && (
+          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
+            <ringGeometry args={[0.4, 0.5, 32]} />
+            <meshBasicMaterial
+              color="#22C55E"
+              transparent
+              opacity={0.6}
+              side={THREE.DoubleSide}
+            />
+          </mesh>
+        )}
+      </group>
+    )
   })
+)
 
-  return (
-    <group
-      ref={groupRef}
-      name={actor.id}
-      position={actor.transform.position}
-      rotation={actor.transform.rotation}
-      scale={actor.transform.scale}
-      visible={actor.visible}
-      onClick={(e) => {
-        e.stopPropagation()
-        onClick?.()
-      }}
-    >
-      {/* Character rig */}
-      <primitive object={rig.root} />
-
-      {/* Selection indicator ring */}
-      {isSelected && (
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
-          <ringGeometry args={[0.4, 0.5, 32]} />
-          <meshBasicMaterial
-            color="#22C55E"
-            transparent
-            opacity={0.6}
-            side={THREE.DoubleSide}
-          />
-        </mesh>
-      )}
-    </group>
-  )
-}
+CharacterRenderer.displayName = 'CharacterRenderer'

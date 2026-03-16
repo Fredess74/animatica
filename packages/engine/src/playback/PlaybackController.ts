@@ -6,7 +6,7 @@
  * @module @animatica/engine/playback/PlaybackController
  */
 import { useCallback, useEffect, useRef } from 'react';
-import { useSceneStore } from '../store/sceneStore';
+import { useSceneStore, useIsPlaying } from '../store/sceneStore';
 import type { LoopMode } from '../store/types';
 
 /**
@@ -46,8 +46,8 @@ export function usePlayback(): PlaybackControls {
     const rafIdRef = useRef<number | null>(null);
     const lastFrameTimeRef = useRef<number | null>(null);
 
-    // Subscribe to playback state changes
-    const isPlaying = useSceneStore((s) => s.playback.isPlaying);
+    // Subscribe to playback state changes using optimized hook
+    const isPlaying = useIsPlaying();
 
     /**
      * The core animation frame callback.
