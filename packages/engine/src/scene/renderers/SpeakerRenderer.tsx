@@ -1,3 +1,4 @@
+"use client";
 import { forwardRef, memo } from 'react'
 import { SpeakerActor } from '../../types'
 import { PositionalAudio } from '@react-three/drei'

@@ -1,3 +1,4 @@
+"use client";
 import React, { useRef, useMemo, memo } from 'react'
 import * as THREE from 'three'
 import { useHelper } from '@react-three/drei'

@@ -1,3 +1,4 @@
+"use client";
 /**
  * CharacterRenderer — R3F component for rendering a character actor.
  * Creates a procedural humanoid (or loads GLB), applies animation, face morphs, and eye tracking.

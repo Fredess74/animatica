@@ -7,13 +7,13 @@ import {
     PrimitiveRenderer,
     LightRenderer,
     CameraRenderer,
-} from '@animatica/engine'
-import type { Actor } from '@animatica/engine'
+} from '@Animatica/engine'
+import type { Actor } from '@Animatica/engine'
 
 export const SceneRenderer: React.FC = () => {
-    const actors = useSceneStore((s) => s.actors)
-    const selectedActorId = useSceneStore((s) => s.selectedActorId)
-    const setSelectedActor = useSceneStore((s) => s.setSelectedActor)
+    const actors = useSceneStore((s: { actors: Actor[] }) => s.actors)
+    const selectedActorId = useSceneStore((s: { selectedActorId: string | null }) => s.selectedActorId)
+    const setSelectedActor = useSceneStore((s: { setSelectedActor: (id: string | null) => void }) => s.setSelectedActor)
 
     return (
         <group>
@@ -60,7 +60,7 @@ const ActorSwitch: React.FC<{
                     position={actor.transform.position}
                     rotation={actor.transform.rotation}
                     scale={actor.transform.scale}
-                    onClick={(e) => { e.stopPropagation(); onSelect() }}
+                    onClick={(e: { stopPropagation: () => void }) => { e.stopPropagation(); onSelect() }}
                 >
                     {/* Placeholder capsule until CharacterRenderer is ready */}
                     <mesh castShadow>
@@ -77,7 +77,7 @@ const ActorSwitch: React.FC<{
                 <group
                     name={actor.id}
                     position={actor.transform.position}
-                    onClick={(e) => { e.stopPropagation(); onSelect() }}
+                    onClick={(e: { stopPropagation: () => void }) => { e.stopPropagation(); onSelect() }}
                 >
                     {/* Speaker icon placeholder */}
                     <mesh>

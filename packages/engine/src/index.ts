@@ -8,6 +8,7 @@ export * from './types/index'
 export * from './importer/schemas/index'
 
 // === STORE ===
+export type { PlaybackState } from './store/types'
 export {
   useSceneStore,
   getActorById,
