@@ -5,7 +5,7 @@ import { Viewport } from './Viewport'
 import React from 'react'
 
 // Mock ResizeObserver
-// @ts-ignore
+// @ts-expect-error - Global ResizeObserver might not be in types
 global.ResizeObserver = class ResizeObserver {
   observe() {}
   unobserve() {}
@@ -35,18 +35,42 @@ vi.mock('@react-three/fiber', async () => {
 // Mock Drei
 vi.mock('@react-three/drei', () => ({
   OrbitControls: () => <div data-testid="orbit-controls" />,
-  TransformControls: () => <div data-testid="transform-controls" />,
+  TransformControls: (props: any) => <div data-testid="transform-controls" data-mode={props.mode} />,
   Grid: () => <div data-testid="grid" />,
+  Sky: () => <div data-testid="sky" />,
+  Environment: () => <div data-testid="environment" />,
+  ContactShadows: () => <div data-testid="contact-shadows" />,
+}))
+
+// Mock local components
+vi.mock('./SceneRenderer', () => ({
+  SceneRenderer: () => <div data-testid="scene-manager" />,
 }))
 
 // Mock Engine
 vi.mock('@Animatica/engine', () => ({
   SceneManager: () => <div data-testid="scene-manager" />,
-  useSceneStore: (selector: any) => selector({
-    selectedActorId: 'test-actor-id',
-    setSelectedActor: mocks.mockSetSelectedActor,
-    updateActor: mocks.mockUpdateActor,
-  }),
+  CharacterRenderer: () => <div data-testid="character-renderer" />,
+  PrimitiveRenderer: () => <div data-testid="primitive-renderer" />,
+  LightRenderer: () => <div data-testid="light-renderer" />,
+  CameraRenderer: () => <div data-testid="camera-renderer" />,
+  useSceneStore: (selector: any) => {
+    // If selector is for environment, return a mock environment
+    // We can't easily detect what the selector is doing without a proper store mock,
+    // so we return an object that satisfies common selectors used in Viewport.
+    return selector({
+        selectedActorId: 'test-actor-id',
+        setSelectedActor: mocks.mockSetSelectedActor,
+        updateActor: mocks.mockUpdateActor,
+        playback: { isPlaying: false },
+        environment: {
+            sun: { position: [0, 10, 0], intensity: 1, color: '#ffffff' },
+            ambientLight: { intensity: 0.5, color: '#ffffff' },
+            skyColor: '#87ceeb'
+        },
+        actors: []
+    })
+  },
 }))
 
 describe('Viewport', () => {
@@ -87,7 +111,7 @@ describe('Viewport', () => {
     expect(topButton).toBeTruthy()
   })
 
-  it('renders gizmo when object is found', () => {
+  it('renders gizmo when object is found', async () => {
     // Mock found object
     mocks.mockGetObjectByName.mockReturnValue({
         position: { x: 0, y: 0, z: 0 },
@@ -97,6 +121,8 @@ describe('Viewport', () => {
 
     render(<Viewport />)
 
-    expect(screen.getByTestId('transform-controls')).toBeTruthy()
+    // Gizmo has a small delay in its useEffect to find the object
+    const gizmo = await screen.findByTestId('transform-controls')
+    expect(gizmo).toBeTruthy()
   })
 })

@@ -28,6 +28,36 @@ export const ViewportToolbar: React.FC<ViewportToolbarProps> = ({
 }) => {
     return (
         <div style={toolbarStyle}>
+            {/* Camera presets */}
+            <div style={groupStyle}>
+                <ToolBtn
+                    tooltip="Perspective View"
+                    active={false}
+                    onClick={() => {}}
+                    icon="📹"
+                />
+                <ToolBtn
+                    tooltip="Top View"
+                    active={false}
+                    onClick={() => {}}
+                    icon="🔝"
+                />
+                <ToolBtn
+                    tooltip="Front View"
+                    active={false}
+                    onClick={() => {}}
+                    icon="正面"
+                />
+                <ToolBtn
+                    tooltip="Side View"
+                    active={false}
+                    onClick={() => {}}
+                    icon="侧面"
+                />
+            </div>
+
+            <Divider />
+
             {/* Gizmo mode group */}
             <div style={groupStyle}>
                 <ToolBtn

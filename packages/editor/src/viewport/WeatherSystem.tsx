@@ -109,6 +109,7 @@ export const WeatherSystem: React.FC<WeatherSystemProps> = ({
                     attach="attributes-position"
                     count={PARTICLE_COUNT}
                     array={positions}
+                    args={[positions, 3]}
                     itemSize={3}
                 />
             </bufferGeometry>

@@ -1,3 +1,4 @@
+"use client";
 /// <reference types="vite/client" />
 import React, { createContext, useContext, ReactNode, useMemo } from 'react';
 
@@ -34,8 +35,8 @@ const getRawEnv = (key: string, env: Record<string, string | boolean | undefined
 };
 
 export const getFeatureFlags = (
-  envMode: string = import.meta.env.MODE,
-  env: Record<string, string | boolean | undefined> = import.meta.env as unknown as Record<string, string | boolean | undefined>
+  envMode: string = (import.meta as any).env.MODE,
+  env: Record<string, string | boolean | undefined> = (import.meta as any).env as unknown as Record<string, string | boolean | undefined>
 ): FeatureFlags => {
   const isDev = envMode === 'development';
   const defaults = isDev ? DEFAULT_FLAGS_DEV : DEFAULT_FLAGS_PROD;
