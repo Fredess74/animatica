@@ -2,6 +2,7 @@
  * @module @animatica/engine/character
  * Barrel export for the character system.
  */
+export { Humanoid } from './Humanoid'
 export { extractRig, createProceduralHumanoid, HUMANOID_BONES } from './CharacterLoader'
 export type { CharacterRig, HumanoidBoneName } from './CharacterLoader'
 
