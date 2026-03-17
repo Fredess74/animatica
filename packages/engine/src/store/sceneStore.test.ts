@@ -1,5 +1,14 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { useSceneStore, getActorById, getActiveActors, getCurrentTime } from './sceneStore';
+import {
+  useSceneStore,
+  getActorById,
+  getActiveActors,
+  getCurrentTime,
+  getTimeline,
+  getEnvironment,
+  getPlaybackState,
+  getMeta
+} from './sceneStore';
 import { PrimitiveActor } from '../types';
 
 describe('sceneStore', () => {
@@ -91,6 +100,31 @@ describe('sceneStore', () => {
     useSceneStore.getState().setPlayback({ currentTime: 10 });
     const result = getCurrentTime(useSceneStore.getState());
     expect(result).toBe(10);
+  });
+
+  it('should get timeline selector', () => {
+    const timeline = { duration: 20, cameraTrack: [], animationTracks: [], markers: [] };
+    useSceneStore.getState().setTimeline(timeline);
+    const result = getTimeline(useSceneStore.getState());
+    expect(result.duration).toBe(20);
+  });
+
+  it('should get environment selector', () => {
+    useSceneStore.getState().setEnvironment({ skyColor: '#ff0000' });
+    const result = getEnvironment(useSceneStore.getState());
+    expect(result.skyColor).toBe('#ff0000');
+  });
+
+  it('should get playback state selector', () => {
+    useSceneStore.getState().setPlayback({ speed: 2.0 });
+    const result = getPlaybackState(useSceneStore.getState());
+    expect(result.speed).toBe(2.0);
+  });
+
+  it('should get meta selector', () => {
+    useSceneStore.getState().setMeta({ title: 'New Title' });
+    const result = getMeta(useSceneStore.getState());
+    expect(result.title).toBe('New Title');
   });
 
   // New Tests
