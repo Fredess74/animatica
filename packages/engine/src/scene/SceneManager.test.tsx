@@ -2,11 +2,25 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render } from '@testing-library/react'
 import { SceneManager } from './SceneManager'
-import { useSceneStore } from '../store/sceneStore'
+import {
+  useActorList,
+  useAmbientLight,
+  useSun,
+  useSkyColor,
+  useFog,
+  useTimeline,
+  useCurrentTime,
+} from '../store/sceneStore'
 
-// Mock the store
+// Mock the store hooks
 vi.mock('../store/sceneStore', () => ({
-  useSceneStore: vi.fn(),
+  useActorList: vi.fn(),
+  useAmbientLight: vi.fn(),
+  useSun: vi.fn(),
+  useSkyColor: vi.fn(),
+  useFog: vi.fn(),
+  useTimeline: vi.fn(),
+  useCurrentTime: vi.fn(),
 }))
 
 // Mock renderers to render visible elements we can query
@@ -45,37 +59,21 @@ describe('SceneManager', () => {
     vi.clearAllMocks()
 
     // Setup default store mock behavior
-    ;(useSceneStore as any).mockImplementation((selector: any) => {
-      const state = {
-        actors: [],
-        environment: {
-          ambientLight: { intensity: 0.5, color: '#ffffff' },
-          sun: { position: [10, 10, 10], intensity: 1, color: '#ffffff' },
-          skyColor: '#87CEEB',
-        },
-        timeline: {
-          cameraTrack: [],
-          animationTracks: [],
-        },
-        playback: {
-          currentTime: 0,
-        },
-      }
-      return selector(state)
+    ;(useActorList as any).mockReturnValue([])
+    ;(useAmbientLight as any).mockReturnValue({ intensity: 0.5, color: '#ffffff' })
+    ;(useSun as any).mockReturnValue({ position: [10, 10, 10], intensity: 1, color: '#ffffff' })
+    ;(useSkyColor as any).mockReturnValue('#87CEEB')
+    ;(useFog as any).mockReturnValue(undefined)
+    ;(useTimeline as any).mockReturnValue({
+      cameraTrack: [],
+      animationTracks: [],
     })
+    ;(useCurrentTime as any).mockReturnValue(0)
   })
 
   it('renders primitive actors', () => {
     const actors = [{ id: '1', type: 'primitive' }]
-    ;(useSceneStore as any).mockImplementation((selector: any) => {
-       const state = {
-         actors,
-         environment: { ambientLight: {}, sun: {}, skyColor: '#000' },
-         timeline: { cameraTrack: [], animationTracks: [] },
-         playback: { currentTime: 0 },
-       }
-       return selector(state)
-    })
+    ;(useActorList as any).mockReturnValue(actors)
 
     const { getByTestId } = render(<SceneManager />)
     expect(getByTestId('primitive-renderer')).toBeDefined()
@@ -83,15 +81,7 @@ describe('SceneManager', () => {
 
   it('renders light actors', () => {
     const actors = [{ id: '2', type: 'light' }]
-    ;(useSceneStore as any).mockImplementation((selector: any) => {
-       const state = {
-         actors,
-         environment: { ambientLight: {}, sun: {}, skyColor: '#000' },
-         timeline: { cameraTrack: [], animationTracks: [] },
-         playback: { currentTime: 0 },
-       }
-       return selector(state)
-    })
+    ;(useActorList as any).mockReturnValue(actors)
 
     const { getByTestId } = render(<SceneManager />)
     expect(getByTestId('light-renderer')).toBeDefined()
@@ -99,15 +89,7 @@ describe('SceneManager', () => {
 
   it('renders camera actors', () => {
     const actors = [{ id: '3', type: 'camera' }]
-    ;(useSceneStore as any).mockImplementation((selector: any) => {
-       const state = {
-         actors,
-         environment: { ambientLight: {}, sun: {}, skyColor: '#000' },
-         timeline: { cameraTrack: [], animationTracks: [] },
-         playback: { currentTime: 0 },
-       }
-       return selector(state)
-    })
+    ;(useActorList as any).mockReturnValue(actors)
 
     const { getByTestId } = render(<SceneManager />)
     expect(getByTestId('camera-renderer')).toBeDefined()
@@ -115,15 +97,7 @@ describe('SceneManager', () => {
 
   it('renders character actors', () => {
     const actors = [{ id: '4', type: 'character' }]
-    ;(useSceneStore as any).mockImplementation((selector: any) => {
-       const state = {
-         actors,
-         environment: { ambientLight: {}, sun: {}, skyColor: '#000' },
-         timeline: { cameraTrack: [], animationTracks: [] },
-         playback: { currentTime: 0 },
-       }
-       return selector(state)
-    })
+    ;(useActorList as any).mockReturnValue(actors)
 
     const { getByTestId } = render(<SceneManager />)
     expect(getByTestId('character-renderer')).toBeDefined()
@@ -131,15 +105,7 @@ describe('SceneManager', () => {
 
   it('renders speaker actors', () => {
     const actors = [{ id: '5', type: 'speaker' }]
-    ;(useSceneStore as any).mockImplementation((selector: any) => {
-       const state = {
-         actors,
-         environment: { ambientLight: {}, sun: {}, skyColor: '#000' },
-         timeline: { cameraTrack: [], animationTracks: [] },
-         playback: { currentTime: 0 },
-       }
-       return selector(state)
-    })
+    ;(useActorList as any).mockReturnValue(actors)
 
     const { getByTestId } = render(<SceneManager />)
     expect(getByTestId('speaker-renderer')).toBeDefined()

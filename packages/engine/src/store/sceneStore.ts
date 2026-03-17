@@ -87,6 +87,26 @@ export const getActiveActors = (state: SceneStoreState): Actor[] =>
 export const getCurrentTime = (state: SceneStoreState): number =>
   state.playback.currentTime;
 
+/**
+ * Selector to get the timeline state.
+ */
+export const getTimeline = (state: SceneStoreState) => state.timeline;
+
+/**
+ * Selector to get the environment state.
+ */
+export const getEnvironment = (state: SceneStoreState) => state.environment;
+
+/**
+ * Selector to get the playback state.
+ */
+export const getPlaybackState = (state: SceneStoreState) => state.playback;
+
+/**
+ * Selector to get the project metadata.
+ */
+export const getMeta = (state: SceneStoreState) => state.meta;
+
 // Hooks
 
 /**
@@ -138,3 +158,61 @@ export const useActorsByType = (type: Actor['type']) =>
  * Hook to get the list of all actors.
  */
 export const useActorList = () => useSceneStore((state) => state.actors);
+
+/**
+ * Hook to get the full environment state.
+ */
+export const useEnvironment = () => useSceneStore(useShallow((state) => state.environment));
+
+/**
+ * Hook to get ambient light settings.
+ */
+export const useAmbientLight = () => useSceneStore(useShallow((state) => state.environment.ambientLight));
+
+/**
+ * Hook to get sun (directional light) settings.
+ */
+export const useSun = () => useSceneStore(useShallow((state) => state.environment.sun));
+
+/**
+ * Hook to get sky color.
+ */
+export const useSkyColor = () => useSceneStore((state) => state.environment.skyColor);
+
+/**
+ * Hook to get fog settings.
+ */
+export const useFog = () => useSceneStore(useShallow((state) => state.environment.fog));
+
+/**
+ * Hook to get the full timeline state.
+ */
+export const useTimeline = () => useSceneStore(useShallow((state) => state.timeline));
+
+/**
+ * Hook to get all animation tracks.
+ */
+export const useAnimationTracks = () => useSceneStore(useShallow((state) => state.timeline.animationTracks));
+
+/**
+ * Hook to get the camera track (cuts).
+ */
+export const useCameraTrack = () => useSceneStore(useShallow((state) => state.timeline.cameraTrack));
+
+/**
+ * Hook to get timeline metadata (duration, etc.).
+ */
+export const useTimelineMetadata = () => useSceneStore(useShallow((state) => ({
+    duration: state.timeline.duration,
+    markers: state.timeline.markers,
+})));
+
+/**
+ * Hook to get the full playback state.
+ */
+export const usePlaybackState = () => useSceneStore(useShallow((state) => state.playback));
+
+/**
+ * Hook to get project metadata.
+ */
+export const useMeta = () => useSceneStore(useShallow((state) => state.meta));
