@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import React from 'react'
+import React, { ReactElement } from 'react'
 // @ts-ignore
 import { CharacterRenderer } from './CharacterRenderer'
 import { CharacterActor } from '../../types'
@@ -52,18 +52,18 @@ describe('CharacterRenderer', () => {
     // Call the forwardRef component's render function directly
     // Since it's wrapped in memo, we access the underlying forwardRef via .type
     // @ts-ignore
-    const result = CharacterRenderer.type.render({ actor: mockActor }, { current: null }) as React.ReactElement
+    const result = CharacterRenderer.type.render({ actor: mockActor }, { current: null }) as ReactElement<any>
 
     expect(result).not.toBeNull()
     expect(result.type).toBe('group')
 
-    const props = result.props as any
+    const props = result.props
     expect(props.position).toEqual([10, 0, 5])
     expect(props.rotation).toEqual([0, Math.PI, 0])
     expect(props.scale).toEqual([1, 1, 1])
 
     // Verify children
-    const children = React.Children.toArray(props.children) as React.ReactElement[]
+    const children = React.Children.toArray(props.children) as ReactElement<any>[]
 
     // First child should be the character rig (primitive)
     const rigPrimitive = children[0]
@@ -80,9 +80,9 @@ describe('CharacterRenderer', () => {
 
   it('renders selection indicator when isSelected is true', () => {
      // @ts-ignore
-    const result = CharacterRenderer.type.render({ actor: mockActor, isSelected: true }, { current: null }) as React.ReactElement
-    const props = result.props as any
-    const children = React.Children.toArray(props.children) as React.ReactElement[]
+    const result = CharacterRenderer.type.render({ actor: mockActor, isSelected: true }, { current: null }) as ReactElement<any>
+    const props = result.props
+    const children = React.Children.toArray(props.children) as ReactElement<any>[]
 
     // Second child should be the selection indicator mesh
     const selectionMesh = children[1]
@@ -90,7 +90,7 @@ describe('CharacterRenderer', () => {
 
     const material = React.Children.toArray(selectionMesh.props.children).find(
       (child: any) => child.type === 'meshBasicMaterial'
-    ) as React.ReactElement
+    ) as ReactElement<any>
 
     expect(material.props.color).toBe('#22C55E')
   })
