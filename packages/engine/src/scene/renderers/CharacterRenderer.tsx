@@ -105,6 +105,8 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     }
   })
 
+  if (!actor.visible) return null
+
   return (
     <group
       ref={groupRef}

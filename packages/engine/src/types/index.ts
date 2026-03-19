@@ -332,7 +332,7 @@ export interface Timeline {
   /** Collection of animation tracks for actors. */
   animationTracks: AnimationTrack[]
   /** List of markers on the timeline. */
-  markers: Marker[]
+  markers?: Marker[]
 }
 
 // ---- Environment ----
