@@ -1,15 +1,13 @@
 # License Audit
 
-**Date:** 2026-02-25
+**Date:** 2026-03-19
 **Auditor:** Jules (License Auditor)
 
 ## Summary
 
-This document lists all dependencies used in the project and their licenses. It also flags any non-MIT licenses and checks for the presence of the project's own LICENSE file.
+This document lists all dependencies used in the core Animatica modules and their licenses. It also flags any non-MIT licenses and checks for the presence of the project's own LICENSE file.
 
-Total dependencies found: 687
-Direct dependencies: 33
-Transitive dependencies: 654
+Total external dependencies found: 628
 
 ## Project License
 
@@ -17,20 +15,13 @@ Transitive dependencies: 654
 - **Status:** Present
 - **License:** MIT
 
-## Source Code Headers
-
-- **Checked:** `packages/engine/src/index.ts`
-- **Result:** No license header found.
-
 ## Flagged Licenses (Non-MIT)
 
 The following dependencies have non-MIT licenses:
 
 | Dependency | Version | License | Type |
-| --- | --- | --- |
+| --- | --- | --- | --- |
 | @dimforge/rapier3d-compat | 0.12.0 | Apache-2.0 | Transitive |
-| @ethereumjs/rlp | 4.0.1 | MPL-2.0 | Transitive |
-| @ethereumjs/util | 8.1.0 | MPL-2.0 | Transitive |
 | @img/sharp-libvips-linux-x64 | 1.2.4 | LGPL-3.0-or-later | Transitive |
 | @img/sharp-libvips-linuxmusl-x64 | 1.2.4 | LGPL-3.0-or-later | Transitive |
 | @img/sharp-linux-x64 | 0.34.5 | Apache-2.0 | Transitive |
@@ -45,6 +36,7 @@ The following dependencies have non-MIT licenses:
 | @swc/helpers | 0.5.15 | Apache-2.0 | Transitive |
 | @webgpu/types | 0.1.69 | BSD-3-Clause | Transitive |
 | abbrev | 1.0.9 | ISC | Transitive |
+| amdefine | 1.0.1 | BSD-3-Clause OR MIT | Transitive |
 | ansi-align | 3.0.1 | ISC | Transitive |
 | antlr4ts | 0.5.0-alpha.4 | BSD-3-Clause | Transitive |
 | anymatch | 3.1.3 | ISC | Transitive |
@@ -69,14 +61,12 @@ The following dependencies have non-MIT licenses:
 | esprima | 2.7.3 | BSD-2-Clause | Transitive |
 | estraverse | 1.9.3 | BSD | Transitive |
 | esutils | 2.0.3 | BSD-2-Clause | Transitive |
-| ethereumjs-util | 7.1.5 | MPL-2.0 | Transitive |
 | expect-type | 1.3.0 | Apache-2.0 | Transitive |
 | fast-uri | 3.1.0 | BSD-3-Clause | Transitive |
 | fastq | 1.20.1 | ISC | Transitive |
 | flat | 5.0.2 | BSD-3-Clause | Transitive |
 | fs.realpath | 1.0.0 | ISC | Transitive |
 | get-caller-file | 2.0.5 | ISC | Transitive |
-| ghost-testrpc | 0.0.2 | ISC | Transitive |
 | glob | 5.0.15 | ISC | Transitive |
 | glob-parent | 5.1.2 | ISC | Transitive |
 | graceful-fs | 4.2.11 | ISC | Transitive |
@@ -106,29 +96,28 @@ The following dependencies have non-MIT licenses:
 | potpack | 1.0.2 | ISC | Transitive |
 | promise-worker-transferable | 1.0.4 | Apache-2.0 | Transitive |
 | qs | 6.15.0 | BSD-3-Clause | Transitive |
-| rlp | 2.2.7 | MPL-2.0 | Transitive |
 | saxes | 6.0.0 | ISC | Transitive |
-| sc-istanbul | 0.4.6 | BSD-3-Clause | Transitive |
 | semver | 5.7.2 | ISC | Transitive |
 | serialize-javascript | 6.0.2 | BSD-3-Clause | Transitive |
 | setprototypeof | 1.2.0 | ISC | Transitive |
+| sha.js | 2.4.12 | (MIT AND BSD-3-Clause) | Transitive |
 | sha1 | 1.1.1 | BSD-3-Clause | Transitive |
 | sharp | 0.34.5 | Apache-2.0 | Transitive |
 | shelljs | 0.8.5 | BSD-3-Clause | Transitive |
 | siginfo | 2.0.0 | ISC | Transitive |
-| solidity-coverage | 0.8.17 | ISC | Transitive |
 | source-map | 0.6.1 | BSD-3-Clause | Transitive |
 | source-map | 0.2.0 | BSD | Transitive |
 | source-map-js | 1.2.1 | BSD-3-Clause | Transitive |
 | split2 | 3.2.2 | ISC | Transitive |
 | sprintf-js | 1.0.3 | BSD-3-Clause | Transitive |
+| string-format | 2.0.0 | WTFPL OR MIT | Transitive |
 | table | 6.9.0 | BSD-3-Clause | Transitive |
 | tough-cookie | 6.0.0 | BSD-3-Clause | Transitive |
 | ts-command-line-args | 2.5.1 | ISC | Transitive |
 | tslib | 1.14.1 | 0BSD | Transitive |
+| type-fest | 0.7.1 | (MIT OR CC0-1.0) | Transitive |
 | typescript | 5.9.3 | Apache-2.0 | **Direct** |
 | uglify-js | 3.19.3 | BSD-2-Clause | Transitive |
-| web3-utils | 1.10.4 | LGPL-3.0 | Transitive |
 | webidl-conversions | 8.0.1 | BSD-2-Clause | Transitive |
 | which | 1.3.1 | ISC | Transitive |
 | workerpool | 6.5.1 | Apache-2.0 | Transitive |
@@ -142,9 +131,7 @@ The following dependencies have non-MIT licenses:
 
 | Dependency | License | Used In |
 | --- | --- | --- |
-| @nomicfoundation/hardhat-toolbox | MIT | @Animatica/contracts |
-| @openzeppelin/contracts | MIT | @Animatica/contracts |
-| @react-three/drei | MIT | @Animatica/engine |
+| @react-three/drei | MIT | @Animatica/editor, @Animatica/engine |
 | @react-three/fiber | MIT | @Animatica/editor, @Animatica/engine, @Animatica/web |
 | @tailwindcss/postcss | MIT | @Animatica/editor |
 | @testing-library/dom | MIT | @Animatica/web |
@@ -152,11 +139,10 @@ The following dependencies have non-MIT licenses:
 | @types/node | MIT | @Animatica/engine |
 | @types/react | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web |
 | @types/react-dom | MIT | @Animatica/editor, @Animatica/platform, @Animatica/web |
-| @types/three | MIT | @Animatica/engine |
+| @types/three | MIT | @Animatica/editor, @Animatica/engine |
 | @types/uuid | MIT | @Animatica/engine |
 | @vitejs/plugin-react | MIT | @Animatica/editor |
 | clsx | MIT | @Animatica/editor |
-| hardhat | MIT | @Animatica/contracts |
 | immer | MIT | @Animatica/engine |
 | jsdom | MIT | @Animatica/editor, @Animatica/engine, @Animatica/web |
 | lucide-react | ISC | @Animatica/editor, @Animatica/web |
@@ -168,11 +154,11 @@ The following dependencies have non-MIT licenses:
 | three | MIT | @Animatica/editor, @Animatica/engine, @Animatica/web |
 | tone | MIT | @Animatica/engine |
 | turbo | MIT | Animatica |
-| typescript | Apache-2.0 | @Animatica/contracts, @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web, Animatica |
+| typescript | Apache-2.0 | @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web, Animatica |
 | uuid | MIT | @Animatica/engine |
 | vite | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform |
 | vitest | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web |
-| zod | MIT | @Animatica/engine |
+| zod | MIT | @Animatica/engine, @Animatica/web |
 | zundo | MIT | @Animatica/engine |
 | zustand | MIT | @Animatica/engine |
 
@@ -184,7 +170,6 @@ The following dependencies have non-MIT licenses:
 | Dependency | Version | License |
 | --- | --- | --- |
 | @acemir/cssom | 0.9.31 | MIT |
-| @adraffy/ens-normalize | 1.10.1 | MIT |
 | @alloc/quick-lru | 5.2.0 | MIT |
 | @asamuzakjp/css-color | 5.0.0 | MIT |
 | @asamuzakjp/dom-selector | 6.8.1 | MIT |
@@ -219,19 +204,11 @@ The following dependencies have non-MIT licenses:
 | @csstools/css-tokenizer | 4.0.0 | MIT |
 | @dimforge/rapier3d-compat | 0.12.0 | Apache-2.0 |
 | @esbuild/linux-x64 | 0.27.3 | MIT |
-| @ethereumjs/rlp | 4.0.1 | MPL-2.0 |
-| @ethereumjs/util | 8.1.0 | MPL-2.0 |
-| @ethersproject/abi | 5.8.0 | MIT |
-| @ethersproject/abstract-provider | 5.8.0 | MIT |
-| @ethersproject/abstract-signer | 5.8.0 | MIT |
-| @ethersproject/address | 5.6.1 | MIT |
 | @ethersproject/base64 | 5.8.0 | MIT |
 | @ethersproject/basex | 5.8.0 | MIT |
 | @ethersproject/bignumber | 5.8.0 | MIT |
 | @ethersproject/bytes | 5.8.0 | MIT |
-| @ethersproject/constants | 5.8.0 | MIT |
 | @ethersproject/contracts | 5.8.0 | MIT |
-| @ethersproject/hash | 5.8.0 | MIT |
 | @ethersproject/hdnode | 5.8.0 | MIT |
 | @ethersproject/json-wallets | 5.8.0 | MIT |
 | @ethersproject/keccak256 | 5.8.0 | MIT |
@@ -239,16 +216,10 @@ The following dependencies have non-MIT licenses:
 | @ethersproject/networks | 5.8.0 | MIT |
 | @ethersproject/pbkdf2 | 5.8.0 | MIT |
 | @ethersproject/properties | 5.8.0 | MIT |
-| @ethersproject/providers | 5.8.0 | MIT |
 | @ethersproject/random | 5.8.0 | MIT |
-| @ethersproject/rlp | 5.8.0 | MIT |
 | @ethersproject/sha2 | 5.8.0 | MIT |
 | @ethersproject/signing-key | 5.8.0 | MIT |
-| @ethersproject/solidity | 5.8.0 | MIT |
 | @ethersproject/strings | 5.8.0 | MIT |
-| @ethersproject/transactions | 5.8.0 | MIT |
-| @ethersproject/units | 5.8.0 | MIT |
-| @ethersproject/wallet | 5.8.0 | MIT |
 | @ethersproject/web | 5.8.0 | MIT |
 | @ethersproject/wordlists | 5.8.0 | MIT |
 | @exodus/bytes | 1.14.1 | MIT |
@@ -274,32 +245,6 @@ The following dependencies have non-MIT licenses:
 | @nodelib/fs.scandir | 2.1.5 | MIT |
 | @nodelib/fs.stat | 2.0.5 | MIT |
 | @nodelib/fs.walk | 1.2.8 | MIT |
-| @nomicfoundation/edr | 0.12.0-next.23 | MIT |
-| @nomicfoundation/edr-darwin-arm64 | 0.12.0-next.23 | MIT |
-| @nomicfoundation/edr-darwin-x64 | 0.12.0-next.23 | MIT |
-| @nomicfoundation/edr-linux-arm64-gnu | 0.12.0-next.23 | MIT |
-| @nomicfoundation/edr-linux-arm64-musl | 0.12.0-next.23 | MIT |
-| @nomicfoundation/edr-linux-x64-gnu | 0.12.0-next.23 | MIT |
-| @nomicfoundation/edr-linux-x64-musl | 0.12.0-next.23 | MIT |
-| @nomicfoundation/edr-win32-x64-msvc | 0.12.0-next.23 | MIT |
-| @nomicfoundation/hardhat-chai-matchers | 2.1.0 | MIT |
-| @nomicfoundation/hardhat-ethers | 3.1.3 | MIT |
-| @nomicfoundation/hardhat-ignition | 0.15.16 | MIT |
-| @nomicfoundation/hardhat-ignition-ethers | 0.15.17 | MIT |
-| @nomicfoundation/hardhat-network-helpers | 1.1.2 | MIT |
-| @nomicfoundation/hardhat-toolbox | 5.0.0 | MIT |
-| @nomicfoundation/hardhat-verify | 2.1.3 | MIT |
-| @nomicfoundation/ignition-core | 0.15.15 | MIT |
-| @nomicfoundation/ignition-ui | 0.15.13 | MIT |
-| @nomicfoundation/solidity-analyzer | 0.1.2 | MIT |
-| @nomicfoundation/solidity-analyzer-darwin-arm64 | 0.1.2 | MIT |
-| @nomicfoundation/solidity-analyzer-darwin-x64 | 0.1.2 | MIT |
-| @nomicfoundation/solidity-analyzer-linux-arm64-gnu | 0.1.2 | MIT |
-| @nomicfoundation/solidity-analyzer-linux-arm64-musl | 0.1.2 | MIT |
-| @nomicfoundation/solidity-analyzer-linux-x64-gnu | 0.1.2 | MIT |
-| @nomicfoundation/solidity-analyzer-linux-x64-musl | 0.1.2 | MIT |
-| @nomicfoundation/solidity-analyzer-win32-x64-msvc | 0.1.2 | MIT |
-| @openzeppelin/contracts | 5.4.0 | MIT |
 | @react-three/drei | 10.7.7 | MIT |
 | @react-three/fiber | 9.5.0 | MIT |
 | @rolldown/pluginutils | 1.0.0-rc.3 | MIT |
@@ -315,7 +260,6 @@ The following dependencies have non-MIT licenses:
 | @sentry/tracing | 5.30.0 | MIT |
 | @sentry/types | 5.30.0 | BSD-3-Clause |
 | @sentry/utils | 5.30.0 | BSD-3-Clause |
-| @solidity-parser/parser | 0.14.5 | MIT |
 | @standard-schema/spec | 1.1.0 | MIT |
 | @swc/helpers | 0.5.15 | Apache-2.0 |
 | @tailwindcss/node | 4.2.0 | MIT |
@@ -331,7 +275,6 @@ The following dependencies have non-MIT licenses:
 | @tsconfig/node16 | 1.0.4 | MIT |
 | @tweenjs/tween.js | 23.1.3 | MIT |
 | @typechain/ethers-v6 | 0.5.1 | MIT |
-| @typechain/hardhat | 9.1.0 | MIT |
 | @types/aria-query | 5.0.4 | MIT |
 | @types/babel__core | 7.20.5 | MIT |
 | @types/babel__generator | 7.27.0 | MIT |
@@ -510,12 +453,6 @@ The following dependencies have non-MIT licenses:
 | estraverse | 1.9.3 | BSD |
 | estree-walker | 3.0.3 | MIT |
 | esutils | 2.0.3 | BSD-2-Clause |
-| eth-gas-reporter | 0.2.27 | MIT |
-| ethereum-bloom-filters | 1.2.0 | MIT |
-| ethereum-cryptography | 0.1.3 | MIT |
-| ethereumjs-util | 7.1.5 | MPL-2.0 |
-| ethers | 5.8.0 | MIT |
-| ethjs-unit | 0.1.6 | MIT |
 | evp_bytestokey | 1.0.3 | MIT |
 | expect-type | 1.3.0 | Apache-2.0 |
 | fast-deep-equal | 3.1.3 | MIT |
@@ -543,7 +480,6 @@ The following dependencies have non-MIT licenses:
 | get-intrinsic | 1.3.0 | MIT |
 | get-port | 3.2.0 | MIT |
 | get-proto | 1.0.1 | MIT |
-| ghost-testrpc | 0.0.2 | ISC |
 | glob | 5.0.15 | ISC |
 | glob-parent | 5.1.2 | ISC |
 | global-modules | 2.0.0 | MIT |
@@ -553,8 +489,6 @@ The following dependencies have non-MIT licenses:
 | gopd | 1.2.0 | MIT |
 | graceful-fs | 4.2.11 | ISC |
 | handlebars | 4.7.8 | MIT |
-| hardhat | 2.28.6 | MIT |
-| hardhat-gas-reporter | 1.0.10 | MIT |
 | has-flag | 1.0.0 | MIT |
 | has-property-descriptors | 1.0.2 | MIT |
 | has-symbols | 1.1.0 | MIT |
@@ -627,9 +561,9 @@ The following dependencies have non-MIT licenses:
 | lodash.isequal | 4.5.0 | MIT |
 | lodash.truncate | 4.4.2 | MIT |
 | log-symbols | 4.1.0 | MIT |
-| lru_map | 0.3.3 | MIT |
 | lru-cache | 5.1.1 | ISC |
 | lru-cache | 11.2.6 | BlueOak-1.0.0 |
+| lru_map | 0.3.3 | MIT |
 | lucide-react | 0.563.0 | ISC |
 | lz-string | 1.5.0 | MIT |
 | maath | 0.10.8 | MIT |
@@ -643,7 +577,6 @@ The following dependencies have non-MIT licenses:
 | merge2 | 1.4.1 | MIT |
 | meshline | 3.3.1 | MIT |
 | meshoptimizer | 0.22.0 | MIT |
-| micro-eth-signer | 0.14.0 | MIT |
 | micro-ftch | 0.3.1 | MIT |
 | micro-packed | 0.7.3 | MIT |
 | micromatch | 4.0.8 | MIT |
@@ -727,13 +660,11 @@ The following dependencies have non-MIT licenses:
 | resolve-from | 3.0.0 | MIT |
 | reusify | 1.1.0 | MIT |
 | ripemd160 | 2.0.3 | MIT |
-| rlp | 2.2.7 | MPL-2.0 |
 | rollup | 4.58.0 | MIT |
 | run-parallel | 1.2.0 | MIT |
 | safe-buffer | 5.1.2 | MIT |
 | safer-buffer | 2.1.2 | MIT |
 | saxes | 6.0.0 | ISC |
-| sc-istanbul | 0.4.6 | BSD-3-Clause |
 | scheduler | 0.27.0 | MIT |
 | scrypt-js | 3.0.1 | MIT |
 | secp256k1 | 4.0.4 | MIT |
@@ -756,8 +687,6 @@ The following dependencies have non-MIT licenses:
 | sisteransi | 1.0.5 | MIT |
 | slash | 3.0.0 | MIT |
 | slice-ansi | 4.0.0 | MIT |
-| solc | 0.8.26 | MIT |
-| solidity-coverage | 0.8.17 | ISC |
 | source-map | 0.6.1 | BSD-3-Clause |
 | source-map | 0.2.0 | BSD |
 | source-map-js | 1.2.1 | BSD-3-Clause |
@@ -771,9 +700,9 @@ The following dependencies have non-MIT licenses:
 | stats.js | 0.17.0 | MIT |
 | statuses | 2.0.2 | MIT |
 | std-env | 3.10.0 | MIT |
-| string_decoder | 1.1.1 | MIT |
 | string-format | 2.0.0 | WTFPL OR MIT |
 | string-width | 2.1.1 | MIT |
+| string_decoder | 1.1.1 | MIT |
 | strip-ansi | 4.0.0 | MIT |
 | strip-hex-prefix | 1.0.0 | MIT |
 | strip-json-comments | 3.1.1 | MIT |
@@ -821,7 +750,6 @@ The following dependencies have non-MIT licenses:
 | type-check | 0.3.2 | MIT |
 | type-detect | 4.1.0 | MIT |
 | type-fest | 0.7.1 | (MIT OR CC0-1.0) |
-| typechain | 8.3.2 | MIT |
 | typed-array-buffer | 1.0.3 | MIT |
 | typedarray | 0.0.6 | MIT |
 | typescript | 5.9.3 | Apache-2.0 |
@@ -841,7 +769,6 @@ The following dependencies have non-MIT licenses:
 | vite | 7.3.1 | MIT |
 | vitest | 4.0.18 | MIT |
 | w3c-xmlserializer | 5.0.0 | MIT |
-| web3-utils | 1.10.4 | LGPL-3.0 |
 | webgl-constants | 1.1.1 | MIT |
 | webgl-sdf-generator | 1.1.1 | MIT |
 | webidl-conversions | 8.0.1 | BSD-2-Clause |
@@ -867,7 +794,7 @@ The following dependencies have non-MIT licenses:
 | yargs-unparser | 2.0.0 | MIT |
 | yn | 3.1.1 | MIT |
 | yocto-queue | 0.1.0 | MIT |
-| zod | 4.3.6 | MIT |
+| zod | 3.25.76 | MIT |
 | zundo | 2.3.0 | MIT |
 | zustand | 4.5.7 | MIT |
 
