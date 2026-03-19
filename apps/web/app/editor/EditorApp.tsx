@@ -11,7 +11,7 @@ import { Viewport } from '@Animatica/editor';
 export default function EditorApp() {
     return (
         <EditorLayout
-            viewport={<Viewport />}
+            viewport={<Viewport className="editor-viewport" />}
         />
     );
 }

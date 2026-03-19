@@ -3,7 +3,7 @@
  * Rendered as a 40px strip above the 3D canvas.
  */
 import React from 'react'
-import type { GizmoMode, TransformSpace } from './Viewport'
+import type { GizmoMode, TransformSpace, ViewMode } from './Viewport'
 
 interface ViewportToolbarProps {
     gizmoMode: GizmoMode
@@ -14,6 +14,8 @@ interface ViewportToolbarProps {
     onSnapToggle: () => void
     gridVisible: boolean
     onGridToggle: () => void
+    viewMode: ViewMode
+    onViewModeChange: (mode: ViewMode) => void
 }
 
 export const ViewportToolbar: React.FC<ViewportToolbarProps> = ({
@@ -25,6 +27,8 @@ export const ViewportToolbar: React.FC<ViewportToolbarProps> = ({
     onSnapToggle,
     gridVisible,
     onGridToggle,
+    viewMode,
+    onViewModeChange,
 }) => {
     return (
         <div style={toolbarStyle}>
@@ -74,6 +78,19 @@ export const ViewportToolbar: React.FC<ViewportToolbarProps> = ({
                     active={gridVisible}
                     onClick={onGridToggle}
                     icon="⊞"
+                />
+                <Divider />
+                <ToolBtn
+                    tooltip="3D viewport mode"
+                    active={viewMode === '3d'}
+                    onClick={() => onViewModeChange('3d')}
+                    icon="🧊"
+                />
+                <ToolBtn
+                    tooltip="2D storyboard mode"
+                    active={viewMode === '2d'}
+                    onClick={() => onViewModeChange('2d')}
+                    icon="🖼️"
                 />
             </div>
         </div>

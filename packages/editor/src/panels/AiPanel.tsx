@@ -18,7 +18,7 @@ export const AiPanel: React.FC = () => {
     const [prompt, setPrompt] = useState('')
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
-    const addActor = useSceneStore((s) => s.addActor)
+
     const setEnvironment = useSceneStore((s) => s.setEnvironment)
     const setTimeline = useSceneStore((s) => s.setTimeline)
 
@@ -41,21 +41,14 @@ export const AiPanel: React.FC = () => {
 
             const scene = await res.json()
 
-            // Apply environment
-            if (scene.environment) {
-                setEnvironment(scene.environment)
-            }
+            if (scene.environment) setEnvironment(scene.environment)
+            if (scene.timeline) setTimeline(scene.timeline)
 
-            // Apply timeline
-            if (scene.timeline) {
-                setTimeline(scene.timeline)
-            }
-
-            // Add actors
             if (scene.actors && Array.isArray(scene.actors)) {
-                for (const actor of scene.actors as Actor[]) {
-                    addActor(actor)
-                }
+                useSceneStore.setState((state) => {
+                    state.actors = scene.actors as Actor[]
+                    state.selectedActorId = scene.actors[0]?.id ?? null
+                })
             }
 
             setPrompt('')
@@ -64,7 +57,7 @@ export const AiPanel: React.FC = () => {
         } finally {
             setLoading(false)
         }
-    }, [prompt, addActor, setEnvironment, setTimeline])
+    }, [prompt, setEnvironment, setTimeline])
 
     return (
         <div className="ai-panel">

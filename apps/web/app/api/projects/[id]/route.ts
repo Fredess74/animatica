@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { ProjectStateSchema } from '@Animatica/engine';
+import { ProjectStateSchema } from '@Animatica/engine/src/importer/schemas';
+import type { ProjectState } from '@Animatica/engine/src/types';
 import { getProjectById, updateProject, deleteProject } from '@/lib/db';
 import { handleError, jsonResponse } from '@/lib/api-utils';
 import { rateLimit } from '@/lib/rate-limit';
@@ -49,7 +50,7 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
         updates = ProjectStateSchema.parse(json);
     }
 
-    const updated = await updateProject(id, updates);
+    const updated = await updateProject(id, updates as Partial<ProjectState>);
     if (!updated) {
       return jsonResponse({ error: 'Project not found' }, 404);
     }

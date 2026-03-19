@@ -16,6 +16,7 @@ export type { LensPreset, ShakePreset } from './viewport/CinematicCamera';
 export { CompositionGuides } from './viewport/CompositionGuides';
 export type { GuideType, AspectRatio, SafeAreaType } from './viewport/CompositionGuides';
 export { PlaybackBar } from './viewport/PlaybackBar';
+export { Viewport2D } from './viewport/Viewport2D';
 
 // === LAYOUTS ===
 export { EditorLayout } from './layouts/EditorLayout';

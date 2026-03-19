@@ -37,6 +37,7 @@ vi.mock('@react-three/drei', () => ({
   OrbitControls: () => <div data-testid="orbit-controls" />,
   TransformControls: () => <div data-testid="transform-controls" />,
   Grid: () => <div data-testid="grid" />,
+  Sky: () => <div data-testid="sky" />,
 }))
 
 // Mock Engine
@@ -46,6 +47,12 @@ vi.mock('@Animatica/engine', () => ({
     selectedActorId: 'test-actor-id',
     setSelectedActor: mocks.mockSetSelectedActor,
     updateActor: mocks.mockUpdateActor,
+    playback: { isPlaying: false },
+    environment: {
+      ambientLight: { intensity: 0.5, color: '#fff' },
+      sun: { position: [10, 10, 10], intensity: 1, color: '#fff' },
+      skyColor: '#87ceeb',
+    },
   }),
 }))
 

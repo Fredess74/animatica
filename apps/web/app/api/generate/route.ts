@@ -2,181 +2,206 @@
  * AI Scene Generation API route.
  * POST /api/generate
  * Body: { prompt: string }
- * Returns: ProjectState JSON
  */
 import { NextResponse } from 'next/server';
 
-const SYSTEM_PROMPT = `You are Animatica's AI scene generator. Given a user's scene description, 
-output a valid JSON ProjectState object with actors, environment, timeline, camera settings, and storyboard.
+const SYSTEM_PROMPT = `You are Animatica's AI scene generator.
+Return ONLY valid JSON for a ProjectState-compatible scene.
 
-Rules:
-- Output ONLY valid JSON, no markdown or explanation
-- Always include a "meta" object with title and version "1.0.0"
-- Actors must have: id (UUID), name, type (character|primitive|light|camera|speaker), transform, visible
-- Characters need: animation, morphTargets, bodyPose, clothing
-  - Characters can have "glbUrl" for loading 3D models (optional)
-- Environment needs: ambientLight, sun, skyColor
-  - Environment can include: fog, weather (type: rain|snow|dust|none, intensity: 0-1)
-- Timeline needs: duration, cameraTrack[], animationTracks[], markers[]
-- Camera actors can include: focalLength (mm), aperture (f-stop), shake (none|handheld|subtle|explosion|earthquake)
-- Include a "storyboard" array with shots: { id, number, name, duration, shotType, description }
-- Include "cinematography" object: { guide: thirds|golden|center|none, aspectRatio: 16:9|2.39:1|4:3|1:1|9:16 }
+Required fields:
+- meta { title, version: "1.0.0", description }
+- environment { ambientLight, sun, skyColor, optional fog, optional weather }
+- actors[] with at least one character, one light, and one camera
+- timeline { duration, cameraTrack, animationTracks, markers }
+- storyboard[] { id, number, name, duration, shotType, description }
+- cinematography { guide, aspectRatio }
 
-Available animation states: idle, walk, run, talk, wave, dance, sit, jump
-Available primitive shapes: box, sphere, cylinder, plane, cone, torus, capsule
-Available light types: point, spot, directional
-Available weather types: none, rain, snow, dust
-Available shot types: wide, medium, close-up, extreme-close-up, over-shoulder, pov, establishing, insert, tracking, crane
-Available lens presets: 18mm (ultra-wide), 24mm (wide), 35mm (standard), 50mm (normal), 85mm (portrait), 135mm (telephoto)
-Available guide types: none, thirds, golden, center, diagonal
-Available morph targets: browInnerUp, browDownLeft, browDownRight, browOuterUpLeft, browOuterUpRight, eyeLookUpLeft, eyeLookUpRight, eyeLookDownLeft, eyeLookDownRight, eyeLookInLeft, eyeLookInRight, eyeLookOutLeft, eyeLookOutRight, eyeBlinkLeft, eyeBlinkRight, eyeSquintLeft, eyeSquintRight, eyeWideLeft, eyeWideRight, cheekPuff, cheekSquintLeft, cheekSquintRight, noseSneerLeft, noseSneerRight, jawOpen, jawForward, jawLeft, jawRight, mouthClose, mouthFunnel, mouthPucker, mouthLeft, mouthRight, mouthSmile, mouthFrownLeft, mouthFrownRight, mouthDimpleLeft, mouthDimpleRight, mouthStretchLeft, mouthStretchRight, mouthRollLower, mouthRollUpper, mouthShrugLower, mouthShrugUpper, mouthPressLeft, mouthPressRight, mouthLowerDownLeft, mouthLowerDownRight, mouthUpperUpLeft, mouthUpperUpRight, tongueOut
+Use cinematic defaults:
+- 3-point lighting
+- camera height Y 1.5-1.7
+- 35mm/dialogue, 85mm/close portrait, 18mm/establishing
+- weather only when implied by prompt
 
-When creating scenes:
-- Use cinematic 3-point lighting (key, fill, rim lights)
-- Position cameras at eye level (Y: 1.5-1.7) for natural shots
-- Set appropriate focal lengths: 35mm for dialogue, 85mm for portraits, 18mm for establishing shots
-- Use shallow DOF (aperture < 4) for dramatic close-ups
-- Add weather effects when the scene description implies it (rain, snow, etc.)
-- Set character expressions via morphTargets to match the mood
-- Create multiple shots in storyboard for complex scenes
+Output JSON object only.`;
 
-Generate UUIDs in format: xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx`;
+type WeatherType = 'none' | 'rain' | 'snow' | 'dust';
+type ShotType = 'wide' | 'medium' | 'close-up' | 'establishing';
 
-/**
- * POST /api/generate — Generate a scene from text description.
- */
-export async function POST(request: Request) {
-    try {
-        const { prompt } = await request.json();
+const id = () => crypto.randomUUID();
 
-        if (!prompt || typeof prompt !== 'string') {
-            return NextResponse.json(
-                { error: 'Missing or invalid "prompt" field' },
-                { status: 400 }
-            );
-        }
-
-        if (prompt.length > 2000) {
-            return NextResponse.json(
-                { error: 'Prompt too long (max 2000 characters)' },
-                { status: 400 }
-            );
-        }
-
-        const apiKey = process.env.OPENAI_API_KEY;
-        if (!apiKey) {
-            // Fallback: return a demo scene
-            return NextResponse.json(generateDemoScene(prompt));
-        }
-
-        // Call OpenAI
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`,
-            },
-            body: JSON.stringify({
-                model: 'gpt-4o-mini',
-                messages: [
-                    { role: 'system', content: SYSTEM_PROMPT },
-                    { role: 'user', content: `Create a scene: ${prompt}` },
-                ],
-                temperature: 0.7,
-                max_tokens: 4000,
-                response_format: { type: 'json_object' },
-            }),
-        });
-
-        if (!response.ok) {
-            const errorData = await response.text();
-            console.error('[AI Generate] OpenAI error:', errorData);
-            return NextResponse.json(generateDemoScene(prompt));
-        }
-
-        const data = await response.json();
-        const content = data.choices?.[0]?.message?.content;
-
-        if (!content) {
-            return NextResponse.json(generateDemoScene(prompt));
-        }
-
-        const scene = JSON.parse(content);
-        return NextResponse.json(scene.project || scene);
-    } catch (error) {
-        console.error('[AI Generate] Error:', error);
-        return NextResponse.json(
-            { error: 'Failed to generate scene' },
-            { status: 500 }
-        );
-    }
+function getWeather(prompt: string): WeatherType {
+  const text = prompt.toLowerCase();
+  if (text.includes('rain') || text.includes('storm')) return 'rain';
+  if (text.includes('snow') || text.includes('winter') || text.includes('blizzard')) return 'snow';
+  if (text.includes('dust') || text.includes('desert') || text.includes('sand')) return 'dust';
+  return 'none';
 }
 
-/**
- * Fallback demo scene generator when no OpenAI key is configured.
- */
-function generateDemoScene(prompt: string) {
-    const id = () => crypto.randomUUID();
-    const title = prompt.slice(0, 50);
+function getAnimation(prompt: string): 'idle' | 'walk' | 'run' | 'talk' | 'wave' | 'dance' | 'sit' | 'jump' {
+  const text = prompt.toLowerCase();
+  if (text.includes('run')) return 'run';
+  if (text.includes('walk')) return 'walk';
+  if (text.includes('dance')) return 'dance';
+  if (text.includes('wave')) return 'wave';
+  if (text.includes('sit')) return 'sit';
+  if (text.includes('jump')) return 'jump';
+  if (text.includes('talk') || text.includes('say') || text.includes('dialog')) return 'talk';
+  return 'idle';
+}
 
-    return {
-        meta: { title, version: '1.0.0', description: `AI-generated: ${prompt}` },
-        environment: {
-            ambientLight: { intensity: 0.6, color: '#e8e0d0' },
-            sun: { position: [5, 10, 5], intensity: 1.2, color: '#fff5e0' },
-            skyColor: '#1a1a2e',
-            fog: { color: '#1a1a2e', near: 15, far: 50 },
+function getShotType(prompt: string): ShotType {
+  const text = prompt.toLowerCase();
+  if (text.includes('close')) return 'close-up';
+  if (text.includes('establish') || text.includes('city') || text.includes('landscape')) return 'establishing';
+  if (text.includes('dialog') || text.includes('conversation')) return 'medium';
+  return 'wide';
+}
+
+function generateLocalScene(prompt: string) {
+  const weather = getWeather(prompt);
+  const animation = getAnimation(prompt);
+  const shotType = getShotType(prompt);
+  const title = prompt.slice(0, 60) || 'Untitled scene';
+
+  return {
+    meta: {
+      title,
+      version: '1.0.0',
+      description: `AI-generated scene from prompt: ${prompt}`,
+    },
+    environment: {
+      ambientLight: { intensity: 0.55, color: '#ddd6c4' },
+      sun: { position: [5, 10, 4], intensity: 1.1, color: '#fff4dd' },
+      skyColor: weather === 'none' ? '#1a1d2e' : '#253042',
+      fog: weather === 'none' ? undefined : { color: '#394255', near: 10, far: 45 },
+      weather: { type: weather, intensity: weather === 'none' ? 0 : 0.65 },
+    },
+    actors: [
+      {
+        id: id(),
+        name: 'Hero',
+        type: 'character',
+        transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
+        visible: true,
+        animation,
+        morphTargets: { mouthSmile: animation === 'talk' ? 0.1 : 0.35 },
+        bodyPose: {},
+        clothing: {},
+      },
+      {
+        id: id(),
+        name: 'Ground',
+        type: 'primitive',
+        transform: { position: [0, -0.05, 0], rotation: [0, 0, 0], scale: [30, 0.1, 30] },
+        visible: true,
+        properties: {
+          shape: 'box',
+          color: '#2b2f3a',
+          roughness: 0.85,
+          metalness: 0.1,
+          opacity: 1,
+          wireframe: false,
         },
-        actors: [
-            {
-                id: id(),
-                name: 'Main Character',
-                type: 'character',
-                transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
-                visible: true,
-                animation: 'idle',
-                morphTargets: { mouthSmile: 0.3 },
-                bodyPose: {},
-                clothing: {},
-            },
-            {
-                id: id(),
-                name: 'Ground',
-                type: 'primitive',
-                transform: { position: [0, -0.01, 0], rotation: [0, 0, 0], scale: [20, 0.02, 20] },
-                visible: true,
-                properties: {
-                    shape: 'box',
-                    color: '#2a2a3a',
-                    roughness: 0.9,
-                    metalness: 0.1,
-                    opacity: 1,
-                    wireframe: false,
-                },
-            },
-            {
-                id: id(),
-                name: 'Key Light',
-                type: 'light',
-                transform: { position: [3, 5, 2], rotation: [0, 0, 0], scale: [1, 1, 1] },
-                visible: true,
-                properties: { lightType: 'point', intensity: 1.5, color: '#ffeedd', castShadow: true },
-            },
-            {
-                id: id(),
-                name: 'Main Camera',
-                type: 'camera',
-                transform: { position: [0, 1.6, 5], rotation: [-0.1, 0, 0], scale: [1, 1, 1] },
-                visible: true,
-                properties: { fov: 45, near: 0.1, far: 100 },
-            },
+      },
+      {
+        id: id(),
+        name: 'Key Light',
+        type: 'light',
+        transform: { position: [3, 5, 2], rotation: [0, 0, 0], scale: [1, 1, 1] },
+        visible: true,
+        properties: { lightType: 'spot', intensity: 1.25, color: '#fff0df', castShadow: true },
+      },
+      {
+        id: id(),
+        name: 'Fill Light',
+        type: 'light',
+        transform: { position: [-3, 3, 2], rotation: [0, 0, 0], scale: [1, 1, 1] },
+        visible: true,
+        properties: { lightType: 'point', intensity: 0.5, color: '#9ab8ff', castShadow: false },
+      },
+      {
+        id: id(),
+        name: 'Rim Light',
+        type: 'light',
+        transform: { position: [0, 4, -3], rotation: [0, 0, 0], scale: [1, 1, 1] },
+        visible: true,
+        properties: { lightType: 'directional', intensity: 0.7, color: '#ffffff', castShadow: false },
+      },
+      {
+        id: id(),
+        name: 'Main Camera',
+        type: 'camera',
+        transform: { position: [0, 1.6, 5], rotation: [-0.1, 0, 0], scale: [1, 1, 1] },
+        visible: true,
+        properties: { fov: shotType === 'close-up' ? 30 : 45, near: 0.1, far: 100 },
+      },
+    ],
+    timeline: {
+      duration: 12,
+      cameraTrack: [],
+      animationTracks: [],
+      markers: [{ id: id(), time: 0, label: 'Start', color: '#6366f1' }],
+    },
+    storyboard: [
+      { id: id(), number: 1, name: 'Establish', duration: 4, shotType: 'establishing', description: 'Set mood and location.' },
+      { id: id(), number: 2, name: 'Action', duration: 5, shotType, description: `Character performs ${animation}.` },
+      { id: id(), number: 3, name: 'Finish', duration: 3, shotType: 'close-up', description: 'Emotional end beat.' },
+    ],
+    cinematography: {
+      guide: 'thirds',
+      aspectRatio: '16:9',
+    },
+    library: { clips: [] },
+  };
+}
+
+/** POST /api/generate — Generate a scene from text description. */
+export async function POST(request: Request) {
+  try {
+    const { prompt } = await request.json();
+
+    if (!prompt || typeof prompt !== 'string') {
+      return NextResponse.json({ error: 'Missing or invalid "prompt" field' }, { status: 400 });
+    }
+
+    if (prompt.length > 2000) {
+      return NextResponse.json({ error: 'Prompt too long (max 2000 characters)' }, { status: 400 });
+    }
+
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+      return NextResponse.json(generateLocalScene(prompt));
+    }
+
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [
+          { role: 'system', content: SYSTEM_PROMPT },
+          { role: 'user', content: `Create a scene: ${prompt}` },
         ],
-        timeline: {
-            duration: 10,
-            cameraTrack: [],
-            animationTracks: [],
-            markers: [{ id: id(), time: 0, label: 'Start', color: '#6366f1' }],
-        },
-        library: { clips: [] },
-    };
+        temperature: 0.6,
+        max_tokens: 4000,
+        response_format: { type: 'json_object' },
+      }),
+    });
+
+    if (!response.ok) {
+      return NextResponse.json(generateLocalScene(prompt));
+    }
+
+    const data = await response.json();
+    const content = data.choices?.[0]?.message?.content;
+    if (!content) return NextResponse.json(generateLocalScene(prompt));
+
+    const scene = JSON.parse(content);
+    return NextResponse.json(scene.project || scene);
+  } catch {
+    return NextResponse.json({ error: 'Failed to generate scene' }, { status: 500 });
+  }
 }
