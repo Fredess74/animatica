@@ -1,5 +1,18 @@
+// @vitest-environment jsdom
 import { describe, it, expect, beforeEach } from 'vitest';
-import { useSceneStore, getActorById, getActiveActors, getCurrentTime } from './sceneStore';
+import { renderHook } from '@testing-library/react';
+import {
+  useSceneStore,
+  getActorById,
+  getActiveActors,
+  getCurrentTime,
+  useEnvironment,
+  useAmbientLight,
+  useSun,
+  useSkyColor,
+  useTimeline,
+  usePlaybackState,
+} from './sceneStore';
 import { PrimitiveActor } from '../types';
 
 describe('sceneStore', () => {
@@ -160,5 +173,37 @@ describe('sceneStore', () => {
       const result = useSceneStore.getState().actors.filter(a => a.type === 'primitive');
       expect(result).toHaveLength(1);
       expect(result[0].id).toBe('1');
+  });
+
+  describe('granular hooks', () => {
+    it('should provide useEnvironment hook', () => {
+      const { result } = renderHook(() => useEnvironment());
+      expect(result.current).toEqual(useSceneStore.getState().environment);
+    });
+
+    it('should provide useAmbientLight hook', () => {
+      const { result } = renderHook(() => useAmbientLight());
+      expect(result.current).toEqual(useSceneStore.getState().environment.ambientLight);
+    });
+
+    it('should provide useSun hook', () => {
+      const { result } = renderHook(() => useSun());
+      expect(result.current).toEqual(useSceneStore.getState().environment.sun);
+    });
+
+    it('should provide useSkyColor hook', () => {
+      const { result } = renderHook(() => useSkyColor());
+      expect(result.current).toBe(useSceneStore.getState().environment.skyColor);
+    });
+
+    it('should provide useTimeline hook', () => {
+      const { result } = renderHook(() => useTimeline());
+      expect(result.current).toEqual(useSceneStore.getState().timeline);
+    });
+
+    it('should provide usePlaybackState hook', () => {
+      const { result } = renderHook(() => usePlaybackState());
+      expect(result.current).toEqual(useSceneStore.getState().playback);
+    });
   });
 });

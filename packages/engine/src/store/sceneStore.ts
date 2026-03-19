@@ -87,7 +87,120 @@ export const getActiveActors = (state: SceneStoreState): Actor[] =>
 export const getCurrentTime = (state: SceneStoreState): number =>
   state.playback.currentTime;
 
+/**
+ * Selector to get the timeline state.
+ */
+export const getTimeline = (state: SceneStoreState) => state.timeline;
+
+/**
+ * Selector to get the environment state.
+ */
+export const getEnvironment = (state: SceneStoreState) => state.environment;
+
+/**
+ * Selector to get the playback state.
+ */
+export const getPlaybackState = (state: SceneStoreState) => state.playback;
+
+/**
+ * Selector to get the project metadata.
+ */
+export const getMeta = (state: SceneStoreState) => state.meta;
+
+/**
+ * Selector to get the library state.
+ */
+export const getLibrary = (state: SceneStoreState) => state.library;
+
 // Hooks
+
+/**
+ * Hook to get the entire environment state.
+ * Optimized with useShallow to prevent re-renders unless properties change.
+ */
+export const useEnvironment = () =>
+  useSceneStore(useShallow((state) => state.environment));
+
+/**
+ * Hook to get the ambient light settings.
+ * Optimized with useShallow.
+ */
+export const useAmbientLight = () =>
+  useSceneStore(useShallow((state) => state.environment.ambientLight));
+
+/**
+ * Hook to get the sun settings.
+ * Optimized with useShallow.
+ */
+export const useSun = () =>
+  useSceneStore(useShallow((state) => state.environment.sun));
+
+/**
+ * Hook to get the sky color.
+ */
+export const useSkyColor = () =>
+  useSceneStore((state) => state.environment.skyColor);
+
+/**
+ * Hook to get the fog settings.
+ * Optimized with useShallow.
+ */
+export const useFog = () =>
+  useSceneStore(useShallow((state) => state.environment.fog));
+
+/**
+ * Hook to get the entire timeline state.
+ * Optimized with useShallow.
+ */
+export const useTimeline = () =>
+  useSceneStore(useShallow((state) => state.timeline));
+
+/**
+ * Hook to get the animation tracks.
+ * Optimized with useShallow.
+ */
+export const useAnimationTracks = () =>
+  useSceneStore(useShallow((state) => state.timeline.animationTracks));
+
+/**
+ * Hook to get the camera track.
+ * Optimized with useShallow.
+ */
+export const useCameraTrack = () =>
+  useSceneStore(useShallow((state) => state.timeline.cameraTrack));
+
+/**
+ * Hook to get timeline metadata (duration and markers).
+ * Optimized with useShallow.
+ */
+export const useTimelineMetadata = () =>
+  useSceneStore(
+    useShallow((state) => ({
+      duration: state.timeline.duration,
+      markers: state.timeline.markers,
+    }))
+  );
+
+/**
+ * Hook to get the entire playback state.
+ * Optimized with useShallow.
+ */
+export const usePlaybackState = () =>
+  useSceneStore(useShallow((state) => state.playback));
+
+/**
+ * Hook to get the project metadata.
+ * Optimized with useShallow.
+ */
+export const useMeta = () =>
+  useSceneStore(useShallow((state) => state.meta));
+
+/**
+ * Hook to get the library state.
+ * Optimized with useShallow.
+ */
+export const useLibrary = () =>
+  useSceneStore(useShallow((state) => state.library));
 
 /**
  * Hook to select a specific actor by ID.
