@@ -14,15 +14,17 @@ import { ViewportGizmo } from './ViewportGizmo'
 import { ViewportToolbar } from './ViewportToolbar'
 import { ViewportOverlay } from './ViewportOverlay'
 import { EnvironmentRenderer } from './EnvironmentRenderer'
+import { Viewport2D } from './Viewport2D'
 import { useActorPicking } from './hooks/useActorPicking'
 import { useViewportHotkeys } from './hooks/useViewportHotkeys'
-import { useSceneStore } from '@animatica/engine'
+import { useSceneStore } from '@Animatica/engine'
 
 // ---- Types ----
 
 export type GizmoMode = 'translate' | 'rotate' | 'scale'
 export type TransformSpace = 'world' | 'local'
 export type ViewPreset = 'perspective' | 'top' | 'front' | 'right'
+export type ViewMode = '3d' | '2d'
 
 export interface ViewportState {
     gizmoMode: GizmoMode
@@ -38,6 +40,7 @@ export const Viewport: React.FC<{ className?: string }> = ({ className }) => {
     const [transformSpace, setTransformSpace] = useState<TransformSpace>('world')
     const [snapEnabled, setSnapEnabled] = useState(false)
     const [gridVisible, setGridVisible] = useState(true)
+    const [viewMode, setViewMode] = useState<ViewMode>('3d')
 
     const isPlaying = useSceneStore((s) => s.playback.isPlaying)
 
@@ -70,55 +73,67 @@ export const Viewport: React.FC<{ className?: string }> = ({ className }) => {
                 onSnapToggle={toggleSnap}
                 gridVisible={gridVisible}
                 onGridToggle={toggleGrid}
+                viewMode={viewMode}
+                onViewModeChange={setViewMode}
             />
 
-            {/* R3F 3D Canvas */}
-            <Canvas
-                shadows
-                dpr={[1, 2]}
-                gl={{
-                    antialias: true,
-                    preserveDrawingBuffer: true,
-                    toneMapping: THREE.ACESFilmicToneMapping,
-                    toneMappingExposure: 1.0,
-                }}
-                camera={{ fov: 50, near: 0.1, far: 1000, position: [8, 6, 8] }}
-                frameloop={isPlaying ? 'always' : 'demand'}
-                style={{ position: 'absolute', top: 40, left: 0, right: 0, bottom: 0 }}
-                onCreated={({ gl }) => {
-                    gl.outputColorSpace = THREE.SRGBColorSpace
-                }}
-            >
-                <Suspense fallback={null}>
-                    {/* Environment: sky, lights, fog */}
-                    <EnvironmentRenderer />
+            {viewMode === '3d' ? (
+                <>
+                    {/* R3F 3D Canvas */}
+                    <Canvas
+                        shadows
+                        dpr={[1, 2]}
+                        gl={{
+                            antialias: true,
+                            preserveDrawingBuffer: true,
+                            powerPreference: 'high-performance',
+                            toneMapping: THREE.ACESFilmicToneMapping,
+                            toneMappingExposure: 1.08,
+                        }}
+                        camera={{ fov: 50, near: 0.1, far: 1000, position: [8, 6, 8] }}
+                        frameloop={isPlaying ? 'always' : 'demand'}
+                        style={{ position: 'absolute', top: 40, left: 0, right: 0, bottom: 0 }}
+                        onCreated={({ gl, scene }) => {
+                            gl.outputColorSpace = THREE.SRGBColorSpace
+                            gl.shadowMap.enabled = true
+                            gl.shadowMap.type = THREE.PCFSoftShadowMap
+                            scene.background = new THREE.Color('#0B1510')
+                        }}
+                    >
+                        <Suspense fallback={null}>
+                            {/* Environment: sky, lights, fog */}
+                            <EnvironmentRenderer />
 
-                    {/* Ground grid */}
-                    {gridVisible && <ViewportGrid />}
+                            {/* Ground grid */}
+                            {gridVisible && <ViewportGrid />}
 
-                    {/* All scene actors */}
-                    <SceneRenderer />
+                            {/* All scene actors */}
+                            <SceneRenderer />
 
-                    {/* Transform gizmo on selected actor */}
-                    <ViewportGizmo
-                        mode={gizmoMode}
-                        space={transformSpace}
-                        snapEnabled={snapEnabled}
-                    />
+                            {/* Transform gizmo on selected actor */}
+                            <ViewportGizmo
+                                mode={gizmoMode}
+                                space={transformSpace}
+                                snapEnabled={snapEnabled}
+                            />
 
-                    {/* Orbit/pan/zoom controls */}
-                    <ViewportControls />
+                            {/* Orbit/pan/zoom controls */}
+                            <ViewportControls />
 
-                    {/* Internal hooks for picking + hotkeys */}
-                    <SceneInteraction
-                        onGizmoModeChange={setGizmoMode}
-                        onTransformSpaceToggle={toggleSpace}
-                    />
-                </Suspense>
-            </Canvas>
+                            {/* Internal hooks for picking + hotkeys */}
+                            <SceneInteraction
+                                onGizmoModeChange={setGizmoMode}
+                                onTransformSpaceToggle={toggleSpace}
+                            />
+                        </Suspense>
+                    </Canvas>
 
-            {/* 2D HUD overlay */}
-            <ViewportOverlay />
+                    {/* 2D HUD overlay */}
+                    <ViewportOverlay />
+                </>
+            ) : (
+                <Viewport2D />
+            )}
         </div>
     )
 }

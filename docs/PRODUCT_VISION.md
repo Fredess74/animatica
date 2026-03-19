@@ -121,3 +121,34 @@ Features that would drive users away:
 | **Avg Creator Earnings/mo** | $10 | $100 |
 | **Asset Marketplace GMV** | $50,000 | $5,000,000 |
 | **Videos Watched/Month** | 5,000,000 | 500,000,000 |
+
+## Functional Scope to Reach Working Video Generation (No Business Layer Yet)
+
+This scope focuses only on **core video creation functionality** (input → editable scene → render/export) and intentionally excludes monetization, marketplace, and token mechanics.
+
+### Kano-Prioritized Functional Backlog
+
+#### Must-Have (MVP must ship with these)
+- Prompt-to-scene generation API with deterministic fallback when AI provider is unavailable.
+- Scene replacement workflow in editor (new generation replaces current draft instead of silently duplicating actors).
+- Baseline cinematic scene model: at least one character, camera, key/fill/rim lights, environment, and timeline marker.
+- Export job endpoint (async stub acceptable for MVP), with schema validation.
+- Basic reliability constraints: prompt length limits, graceful fallback on provider errors.
+
+#### Performance Features (increase quality proportionally)
+- Better prompt understanding for action, weather, shot type, and expression hints.
+- Richer storyboard generation (multiple shots and pacing suggestions).
+- Improved camera grammar (focal length presets + framing guides).
+- More stable scene JSON validation before loading into the editor.
+
+#### Delighters (post-MVP but high perceived value)
+- “Regenerate selected shot” instead of full-scene regeneration.
+- Style presets (anime, noir, cinematic, toon) applied in one click.
+- Auto-sound bed / ambience suggestions from scene intent.
+
+### Definition of “Working” for current phase
+1. User writes a prompt in editor AI panel.
+2. API always returns valid scene JSON (provider or local fallback).
+3. Editor applies generated scene as a clean state.
+4. User can preview in viewport and start export job.
+

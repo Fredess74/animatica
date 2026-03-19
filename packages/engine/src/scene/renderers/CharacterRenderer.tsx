@@ -6,7 +6,17 @@ import React, { useEffect, useRef, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { createProceduralHumanoid } from '../../character/CharacterLoader'
-import { CharacterAnimator, createIdleClip, createWalkClip } from '../../character/CharacterAnimator'
+import {
+  CharacterAnimator,
+  createDanceClip,
+  createIdleClip,
+  createJumpClip,
+  createRunClip,
+  createSitClip,
+  createTalkClip,
+  createWalkClip,
+  createWaveClip,
+} from '../../character/CharacterAnimator'
 import { FaceMorphController } from '../../character/FaceMorphController'
 import { EyeController } from '../../character/EyeController'
 import { getPreset } from '../../character/CharacterPresets'
@@ -45,6 +55,12 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     const animator = new CharacterAnimator(rig.root)
     animator.registerClip('idle', createIdleClip())
     animator.registerClip('walk', createWalkClip())
+    animator.registerClip('run', createRunClip())
+    animator.registerClip('talk', createTalkClip())
+    animator.registerClip('wave', createWaveClip())
+    animator.registerClip('dance', createDanceClip())
+    animator.registerClip('sit', createSitClip())
+    animator.registerClip('jump', createJumpClip())
     animator.play(actor.animation || 'idle')
     animatorRef.current = animator
 

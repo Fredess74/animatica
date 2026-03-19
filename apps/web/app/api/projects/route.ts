@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { z } from 'zod';
-import { ProjectMetaSchema, ProjectStateSchema } from '@Animatica/engine';
+import { ProjectMetaSchema, ProjectStateSchema } from '@Animatica/engine/src/importer/schemas';
 import { createProject, getProjects } from '@/lib/db';
 import { handleError, jsonResponse } from '@/lib/api-utils';
 import { rateLimit } from '@/lib/rate-limit';

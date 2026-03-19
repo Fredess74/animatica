@@ -1,4 +1,4 @@
-import { ProjectState } from '@Animatica/engine';
+import type { ProjectState } from '@Animatica/engine/src/types';
 import { randomUUID } from 'crypto';
 
 export interface DbProject {
