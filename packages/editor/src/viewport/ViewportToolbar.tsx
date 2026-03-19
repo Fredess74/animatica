@@ -4,6 +4,7 @@
  */
 import React from 'react'
 import type { GizmoMode, TransformSpace } from './Viewport'
+import { useCameraPreset } from './ViewportControls'
 
 interface ViewportToolbarProps {
     gizmoMode: GizmoMode
