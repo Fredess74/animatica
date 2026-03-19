@@ -26,6 +26,8 @@ export const ViewportToolbar: React.FC<ViewportToolbarProps> = ({
     gridVisible,
     onGridToggle,
 }) => {
+    const { goToPreset } = useCameraPreset()
+
     return (
         <div style={toolbarStyle}>
             {/* Gizmo mode group */}
@@ -74,6 +76,34 @@ export const ViewportToolbar: React.FC<ViewportToolbarProps> = ({
                     active={gridVisible}
                     onClick={onGridToggle}
                     icon="⊞"
+                />
+            </div>
+
+            {/* Camera View Presets */}
+            <div style={groupStyle}>
+                <ToolBtn
+                    tooltip="Top View"
+                    active={false}
+                    onClick={() => goToPreset('top')}
+                    icon="T"
+                />
+                <ToolBtn
+                    tooltip="Front View"
+                    active={false}
+                    onClick={() => goToPreset('front')}
+                    icon="F"
+                />
+                <ToolBtn
+                    tooltip="Side View"
+                    active={false}
+                    onClick={() => goToPreset('right')}
+                    icon="S"
+                />
+                <ToolBtn
+                    tooltip="Perspective View"
+                    active={false}
+                    onClick={() => goToPreset('perspective')}
+                    icon="P"
                 />
             </div>
         </div>

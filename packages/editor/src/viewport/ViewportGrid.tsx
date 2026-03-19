@@ -27,7 +27,7 @@ export const ViewportGrid: React.FC = () => {
                 <bufferGeometry>
                     <bufferAttribute
                         attach="attributes-position"
-                        array={new Float32Array([-100, 0.001, 0, 100, 0.001, 0])}
+                        args={[new Float32Array([-100, 0.001, 0, 100, 0.001, 0]), 3]}
                         count={2}
                         itemSize={3}
                     />
@@ -40,7 +40,7 @@ export const ViewportGrid: React.FC = () => {
                 <bufferGeometry>
                     <bufferAttribute
                         attach="attributes-position"
-                        array={new Float32Array([0, 0.001, -100, 0, 0.001, 100])}
+                        args={[new Float32Array([0, 0.001, -100, 0, 0.001, 100]), 3]}
                         count={2}
                         itemSize={3}
                     />
