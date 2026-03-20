@@ -2,10 +2,10 @@
  * CharacterPanel — Editor UI for character customization.
  * Provides preset picker, body sliders, expression selector, and animation controls.
  */
-import React, { useState, useCallback } from 'react'
+import React from 'react'
 import { useSceneStore } from '@Animatica/engine'
 import { CHARACTER_PRESETS, EXPRESSION_PRESETS } from '@Animatica/engine'
-import type { CharacterActor, AnimationState } from '@Animatica/engine'
+import type { CharacterActor, AnimationState, MorphTargets } from '@Animatica/engine'
 
 const ANIMATIONS: AnimationState[] = ['idle', 'walk', 'run', 'wave', 'talk', 'dance', 'sit', 'jump']
 
@@ -73,7 +73,7 @@ export const CharacterPanel: React.FC = () => {
                                 // Expression is stored in morphTargets
                                 // CharacterRenderer reads this and applies via FaceMorphController
                                 updateActor(selectedActor.id, {
-                                    morphTargets: EXPRESSION_PRESETS[name] as any,
+                                    morphTargets: EXPRESSION_PRESETS[name] as MorphTargets,
                                 } as Partial<CharacterActor>)
                             }}
                         >

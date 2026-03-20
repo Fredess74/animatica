@@ -40,7 +40,7 @@ export const ModelBrowser: React.FC = () => {
                         },
                     }),
                 glbUrl: model.url,
-            } as any)
+            } as unknown as Actor)
         },
         [addActor]
     )
@@ -64,7 +64,7 @@ export const ModelBrowser: React.FC = () => {
                     wireframe: false,
                 },
                 glbUrl: importUrl.trim(),
-            } as any)
+            } as unknown as Actor)
             setImportUrl('')
         } finally {
             setLoading(false)

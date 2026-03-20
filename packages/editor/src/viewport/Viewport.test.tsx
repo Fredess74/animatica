@@ -5,7 +5,7 @@ import { Viewport } from './Viewport'
 import React from 'react'
 
 // Mock ResizeObserver
-// @ts-ignore
+// @ts-expect-error - ResizeObserver is not available in jsdom
 global.ResizeObserver = class ResizeObserver {
   observe() {}
   unobserve() {}
