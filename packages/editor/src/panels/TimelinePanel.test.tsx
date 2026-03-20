@@ -7,7 +7,7 @@ import { useSceneStore, usePlayback } from '@Animatica/engine';
 // Mock useTranslation
 vi.mock('../i18n/useTranslation', () => ({
     useTranslation: () => ({
-        t: (key: string, options?: any) => {
+        t: (key: string, options?: { count?: number }) => {
             if (key === 'timeline.seconds') return `${options?.count ?? 0}s`;
             return key;
         },
@@ -23,9 +23,19 @@ vi.mock('@Animatica/engine', () => ({
 }));
 
 describe('TimelinePanel', () => {
-    let mockState: any;
-    let mockPlayback: any;
-    let mockSetTimeline: any;
+    let mockState: {
+        playback: { isPlaying: boolean; currentTime: number };
+        timeline: { duration: number; animationTracks: any[] };
+        selectedActorId: string | null;
+        setTimeline: ReturnType<typeof vi.fn>;
+    };
+    let mockPlayback: {
+        play: ReturnType<typeof vi.fn>;
+        pause: ReturnType<typeof vi.fn>;
+        stop: ReturnType<typeof vi.fn>;
+        seek: ReturnType<typeof vi.fn>;
+    };
+    let mockSetTimeline: ReturnType<typeof vi.fn>;
 
     beforeEach(() => {
         mockSetTimeline = vi.fn();
@@ -43,8 +53,8 @@ describe('TimelinePanel', () => {
             seek: vi.fn(),
         };
 
-        (useSceneStore as any).mockImplementation((selector: any) => selector(mockState));
-        (usePlayback as any).mockReturnValue(mockPlayback);
+        vi.mocked(useSceneStore).mockImplementation((selector: any) => selector(mockState));
+        vi.mocked(usePlayback).mockReturnValue(mockPlayback as any);
     });
 
     afterEach(() => {
