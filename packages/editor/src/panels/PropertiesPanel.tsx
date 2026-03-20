@@ -19,7 +19,7 @@ const radToDeg = (rad: number) => rad * RAD2DEG;
 const degToRad = (deg: number) => deg * DEG2RAD;
 
 // Helper hook for debounced updates
-function useDebouncedCallback<T extends (...args: any[]) => any>(callback: T, delay: number) {
+function useDebouncedCallback<T extends any[]>(callback: (...args: T) => void, delay: number) {
     const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     // Clean up timeout on unmount
@@ -29,7 +29,7 @@ function useDebouncedCallback<T extends (...args: any[]) => any>(callback: T, de
         };
     }, []);
 
-    return useCallback((...args: Parameters<T>) => {
+    return useCallback((...args: T) => {
         if (timeoutRef.current) {
             clearTimeout(timeoutRef.current);
         }
