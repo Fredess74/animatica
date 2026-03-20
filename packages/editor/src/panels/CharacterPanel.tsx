@@ -2,7 +2,7 @@
  * CharacterPanel — Editor UI for character customization.
  * Provides preset picker, body sliders, expression selector, and animation controls.
  */
-import React, { useState, useCallback } from 'react'
+import React from 'react'
 import { useSceneStore } from '@Animatica/engine'
 import { CHARACTER_PRESETS, EXPRESSION_PRESETS } from '@Animatica/engine'
 import type { CharacterActor, AnimationState } from '@Animatica/engine'
