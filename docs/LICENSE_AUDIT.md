@@ -7,8 +7,8 @@
 
 Date: 2026-03-20
 
-Total dependencies (after filtering forbidden keywords): 627
-Non-MIT dependencies: 107
+Total dependencies (after filtering forbidden keywords): 671
+Non-MIT dependencies: 124
 
 ## Project License
 
@@ -31,6 +31,15 @@ The following dependencies have non-MIT licenses:
 | type-fest | 0.7.1, 0.20.2, 0.21.3 | (MIT OR CC0-1.0) |
 | tslib | 1.14.1, 2.7.0, 2.8.1 | 0BSD |
 | @dimforge/rapier3d-compat | 0.12.0 | Apache-2.0 |
+| @eslint/config-array | 0.23.3 | Apache-2.0 |
+| @eslint/config-helpers | 0.5.3 | Apache-2.0 |
+| @eslint/core | 1.1.1 | Apache-2.0 |
+| @eslint/object-schema | 3.0.3 | Apache-2.0 |
+| @eslint/plugin-kit | 0.6.1 | Apache-2.0 |
+| @humanfs/core | 0.19.1 | Apache-2.0 |
+| @humanfs/node | 0.16.7 | Apache-2.0 |
+| @humanwhocodes/module-importer | 1.0.1 | Apache-2.0 |
+| @humanwhocodes/retry | 0.4.3 | Apache-2.0 |
 | @img/sharp-linux-x64 | 0.34.5 | Apache-2.0 |
 | @img/sharp-linuxmusl-x64 | 0.34.5 | Apache-2.0 |
 | @mediapipe/tasks-vision | 0.10.17 | Apache-2.0 |
@@ -40,6 +49,7 @@ The following dependencies have non-MIT licenses:
 | caseless | 0.12.0 | Apache-2.0 |
 | detect-libc | 2.1.2 | Apache-2.0 |
 | draco3d | 1.5.7 | Apache-2.0 |
+| eslint-visitor-keys | 3.4.3, 5.0.1 | Apache-2.0 |
 | expect-type | 1.3.0 | Apache-2.0 |
 | hls.js | 1.6.15 | Apache-2.0 |
 | promise-worker-transferable | 1.0.4 | Apache-2.0 |
@@ -52,9 +62,14 @@ The following dependencies have non-MIT licenses:
 | source-map | 0.2.0 | BSD |
 | entities | 6.0.1 | BSD-2-Clause |
 | escodegen | 1.8.1 | BSD-2-Clause |
+| eslint-scope | 9.1.2 | BSD-2-Clause |
+| espree | 11.2.0 | BSD-2-Clause |
 | esprima | 2.7.3, 4.0.1 | BSD-2-Clause |
+| esrecurse | 4.3.0 | BSD-2-Clause |
+| estraverse | 5.3.0 | BSD-2-Clause |
 | esutils | 2.0.3 | BSD-2-Clause |
 | uglify-js | 3.19.3 | BSD-2-Clause |
+| uri-js | 4.4.1 | BSD-2-Clause |
 | webidl-conversions | 8.0.1 | BSD-2-Clause |
 | @sentry/core | 5.30.0 | BSD-3-Clause |
 | @sentry/hub | 5.30.0 | BSD-3-Clause |
@@ -67,6 +82,7 @@ The following dependencies have non-MIT licenses:
 | charenc | 0.0.2 | BSD-3-Clause |
 | crypt | 0.0.2 | BSD-3-Clause |
 | diff | 4.0.4, 5.2.2 | BSD-3-Clause |
+| esquery | 1.7.0 | BSD-3-Clause |
 | fast-uri | 3.1.0 | BSD-3-Clause |
 | flat | 5.0.2 | BSD-3-Clause |
 | ieee754 | 1.2.1 | BSD-3-Clause |
@@ -82,7 +98,7 @@ The following dependencies have non-MIT licenses:
 | tough-cookie | 6.0.0 | BSD-3-Clause |
 | amdefine | 1.0.1 | BSD-3-Clause OR MIT |
 | lru-cache | 11.2.6 | BlueOak-1.0.0 |
-| minimatch | 10.2.2 | BlueOak-1.0.0 |
+| minimatch | 10.2.2, 10.2.4 | BlueOak-1.0.0 |
 | caniuse-lite | 1.0.30001770 | CC-BY-4.0 |
 | mdn-data | 2.12.2 | CC0-1.0 |
 | abbrev | 1.0.9 | ISC |
@@ -93,10 +109,11 @@ The following dependencies have non-MIT licenses:
 | cliui | 7.0.4 | ISC |
 | electron-to-chromium | 1.5.302 | ISC |
 | fastq | 1.20.1 | ISC |
+| flatted | 3.4.2 | ISC |
 | fs.realpath | 1.0.0 | ISC |
 | get-caller-file | 2.0.5 | ISC |
 | glob | 5.0.15, 7.1.7, 7.2.3, 8.1.0 | ISC |
-| glob-parent | 5.1.2 | ISC |
+| glob-parent | 5.1.2, 6.0.2 | ISC |
 | graceful-fs | 4.2.11 | ISC |
 | inflight | 1.0.6 | ISC |
 | inherits | 2.0.4 | ISC |
@@ -160,6 +177,15 @@ The following dependencies have non-MIT licenses:
 | Package | Version | Description |
 |---------|---------|-------------|
 | @dimforge/rapier3d-compat | 0.12.0 | 3-dimensional physics engine in Rust - official JS bindings. Compatibility package with inlined webassembly as base64. |
+| @eslint/config-array | 0.23.3 | General purpose glob-based configuration matching. |
+| @eslint/config-helpers | 0.5.3 | Helper utilities for creating ESLint configuration |
+| @eslint/core | 1.1.1 | Runtime-agnostic core of ESLint |
+| @eslint/object-schema | 3.0.3 | An object schema merger/validator |
+| @eslint/plugin-kit | 0.6.1 | Utilities for building ESLint plugins. |
+| @humanfs/core | 0.19.1 | The core of the humanfs library. |
+| @humanfs/node | 0.16.7 | The Node.js bindings of the humanfs library. |
+| @humanwhocodes/module-importer | 1.0.1 | Universal module importer for Node.js |
+| @humanwhocodes/retry | 0.4.3 | A utility to retry failed async methods. |
 | @img/sharp-linux-x64 | 0.34.5 | Prebuilt sharp for use with Linux (glibc) x64 |
 | @img/sharp-linuxmusl-x64 | 0.34.5 | Prebuilt sharp for use with Linux (musl) x64 |
 | @mediapipe/tasks-vision | 0.10.17 | MediaPipe Vision Tasks |
@@ -169,6 +195,7 @@ The following dependencies have non-MIT licenses:
 | caseless | 0.12.0 | Caseless object set/get/has, very useful when working with HTTP headers. |
 | detect-libc | 2.1.2 | Node.js module to detect the C standard library (libc) implementation family and version |
 | draco3d | 1.5.7 | Draco is a library for compressing and decompressing 3D geometric meshes and point clouds. It is intended to improve the storage and transmission of 3D graphics. |
+| eslint-visitor-keys | 3.4.3, 5.0.1 | Constants and utilities about visitor keys to traverse AST. |
 | expect-type | 1.3.0 | N/A |
 | hls.js | 1.6.15 | JavaScript HLS client using MediaSourceExtension |
 | promise-worker-transferable | 1.0.4 | Communicate with a Web Worker using Promises, allowing transferList |
@@ -191,9 +218,14 @@ The following dependencies have non-MIT licenses:
 |---------|---------|-------------|
 | entities | 6.0.1 | Encode & decode XML and HTML entities with ease & speed |
 | escodegen | 1.8.1 | ECMAScript code generator |
+| eslint-scope | 9.1.2 | ECMAScript scope analyzer for ESLint |
+| espree | 11.2.0 | An Esprima-compatible JavaScript parser built on Acorn |
 | esprima | 2.7.3, 4.0.1 | ECMAScript parsing infrastructure for multipurpose analysis |
+| esrecurse | 4.3.0 | ECMAScript AST recursive visitor |
+| estraverse | 5.3.0 | ECMAScript JS AST traversal functions |
 | esutils | 2.0.3 | utility box for ECMAScript language tools |
 | uglify-js | 3.19.3 | JavaScript parser, mangler/compressor and beautifier toolkit |
+| uri-js | 4.4.1 | An RFC 3986/3987 compliant, scheme extendable URI/IRI parsing/validating/resolving library for JavaScript. |
 | webidl-conversions | 8.0.1 | Implements the WebIDL algorithms for converting to and from JavaScript values |
 
 ### BSD-3-Clause
@@ -211,6 +243,7 @@ The following dependencies have non-MIT licenses:
 | charenc | 0.0.2 | character encoding utilities |
 | crypt | 0.0.2 | utilities for encryption and hashing |
 | diff | 4.0.4, 5.2.2 | A JavaScript text diff implementation. |
+| esquery | 1.7.0 | A query library for ECMAScript AST using a CSS selector like query language. |
 | fast-uri | 3.1.0 | Dependency-free RFC 3986 URI toolbox |
 | flat | 5.0.2 | Take a nested Javascript object and flatten it, or unflatten an object with delimited keys |
 | ieee754 | 1.2.1 | Read/write IEEE754 floating point numbers from/to a Buffer or array-like object |
@@ -236,7 +269,7 @@ The following dependencies have non-MIT licenses:
 | Package | Version | Description |
 |---------|---------|-------------|
 | lru-cache | 11.2.6 | A cache object that deletes the least-recently-used items. |
-| minimatch | 10.2.2 | a glob matcher in javascript |
+| minimatch | 10.2.2, 10.2.4 | a glob matcher in javascript |
 
 ### CC-BY-4.0
 
@@ -262,10 +295,11 @@ The following dependencies have non-MIT licenses:
 | cliui | 7.0.4 | easily create complex multi-column command-line-interfaces |
 | electron-to-chromium | 1.5.302 | Provides a list of electron-to-chromium version mappings |
 | fastq | 1.20.1 | Fast, in memory work queue |
+| flatted | 3.4.2 | A super light and fast circular JSON parser. |
 | fs.realpath | 1.0.0 | Use node's fs.realpath, but fall back to the JS implementation if the native one fails |
 | get-caller-file | 2.0.5 | N/A |
 | glob | 5.0.15, 7.1.7, 7.2.3, 8.1.0 | a little globber |
-| glob-parent | 5.1.2 | Extract the non-magic parent path from a glob string. |
+| glob-parent | 5.1.2, 6.0.2 | Extract the non-magic parent path from a glob string. |
 | graceful-fs | 4.2.11 | A drop-in replacement for fs, making various improvements. |
 | inflight | 1.0.6 | Add callbacks to requests in flight to avoid async duplication |
 | inherits | 2.0.4 | Browser-friendly inheritance fully compatible with standard node.js inherits() |
@@ -336,6 +370,9 @@ The following dependencies have non-MIT licenses:
 | @csstools/css-parser-algorithms | 4.0.0 | Algorithms to help you parse CSS from an array of tokens. |
 | @csstools/css-tokenizer | 4.0.0 | Tokenize CSS |
 | @esbuild/linux-x64 | 0.27.3 | The Linux 64-bit binary for esbuild, a JavaScript bundler. |
+| @eslint-community/eslint-utils | 4.9.1 | Utilities for ESLint plugins. |
+| @eslint-community/regexpp | 4.12.2 | Regular expression parser for ECMAScript. |
+| @eslint/js | 10.0.1 | ESLint JavaScript language implementation |
 | @ethersproject/base64 | 5.8.0 | Base64 coder. |
 | @ethersproject/basex | 5.8.0 | Base-X without Buffer. |
 | @ethersproject/bignumber | 5.8.0 | BigNumber library used in ethers.js. |
@@ -405,9 +442,11 @@ The following dependencies have non-MIT licenses:
 | @types/concat-stream | 1.6.1 | TypeScript definitions for concat-stream |
 | @types/deep-eql | 4.0.2 | TypeScript definitions for deep-eql |
 | @types/draco3d | 1.4.10 | TypeScript definitions for draco3d |
+| @types/esrecurse | 4.3.1 | TypeScript definitions for esrecurse |
 | @types/estree | 1.0.8 | TypeScript definitions for estree |
 | @types/form-data | 0.0.33 | TypeScript definitions for form-data |
 | @types/glob | 7.2.0 | TypeScript definitions for Glob |
+| @types/json-schema | 7.0.15 | TypeScript definitions for json-schema |
 | @types/minimatch | 6.0.0 | Stub TypeScript definitions entry for minimatch, which provides its own types definitions |
 | @types/mocha | 10.0.10 | TypeScript definitions for mocha |
 | @types/node | 8.10.66, 10.17.60, 22.7.5, 25.3.0 | TypeScript definitions for node |
@@ -423,6 +462,16 @@ The following dependencies have non-MIT licenses:
 | @types/three | 0.182.0 | TypeScript definitions for three |
 | @types/uuid | 10.0.0 | TypeScript definitions for uuid |
 | @types/webxr | 0.5.24 | TypeScript definitions for webxr |
+| @typescript-eslint/eslint-plugin | 8.57.1 | TypeScript plugin for ESLint |
+| @typescript-eslint/parser | 8.57.1 | An ESLint custom parser which leverages TypeScript ESTree |
+| @typescript-eslint/project-service | 8.57.1 | Standalone TypeScript project service wrapper for linting. |
+| @typescript-eslint/scope-manager | 8.57.1 | TypeScript scope analyser for ESLint |
+| @typescript-eslint/tsconfig-utils | 8.57.1 | Utilities for collecting TSConfigs for linting scenarios. |
+| @typescript-eslint/type-utils | 8.57.1 | Type utilities for working with TypeScript + ESLint together |
+| @typescript-eslint/types | 8.57.1 | Types for the TypeScript-ESTree AST spec |
+| @typescript-eslint/typescript-estree | 8.57.1 | A parser that converts TypeScript source code into an ESTree compatible form |
+| @typescript-eslint/utils | 8.57.1 | Utilities for working with TypeScript + ESLint together |
+| @typescript-eslint/visitor-keys | 8.57.1 | Visitor keys used to help traverse the TypeScript-ESTree AST |
 | @use-gesture/core | 10.3.1 | Core engine for receiving gestures |
 | @use-gesture/react | 10.3.1 | React target for @use-gesture |
 | @vitejs/plugin-react | 5.1.4 | The default Vite plugin for React projects |
@@ -434,12 +483,13 @@ The following dependencies have non-MIT licenses:
 | @vitest/spy | 4.0.18 | Lightweight Jest compatible spy implementation |
 | @vitest/utils | 4.0.18 | Shared Vitest utility functions |
 | acorn | 8.16.0 | ECMAScript parser |
+| acorn-jsx | 5.3.2 | Modern, fast React.js JSX parser |
 | acorn-walk | 8.3.5 | ECMAScript (ESTree) AST walker |
 | adm-zip | 0.4.16 | Javascript implementation of zip for nodejs with support for electron original-fs. Allows user to create or extract zip files both in memory or to/from disk |
 | aes-js | 3.0.0, 4.0.0-beta.5 | A pure JavaScript implementation of the AES block cipher and all common modes of operation. |
 | agent-base | 6.0.2, 7.1.4 | Turn a function into an `http.Agent` instance |
 | aggregate-error | 3.1.0 | Create an error from multiple errors |
-| ajv | 8.18.0 | Another JSON Schema Validator |
+| ajv | 6.14.0, 8.18.0 | Another JSON Schema Validator |
 | ansi-colors | 4.1.3 | Easily add ANSI colors to your text and symbols in the terminal. A faster drop-in replacement for chalk, kleur and turbocolor (without the dependencies and rendering bugs). |
 | ansi-escapes | 4.3.2 | ANSI escape codes for manipulating the terminal |
 | ansi-regex | 3.0.1, 5.0.1 | Regular expression for matching ANSI escape codes |
@@ -544,16 +594,20 @@ The following dependencies have non-MIT licenses:
 | esbuild | 0.27.3 | An extremely fast JavaScript and CSS bundler and minifier. |
 | escalade | 3.2.0 | A tiny (183B to 210B) and fast utility to ascend parent directories |
 | escape-string-regexp | 1.0.5, 4.0.0 | Escape RegExp special characters |
+| eslint | 10.0.3 | An AST-based pattern checker for JavaScript. |
 | estree-walker | 3.0.3 | Traverse an ESTree-compliant AST |
 | evp_bytestokey | 1.0.3 | The insecure key derivation algorithm from OpenSSL |
 | fast-deep-equal | 3.1.3 | Fast deep equal |
 | fast-glob | 3.3.3 | It's a very fast and efficient glob library for Node.js |
+| fast-json-stable-stringify | 2.1.0 | deterministic `JSON.stringify()` - a faster version of substack's json-stable-strigify without jsonify |
 | fast-levenshtein | 2.0.6 | Efficient implementation of Levenshtein algorithm  with locale-specific collator support. |
 | fdir | 6.5.0 | The fastest directory crawler & globbing alternative to glob, fast-glob, & tiny-glob. Crawls 1m files in < 1s |
 | fflate | 0.6.10, 0.8.2 | High performance (de)compression in an 8kB package |
+| file-entry-cache | 8.0.0 | Super simple cache for file metadata, useful for process that work o a given series of files and that only need to repeat the job on the changed ones since the previous run of the process |
 | fill-range | 7.1.1 | Fill in a range of numbers or letters, optionally passing an increment or `step` to use, or create a regex-compatible range with `options.toRegex` |
 | find-replace | 3.0.0 | Find and either replace or remove items in an array |
 | find-up | 5.0.0 | Find a file or directory by walking up parent directories |
+| flat-cache | 4.0.1 | A stupidly simple key/value storage using files to persist some data |
 | follow-redirects | 1.15.11 | HTTP and HTTPS modules that follow redirects. |
 | for-each | 0.3.5 | A better forEach |
 | form-data | 2.5.5, 4.0.5 | A library to create readable "multipart/form-data" streams. Can be used to submit forms and file uploads to other web applications. |
@@ -589,10 +643,11 @@ The following dependencies have non-MIT licenses:
 | http-response-object | 3.0.2 | A simple object to represent an http response |
 | https-proxy-agent | 5.0.1, 7.0.6 | An HTTP(s) proxy `http.Agent` implementation for HTTPS |
 | iconv-lite | 0.4.24 | Convert character encodings in pure javascript. |
-| ignore | 5.3.2 | Ignore is a manager and filter for .gitignore rules, the one used by eslint, gitbook and many others. |
+| ignore | 5.3.2, 7.0.5 | Ignore is a manager and filter for .gitignore rules, the one used by eslint, gitbook and many others. |
 | immediate | 3.0.6 | A cross browser microtask library |
 | immer | 10.0.2, 10.2.0 | Create your next immutable state by mutating the current one |
 | immutable | 4.3.7 | Immutable Data Collections |
+| imurmurhash | 0.1.4 | An incremental implementation of MurmurHash3 |
 | indent-string | 4.0.0 | Indent each line in a string |
 | interpret | 1.4.0 | A dictionary of file extensions and associated module loaders. |
 | io-ts | 1.10.4 | TypeScript compatible runtime type system for IO validation |
@@ -617,15 +672,18 @@ The following dependencies have non-MIT licenses:
 | js-yaml | 3.14.2, 4.1.1 | YAML 1.2 parser and serializer |
 | jsdom | 28.1.0 | A JavaScript implementation of many web standards |
 | jsesc | 3.1.0 | Given some data, jsesc returns the shortest possible stringified & ASCII-safe representation of that data. |
-| json-schema-traverse | 1.0.0 | Traverse JSON Schema passing each schema object to callback |
+| json-buffer | 3.0.1 | JSON parse & stringify that supports binary via bops & base64 |
+| json-schema-traverse | 0.4.1, 1.0.0 | Traverse JSON Schema passing each schema object to callback |
+| json-stable-stringify-without-jsonify | 1.0.1 | deterministic JSON.stringify() with custom sorting to get deterministic hashes from stringified results, with no public domain dependencies |
 | json-stream-stringify | 3.1.6 | JSON.Stringify as a readable stream |
 | json5 | 2.2.3 | JSON for Humans |
 | jsonfile | 4.0.0, 6.2.0 | Easily read/write JSON files. |
 | jsonschema | 1.5.0 | A fast and easy to use JSON Schema validator |
 | keccak | 3.0.4 | Keccak sponge function family |
+| keyv | 4.5.4 | Simple key-value storage with support for multiple backends |
 | kind-of | 6.0.3 | Get the native type of a value. |
 | kleur | 3.0.3 | The fastest Node.js library for formatting terminal text with ANSI colors~! |
-| levn | 0.3.0 | Light ECMAScript (JavaScript) Value Notation - human written, concise, typed, flexible |
+| levn | 0.3.0, 0.4.1 | Light ECMAScript (JavaScript) Value Notation - human written, concise, typed, flexible |
 | lie | 3.3.0 | A basic but performant promise implementation |
 | locate-path | 6.0.0 | Get the first path that exists on disk of multiple paths |
 | lodash | 4.17.21, 4.17.23 | Lodash modular utilities. |
@@ -657,6 +715,7 @@ The following dependencies have non-MIT licenses:
 | mocha | 10.8.2 | simple, flexible, fun test framework |
 | ms | 2.1.3 | Tiny millisecond conversion utility |
 | nanoid | 3.3.11 | A tiny (116 bytes), secure URL-friendly unique string ID generator |
+| natural-compare | 1.4.0 | Compare strings containing a mix of letters and numbers in the way a human being would in sort order. |
 | neo-async | 2.6.2 | Neo-Async is a drop-in replacement for Async, it almost fully covers its functionality and runs faster  |
 | next | 15.5.12 | The React Framework |
 | node-addon-api | 2.0.2, 5.1.0 | Node.js API (Node-API) |
@@ -670,7 +729,7 @@ The following dependencies have non-MIT licenses:
 | object-inspect | 1.13.4 | string representations of objects in node and the browser |
 | obliterator | 2.0.5 | Higher order iterator library for JavaScript/TypeScript. |
 | obug | 2.1.1 | A lightweight JavaScript debugging utility, forked from debug, featuring TypeScript and ESM support. |
-| optionator | 0.8.3 | option parsing and help generation |
+| optionator | 0.8.3, 0.9.4 | option parsing and help generation |
 | ordinal | 1.0.3 | Module to provide the ordinal letters following a numeral |
 | os-tmpdir | 1.0.2 | Node.js os.tmpdir() ponyfill |
 | p-limit | 3.1.0 | Run multiple promise-returning & async functions with limited concurrency |
@@ -688,7 +747,7 @@ The following dependencies have non-MIT licenses:
 | pify | 4.0.1 | Promisify a callback-style function |
 | possible-typed-array-names | 1.1.0 | A simple list of possible Typed Array names. |
 | postcss | 8.4.31, 8.5.6 | Tool for transforming styles with JS plugins |
-| prelude-ls | 1.1.2 | prelude.ls is a functionally oriented utility library. It is powerful and flexible. Almost all of its functions are curried. It is written in, and is the recommended base library for, LiveScript. |
+| prelude-ls | 1.1.2, 1.2.1 | prelude.ls is a functionally oriented utility library. It is powerful and flexible. Almost all of its functions are curried. It is written in, and is the recommended base library for, LiveScript. |
 | prettier | 2.8.8 | Prettier is an opinionated code formatter |
 | pretty-format | 27.5.1 | Stringify any JavaScript value. |
 | process-nextick-args | 2.0.1 | process.nextTick but always with args |
@@ -779,16 +838,18 @@ The following dependencies have non-MIT licenses:
 | troika-three-text | 0.52.4 | SDF-based text rendering for Three.js |
 | troika-three-utils | 0.52.4 | Various utilities related to Three.js |
 | troika-worker-utils | 0.52.0 | Utilities for executing code in Web Workers |
+| ts-api-utils | 2.5.0 | Utility functions for working with TypeScript's API. Successor to the wonderful tsutils. 🛠️️ |
 | ts-essentials | 7.0.3 | All essential TypeScript types in one place |
 | ts-node | 10.9.2 | TypeScript execution environment and REPL for node.js, with source map support |
 | tsort | 0.0.1 | Topological sort on directed graphs. |
 | tunnel-rat | 0.1.2 | non gratum anus rodentum |
 | turbo | 2.8.10 | Turborepo is a high-performance build system for JavaScript and TypeScript codebases. |
 | turbo-linux-64 | 2.8.10 | The linux-x64 binary for turbo, a monorepo build system. |
-| type-check | 0.3.2 | type-check allows you to check the types of JavaScript values at runtime with a Haskell like type syntax. |
+| type-check | 0.3.2, 0.4.0 | type-check allows you to check the types of JavaScript values at runtime with a Haskell like type syntax. |
 | type-detect | 4.1.0 | Improved typeof detection for node.js and the browser. |
 | typed-array-buffer | 1.0.3 | Get the ArrayBuffer out of a TypedArray, robustly. |
 | typedarray | 0.0.6 | TypedArray polyfill for old browsers |
+| typescript-eslint | 8.57.1 | Tooling which enables you to use TypeScript with ESLint |
 | typical | 4.0.0, 5.2.0 | Isomorphic, functional type-checking for Javascript |
 | undici | 5.29.0, 7.22.0 | An HTTP/1.1 client, written from scratch for Node.js |
 | undici-types | 6.19.8, 7.18.2 | A stand-alone types package for Undici |
