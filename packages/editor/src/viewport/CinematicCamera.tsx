@@ -68,8 +68,8 @@ interface CinematicCameraProps {
  */
 export const CinematicCamera: React.FC<CinematicCameraProps> = ({
     focalLength = 50,
-    aperture = 2.8,
-    focusDistance = 5,
+    aperture: _aperture = 2.8,
+    focusDistance: _focusDistance = 5,
     shake = 'none',
     shakeIntensity = 1,
 }) => {

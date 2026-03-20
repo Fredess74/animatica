@@ -3,7 +3,7 @@
  * Browse bundled CC0 models, import from URL, or drag-drop GLB files.
  */
 import React, { useState, useCallback } from 'react'
-import { useSceneStore } from '@Animatica/engine'
+import { useSceneStore, type Actor } from '@Animatica/engine'
 import { BUNDLED_MODELS, type BundledModel } from '@Animatica/engine'
 
 type Category = 'all' | 'character' | 'prop' | 'environment'
