@@ -161,4 +161,31 @@ describe('sceneStore', () => {
       expect(result).toHaveLength(1);
       expect(result[0].id).toBe('1');
   });
+
+  it('should set library', () => {
+    const library = { clips: [{ id: '1', name: 'Test Clip' }] };
+    useSceneStore.getState().setLibrary(library);
+    expect(useSceneStore.getState().library).toEqual(library);
+  });
+
+  it('should set entire project', () => {
+    const project = {
+      meta: { title: 'New Project', version: '2.0.0' },
+      environment: {
+        ambientLight: { intensity: 0.8, color: '#ff0000' },
+        sun: { position: [0, 10, 0] as [number, number, number], intensity: 2, color: '#ffffff' },
+        skyColor: '#0000ff',
+      },
+      actors: [createActor('1')],
+      timeline: { duration: 30, cameraTrack: [], animationTracks: [], markers: [] },
+      library: { clips: [] },
+    };
+
+    useSceneStore.getState().setProject(project);
+
+    expect(useSceneStore.getState().meta.title).toBe('New Project');
+    expect(useSceneStore.getState().environment.skyColor).toBe('#0000ff');
+    expect(useSceneStore.getState().actors).toHaveLength(1);
+    expect(useSceneStore.getState().timeline.duration).toBe(30);
+  });
 });
