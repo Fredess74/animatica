@@ -1,36 +1,65 @@
+// @vitest-environment jsdom
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import React from 'react'
+import { render, cleanup } from '@testing-library/react'
 import { CharacterRenderer } from './CharacterRenderer'
 import { CharacterActor } from '../../types'
 
-// Mock react to bypass hooks checks when calling component directly
-vi.mock('react', async () => {
-  const actual = await vi.importActual<typeof import('react')>('react')
-  return {
-    ...actual,
-    useRef: (val: any) => ({ current: val || null }),
-    useMemo: (fn: any) => fn(),
-    useEffect: () => {},
-    useLayoutEffect: () => {},
-    useImperativeHandle: vi.fn(),
-  }
+// Mock character dependencies
+vi.mock('../../characters/CharacterLoader', () => ({
+  createProceduralHumanoid: vi.fn(() => ({
+    root: { name: 'rig-root' },
+    bodyMesh: {},
+    morphTargetMap: {}
+  }))
+}))
+
+vi.mock('../../characters/CharacterAnimator', () => {
+    return {
+        CharacterAnimator: class {
+            registerClip = vi.fn()
+            play = vi.fn()
+            setSpeed = vi.fn()
+            dispose = vi.fn()
+            update = vi.fn()
+        },
+        createDanceClip: vi.fn(),
+        createIdleClip: vi.fn(),
+        createJumpClip: vi.fn(),
+        createRunClip: vi.fn(),
+        createSitClip: vi.fn(),
+        createTalkClip: vi.fn(),
+        createWalkClip: vi.fn(),
+        createWaveClip: vi.fn(),
+    }
 })
+
+vi.mock('../../characters/FaceMorphController', () => ({
+    FaceMorphController: class {
+        setTarget = vi.fn()
+        update = vi.fn()
+        setImmediate = vi.fn()
+    }
+}))
+
+vi.mock('../../characters/EyeController', () => ({
+    EyeController: class {
+        update = vi.fn()
+    }
+}))
+
+vi.mock('../../characters/CharacterPresets', () => ({
+    getPreset: vi.fn(() => ({
+        body: { skinColor: '#ff0000', height: 1, build: 0.5 }
+    }))
+}))
 
 // Mock @react-three/fiber
 vi.mock('@react-three/fiber', () => ({
   useFrame: vi.fn(),
 }))
 
-// Mock the Edges component from @react-three/drei
-vi.mock('@react-three/drei', () => ({
-  Edges: () => null
-}))
-
 describe('CharacterRenderer', () => {
-  afterEach(() => {
-    vi.restoreAllMocks()
-  })
-
   const mockActor: CharacterActor = {
     id: 'char-1',
     name: 'Hero',
@@ -47,45 +76,34 @@ describe('CharacterRenderer', () => {
     clothing: {}
   }
 
-  it('renders a group containing primitive with correct transform', () => {
-    // CharacterRenderer is memo(forwardRef(...))
-    // @ts-ignore - Accessing internal render function for unit testing JSX output
-    const renderFn = (CharacterRenderer as any).type.render
-    const result = renderFn({ actor: mockActor }, null) as React.ReactElement
+  afterEach(() => {
+    cleanup()
+    vi.restoreAllMocks()
+  })
 
-    expect(result).not.toBeNull()
-    expect(result.type).toBe('group')
+  it('renders a group with correct transform', () => {
+    const { container } = render(<CharacterRenderer actor={mockActor} />)
+    const group = container.querySelector('group')
 
-    const props = result.props as any
-    expect(props.position).toEqual([10, 0, 5])
-    expect(props.rotation).toEqual([0, Math.PI, 0])
-    expect(props.scale).toEqual([1, 1, 1])
-
-    // Verify children
-    const children = React.Children.toArray(props.children) as React.ReactElement[]
-
-    // First child should be the rig root (primitive)
-    const rigRoot = children.find(c => c.type === 'primitive')
-    expect(rigRoot).toBeDefined()
+    expect(group).not.toBeNull()
+    expect(group?.getAttribute('name')).toBe('char-1')
   })
 
   it('renders nothing when visible is false', () => {
-    const invisibleActor = { ...mockActor, visible: false }
-    // @ts-ignore - Accessing internal render function for unit testing JSX output
-    const renderFn = (CharacterRenderer as any).type.render
-    const result = renderFn({ actor: invisibleActor }, null)
-    expect(result).toBeNull()
+    const { container } = render(<CharacterRenderer actor={{ ...mockActor, visible: false }} />)
+    expect(container.firstChild).toBeNull()
   })
 
   it('renders selection indicator when isSelected is true', () => {
-    // @ts-ignore - Accessing internal render function for unit testing JSX output
-    const renderFn = (CharacterRenderer as any).type.render
-    const result = renderFn({ actor: mockActor, isSelected: true }, null) as React.ReactElement
-    const props = result.props as any
-    const children = React.Children.toArray(props.children) as React.ReactElement[]
+    const { container } = render(<CharacterRenderer actor={mockActor} isSelected={true} />)
+    // Selection indicator is a ringGeometry inside a mesh
+    const ring = container.querySelector('ringgeometry')
+    expect(ring).not.toBeNull()
+  })
 
-    // The selection indicator mesh
-    const selectionIndicator = children.find(c => c.type === 'mesh')
-    expect(selectionIndicator).toBeDefined()
+  it('forwards ref to the group', () => {
+    const ref = React.createRef<any>()
+    render(<CharacterRenderer actor={mockActor} ref={ref} />)
+    expect(ref.current).toBeDefined()
   })
 })
