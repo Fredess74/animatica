@@ -2,6 +2,7 @@
   "name": "Animatica",
   "private": true,
   "version": "0.1.0",
+  "type": "module",
   "description": "The Animation Platform for Everyone — Create, Animate, Earn",
   "workspaces": [
     "packages/*",
@@ -15,8 +16,11 @@
     "typecheck": "turbo run typecheck"
   },
   "devDependencies": {
+    "@eslint/js": "^9.21.0",
+    "eslint": "^9.21.0",
     "turbo": "^2.5.0",
-    "typescript": "~5.9.3"
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.25.0"
   },
   "packageManager": "pnpm@10.28.0",
   "engines": {
