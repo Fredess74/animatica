@@ -7,8 +7,10 @@
 
 This document lists all dependencies used in the project and their licenses. It also flags any non-MIT licenses and checks for the presence of the project's own LICENSE file.
 
+**Note:** In accordance with project rules, all blockchain, Web3, and cryptocurrency-related packages have been excluded from this audit.
+
 Total dependencies found: 643
-Direct dependencies: 33
+Direct dependencies: 30
 
 ## Project License
 
@@ -137,41 +139,38 @@ The following dependencies have non-MIT licenses:
 
 ## Direct Dependencies
 
-| Dependency | License |
-| --- | --- |
-| @Animatica/editor | MIT (Internal) |
-| @Animatica/engine | MIT (Internal) |
-| @Animatica/platform | MIT (Internal) |
-| @react-three/drei | MIT |
-| @react-three/fiber | MIT |
-| @tailwindcss/postcss | MIT |
-| @testing-library/dom | MIT |
-| @testing-library/react | MIT |
-| @types/node | MIT |
-| @types/react | MIT |
-| @types/react-dom | MIT |
-| @types/three | MIT |
-| @types/uuid | MIT |
-| @vitejs/plugin-react | MIT |
-| clsx | MIT |
-| immer | MIT |
-| jsdom | MIT |
-| lucide-react | ISC |
-| next | MIT |
-| react | MIT |
-| react-dom | MIT |
-| tailwind-merge | MIT |
-| tailwindcss | MIT |
-| three | MIT |
-| tone | MIT |
-| turbo | MIT |
-| typescript | Apache-2.0 |
-| uuid | MIT |
-| vite | MIT |
-| vitest | MIT |
-| zod | MIT |
-| zundo | MIT |
-| zustand | MIT |
+| Dependency | License | Used In |
+| --- | --- | --- |
+| @react-three/drei | MIT | @Animatica/editor, @Animatica/engine |
+| @react-three/fiber | MIT | @Animatica/editor, @Animatica/engine, @Animatica/web |
+| @tailwindcss/postcss | MIT | @Animatica/editor |
+| @testing-library/dom | MIT | @Animatica/web |
+| @testing-library/react | MIT | @Animatica/editor, @Animatica/engine, @Animatica/web |
+| @types/node | MIT | @Animatica/engine |
+| @types/react | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web |
+| @types/react-dom | MIT | @Animatica/editor, @Animatica/platform, @Animatica/web |
+| @types/three | MIT | @Animatica/editor, @Animatica/engine |
+| @types/uuid | MIT | @Animatica/engine |
+| @vitejs/plugin-react | MIT | @Animatica/editor |
+| clsx | MIT | @Animatica/editor |
+| immer | MIT | @Animatica/engine |
+| jsdom | MIT | @Animatica/editor, @Animatica/engine, @Animatica/web |
+| lucide-react | ISC | @Animatica/editor, @Animatica/web |
+| next | MIT | @Animatica/web |
+| react | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web |
+| react-dom | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web |
+| tailwind-merge | MIT | @Animatica/editor |
+| tailwindcss | MIT | @Animatica/editor |
+| three | MIT | @Animatica/editor, @Animatica/engine, @Animatica/web |
+| tone | MIT | @Animatica/engine |
+| turbo | MIT | Root |
+| typescript | Apache-2.0 | @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web, Root |
+| uuid | MIT | @Animatica/engine |
+| vite | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform |
+| vitest | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web |
+| zod | MIT | @Animatica/engine, @Animatica/web |
+| zundo | MIT | @Animatica/engine |
+| zustand | MIT | @Animatica/engine |
 
 ## All Dependencies (including transitive)
 
