@@ -28,12 +28,15 @@ interface CharacterRendererProps {
   onClick?: () => void
 }
 
-export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
-  actor,
-  isSelected = false,
-  onClick,
-}) => {
+export const CharacterRenderer: React.FC<CharacterRendererProps> = React.memo(
+  React.forwardRef<THREE.Group, CharacterRendererProps>(({
+    actor,
+    isSelected = false,
+    onClick,
+  }, ref) => {
   const groupRef = useRef<THREE.Group>(null)
+
+  React.useImperativeHandle(ref, () => groupRef.current!)
   const animatorRef = useRef<CharacterAnimator | null>(null)
   const faceMorphRef = useRef<FaceMorphController | null>(null)
   const eyeControllerRef = useRef<EyeController | null>(null)
@@ -121,6 +124,8 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     }
   })
 
+  if (!actor.visible) return null
+
   return (
     <group
       ref={groupRef}
@@ -151,4 +156,6 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       )}
     </group>
   )
-}
+}))
+
+CharacterRenderer.displayName = 'CharacterRenderer'

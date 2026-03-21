@@ -10,6 +10,7 @@ import { createEnvironmentSlice } from './slices/environmentSlice';
 import { createTimelineSlice } from './slices/timelineSlice';
 import { createPlaybackSlice } from './slices/playbackSlice';
 import { createMetaSlice } from './slices/metaSlice';
+import { createLibrarySlice } from './slices/librarySlice';
 
 /**
  * Zustand store for managing the scene state, including actors, timeline, environment, and playback.
@@ -19,13 +20,22 @@ import { createMetaSlice } from './slices/metaSlice';
 export const useSceneStore = create<SceneStoreState>()(
   temporal(
     persist(
-      immer((...a) => ({
-        ...createActorsSlice(...a),
-        ...createEnvironmentSlice(...a),
-        ...createTimelineSlice(...a),
-        ...createPlaybackSlice(...a),
-        ...createMetaSlice(...a),
-        library: { clips: [] },
+      immer((set, ...a) => ({
+        ...createActorsSlice(set, ...a),
+        ...createEnvironmentSlice(set, ...a),
+        ...createTimelineSlice(set, ...a),
+        ...createPlaybackSlice(set, ...a),
+        ...createMetaSlice(set, ...a),
+        ...createLibrarySlice(set, ...a),
+
+        setProject: (project) =>
+          set((state) => {
+            state.meta = project.meta;
+            state.environment = project.environment;
+            state.actors = project.actors;
+            state.timeline = project.timeline;
+            state.library = project.library;
+          }),
       })),
       {
         name: 'animatica-scene',
@@ -103,7 +113,14 @@ export const useActorIds = () =>
   useSceneStore(useShallow((state) => state.actors.map((a) => a.id)));
 
 /**
+ * Hook to get the list of all actors.
+ * Use useShallow if you only need to re-render when the list of actors itself changes.
+ */
+export const useActorList = () => useSceneStore((state) => state.actors);
+
+/**
  * Hook to get the current playback time.
+ * High-frequency update: use this only in components that need to respond to time changes.
  */
 export const useCurrentTime = () =>
   useSceneStore((state) => state.playback.currentTime);
@@ -113,6 +130,12 @@ export const useCurrentTime = () =>
  */
 export const useIsPlaying = () =>
   useSceneStore((state) => state.playback.isPlaying);
+
+/**
+ * Hook to get the full playback state.
+ */
+export const usePlaybackState = () =>
+  useSceneStore((state) => state.playback);
 
 /**
  * Hook to get the ID of the currently selected actor.
@@ -135,6 +158,25 @@ export const useActorsByType = (type: Actor['type']) =>
   useSceneStore(useShallow((state) => state.actors.filter((a) => a.type === type)));
 
 /**
- * Hook to get the list of all actors.
+ * Hook to get the scene environment settings.
  */
-export const useActorList = () => useSceneStore((state) => state.actors);
+export const useEnvironment = () =>
+  useSceneStore((state) => state.environment);
+
+/**
+ * Hook to get the timeline configuration.
+ */
+export const useTimeline = () =>
+  useSceneStore((state) => state.timeline);
+
+/**
+ * Hook to get the project metadata.
+ */
+export const useProjectMeta = () =>
+  useSceneStore((state) => state.meta);
+
+/**
+ * Hook to get the asset library.
+ */
+export const useLibrary = () =>
+  useSceneStore((state) => state.library);
