@@ -2,10 +2,10 @@
  * CharacterRenderer — R3F component for rendering a character actor.
  * Creates a procedural humanoid (or loads GLB), applies animation, face morphs, and eye tracking.
  */
-import React, { useEffect, useRef, useMemo } from 'react'
+import { useEffect, useRef, useMemo, memo, forwardRef, useImperativeHandle } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
-import { createProceduralHumanoid } from '../../character/CharacterLoader'
+import { createProceduralHumanoid } from '../../characters/CharacterLoader'
 import {
   CharacterAnimator,
   createDanceClip,
@@ -16,10 +16,10 @@ import {
   createTalkClip,
   createWalkClip,
   createWaveClip,
-} from '../../character/CharacterAnimator'
-import { FaceMorphController } from '../../character/FaceMorphController'
-import { EyeController } from '../../character/EyeController'
-import { getPreset } from '../../character/CharacterPresets'
+} from '../../characters/CharacterAnimator'
+import { FaceMorphController } from '../../characters/FaceMorphController'
+import { EyeController } from '../../characters/EyeController'
+import { getPreset } from '../../characters/CharacterPresets'
 import type { CharacterActor } from '../../types'
 
 interface CharacterRendererProps {
@@ -28,15 +28,25 @@ interface CharacterRendererProps {
   onClick?: () => void
 }
 
-export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
+/**
+ * CharacterRenderer component.
+ * Renders a humanoid character with support for procedural rigs, GLB models,
+ * skeletal animations, facial morphs, and eye tracking.
+ *
+ * @component
+ */
+export const CharacterRenderer = memo(forwardRef<THREE.Group, CharacterRendererProps>(({
   actor,
   isSelected = false,
   onClick,
-}) => {
+}, ref) => {
   const groupRef = useRef<THREE.Group>(null)
   const animatorRef = useRef<CharacterAnimator | null>(null)
   const faceMorphRef = useRef<FaceMorphController | null>(null)
   const eyeControllerRef = useRef<EyeController | null>(null)
+
+  // Expose group ref to parent
+  useImperativeHandle(ref, () => groupRef.current!)
 
   // Build character rig
   const rig = useMemo(() => {
@@ -64,9 +74,11 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     animator.play(actor.animation || 'idle')
     animatorRef.current = animator
 
-    // Setup face morph controller
-    const faceMorph = new FaceMorphController(rig.bodyMesh, rig.morphTargetMap)
-    faceMorphRef.current = faceMorph
+    // Setup face morph controller - only if bodyMesh exists
+    if (rig.bodyMesh) {
+      const faceMorph = new FaceMorphController(rig.bodyMesh, rig.morphTargetMap)
+      faceMorphRef.current = faceMorph
+    }
 
     // Setup eye controller
     const eyeController = new EyeController()
@@ -121,6 +133,9 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     }
   })
 
+  // Visibility check
+  if (!actor.visible) return null
+
   return (
     <group
       ref={groupRef}
@@ -151,4 +166,6 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       )}
     </group>
   )
-}
+}))
+
+CharacterRenderer.displayName = 'CharacterRenderer'
