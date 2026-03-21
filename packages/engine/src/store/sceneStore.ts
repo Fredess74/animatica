@@ -31,7 +31,7 @@ export const useSceneStore = create<SceneStoreState>()(
         name: 'animatica-scene',
         // Only persist project state, not playback or selection
         partialize: (state) => {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
           const { playback, selectedActorId, ...rest } = state;
           return rest as unknown as SceneStoreState;
         },

@@ -32,11 +32,11 @@ export { SceneManager } from './scene/SceneManager'
 export { usePlayback } from './playback/PlaybackController'
 
 // === CHARACTER SYSTEM ===
-export * from './character/index'
+export * from './characters/index'
 
 // === GLB MODEL LOADING ===
-export { parseGLBResult, glbToCharacterRig, BUNDLED_MODELS } from './character/GLBLoader'
-export type { GLBLoadResult, BundledModel } from './character/GLBLoader'
+export { parseGLBResult, glbToCharacterRig, BUNDLED_MODELS } from './characters/GLBLoader'
+export type { GLBLoadResult, BundledModel } from './characters/GLBLoader'
 
 // === ANIMATION ===
 export * as Easing from './animation/easing';
