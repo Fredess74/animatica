@@ -62,11 +62,6 @@ vi.mock('@Animatica/engine', () => ({
   useActorList: () => [],
   useSelectedActorId: () => 'test-actor-id',
   useIsPlaying: () => false,
-  useEnvironment: () => ({
-    ambientLight: { intensity: 0.5, color: '#fff' },
-    sun: { position: [10, 10, 10], intensity: 1, color: '#fff' },
-    skyColor: '#87ceeb',
-  }),
   useSceneStore: (selector: any) => selector({
     actors: [],
     selectedActorId: 'test-actor-id',
