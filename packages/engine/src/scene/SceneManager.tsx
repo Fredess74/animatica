@@ -7,7 +7,6 @@
  */
 import React, { useMemo } from 'react';
 import {
-    useSceneStore,
     useEnvironment,
     useTimeline,
     useCurrentTime,
