@@ -25,12 +25,10 @@ Direct dependencies: 30
 
 ## Flagged Licenses (Non-MIT)
 
-The following dependencies have non-MIT licenses:
+The following dependencies have non-MIT licenses (including ISC, Apache-2.0, BSD, etc.):
 
 | Dependency | Version | License | Type |
 | --- | --- | --- | --- |
-| @csstools/color-helpers | 6.0.2 | MIT-0 | Transitive |
-| @csstools/css-syntax-patches-for-csstree | 1.0.28 | MIT-0 | Transitive |
 | @dimforge/rapier3d-compat | 0.12.0 | Apache-2.0 | Transitive |
 | @img/sharp-libvips-linux-x64 | 1.2.4 | LGPL-3.0-or-later | Transitive |
 | @img/sharp-libvips-linuxmusl-x64 | 1.2.4 | LGPL-3.0-or-later | Transitive |
@@ -120,12 +118,9 @@ The following dependencies have non-MIT licenses:
 | source-map-js | 1.2.1 | BSD-3-Clause | Transitive |
 | split2 | 3.2.2 | ISC | Transitive |
 | sprintf-js | 1.0.3 | BSD-3-Clause | Transitive |
-| string-format | 2.0.0 | WTFPL OR MIT | Transitive |
 | table | 6.9.0 | BSD-3-Clause | Transitive |
 | tough-cookie | 6.0.0 | BSD-3-Clause | Transitive |
 | ts-command-line-args | 2.5.1 | ISC | Transitive |
-| tslib | 1.14.1, 2.7.0, 2.8.1 | 0BSD | Transitive |
-| type-fest | 0.7.1, 0.20.2, 0.21.3 | (MIT OR CC0-1.0) | Transitive |
 | typescript | 5.9.3 | Apache-2.0 | **Direct** |
 | uglify-js | 3.19.3 | BSD-2-Clause | Transitive |
 | webidl-conversions | 8.0.1 | BSD-2-Clause | Transitive |
