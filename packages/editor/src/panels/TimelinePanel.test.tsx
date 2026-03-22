@@ -2,7 +2,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import { TimelinePanel } from './TimelinePanel';
-import { useSceneStore, usePlayback } from '@Animatica/engine';
+import { useSceneStore, usePlaybackControls } from '@Animatica/engine';
 
 // Mock useTranslation
 vi.mock('../i18n/useTranslation', () => ({
@@ -18,7 +18,7 @@ vi.mock('../i18n/useTranslation', () => ({
 // Mock @Animatica/engine
 vi.mock('@Animatica/engine', () => ({
     useSceneStore: vi.fn(),
-    usePlayback: vi.fn(),
+    usePlaybackControls: vi.fn(),
     evaluateTracksAtTime: vi.fn().mockReturnValue(new Map()),
 }));
 
@@ -44,7 +44,7 @@ describe('TimelinePanel', () => {
         };
 
         (useSceneStore as any).mockImplementation((selector: any) => selector(mockState));
-        (usePlayback as any).mockReturnValue(mockPlayback);
+        (usePlaybackControls as any).mockReturnValue(mockPlayback);
     });
 
     afterEach(() => {

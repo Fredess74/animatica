@@ -21,6 +21,16 @@ export {
   useSelectedActor,
   useActorsByType,
   useActorList,
+  useEnvironment,
+  useTimeline,
+  useMeta,
+  useLibrary,
+  usePlayback,
+  useProjectState,
+  useAmbientLight,
+  useSun,
+  useFog,
+  useWeather,
 } from './store/sceneStore';
 
 // === COMPONENTS (R3F) ===
@@ -29,7 +39,7 @@ export { LightRenderer } from './scene/renderers/LightRenderer'
 export { CameraRenderer } from './scene/renderers/CameraRenderer'
 export { CharacterRenderer } from './scene/renderers/CharacterRenderer'
 export { SceneManager } from './scene/SceneManager'
-export { usePlayback } from './playback/PlaybackController'
+export { usePlayback as usePlaybackControls } from './playback/PlaybackController'
 
 // === CHARACTER SYSTEM ===
 export * from './character/index'
@@ -55,4 +65,3 @@ export { getAiPrompt, PROMPT_STYLES } from './ai/promptTemplates';
 // === CONFIG ===
 export { FeatureFlagProvider, useFeatureFlag, getFeatureFlags } from './config/featureFlags';
 export type { FeatureFlags } from './config/featureFlags';
-
