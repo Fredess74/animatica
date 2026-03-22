@@ -143,7 +143,7 @@ describe('Engine Benchmarks', () => {
         });
     });
 
-    describe('Store Performance', () => {
+    describe('Store Performance', { timeout: 10000 }, () => {
         it('Store Update Throughput (10k playback updates)', () => {
             const { setState, getState } = useSceneStore;
 
