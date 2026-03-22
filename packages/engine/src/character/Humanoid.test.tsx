@@ -1,6 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
 import React from 'react'
-import * as THREE from 'three'
 import { Humanoid } from './Humanoid'
 
 // Mock Three.js
@@ -28,16 +27,16 @@ vi.mock('react', async () => {
 
 // Mock @react-three/drei
 vi.mock('@react-three/drei', () => ({
-    useGLTF: vi.fn().mockReturnValue({ scene: new THREE.Group(), animations: [] }),
+    useGLTF: vi.fn().mockReturnValue({ scene: { type: 'Group' }, animations: [] }),
 }))
 
 // Mock CharacterLoader
 vi.mock('./CharacterLoader', () => ({
     createProceduralHumanoid: vi.fn().mockReturnValue({
-        root: new THREE.Group(),
+        root: { type: 'Group' },
     }),
     extractRig: vi.fn().mockReturnValue({
-        root: new THREE.Group(),
+        root: { type: 'Group' },
     }),
 }))
 

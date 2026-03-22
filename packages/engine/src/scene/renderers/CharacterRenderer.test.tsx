@@ -1,6 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
 import React from 'react'
-import * as THREE from 'three'
 import { CharacterRenderer } from './CharacterRenderer'
 import { CharacterActor } from '../../types'
 
