@@ -161,4 +161,42 @@ describe('sceneStore', () => {
       expect(result).toHaveLength(1);
       expect(result[0].id).toBe('1');
   });
+
+  it('should set project atomically', () => {
+    const newProject = {
+      meta: { title: 'New Project', version: '2.0.0' },
+      environment: {
+        ambientLight: { intensity: 0.1, color: '#000000' },
+        sun: { position: [0, 0, 0] as [number, number, number], intensity: 0, color: '#000000' },
+        skyColor: '#000000',
+      },
+      actors: [createActor('new-1')],
+      timeline: { duration: 100, cameraTrack: [], animationTracks: [], markers: [] },
+      library: { clips: [{ id: 'clip-1' }] },
+    };
+
+    // Set some non-project state to check if it resets
+    useSceneStore.getState().setSelectedActor('old-id');
+    useSceneStore.getState().setPlayback({ currentTime: 50, isPlaying: true });
+
+    useSceneStore.getState().setProject(newProject);
+
+    expect(useSceneStore.getState().meta.title).toBe('New Project');
+    expect(useSceneStore.getState().environment.skyColor).toBe('#000000');
+    expect(useSceneStore.getState().actors).toHaveLength(1);
+    expect(useSceneStore.getState().timeline.duration).toBe(100);
+    expect(useSceneStore.getState().library.clips).toHaveLength(1);
+
+    // Check reset state
+    expect(useSceneStore.getState().selectedActorId).toBeNull();
+    expect(useSceneStore.getState().playback.currentTime).toBe(0);
+    expect(useSceneStore.getState().playback.isPlaying).toBe(false);
+  });
+
+  it('should update library', () => {
+    const library = { clips: [{ id: 'clip-2' }] };
+    useSceneStore.getState().setLibrary(library);
+    expect(useSceneStore.getState().library.clips).toHaveLength(1);
+    expect(useSceneStore.getState().library.clips[0]).toEqual({ id: 'clip-2' });
+  });
 });

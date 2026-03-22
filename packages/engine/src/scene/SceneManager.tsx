@@ -117,7 +117,10 @@ export const SceneManager: React.FC<SceneManagerProps> = ({
                                 key={actor.id}
                                 actor={actor as PrimitiveActor}
                                 isSelected={actor.id === selectedActorId}
-                                onClick={() => onActorSelect?.(actor.id)}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onActorSelect?.(actor.id);
+                                }}
                             />
                         );
 

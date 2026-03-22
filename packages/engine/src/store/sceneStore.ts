@@ -3,13 +3,15 @@ import { immer } from 'zustand/middleware/immer';
 import { persist } from 'zustand/middleware';
 import { temporal } from 'zundo';
 import { useShallow } from 'zustand/react/shallow';
-import { Actor } from '../types';
+import { Actor, Environment, Timeline, ProjectMeta, ProjectState } from '../types';
 import { SceneStoreState } from './types';
 import { createActorsSlice } from './slices/actorsSlice';
 import { createEnvironmentSlice } from './slices/environmentSlice';
 import { createTimelineSlice } from './slices/timelineSlice';
 import { createPlaybackSlice } from './slices/playbackSlice';
 import { createMetaSlice } from './slices/metaSlice';
+import { createLibrarySlice } from './slices/librarySlice';
+import { createProjectSlice } from './slices/projectSlice';
 
 /**
  * Zustand store for managing the scene state, including actors, timeline, environment, and playback.
@@ -25,7 +27,8 @@ export const useSceneStore = create<SceneStoreState>()(
         ...createTimelineSlice(...a),
         ...createPlaybackSlice(...a),
         ...createMetaSlice(...a),
-        library: { clips: [] },
+        ...createLibrarySlice(...a),
+        ...createProjectSlice(...a),
       })),
       {
         name: 'animatica-scene',
@@ -138,3 +141,62 @@ export const useActorsByType = (type: Actor['type']) =>
  * Hook to get the list of all actors.
  */
 export const useActorList = () => useSceneStore((state) => state.actors);
+
+/**
+ * Hook to get the current environment state.
+ */
+export const useEnvironment = () => useSceneStore((state) => state.environment);
+
+/**
+ * Hook to get the current timeline state.
+ */
+export const useTimeline = () => useSceneStore((state) => state.timeline);
+
+/**
+ * Hook to get the current project metadata.
+ */
+export const useMeta = () => useSceneStore((state) => state.meta);
+
+/**
+ * Hook to get the asset library.
+ */
+export const useLibrary = () => useSceneStore((state) => state.library);
+
+/**
+ * Hook to get the current playback state.
+ */
+export const usePlayback = () => useSceneStore((state) => state.playback);
+
+/**
+ * Hook to get the entire project state.
+ */
+export const useProjectState = (): ProjectState =>
+  useSceneStore(
+    useShallow((state) => ({
+      meta: state.meta,
+      environment: state.environment,
+      actors: state.actors,
+      timeline: state.timeline,
+      library: state.library,
+    }))
+  );
+
+/**
+ * Hook to get the ambient light settings.
+ */
+export const useAmbientLight = () => useSceneStore((state) => state.environment.ambientLight);
+
+/**
+ * Hook to get the sun settings.
+ */
+export const useSun = () => useSceneStore((state) => state.environment.sun);
+
+/**
+ * Hook to get the fog settings.
+ */
+export const useFog = () => useSceneStore((state) => state.environment.fog);
+
+/**
+ * Hook to get the weather settings.
+ */
+export const useWeather = () => useSceneStore((state) => state.environment.weather);
