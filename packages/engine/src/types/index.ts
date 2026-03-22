@@ -139,6 +139,8 @@ export interface ClothingSlots {
 export interface CharacterActor extends BaseActor {
   /** Discriminator for the actor type. */
   type: 'character'
+  /** URL to an external GLB model (e.g. from ReadyPlayerMe). */
+  avatarUrl?: string
   /** Current animation state. */
   animation: AnimationState
   /** Speed multiplier for the animation (default: 1). */

@@ -1,102 +1,145 @@
-import { describe, it, expect, vi, afterEach } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import React from 'react'
-// @ts-ignore
+import * as THREE from 'three'
 import { CharacterRenderer } from './CharacterRenderer'
 import { CharacterActor } from '../../types'
 
-// Mock react to bypass hooks checks when calling component directly
-vi.mock('react', async () => {
-  const actual = await vi.importActual<typeof import('react')>('react')
-  return {
-    ...actual,
-    useRef: () => ({ current: null }),
-  }
+// Mock Three.js
+vi.mock('three', async () => {
+    const actual = await vi.importActual<typeof import('three')>('three')
+    return {
+        ...actual,
+        Vector3: class {
+            x = 0; y = 0; z = 0;
+            set = vi.fn().mockReturnThis();
+            setFromMatrixPosition = vi.fn().mockReturnThis();
+        },
+        Group: class extends actual.Object3D {
+            type = 'Group';
+            children = [];
+            getWorldPosition = vi.fn();
+        },
+        SkinnedMesh: class extends actual.Object3D {
+            type = 'SkinnedMesh';
+            geometry = { attributes: { position: { count: 100 } } };
+            morphTargetDictionary = {};
+        },
+        DoubleSide: 2,
+    }
 })
 
-// Mock the Edges component from @react-three/drei
-vi.mock('@react-three/drei', () => ({
-  Edges: () => null
+// Mock React hooks
+vi.mock('react', async () => {
+    const actual = await vi.importActual<typeof import('react')>('react')
+    return {
+        ...actual,
+        useRef: vi.fn().mockReturnValue({ current: null }),
+        useMemo: vi.fn((fn) => fn()),
+        useEffect: vi.fn(),
+        useCallback: vi.fn((fn) => fn),
+        useImperativeHandle: vi.fn(),
+    }
+})
+
+// Mock R3F hooks
+vi.mock('@react-three/fiber', () => ({
+    useFrame: vi.fn(),
+}))
+
+// Mock character system
+vi.mock('../../character', () => ({
+    CharacterAnimator: vi.fn().mockImplementation(() => ({
+        registerClip: vi.fn(),
+        play: vi.fn(),
+        setSpeed: vi.fn(),
+        update: vi.fn(),
+        dispose: vi.fn(),
+    })),
+    FaceMorphController: vi.fn().mockImplementation(() => ({
+        setTarget: vi.fn(),
+        update: vi.fn(),
+        setImmediate: vi.fn(),
+    })),
+    EyeController: vi.fn().mockImplementation(() => ({
+        update: vi.fn(),
+    })),
+    getPreset: vi.fn().mockReturnValue({
+        body: { skinColor: '#D4A27C', height: 1.0, build: 0.5 }
+    }),
+    createIdleClip: vi.fn(),
+    createWalkClip: vi.fn(),
+    createRunClip: vi.fn(),
+    createTalkClip: vi.fn(),
+    createWaveClip: vi.fn(),
+    createDanceClip: vi.fn(),
+    createSitClip: vi.fn(),
+    createJumpClip: vi.fn(),
+    Humanoid: (props: any) => <div data-testid="humanoid" data-url={props.url} />,
 }))
 
 describe('CharacterRenderer', () => {
-  afterEach(() => {
-    vi.restoreAllMocks()
-  })
+    const mockActor: CharacterActor = {
+        id: 'char-1',
+        name: 'Hero',
+        type: 'character',
+        visible: true,
+        transform: {
+            position: [10, 0, 5],
+            rotation: [0, Math.PI, 0],
+            scale: [1, 1, 1]
+        },
+        animation: 'idle',
+        morphTargets: {},
+        bodyPose: {},
+        clothing: {}
+    }
 
-  const mockActor: CharacterActor = {
-    id: 'char-1',
-    name: 'Hero',
-    type: 'character',
-    visible: true,
-    transform: {
-      position: [10, 0, 5],
-      rotation: [0, Math.PI, 0],
-      scale: [1, 1, 1]
-    },
-    animation: 'idle',
-    morphTargets: {},
-    bodyPose: {},
-    clothing: {}
-  }
+    it('renders a group with correct transform', () => {
+        // @ts-expect-error - Accessing internal render function for shallow test
+        const result = CharacterRenderer.type.render({ actor: mockActor }, null)
 
-  it('renders a group containing capsule mesh with correct transform', () => {
-    // Call the forwardRef component's render function directly
-    // Since it's wrapped in memo, we access the underlying forwardRef via .type
-    // @ts-ignore
-    const result = CharacterRenderer.type.render({ actor: mockActor }, null) as React.ReactElement
+        expect(result).not.toBeNull()
+        expect(result.type).toBe('group')
 
-    expect(result).not.toBeNull()
-    expect(result.type).toBe('group')
+        const props = result.props
+        expect(props.position).toEqual([10, 0, 5])
+        expect(props.rotation).toEqual([0, Math.PI, 0])
+        expect(props.scale).toEqual([1, 1, 1])
+    })
 
-    const props = result.props as any
-    expect(props.position).toEqual([10, 0, 5])
-    expect(props.rotation).toEqual([0, Math.PI, 0])
-    expect(props.scale).toEqual([1, 1, 1])
+    it('renders Humanoid child with avatarUrl', () => {
+        const actorWithUrl = { ...mockActor, avatarUrl: 'https://example.com/model.glb' }
+        // @ts-expect-error - Accessing internal render function for shallow test
+        const result = CharacterRenderer.type.render({ actor: actorWithUrl }, null)
 
-    // Verify children
-    const children = React.Children.toArray(props.children) as React.ReactElement[]
+        const children = React.Children.toArray(result.props.children)
+        // Check for Humanoid component in children
+        const humanoid = children.find((c: any) => c.type && (typeof c.type === 'function' || typeof c.type === 'object'))
 
-    // First child should be the main mesh (capsule)
-    const mainMesh = children[0]
-    expect(mainMesh.type).toBe('mesh')
+        expect(humanoid).toBeDefined()
+        // @ts-ignore
+        expect(humanoid.props.url).toBe('https://example.com/model.glb')
+    })
 
-    const mainMeshProps = mainMesh.props as any
-    const meshChildren = React.Children.toArray(mainMeshProps.children) as React.ReactElement[]
+    it('renders nothing when visible is false', () => {
+        const invisibleActor = { ...mockActor, visible: false }
+        // @ts-expect-error - Accessing internal render function for shallow test
+        const result = CharacterRenderer.type.render({ actor: invisibleActor }, null)
+        expect(result).toBeNull()
+    })
 
-    // Check geometry
-    const geometry = meshChildren.find((child) => child.type === 'capsuleGeometry')
-    expect(geometry).toBeDefined()
+    it('renders selection indicator when isSelected is true', () => {
+        // @ts-expect-error - Accessing internal render function for shallow test
+        const result = CharacterRenderer.type.render({ actor: mockActor, isSelected: true }, null)
+        const children = React.Children.toArray(result.props.children)
 
-    const geometryProps = geometry?.props as any
-    // Check args: radius 0.5, length 1.8
-    expect(geometryProps?.args?.[0]).toBe(0.5)
-    expect(geometryProps?.args?.[1]).toBe(1.8)
+        // Find the selection ring (mesh with ringGeometry)
+        const ring = children.find((c: any) => {
+            if (c.type !== 'mesh') return false
+            const meshChildren = React.Children.toArray(c.props.children)
+            return meshChildren.some((mc: any) => mc.type === 'ringGeometry')
+        })
 
-    // Check material
-    const material = meshChildren.find((child) => child.type === 'meshStandardMaterial')
-    expect(material).toBeDefined()
-
-    const materialProps = material?.props as any
-    expect(materialProps?.color).toBe('#ff00aa') // The placeholder color
-  })
-
-  it('renders nothing when visible is false', () => {
-    const invisibleActor = { ...mockActor, visible: false }
-    // @ts-ignore
-    const result = CharacterRenderer.type.render({ actor: invisibleActor }, null)
-    expect(result).toBeNull()
-  })
-
-  it('renders face direction indicator', () => {
-     // @ts-ignore
-    const result = CharacterRenderer.type.render({ actor: mockActor }, null) as React.ReactElement
-    const props = result.props as any
-    const children = React.Children.toArray(props.children) as React.ReactElement[]
-
-    // Second child should be the face mesh
-    const faceMesh = children[1]
-    expect(faceMesh.type).toBe('mesh')
-    const faceMeshProps = faceMesh.props as any
-    expect(faceMeshProps?.position?.[2]).toBe(0.4)
-  })
+        expect(ring).toBeDefined()
+    })
 })
