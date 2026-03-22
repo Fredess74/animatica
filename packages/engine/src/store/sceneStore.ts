@@ -3,7 +3,7 @@ import { immer } from 'zustand/middleware/immer';
 import { persist } from 'zustand/middleware';
 import { temporal } from 'zundo';
 import { useShallow } from 'zustand/react/shallow';
-import { Actor, Environment, Timeline, ProjectMeta, ProjectState } from '../types';
+import { Actor, ProjectState } from '../types';
 import { SceneStoreState } from './types';
 import { createActorsSlice } from './slices/actorsSlice';
 import { createEnvironmentSlice } from './slices/environmentSlice';
