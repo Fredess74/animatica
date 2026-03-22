@@ -6,7 +6,7 @@
  */
 import React, { useState, useCallback, useMemo } from 'react';
 import { useTranslation } from '../i18n/useTranslation';
-import { useSceneStore, usePlayback, evaluateTracksAtTime } from '@Animatica/engine';
+import { useSceneStore, usePlaybackControls, evaluateTracksAtTime } from '@Animatica/engine';
 import { TimelineTrack } from './TimelineTrack';
 
 interface TimelinePanelProps {
@@ -32,7 +32,7 @@ export const TimelinePanel: React.FC<TimelinePanelProps> = ({ selectedActorId })
     const setDuration = (d: number) => setTimeline({ duration: d });
 
     // Playback controls
-    const { play, pause, stop, seek } = usePlayback();
+    const { play, pause, stop, seek } = usePlaybackControls();
 
     // Local state
     const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null);
