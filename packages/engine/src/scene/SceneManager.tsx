@@ -15,7 +15,6 @@ import { CameraRenderer } from './renderers/CameraRenderer';
 import { CharacterRenderer } from './renderers/CharacterRenderer';
 import { SpeakerRenderer } from './renderers/SpeakerRenderer';
 import type {
-    Actor,
     PrimitiveActor,
     LightActor,
     CameraActor,

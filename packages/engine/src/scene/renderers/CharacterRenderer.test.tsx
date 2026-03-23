@@ -1,8 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import React from 'react'
-// @ts-ignore
-import { CharacterRenderer } from './CharacterRenderer'
-import { CharacterActor } from '../../types'
 
 // Mock react to bypass hooks checks when calling component directly
 vi.mock('react', async () => {
@@ -22,6 +19,17 @@ vi.mock('react', async () => {
 vi.mock('@react-three/drei', () => ({
   Edges: () => null
 }))
+
+// Mock @react-three/fiber
+vi.mock('@react-three/fiber', () => ({
+  useFrame: vi.fn(),
+  useStore: vi.fn(),
+  useThree: vi.fn(() => ({})),
+}))
+
+// @ts-ignore
+import { CharacterRenderer } from './CharacterRenderer'
+import { CharacterActor } from '../../types'
 
 describe('CharacterRenderer', () => {
   afterEach(() => {
@@ -62,9 +70,9 @@ describe('CharacterRenderer', () => {
     const children = React.Children.toArray(props.children) as React.ReactElement[]
 
     // First child should be the rig root (primitive)
-    const rigRoot = children[0]
+    const rigRoot = children[0] as React.ReactElement
     expect(rigRoot.type).toBe('primitive')
-    expect(rigRoot.props.object).toBeDefined()
+    expect((rigRoot.props as any).object).toBeDefined()
   })
 
   it('renders nothing when visible is false', () => {
