@@ -136,7 +136,7 @@ The following dependencies have non-MIT licenses:
 ## Direct Dependencies
 
 | Dependency | License | Used In |
-| --- | --- | --- | --- |
+| --- | --- | --- |
 | @nomicfoundation/hardhat-toolbox | MIT | @Animatica/contracts |
 | @openzeppelin/contracts | MIT | @Animatica/contracts |
 | @react-three/drei | MIT | @Animatica/editor, @Animatica/engine |
