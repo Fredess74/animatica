@@ -3,7 +3,7 @@
  * Rendered as a 40px strip above the 3D canvas.
  */
 import React from 'react'
-import type { GizmoMode, TransformSpace, ViewMode } from './Viewport'
+import type { GizmoMode, TransformSpace, ViewMode, ViewPreset } from './Viewport'
 
 interface ViewportToolbarProps {
     gizmoMode: GizmoMode

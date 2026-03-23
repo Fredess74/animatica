@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import React from 'react'
-// @ts-expect-error - CharacterRenderer uses hooks but we test as pure function
 import { CharacterRenderer } from './CharacterRenderer'
 import { CharacterActor } from '../../types'
 
