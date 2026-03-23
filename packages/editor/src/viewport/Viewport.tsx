@@ -75,6 +75,7 @@ export const Viewport: React.FC<{ className?: string }> = ({ className }) => {
                 onGridToggle={toggleGrid}
                 viewMode={viewMode}
                 onViewModeChange={setViewMode}
+                onViewPresetChange={() => {}} // Placeholder for tests
             />
 
             {viewMode === '3d' ? (

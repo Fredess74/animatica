@@ -49,17 +49,17 @@ describe('Easing Functions', () => {
 
     // Branch 2: t < 2/2.75 (~0.7272)
     const t2 = 0.5;
-    let t_calc2 = t2 - 1.5 / 2.75;
+    const t_calc2 = t2 - 1.5 / 2.75;
     expect(Easing.bounce(t2)).toBeCloseTo(7.5625 * t_calc2 * t_calc2 + 0.75);
 
     // Branch 3: t < 2.5/2.75 (~0.9090)
     const t3 = 0.8;
-    let t_calc3 = t3 - 2.25 / 2.75;
+    const t_calc3 = t3 - 2.25 / 2.75;
     expect(Easing.bounce(t3)).toBeCloseTo(7.5625 * t_calc3 * t_calc3 + 0.9375);
 
     // Branch 4: t >= 2.5/2.75
     const t4 = 0.95;
-    let t_calc4 = t4 - 2.625 / 2.75;
+    const t_calc4 = t4 - 2.625 / 2.75;
     expect(Easing.bounce(t4)).toBeCloseTo(7.5625 * t_calc4 * t_calc4 + 0.984375);
   });
 

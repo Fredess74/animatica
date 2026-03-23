@@ -38,8 +38,7 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
     // Assuming ProjectStateSchema is a ZodObject as it represents the state.
     let updates;
     if ('partial' in ProjectStateSchema && typeof ProjectStateSchema.partial === 'function') {
-        // @ts-ignore - Schema version mismatch might cause TS issues but runtime should work
-        updates = ProjectStateSchema.partial().parse(json);
+        updates = (ProjectStateSchema as any).partial().parse(json);
     } else {
         // Fallback: Validate full object if partial is not supported, or just trust simple validation
         // But for PUT we usually want to allow partial updates?
