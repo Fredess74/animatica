@@ -5,8 +5,8 @@
  *
  * @module @animatica/engine/scene/SceneManager
  */
-import React, { useMemo } from 'react';
-import { useSceneStore } from '../store/sceneStore';
+import React, { useMemo, memo } from 'react';
+import { useSceneStore, useEnvironmentValue, useTimelineValue, useCurrentTime, useActorIds } from '../store/sceneStore';
 import { evaluateTracksAtTime } from '../animation/interpolate';
 import { applyAnimationToActor, resolveActiveCamera } from './animationUtils';
 import { PrimitiveRenderer } from './renderers/PrimitiveRenderer';
@@ -33,62 +33,14 @@ interface SceneManagerProps {
 }
 
 /**
- * SceneManager — the main scene orchestrator.
- * Reads actors, timeline, and environment from the Zustand store
- * and renders everything using the appropriate renderer components.
- *
- * @component
- * @example
- * ```tsx
- * <Canvas>
- *   <SceneManager
- *     selectedActorId={selectedId}
- *     onActorSelect={(id) => setSelectedId(id)}
- *     showHelpers={true}
- *   />
- * </Canvas>
- * ```
+ * SceneEnvironment — Renders lights, sky, and fog.
+ * Subscribes only to environment state.
  */
-export const SceneManager: React.FC<SceneManagerProps> = ({
-    selectedActorId,
-    onActorSelect,
-    showHelpers = false,
-}) => {
-    const actors = useSceneStore((s) => s.actors);
-    const environment = useSceneStore((s) => s.environment);
-    const timeline = useSceneStore((s) => s.timeline);
-    const currentTime = useSceneStore((s) => s.playback.currentTime);
-
-    // Evaluate all animation tracks at the current time
-    const animationValues = useMemo(
-        () => evaluateTracksAtTime(timeline.animationTracks, currentTime),
-        [timeline.animationTracks, currentTime],
-    );
-
-    // Sort camera cuts only when the track changes, not every frame
-    const sortedCameraCuts = useMemo(
-        () => [...timeline.cameraTrack].sort((a, b) => a.time - b.time),
-        [timeline.cameraTrack]
-    );
-
-    // Determine the active camera from the sorted camera cuts
-    const activeCameraId = useMemo(
-        () => resolveActiveCamera(sortedCameraCuts, currentTime),
-        [sortedCameraCuts, currentTime],
-    );
-
-    // Apply animation values to actors
-    const animatedActors = useMemo(
-        () =>
-            actors.map((actor: Actor) =>
-                applyAnimationToActor(actor, animationValues.get(actor.id)),
-            ),
-        [actors, animationValues],
-    );
+const SceneEnvironment: React.FC = memo(() => {
+    const environment = useEnvironmentValue((s) => s);
 
     return (
         <>
-            {/* === Environment === */}
             <ambientLight
                 intensity={environment.ambientLight.intensity}
                 color={environment.ambientLight.color}
@@ -107,62 +59,171 @@ export const SceneManager: React.FC<SceneManagerProps> = ({
                     args={[environment.fog.color, environment.fog.near, environment.fog.far]}
                 />
             )}
+        </>
+    );
+});
 
-            {/* === Actors === */}
-            {animatedActors.map((actor: Actor) => {
-                switch (actor.type) {
-                    case 'primitive':
-                        return (
-                            <PrimitiveRenderer
-                                key={actor.id}
-                                actor={actor as PrimitiveActor}
-                                isSelected={actor.id === selectedActorId}
-                                onClick={() => onActorSelect?.(actor.id)}
-                            />
-                        );
+SceneEnvironment.displayName = 'SceneEnvironment';
 
-                    case 'light':
-                        return (
-                            <LightRenderer
-                                key={actor.id}
-                                actor={actor as LightActor}
-                                showHelper={showHelpers || actor.id === selectedActorId}
-                            />
-                        );
+interface SceneActorsProps extends SceneManagerProps {
+    actorIds: string[];
+}
 
-                    case 'camera':
-                        return (
-                            <CameraRenderer
-                                key={actor.id}
-                                actor={actor as CameraActor}
-                                isActive={actor.id === activeCameraId}
-                                showHelper={showHelpers || actor.id === selectedActorId}
-                            />
-                        );
+/**
+ * SceneActorItem — Renders a single actor.
+ * Subscribes only to that actor's state.
+ */
+const SceneActorItem: React.FC<{
+    actorId: string;
+    animationValues: Map<string, unknown> | undefined;
+    activeCameraId: string | null;
+    selectedActorId?: string;
+    onActorSelect?: (id: string) => void;
+    showHelpers?: boolean;
+}> = memo(({
+    actorId,
+    animationValues,
+    activeCameraId,
+    selectedActorId,
+    onActorSelect,
+    showHelpers = false,
+}) => {
+    const actor = useSceneStore((s) => s.actors.find(a => a.id === actorId));
+    if (!actor) return null;
 
-                    case 'character':
-                        return (
-                            <CharacterRenderer
-                                key={actor.id}
-                                actor={actor as CharacterActor}
-                                isSelected={actor.id === selectedActorId}
-                                onClick={() => onActorSelect?.(actor.id)}
-                            />
-                        );
+    const animatedActor = applyAnimationToActor(actor, animationValues);
 
-                    case 'speaker':
-                        return (
-                            <SpeakerRenderer
-                                key={actor.id}
-                                actor={actor as SpeakerActor}
-                                showHelper={showHelpers || actor.id === selectedActorId}
-                            />
-                        );
+    switch (animatedActor.type) {
+        case 'primitive':
+            return (
+                <PrimitiveRenderer
+                    key={animatedActor.id}
+                    actor={animatedActor as PrimitiveActor}
+                    isSelected={animatedActor.id === selectedActorId}
+                    onClick={() => onActorSelect?.(animatedActor.id)}
+                />
+            );
 
-                    default:
-                        return null;
-                }
-            })}
+        case 'light':
+            return (
+                <LightRenderer
+                    key={animatedActor.id}
+                    actor={animatedActor as LightActor}
+                    showHelper={showHelpers || animatedActor.id === selectedActorId}
+                />
+            );
+
+        case 'camera':
+            return (
+                <CameraRenderer
+                    key={animatedActor.id}
+                    actor={animatedActor as CameraActor}
+                    isActive={animatedActor.id === activeCameraId}
+                    showHelper={showHelpers || animatedActor.id === selectedActorId}
+                />
+            );
+
+        case 'character':
+            return (
+                <CharacterRenderer
+                    key={animatedActor.id}
+                    actor={animatedActor as CharacterActor}
+                    isSelected={animatedActor.id === selectedActorId}
+                    onClick={() => onActorSelect?.(animatedActor.id)}
+                />
+            );
+
+        case 'speaker':
+            return (
+                <SpeakerRenderer
+                    key={animatedActor.id}
+                    actor={animatedActor as SpeakerActor}
+                    showHelper={showHelpers || animatedActor.id === selectedActorId}
+                />
+            );
+
+        default:
+            return null;
+    }
+});
+
+SceneActorItem.displayName = 'SceneActorItem';
+
+/**
+ * SceneActors — Renders all actors and evaluates animations.
+ * Subscribes to actors, timeline, and high-frequency currentTime.
+ */
+const SceneActors: React.FC<SceneActorsProps> = memo(({
+    actorIds,
+    selectedActorId,
+    onActorSelect,
+    showHelpers = false,
+}) => {
+    const animationTracks = useTimelineValue((s) => s.animationTracks);
+    const cameraTrack = useTimelineValue((s) => s.cameraTrack);
+    const currentTime = useCurrentTime();
+
+    // Evaluate all animation tracks at the current time
+    const animationValues = useMemo(
+        () => evaluateTracksAtTime(animationTracks, currentTime),
+        [animationTracks, currentTime],
+    );
+
+    // Sort camera cuts only when the track changes, not every frame
+    const sortedCameraCuts = useMemo(
+        () => [...cameraTrack].sort((a, b) => a.time - b.time),
+        [cameraTrack]
+    );
+
+    // Determine the active camera from the sorted camera cuts
+    const activeCameraId = useMemo(
+        () => resolveActiveCamera(sortedCameraCuts, currentTime),
+        [sortedCameraCuts, currentTime],
+    );
+
+    return (
+        <>
+            {actorIds.map((actorId) => (
+                <SceneActorItem
+                    key={actorId}
+                    actorId={actorId}
+                    animationValues={animationValues.get(actorId)}
+                    activeCameraId={activeCameraId}
+                    selectedActorId={selectedActorId}
+                    onActorSelect={onActorSelect}
+                    showHelpers={showHelpers}
+                />
+            ))}
+        </>
+    );
+});
+
+SceneActors.displayName = 'SceneActors';
+
+/**
+ * SceneManager — the main scene orchestrator.
+ * Reads actors, timeline, and environment from the Zustand store
+ * and renders everything using the appropriate renderer components.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Canvas>
+ *   <SceneManager
+ *     selectedActorId={selectedId}
+ *     onActorSelect={(id) => setSelectedId(id)}
+ *     showHelpers={true}
+ *   />
+ * </Canvas>
+ * ```
+ */
+export const SceneManager: React.FC<SceneManagerProps> = (props) => {
+    const actorIds = useActorIds();
+
+    return (
+        <>
+            <SceneEnvironment />
+            <SceneActors actorIds={actorIds} {...props} />
         </>
     );
 };

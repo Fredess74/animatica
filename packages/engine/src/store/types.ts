@@ -1,4 +1,4 @@
-import { Actor, Environment, Timeline, ProjectMeta } from '../types';
+import { Actor, Environment, Timeline, ProjectMeta, ProjectState } from '../types';
 
 /**
  * Loop modes for playback.
@@ -92,4 +92,6 @@ export interface SceneStoreState extends
   MetaSlice {
   /** Asset library. */
   library: { clips: unknown[] };
+  /** Atomically updates the entire project state. */
+  setProject: (project: ProjectState) => void;
 }

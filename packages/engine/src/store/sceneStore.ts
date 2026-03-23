@@ -19,14 +19,25 @@ import { createMetaSlice } from './slices/metaSlice';
 export const useSceneStore = create<SceneStoreState>()(
   temporal(
     persist(
-      immer((...a) => ({
-        ...createActorsSlice(...a),
-        ...createEnvironmentSlice(...a),
-        ...createTimelineSlice(...a),
-        ...createPlaybackSlice(...a),
-        ...createMetaSlice(...a),
-        library: { clips: [] },
-      })),
+      immer((...a) => {
+        const [set] = a;
+        return {
+          ...createActorsSlice(...a),
+          ...createEnvironmentSlice(...a),
+          ...createTimelineSlice(...a),
+          ...createPlaybackSlice(...a),
+          ...createMetaSlice(...a),
+          library: { clips: [] },
+          setProject: (project) =>
+            set((state) => {
+              state.meta = project.meta;
+              state.environment = project.environment;
+              state.actors = project.actors;
+              state.timeline = project.timeline;
+              state.library = project.library;
+            }),
+        };
+      }),
       {
         name: 'animatica-scene',
         // Only persist project state, not playback or selection
@@ -122,10 +133,13 @@ export const useSelectedActorId = () =>
 
 /**
  * Hook to get the currently selected actor.
+ * Optimized with useShallow to prevent re-renders unless the selected actor's properties change.
  */
 export const useSelectedActor = () =>
-  useSceneStore((state) =>
-    state.selectedActorId ? state.actors.find((a) => a.id === state.selectedActorId) : undefined
+  useSceneStore(
+    useShallow((state) =>
+      state.selectedActorId ? state.actors.find((a) => a.id === state.selectedActorId) : undefined
+    )
   );
 
 /**
@@ -138,3 +152,17 @@ export const useActorsByType = (type: Actor['type']) =>
  * Hook to get the list of all actors.
  */
 export const useActorList = () => useSceneStore((state) => state.actors);
+
+/**
+ * Hook to select a specific property from the environment.
+ * Optimized with useShallow for complex objects.
+ */
+export const useEnvironmentValue = <T>(selector: (env: SceneStoreState['environment']) => T) =>
+  useSceneStore(useShallow((state) => selector(state.environment)));
+
+/**
+ * Hook to select a specific property from the timeline.
+ * Optimized with useShallow for complex objects.
+ */
+export const useTimelineValue = <T>(selector: (timeline: SceneStoreState['timeline']) => T) =>
+  useSceneStore(useShallow((state) => selector(state.timeline)));
