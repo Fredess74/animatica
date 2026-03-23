@@ -2,7 +2,7 @@
  * CharacterRenderer — R3F component for rendering a character actor.
  * Creates a procedural humanoid (or loads GLB), applies animation, face morphs, and eye tracking.
  */
-import React, { useEffect, useRef, useMemo } from 'react'
+import { useEffect, useRef, useMemo, useImperativeHandle, memo, forwardRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { createProceduralHumanoid } from '../../character/CharacterLoader'
@@ -28,15 +28,21 @@ interface CharacterRendererProps {
   onClick?: () => void
 }
 
-export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
+// Pre-allocate vector for performance
+const headPosScratch = new THREE.Vector3()
+
+export const CharacterRenderer = memo(forwardRef<THREE.Group, CharacterRendererProps>(({
   actor,
   isSelected = false,
   onClick,
-}) => {
+}, ref) => {
   const groupRef = useRef<THREE.Group>(null)
   const animatorRef = useRef<CharacterAnimator | null>(null)
   const faceMorphRef = useRef<FaceMorphController | null>(null)
   const eyeControllerRef = useRef<EyeController | null>(null)
+
+  // Expose group ref to parent
+  useImperativeHandle(ref, () => groupRef.current as THREE.Group)
 
   // Build character rig
   const rig = useMemo(() => {
@@ -100,6 +106,9 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
 
   // Frame update — animation, face morphs, eye blinks
   useFrame((_state, delta) => {
+    // Skip all logic if not visible for performance
+    if (!actor.visible) return
+
     // Skeletal animation
     if (animatorRef.current) {
       animatorRef.current.update(delta)
@@ -113,13 +122,16 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     // Eye auto-blink + look-at
     if (eyeControllerRef.current && faceMorphRef.current) {
       const headPos = groupRef.current
-        ? new THREE.Vector3().setFromMatrixPosition(groupRef.current.matrixWorld)
+        ? headPosScratch.setFromMatrixPosition(groupRef.current.matrixWorld)
         : undefined
       const eyeValues = eyeControllerRef.current.update(delta, headPos)
       // Apply eye morph values on top of expression
       faceMorphRef.current.setImmediate(eyeValues)
     }
   })
+
+  // Early return after hooks to comply with React's rules
+  if (!actor.visible) return null
 
   return (
     <group
@@ -151,4 +163,6 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       )}
     </group>
   )
-}
+}))
+
+CharacterRenderer.displayName = 'CharacterRenderer'
