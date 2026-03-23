@@ -16,6 +16,7 @@ interface ViewportToolbarProps {
     onGridToggle: () => void
     viewMode: ViewMode
     onViewModeChange: (mode: ViewMode) => void
+    onViewPresetChange?: (preset: ViewPreset) => void
 }
 
 export const ViewportToolbar: React.FC<ViewportToolbarProps> = ({
@@ -29,6 +30,7 @@ export const ViewportToolbar: React.FC<ViewportToolbarProps> = ({
     onGridToggle,
     viewMode,
     onViewModeChange,
+    onViewPresetChange,
 }) => {
     return (
         <div style={toolbarStyle}>
@@ -62,6 +64,34 @@ export const ViewportToolbar: React.FC<ViewportToolbarProps> = ({
                     active={transformSpace === 'local'}
                     onClick={onTransformSpaceToggle}
                     icon={transformSpace === 'world' ? '🌐' : '📦'}
+                />
+            </div>
+
+            {/* View presets group */}
+            <div style={groupStyle}>
+                <ToolBtn
+                    tooltip="Top View"
+                    active={false}
+                    onClick={() => onViewPresetChange?.('top')}
+                    icon="T"
+                />
+                <ToolBtn
+                    tooltip="Front View"
+                    active={false}
+                    onClick={() => onViewPresetChange?.('front')}
+                    icon="F"
+                />
+                <ToolBtn
+                    tooltip="Side View"
+                    active={false}
+                    onClick={() => onViewPresetChange?.('right')}
+                    icon="S"
+                />
+                <ToolBtn
+                    tooltip="Perspective View"
+                    active={false}
+                    onClick={() => onViewPresetChange?.('perspective')}
+                    icon="P"
                 />
             </div>
 

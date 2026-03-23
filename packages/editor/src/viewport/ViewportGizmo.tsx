@@ -59,6 +59,7 @@ export const ViewportGizmo: React.FC<ViewportGizmoProps> = ({
 
     return (
         <TransformControls
+            data-testid="transform-controls"
             ref={controlsRef}
             object={target}
             mode={mode}

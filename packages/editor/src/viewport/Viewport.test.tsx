@@ -5,7 +5,7 @@ import { Viewport } from './Viewport'
 import React from 'react'
 
 // Mock ResizeObserver
-// @ts-ignore
+// @ts-expect-error - ResizeObserver is not defined in jsdom
 global.ResizeObserver = class ResizeObserver {
   observe() {}
   unobserve() {}
@@ -27,7 +27,8 @@ vi.mock('@react-three/fiber', async () => {
     Canvas: ({ children }: { children: React.ReactNode }) => <div data-testid="canvas">{children}</div>,
     useThree: () => ({
       scene: { getObjectByName: mocks.mockGetObjectByName },
-      camera: { position: { set: vi.fn() }, lookAt: vi.fn() }
+      camera: { position: { set: vi.fn() }, lookAt: vi.fn() },
+      gl: { domElement: { onpointerdown: null } },
     }),
   }
 })
@@ -38,12 +39,25 @@ vi.mock('@react-three/drei', () => ({
   TransformControls: () => <div data-testid="transform-controls" />,
   Grid: () => <div data-testid="grid" />,
   Sky: () => <div data-testid="sky" />,
+  ContactShadows: () => <div data-testid="contact-shadows" />,
+  Environment: () => <div data-testid="environment" />,
 }))
 
 // Mock Engine
 vi.mock('@Animatica/engine', () => ({
-  SceneManager: () => <div data-testid="scene-manager" />,
+  PrimitiveRenderer: () => <div data-testid="primitive-renderer" />,
+  LightRenderer: () => <div data-testid="light-renderer" />,
+  CameraRenderer: () => <div data-testid="camera-renderer" />,
   useSceneStore: (selector: any) => selector({
+    actors: [
+        {
+            id: 'test-actor-id',
+            name: 'Test Actor',
+            type: 'primitive',
+            transform: { position: [0,0,0], rotation: [0,0,0], scale: [1,1,1] },
+            properties: { shape: 'box', color: '#ff0000' }
+        }
+    ],
     selectedActorId: 'test-actor-id',
     setSelectedActor: mocks.mockSetSelectedActor,
     updateActor: mocks.mockUpdateActor,
@@ -73,7 +87,6 @@ describe('Viewport', () => {
     expect(screen.getByTestId('canvas')).toBeTruthy()
     expect(screen.getByTestId('orbit-controls')).toBeTruthy()
     expect(screen.getByTestId('grid')).toBeTruthy()
-    expect(screen.getByTestId('scene-manager')).toBeTruthy()
   })
 
   it('renders the camera toolbar', () => {
@@ -94,7 +107,7 @@ describe('Viewport', () => {
     expect(topButton).toBeTruthy()
   })
 
-  it('renders gizmo when object is found', () => {
+  it('renders gizmo when object is found', async () => {
     // Mock found object
     mocks.mockGetObjectByName.mockReturnValue({
         position: { x: 0, y: 0, z: 0 },
@@ -104,6 +117,8 @@ describe('Viewport', () => {
 
     render(<Viewport />)
 
-    expect(screen.getByTestId('transform-controls')).toBeTruthy()
+    // ViewportGizmo has a 50ms delay to ensure object is mounted
+    const gizmo = await screen.findByTestId('transform-controls', {}, { timeout: 1000 })
+    expect(gizmo).toBeTruthy()
   })
 })
