@@ -28,10 +28,6 @@ interface CharacterRendererProps {
   onClick?: () => void
 }
 
-interface CharacterRendererRef {
-  group: THREE.Group | null
-}
-
 export const CharacterRenderer = React.memo(React.forwardRef<THREE.Group, CharacterRendererProps>(({
   actor,
   isSelected = false,
@@ -127,7 +123,7 @@ export const CharacterRenderer = React.memo(React.forwardRef<THREE.Group, Charac
     }
   })
 
-  React.useImperativeHandle(ref, () => groupRef.current);
+  React.useImperativeHandle(ref, () => groupRef.current as THREE.Group);
 
   return (
     <group
