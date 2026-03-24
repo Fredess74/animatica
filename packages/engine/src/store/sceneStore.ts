@@ -3,7 +3,7 @@ import { immer } from 'zustand/middleware/immer';
 import { persist } from 'zustand/middleware';
 import { temporal } from 'zundo';
 import { useShallow } from 'zustand/react/shallow';
-import { Actor } from '../types';
+import { Actor, AnimationTrack } from '../types';
 import { SceneStoreState } from './types';
 import { createActorsSlice } from './slices/actorsSlice';
 import { createEnvironmentSlice } from './slices/environmentSlice';
@@ -29,11 +29,42 @@ export const useSceneStore = create<SceneStoreState>()(
       })),
       {
         name: 'animatica-scene',
-        // Only persist project state, not playback or selection
+        // Only persist project state, not playback, selection or indices
         partialize: (state) => {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { playback, selectedActorId, ...rest } = state;
+          const {
+            playback,
+            selectedActorId,
+            actorsById,
+            tracksByTargetId,
+            ...rest
+          } = state;
           return rest as unknown as SceneStoreState;
+        },
+        // Rebuild indices after rehydration
+        onRehydrateStorage: () => (state) => {
+          if (!state) return;
+
+          // Rebuild Actor Index
+          const actorsById: Record<string, Actor> = {};
+          for (const actor of state.actors) {
+            actorsById[actor.id] = actor;
+          }
+          state.actorsById = actorsById;
+
+          // Rebuild Track Index
+          const tracksByTargetId: Record<string, AnimationTrack[]> = {};
+          for (const track of state.timeline.animationTracks) {
+            if (!tracksByTargetId[track.targetId]) {
+              tracksByTargetId[track.targetId] = [];
+            }
+            // Pre-sort keyframes for faster interpolation
+            const sortedTrack = {
+              ...track,
+              keyframes: [...track.keyframes].sort((a, b) => a.time - b.time),
+            };
+            tracksByTargetId[track.targetId].push(sortedTrack);
+          }
+          state.tracksByTargetId = tracksByTargetId;
         },
       }
     ),
@@ -91,9 +122,10 @@ export const getCurrentTime = (state: SceneStoreState): number =>
 
 /**
  * Hook to select a specific actor by ID.
+ * Optimized with an indexed lookup for O(1) performance.
  */
 export const useActorById = (id: string) =>
-  useSceneStore((state) => state.actors.find((a) => a.id === id));
+  useSceneStore((state) => state.actorsById[id]);
 
 /**
  * Hook to get the list of all actor IDs.
@@ -122,19 +154,61 @@ export const useSelectedActorId = () =>
 
 /**
  * Hook to get the currently selected actor.
+ * Optimized with useShallow to provide a stable object reference.
  */
 export const useSelectedActor = () =>
-  useSceneStore((state) =>
-    state.selectedActorId ? state.actors.find((a) => a.id === state.selectedActorId) : undefined
+  useSceneStore(
+    useShallow((state) =>
+      state.selectedActorId ? state.actors.find((a) => a.id === state.selectedActorId) : undefined
+    )
   );
 
 /**
  * Hook to get all actors of a specific type.
+ * Optimized with useShallow to prevent re-renders when the filtered list reference changes but content is same.
  */
 export const useActorsByType = (type: Actor['type']) =>
   useSceneStore(useShallow((state) => state.actors.filter((a) => a.type === type)));
 
 /**
  * Hook to get the list of all actors.
+ * Optimized with useShallow to provide a stable array reference.
  */
-export const useActorList = () => useSceneStore((state) => state.actors);
+export const useActorList = () => useSceneStore(useShallow((state) => state.actors));
+
+/**
+ * Hook to get the ambient light settings.
+ */
+export const useAmbientLight = () => useSceneStore(useShallow((s) => s.environment.ambientLight));
+
+/**
+ * Hook to get the sun (directional light) settings.
+ */
+export const useSun = () => useSceneStore(useShallow((s) => s.environment.sun));
+
+/**
+ * Hook to get the sky color.
+ */
+export const useSkyColor = () => useSceneStore((s) => s.environment.skyColor);
+
+/**
+ * Hook to get the fog settings.
+ */
+export const useFog = () => useSceneStore(useShallow((s) => s.environment.fog));
+
+/**
+ * Hook to get the weather settings.
+ */
+export const useWeather = () => useSceneStore(useShallow((s) => s.environment.weather));
+
+/**
+ * Hook to get animation tracks for a specific actor.
+ * Optimized with an indexed lookup for O(1) performance.
+ */
+export const useActorTracks = (id: string) =>
+  useSceneStore(useShallow((state) => state.tracksByTargetId[id] || []));
+
+/**
+ * Hook to get the camera track (cuts).
+ */
+export const useCameraTrack = () => useSceneStore(useShallow((s) => s.timeline.cameraTrack));

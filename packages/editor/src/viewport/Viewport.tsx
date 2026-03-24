@@ -108,7 +108,9 @@ export const Viewport: React.FC<{ className?: string }> = ({ className }) => {
                             {gridVisible && <ViewportGrid />}
 
                             {/* All scene actors */}
-                            <SceneRenderer />
+                            <group data-testid="scene-renderer-container">
+                                <SceneRenderer />
+                            </group>
 
                             {/* Transform gizmo on selected actor */}
                             <ViewportGizmo
