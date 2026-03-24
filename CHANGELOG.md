@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-03-24
+
+### Added
+
+- **Phase 2: Characters** progress:
+    - `Humanoid` base component for ReadyPlayerMe models and procedural fallbacks.
+    - `BoneController` for mapping BodyPose to skeleton bone rotations.
+    - `FaceMorphController` and `EyeController` for facial expressions and blink/look-at behavior.
+    - Character presets (cowboy, robot, etc.) in `CharacterPresets.ts`.
+- **Phase 3: Editor UI** progress:
+    - 3-panel layout (`EditorLayout.tsx`) with dark theme.
+    - `AssetLibrary` for adding characters, props, and lights.
+    - `PropertiesPanel` for transform and material controls.
+    - `TimelinePanel` with playhead and keyframe management.
+    - `ScriptConsole` for manual JSON scene building and validation.
+    - `ExportModal` for video resolution and FPS settings.
+- **AI Integration**:
+    - AI prompt templates and system instructions in `ai/promptTemplates.ts`.
+    - `ScriptImporter` updates for robust scene construction.
+
+### Changed
+
+- Refactored `CharacterRenderer` to use `memo` and `forwardRef` for better performance and testability.
+- Updated all monorepo packages to version `0.2.0`.
+
+### Removed
+
+- Legacy blockchain and Web3 artifacts (contracts, docs) to align with project mandate.
+
 ## [0.1.0] - 2026-02-22
 
 ### Added

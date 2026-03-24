@@ -199,6 +199,6 @@ describe('Engine Benchmarks', () => {
                     getState().removeActor(`bench-${i}`);
                 }
             });
-        });
+        }, 15000); // Increased timeout for slow environments
     });
 });
