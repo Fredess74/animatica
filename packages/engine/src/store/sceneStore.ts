@@ -122,19 +122,60 @@ export const useSelectedActorId = () =>
 
 /**
  * Hook to get the currently selected actor.
+ * Optimized with useShallow to provide a stable object reference.
  */
 export const useSelectedActor = () =>
-  useSceneStore((state) =>
-    state.selectedActorId ? state.actors.find((a) => a.id === state.selectedActorId) : undefined
+  useSceneStore(
+    useShallow((state) =>
+      state.selectedActorId ? state.actors.find((a) => a.id === state.selectedActorId) : undefined
+    )
   );
 
 /**
  * Hook to get all actors of a specific type.
+ * Optimized with useShallow to prevent re-renders when the filtered list reference changes but content is same.
  */
 export const useActorsByType = (type: Actor['type']) =>
   useSceneStore(useShallow((state) => state.actors.filter((a) => a.type === type)));
 
 /**
  * Hook to get the list of all actors.
+ * Optimized with useShallow to provide a stable array reference.
  */
-export const useActorList = () => useSceneStore((state) => state.actors);
+export const useActorList = () => useSceneStore(useShallow((state) => state.actors));
+
+/**
+ * Hook to get the ambient light settings.
+ */
+export const useAmbientLight = () => useSceneStore(useShallow((s) => s.environment.ambientLight));
+
+/**
+ * Hook to get the sun (directional light) settings.
+ */
+export const useSun = () => useSceneStore(useShallow((s) => s.environment.sun));
+
+/**
+ * Hook to get the sky color.
+ */
+export const useSkyColor = () => useSceneStore((s) => s.environment.skyColor);
+
+/**
+ * Hook to get the fog settings.
+ */
+export const useFog = () => useSceneStore(useShallow((s) => s.environment.fog));
+
+/**
+ * Hook to get the weather settings.
+ */
+export const useWeather = () => useSceneStore(useShallow((s) => s.environment.weather));
+
+/**
+ * Hook to get animation tracks for a specific actor.
+ */
+export const useActorTracks = (id: string) =>
+  useSceneStore(useShallow((s) => s.timeline.animationTracks.filter((t) => t.targetId === id)));
+
+/**
+ * Hook to get the camera track (cuts).
+ */
+export const useCameraTrack = () => useSceneStore(useShallow((s) => s.timeline.cameraTrack));
