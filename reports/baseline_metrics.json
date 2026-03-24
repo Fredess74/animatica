@@ -1,10 +1,42 @@
 {
-  "Number Interpolation (10k ops)": "451.23ms",
-  "Vector3 Interpolation (10k ops)": "499.22ms",
-  "Color Interpolation (10k ops)": "542.74ms",
-  "Schema Validation Speed (100 runs)": "99.02ms",
-  "Store Playback Updates (10k ops)": "339.19ms",
-  "Store Add Actor (1k ops)": "188.94ms",
-  "Store Update Actor (1k ops)": "1456.54ms",
-  "Store Remove Actor (1k ops)": "1162.69ms"
+  "Number Interpolation": {
+    "total_duration": "460.79ms",
+    "ms_per_op": "0.046079ms/op",
+    "iterations": 10000
+  },
+  "Vector3 Interpolation": {
+    "total_duration": "540.97ms",
+    "ms_per_op": "0.054097ms/op",
+    "iterations": 10000
+  },
+  "Color Interpolation": {
+    "total_duration": "549.59ms",
+    "ms_per_op": "0.054959ms/op",
+    "iterations": 10000
+  },
+  "Project Schema Validation": {
+    "total_duration": "54.82ms",
+    "ms_per_op": "0.548183ms/op",
+    "iterations": 100
+  },
+  "Store Playback Updates": {
+    "total_duration": "253.12ms",
+    "ms_per_op": "0.025312ms/op",
+    "iterations": 10000
+  },
+  "Store Add Actor": {
+    "total_duration": "199.86ms",
+    "ms_per_op": "0.199855ms/op",
+    "iterations": 1000
+  },
+  "Store Update Actor": {
+    "total_duration": "1640.20ms",
+    "ms_per_op": "1.640198ms/op",
+    "iterations": 1000
+  },
+  "Store Remove Actor": {
+    "total_duration": "2024.67ms",
+    "ms_per_op": "2.024674ms/op",
+    "iterations": 1000
+  }
 }
