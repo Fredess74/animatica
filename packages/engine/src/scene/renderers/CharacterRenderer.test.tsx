@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import React from 'react'
-// @ts-ignore
+// @ts-ignore - CharacterRenderer is a .tsx file and might have import issues in some environments
 import { CharacterRenderer } from './CharacterRenderer'
 import { CharacterActor } from '../../types'
+import React from 'react'
 
 // Mock react to bypass hooks checks when calling component directly
 vi.mock('react', async () => {
@@ -51,7 +51,7 @@ describe('CharacterRenderer', () => {
   it('renders a group containing primitive with rig root', () => {
     // Call the forwardRef component's render function directly
     // Since it's wrapped in memo, we access the underlying forwardRef via .type
-    // @ts-ignore
+    // @ts-ignore - testing internals of memoized forwardRef component
     const result = CharacterRenderer.type.render({ actor: mockActor }, { current: null }) as React.ReactElement
 
     expect(result).not.toBeNull()
@@ -72,13 +72,13 @@ describe('CharacterRenderer', () => {
 
   it('renders nothing when visible is false', () => {
     const invisibleActor = { ...mockActor, visible: false }
-    // @ts-ignore
+    // @ts-ignore - testing internals of memoized forwardRef component
     const result = CharacterRenderer.type.render({ actor: invisibleActor }, { current: null })
     expect(result).toBeNull()
   })
 
   it('renders selection indicator when isSelected is true', () => {
-    // @ts-ignore
+    // @ts-ignore - testing internals of memoized forwardRef component
     const result = CharacterRenderer.type.render({ actor: mockActor, isSelected: true }, { current: null }) as React.ReactElement
     const props = result.props as any
     const children = React.Children.toArray(props.children) as React.ReactElement[]
