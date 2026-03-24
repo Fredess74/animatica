@@ -1,19 +1,19 @@
 import React, { useMemo, memo } from 'react';
 import { useActorById, useActorTracks, useCurrentTime } from '../store/sceneStore';
 import { evaluateTracksAtTime } from '../animation/interpolate';
-import { applyAnimationToActor } from './animationUtils';
+import { applyAnimationToActor, resolveActiveCamera } from './animationUtils';
 import { PrimitiveRenderer } from './renderers/PrimitiveRenderer';
 import { LightRenderer } from './renderers/LightRenderer';
 import { CameraRenderer } from './renderers/CameraRenderer';
 import { CharacterRenderer } from './renderers/CharacterRenderer';
 import { SpeakerRenderer } from './renderers/SpeakerRenderer';
 import type {
-    Actor,
     PrimitiveActor,
     LightActor,
     CameraActor,
     CharacterActor,
     SpeakerActor,
+    CameraCut,
 } from '../types';
 
 interface SceneActorItemProps {
@@ -21,7 +21,7 @@ interface SceneActorItemProps {
     selectedActorId?: string;
     onActorSelect?: (actorId: string) => void;
     showHelpers?: boolean;
-    activeCameraId?: string;
+    sortedCameraCuts: CameraCut[];
 }
 
 /**
@@ -34,7 +34,7 @@ export const SceneActorItem: React.FC<SceneActorItemProps> = memo(({
     selectedActorId,
     onActorSelect,
     showHelpers = false,
-    activeCameraId,
+    sortedCameraCuts,
 }) => {
     const actor = useActorById(id);
     const tracks = useActorTracks(id);
@@ -46,6 +46,13 @@ export const SceneActorItem: React.FC<SceneActorItemProps> = memo(({
         const animationValues = evaluateTracksAtTime(tracks, currentTime);
         return applyAnimationToActor(actor, animationValues.get(id));
     }, [actor, tracks, currentTime, id]);
+
+    // Determine the active camera from the provided sorted camera cuts
+    // This is only evaluated if the current actor is a camera
+    const activeCameraId = useMemo(() => {
+        if (!actor || actor.type !== 'camera') return undefined;
+        return resolveActiveCamera(sortedCameraCuts, currentTime) ?? undefined;
+    }, [actor?.type, sortedCameraCuts, currentTime]);
 
     if (!animatedActor) return null;
 

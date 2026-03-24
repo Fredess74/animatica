@@ -14,6 +14,7 @@ vi.mock('react', async () => {
     useCallback: (callback: any) => callback,
     useEffect: () => {},
     useLayoutEffect: () => {},
+    useImperativeHandle: () => {},
   }
 })
 
@@ -49,9 +50,10 @@ describe('CharacterRenderer', () => {
   }
 
   it('renders a group containing character rig with correct transform', () => {
-    // Call the component directly
+    // Call the forwardRef component's render function directly
+    // Since it's wrapped in memo, we access the underlying forwardRef via .type
     // @ts-ignore
-    const result = CharacterRenderer({ actor: mockActor }) as React.ReactElement
+    const result = CharacterRenderer.type.render({ actor: mockActor }, { current: null }) as React.ReactElement
 
     expect(result).not.toBeNull()
     expect(result.type).toBe('group')
@@ -71,19 +73,15 @@ describe('CharacterRenderer', () => {
   })
 
   it('renders nothing when visible is false', () => {
-    // Note: The actual component uses early return if !visible
-    // But since it's a functional component, we expect it to return null
     const invisibleActor = { ...mockActor, visible: false }
     // @ts-ignore
-    const result = CharacterRenderer({ actor: invisibleActor })
-    // If it's a functional component, it might not return null but a group with visible=false
-    // Looking at CharacterRenderer.tsx, it returns <group visible={actor.visible} ... />
-    expect(result.props.visible).toBe(false)
+    const result = CharacterRenderer.type.render({ actor: invisibleActor }, { current: null })
+    expect(result).toBeNull()
   })
 
   it('renders selection indicator when isSelected is true', () => {
      // @ts-ignore
-    const result = CharacterRenderer({ actor: mockActor, isSelected: true }) as React.ReactElement
+    const result = CharacterRenderer.type.render({ actor: mockActor, isSelected: true }, { current: null }) as React.ReactElement
     const props = result.props as any
     const children = React.Children.toArray(props.children) as React.ReactElement[]
 

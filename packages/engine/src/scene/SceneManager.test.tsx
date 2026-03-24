@@ -2,7 +2,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render } from '@testing-library/react'
 import { SceneManager } from './SceneManager'
-import { useSceneStore } from '../store/sceneStore'
 
 // Mock the store
 vi.mock('../store/sceneStore', () => ({
