@@ -28,11 +28,11 @@ interface CharacterRendererProps {
   onClick?: () => void
 }
 
-export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
+export const CharacterRenderer = React.memo(React.forwardRef<THREE.Group, CharacterRendererProps>(({
   actor,
   isSelected = false,
   onClick,
-}) => {
+}, ref) => {
   const groupRef = useRef<THREE.Group>(null)
   const animatorRef = useRef<CharacterAnimator | null>(null)
   const faceMorphRef = useRef<FaceMorphController | null>(null)
@@ -47,6 +47,8 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
 
     return createProceduralHumanoid({ skinColor, height, build })
   }, [actor.name])
+
+  if (!actor.visible) return null
 
   // Setup animator
   useEffect(() => {
@@ -121,6 +123,8 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     }
   })
 
+  React.useImperativeHandle(ref, () => groupRef.current as THREE.Group);
+
   return (
     <group
       ref={groupRef}
@@ -151,4 +155,4 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       )}
     </group>
   )
-}
+}))
