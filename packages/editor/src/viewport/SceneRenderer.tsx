@@ -3,6 +3,9 @@
  */
 import React from 'react'
 import {
+    useActorIds,
+    useActorById,
+    useSelectedActorId,
     useSceneStore,
     PrimitiveRenderer,
     LightRenderer,
@@ -11,21 +14,41 @@ import {
 import type { Actor } from '@Animatica/engine'
 
 export const SceneRenderer: React.FC = () => {
-    const actors = useSceneStore((s) => s.actors)
-    const selectedActorId = useSceneStore((s) => s.selectedActorId)
+    const actorIds = useActorIds()
+    const selectedActorId = useSelectedActorId()
     const setSelectedActor = useSceneStore((s) => s.setSelectedActor)
 
     return (
         <group>
-            {actors.map((actor) => (
-                <ActorSwitch
-                    key={actor.id}
-                    actor={actor}
-                    isSelected={actor.id === selectedActorId}
-                    onSelect={() => setSelectedActor(actor.id)}
+            {actorIds.map((id) => (
+                <SceneActorItem
+                    key={id}
+                    id={id}
+                    selectedActorId={selectedActorId}
+                    onSelect={setSelectedActor}
                 />
             ))}
         </group>
+    )
+}
+
+/**
+ * Optimized item renderer that subscribes to its own actor data.
+ */
+const SceneActorItem: React.FC<{
+    id: string
+    selectedActorId: string | null
+    onSelect: (id: string) => void
+}> = ({ id, selectedActorId, onSelect }) => {
+    const actor = useActorById(id)
+    if (!actor) return null
+
+    return (
+        <ActorSwitch
+            actor={actor}
+            isSelected={id === selectedActorId}
+            onSelect={() => onSelect(id)}
+        />
     )
 }
 
