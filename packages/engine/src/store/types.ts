@@ -1,4 +1,4 @@
-import { Actor, Environment, Timeline, ProjectMeta } from '../types';
+import { Actor, Environment, Timeline, ProjectMeta, AnimationTrack } from '../types';
 
 /**
  * Loop modes for playback.
@@ -29,6 +29,8 @@ export interface PlaybackState {
 export interface ActorsSlice {
   /** List of actors in the scene. */
   actors: Actor[];
+  /** Index of actors by their unique ID for O(1) lookups. */
+  actorsById: Record<string, Actor>;
   /** The ID of the currently selected actor, or null if none selected. */
   selectedActorId: string | null;
   /** Adds a new actor to the scene. */
@@ -57,6 +59,8 @@ export interface EnvironmentSlice {
 export interface TimelineSlice {
   /** Timeline configuration. */
   timeline: Timeline;
+  /** Index of animation tracks by target actor ID for O(1) lookups. */
+  tracksByTargetId: Record<string, AnimationTrack[]>;
   /** Updates the timeline configuration. */
   setTimeline: (timeline: Partial<Timeline>) => void;
 }
