@@ -5,7 +5,7 @@ import { Viewport } from './Viewport'
 import React from 'react'
 
 // Mock ResizeObserver
-// @ts-ignore
+// @ts-expect-error - Mocking global
 global.ResizeObserver = class ResizeObserver {
   observe() {}
   unobserve() {}
@@ -27,7 +27,8 @@ vi.mock('@react-three/fiber', async () => {
     Canvas: ({ children }: { children: React.ReactNode }) => <div data-testid="canvas">{children}</div>,
     useThree: () => ({
       scene: { getObjectByName: mocks.mockGetObjectByName },
-      camera: { position: { set: vi.fn() }, lookAt: vi.fn() }
+      camera: { position: { set: vi.fn() }, lookAt: vi.fn() },
+      gl: { domElement: { onpointerdown: null } },
     }),
   }
 })
@@ -38,12 +39,15 @@ vi.mock('@react-three/drei', () => ({
   TransformControls: () => <div data-testid="transform-controls" />,
   Grid: () => <div data-testid="grid" />,
   Sky: () => <div data-testid="sky" />,
+  ContactShadows: () => <div data-testid="contact-shadows" />,
+  Environment: () => <div data-testid="environment" />,
 }))
 
 // Mock Engine
 vi.mock('@Animatica/engine', () => ({
   SceneManager: () => <div data-testid="scene-manager" />,
-  useSceneStore: (selector: any) => selector({
+  useSceneStore: (selector: (state: any) => any) => selector({
+    actors: [],
     selectedActorId: 'test-actor-id',
     setSelectedActor: mocks.mockSetSelectedActor,
     updateActor: mocks.mockUpdateActor,
@@ -54,6 +58,14 @@ vi.mock('@Animatica/engine', () => ({
       skyColor: '#87ceeb',
     },
   }),
+  PrimitiveRenderer: () => null,
+  LightRenderer: () => null,
+  CameraRenderer: () => null,
+}))
+
+// Mock local SceneRenderer because Viewport uses it
+vi.mock('./SceneRenderer', () => ({
+  SceneRenderer: () => <div data-testid="scene-manager" />
 }))
 
 describe('Viewport', () => {
@@ -72,37 +84,46 @@ describe('Viewport', () => {
 
     expect(screen.getByTestId('canvas')).toBeTruthy()
     expect(screen.getByTestId('orbit-controls')).toBeTruthy()
-    expect(screen.getByTestId('grid')).toBeTruthy()
     expect(screen.getByTestId('scene-manager')).toBeTruthy()
   })
 
-  it('renders the camera toolbar', () => {
+  it('renders the toolbar', () => {
     render(<Viewport />)
 
-    expect(screen.getByTitle('Top View')).toBeTruthy()
-    expect(screen.getByTitle('Front View')).toBeTruthy()
-    expect(screen.getByTitle('Side View')).toBeTruthy()
-    expect(screen.getByTitle('Perspective View')).toBeTruthy()
+    expect(screen.getByTitle('Move (W)')).toBeTruthy()
+    expect(screen.getByTitle('Rotate (E)')).toBeTruthy()
+    expect(screen.getByTitle('Scale (R)')).toBeTruthy()
+    expect(screen.getByTitle('Toggle grid')).toBeTruthy()
   })
 
-  it('attempts to change camera view when toolbar button clicked', () => {
+  it('attempts to change gizmo mode when toolbar button clicked', () => {
     render(<Viewport />)
 
-    const topButton = screen.getByTitle('Top View')
-    fireEvent.click(topButton)
+    const moveButton = screen.getByTitle('Move (W)')
+    fireEvent.click(moveButton)
 
-    expect(topButton).toBeTruthy()
+    expect(moveButton).toBeTruthy()
   })
 
-  it('renders gizmo when object is found', () => {
+  it('renders gizmo when object is found', async () => {
     // Mock found object
-    mocks.mockGetObjectByName.mockReturnValue({
+    const mockObject = {
         position: { x: 0, y: 0, z: 0 },
         rotation: { x: 0, y: 0, z: 0 },
-        scale: { x: 1, y: 1, z: 1 }
-    })
+        scale: { x: 1, y: 1, z: 1 },
+        traverse: vi.fn(),
+        parent: null,
+        children: [],
+        uuid: 'test-uuid',
+        type: 'Mesh',
+        visible: true,
+    }
+    mocks.mockGetObjectByName.mockReturnValue(mockObject)
 
     render(<Viewport />)
+
+    // ViewportGizmo has a 50ms delay
+    await new Promise(resolve => setTimeout(resolve, 100))
 
     expect(screen.getByTestId('transform-controls')).toBeTruthy()
   })
