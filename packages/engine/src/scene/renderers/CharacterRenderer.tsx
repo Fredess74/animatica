@@ -1,8 +1,4 @@
-/**
- * CharacterRenderer — R3F component for rendering a character actor.
- * Creates a procedural humanoid (or loads GLB), applies animation, face morphs, and eye tracking.
- */
-import React, { useEffect, useRef, useMemo } from 'react'
+import React, { useEffect, useRef, useMemo, forwardRef, memo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { createProceduralHumanoid } from '../../character/CharacterLoader'
@@ -12,10 +8,10 @@ import {
   createIdleClip,
   createJumpClip,
   createRunClip,
-  createSitClip,
   createTalkClip,
   createWalkClip,
   createWaveClip,
+  createSitClip,
 } from '../../character/CharacterAnimator'
 import { FaceMorphController } from '../../character/FaceMorphController'
 import { EyeController } from '../../character/EyeController'
@@ -28,12 +24,21 @@ interface CharacterRendererProps {
   onClick?: () => void
 }
 
-export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
+/**
+ * CharacterRenderer — R3F component for rendering a character actor.
+ * Creates a procedural humanoid (or loads GLB), applies animation, face morphs, and eye tracking.
+ *
+ * @component
+ */
+export const CharacterRenderer = memo(forwardRef<THREE.Group, CharacterRendererProps>(({
   actor,
   isSelected = false,
   onClick,
-}) => {
-  const groupRef = useRef<THREE.Group>(null)
+}, ref) => {
+  const localRef = useRef<THREE.Group>(null)
+  // Combine forwarded ref and local ref
+  const groupRef = (ref as React.MutableRefObject<THREE.Group>) || localRef
+
   const animatorRef = useRef<CharacterAnimator | null>(null)
   const faceMorphRef = useRef<FaceMorphController | null>(null)
   const eyeControllerRef = useRef<EyeController | null>(null)
@@ -151,4 +156,6 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       )}
     </group>
   )
-}
+}))
+
+CharacterRenderer.displayName = 'CharacterRenderer'
