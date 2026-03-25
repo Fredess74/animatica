@@ -14,7 +14,7 @@ export const createActorsSlice: StateCreator<
   addActor: (actor) =>
     set((state) => {
       state.actors.push(actor);
-      state.actorsById[actor.id] = actor;
+      state.actorsById[actor.id] = state.actors[state.actors.length - 1];
     }),
 
   removeActor: (actorId) =>
@@ -28,10 +28,10 @@ export const createActorsSlice: StateCreator<
 
   updateActor: (actorId, updates) =>
     set((state) => {
-      const actorIndex = state.actors.findIndex((a) => a.id === actorId);
-      if (actorIndex !== -1) {
-        Object.assign(state.actors[actorIndex], updates);
-        state.actorsById[actorId] = state.actors[actorIndex];
+      const actor = state.actors.find((a) => a.id === actorId);
+      if (actor) {
+        Object.assign(actor, updates);
+        state.actorsById[actorId] = actor;
       }
     }),
 
