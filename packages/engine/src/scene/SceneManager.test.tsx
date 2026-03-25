@@ -2,146 +2,42 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render } from '@testing-library/react'
 import { SceneManager } from './SceneManager'
-import { useSceneStore } from '../store/sceneStore'
+import { useActorIds, useSceneStore } from '../store/sceneStore'
 
-// Mock the store
+// Mock hooks
 vi.mock('../store/sceneStore', () => ({
+  useActorIds: vi.fn(),
+  useAmbientLight: vi.fn(() => ({ intensity: 0.5, color: '#ffffff' })),
+  useSun: vi.fn(() => ({ position: [10, 10, 10], intensity: 1, color: '#ffffff' })),
+  useSkyColor: vi.fn(() => '#87CEEB'),
+  useFog: vi.fn(() => null),
+  useCurrentTime: vi.fn(() => 0),
   useSceneStore: vi.fn(),
 }))
 
-// Mock renderers to render visible elements we can query
-vi.mock('./renderers/PrimitiveRenderer', () => ({
-  PrimitiveRenderer: () => <div data-testid="primitive-renderer" />
-}))
-vi.mock('./renderers/LightRenderer', () => ({
-  LightRenderer: () => <div data-testid="light-renderer" />
-}))
-vi.mock('./renderers/CameraRenderer', () => ({
-  CameraRenderer: () => <div data-testid="camera-renderer" />
-}))
-vi.mock('./renderers/CharacterRenderer', () => ({
-  CharacterRenderer: () => <div data-testid="character-renderer" />
-}))
-vi.mock('./renderers/SpeakerRenderer', () => ({
-  SpeakerRenderer: () => <div data-testid="speaker-renderer" />
+// Mock SceneActorItem
+vi.mock('./SceneActorItem', () => ({
+  SceneActorItem: ({ actorId }: { actorId: string }) => (
+    <div data-testid={`actor-item-${actorId}`} />
+  )
 }))
 
 // Mock animation utils
-vi.mock('../animation/interpolate', () => ({
-  evaluateTracksAtTime: vi.fn(() => new Map()),
-}))
 vi.mock('./animationUtils', () => ({
-  applyAnimationToActor: vi.fn((actor) => actor),
   resolveActiveCamera: vi.fn(() => 'camera-1'),
 }))
-
-// Mock Three.js intrinsic elements to avoid React warnings in JSDOM
-// We can't easily mock intrinsic elements like <ambientLight> globally without affecting other tests
-// or modifying the environment. But typically R3F components in JSDOM just render as custom elements (e.g. <ambientlight>).
-// We'll ignore the console errors for unknown elements if necessary, or just focus on our custom renderers.
 
 describe('SceneManager', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-
-    // Setup default store mock behavior
-    ;(useSceneStore as any).mockImplementation((selector: any) => {
-      const state = {
-        actors: [],
-        environment: {
-          ambientLight: { intensity: 0.5, color: '#ffffff' },
-          sun: { position: [10, 10, 10], intensity: 1, color: '#ffffff' },
-          skyColor: '#87CEEB',
-        },
-        timeline: {
-          cameraTrack: [],
-          animationTracks: [],
-        },
-        playback: {
-          currentTime: 0,
-        },
-      }
-      return selector(state)
-    })
+    ;(useActorIds as any).mockReturnValue([])
+    ;(useSceneStore as any).mockImplementation((selector: any) => selector({ timeline: { cameraTrack: [] } }))
   })
 
-  it('renders primitive actors', () => {
-    const actors = [{ id: '1', type: 'primitive' }]
-    ;(useSceneStore as any).mockImplementation((selector: any) => {
-       const state = {
-         actors,
-         environment: { ambientLight: {}, sun: {}, skyColor: '#000' },
-         timeline: { cameraTrack: [], animationTracks: [] },
-         playback: { currentTime: 0 },
-       }
-       return selector(state)
-    })
-
+  it('renders actor items for each actor ID', () => {
+    ;(useActorIds as any).mockReturnValue(['1', '2'])
     const { getByTestId } = render(<SceneManager />)
-    expect(getByTestId('primitive-renderer')).toBeDefined()
-  })
-
-  it('renders light actors', () => {
-    const actors = [{ id: '2', type: 'light' }]
-    ;(useSceneStore as any).mockImplementation((selector: any) => {
-       const state = {
-         actors,
-         environment: { ambientLight: {}, sun: {}, skyColor: '#000' },
-         timeline: { cameraTrack: [], animationTracks: [] },
-         playback: { currentTime: 0 },
-       }
-       return selector(state)
-    })
-
-    const { getByTestId } = render(<SceneManager />)
-    expect(getByTestId('light-renderer')).toBeDefined()
-  })
-
-  it('renders camera actors', () => {
-    const actors = [{ id: '3', type: 'camera' }]
-    ;(useSceneStore as any).mockImplementation((selector: any) => {
-       const state = {
-         actors,
-         environment: { ambientLight: {}, sun: {}, skyColor: '#000' },
-         timeline: { cameraTrack: [], animationTracks: [] },
-         playback: { currentTime: 0 },
-       }
-       return selector(state)
-    })
-
-    const { getByTestId } = render(<SceneManager />)
-    expect(getByTestId('camera-renderer')).toBeDefined()
-  })
-
-  it('renders character actors', () => {
-    const actors = [{ id: '4', type: 'character' }]
-    ;(useSceneStore as any).mockImplementation((selector: any) => {
-       const state = {
-         actors,
-         environment: { ambientLight: {}, sun: {}, skyColor: '#000' },
-         timeline: { cameraTrack: [], animationTracks: [] },
-         playback: { currentTime: 0 },
-       }
-       return selector(state)
-    })
-
-    const { getByTestId } = render(<SceneManager />)
-    expect(getByTestId('character-renderer')).toBeDefined()
-  })
-
-  it('renders speaker actors', () => {
-    const actors = [{ id: '5', type: 'speaker' }]
-    ;(useSceneStore as any).mockImplementation((selector: any) => {
-       const state = {
-         actors,
-         environment: { ambientLight: {}, sun: {}, skyColor: '#000' },
-         timeline: { cameraTrack: [], animationTracks: [] },
-         playback: { currentTime: 0 },
-       }
-       return selector(state)
-    })
-
-    const { getByTestId } = render(<SceneManager />)
-    expect(getByTestId('speaker-renderer')).toBeDefined()
+    expect(getByTestId('actor-item-1')).toBeDefined()
+    expect(getByTestId('actor-item-2')).toBeDefined()
   })
 })

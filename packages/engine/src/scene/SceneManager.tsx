@@ -5,23 +5,18 @@
  *
  * @module @animatica/engine/scene/SceneManager
  */
-import React, { useMemo } from 'react';
-import { useSceneStore } from '../store/sceneStore';
-import { evaluateTracksAtTime } from '../animation/interpolate';
-import { applyAnimationToActor, resolveActiveCamera } from './animationUtils';
-import { PrimitiveRenderer } from './renderers/PrimitiveRenderer';
-import { LightRenderer } from './renderers/LightRenderer';
-import { CameraRenderer } from './renderers/CameraRenderer';
-import { CharacterRenderer } from './renderers/CharacterRenderer';
-import { SpeakerRenderer } from './renderers/SpeakerRenderer';
-import type {
-    Actor,
-    PrimitiveActor,
-    LightActor,
-    CameraActor,
-    CharacterActor,
-    SpeakerActor,
-} from '../types';
+import React from 'react';
+import {
+    useActorIds,
+    useAmbientLight,
+    useSun,
+    useSkyColor,
+    useFog,
+    useSceneStore,
+    useCurrentTime,
+} from '../store/sceneStore';
+import { resolveActiveCamera } from './animationUtils';
+import { SceneActorItem } from './SceneActorItem';
 
 interface SceneManagerProps {
     /** ID of the currently selected actor in the editor. */
@@ -54,115 +49,52 @@ export const SceneManager: React.FC<SceneManagerProps> = ({
     onActorSelect,
     showHelpers = false,
 }) => {
-    const actors = useSceneStore((s) => s.actors);
-    const environment = useSceneStore((s) => s.environment);
-    const timeline = useSceneStore((s) => s.timeline);
-    const currentTime = useSceneStore((s) => s.playback.currentTime);
+    const actorIds = useActorIds();
+    const ambientLight = useAmbientLight();
+    const sun = useSun();
+    const skyColor = useSkyColor();
+    const fog = useFog();
+    const currentTime = useCurrentTime();
 
-    // Evaluate all animation tracks at the current time
-    const animationValues = useMemo(
-        () => evaluateTracksAtTime(timeline.animationTracks, currentTime),
-        [timeline.animationTracks, currentTime],
-    );
-
-    // Sort camera cuts only when the track changes, not every frame
-    const sortedCameraCuts = useMemo(
-        () => [...timeline.cameraTrack].sort((a, b) => a.time - b.time),
-        [timeline.cameraTrack]
-    );
-
-    // Determine the active camera from the sorted camera cuts
-    const activeCameraId = useMemo(
-        () => resolveActiveCamera(sortedCameraCuts, currentTime),
-        [sortedCameraCuts, currentTime],
-    );
-
-    // Apply animation values to actors
-    const animatedActors = useMemo(
-        () =>
-            actors.map((actor: Actor) =>
-                applyAnimationToActor(actor, animationValues.get(actor.id)),
-            ),
-        [actors, animationValues],
-    );
+    // Determine the active camera from the timeline state (needed only for CameraRenderer isActive prop)
+    const activeCameraId = useSceneStore((state) => {
+        const sortedCameraCuts = [...state.timeline.cameraTrack].sort((a, b) => a.time - b.time);
+        return resolveActiveCamera(sortedCameraCuts, currentTime);
+    });
 
     return (
         <>
             {/* === Environment === */}
             <ambientLight
-                intensity={environment.ambientLight.intensity}
-                color={environment.ambientLight.color}
+                intensity={ambientLight.intensity}
+                color={ambientLight.color}
             />
             <directionalLight
-                position={environment.sun.position as unknown as [number, number, number]}
-                intensity={environment.sun.intensity}
-                color={environment.sun.color}
+                position={sun.position as unknown as [number, number, number]}
+                intensity={sun.intensity}
+                color={sun.color}
                 castShadow
             />
-            <color attach="background" args={[environment.skyColor]} />
+            <color attach="background" args={[skyColor]} />
 
-            {environment.fog && (
+            {fog && (
                 <fog
                     attach="fog"
-                    args={[environment.fog.color, environment.fog.near, environment.fog.far]}
+                    args={[fog.color, fog.near, fog.far]}
                 />
             )}
 
             {/* === Actors === */}
-            {animatedActors.map((actor: Actor) => {
-                switch (actor.type) {
-                    case 'primitive':
-                        return (
-                            <PrimitiveRenderer
-                                key={actor.id}
-                                actor={actor as PrimitiveActor}
-                                isSelected={actor.id === selectedActorId}
-                                onClick={() => onActorSelect?.(actor.id)}
-                            />
-                        );
-
-                    case 'light':
-                        return (
-                            <LightRenderer
-                                key={actor.id}
-                                actor={actor as LightActor}
-                                showHelper={showHelpers || actor.id === selectedActorId}
-                            />
-                        );
-
-                    case 'camera':
-                        return (
-                            <CameraRenderer
-                                key={actor.id}
-                                actor={actor as CameraActor}
-                                isActive={actor.id === activeCameraId}
-                                showHelper={showHelpers || actor.id === selectedActorId}
-                            />
-                        );
-
-                    case 'character':
-                        return (
-                            <CharacterRenderer
-                                key={actor.id}
-                                actor={actor as CharacterActor}
-                                isSelected={actor.id === selectedActorId}
-                                onClick={() => onActorSelect?.(actor.id)}
-                            />
-                        );
-
-                    case 'speaker':
-                        return (
-                            <SpeakerRenderer
-                                key={actor.id}
-                                actor={actor as SpeakerActor}
-                                showHelper={showHelpers || actor.id === selectedActorId}
-                            />
-                        );
-
-                    default:
-                        return null;
-                }
-            })}
+            {actorIds.map((id) => (
+                <SceneActorItem
+                    key={id}
+                    actorId={id}
+                    isActiveCamera={id === activeCameraId}
+                    isSelected={id === selectedActorId}
+                    showHelpers={showHelpers}
+                    onSelect={onActorSelect}
+                />
+            ))}
         </>
     );
 };

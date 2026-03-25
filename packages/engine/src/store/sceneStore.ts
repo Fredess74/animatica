@@ -29,11 +29,28 @@ export const useSceneStore = create<SceneStoreState>()(
       })),
       {
         name: 'animatica-scene',
-        // Only persist project state, not playback or selection
+        // Only persist project state, not playback or selection or indexed data
         partialize: (state) => {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { playback, selectedActorId, ...rest } = state;
+          const { playback, selectedActorId, actorsById, tracksByTargetId, ...rest } = state;
           return rest as unknown as SceneStoreState;
+        },
+        onRehydrateStorage: () => (state) => {
+          if (state) {
+            // Rebuild actorsById index
+            state.actorsById = {};
+            for (const actor of state.actors) {
+              state.actorsById[actor.id] = actor;
+            }
+            // Rebuild tracksByTargetId index
+            state.tracksByTargetId = {};
+            for (const track of state.timeline.animationTracks) {
+              if (!state.tracksByTargetId[track.targetId]) {
+                state.tracksByTargetId[track.targetId] = [];
+              }
+              state.tracksByTargetId[track.targetId].push(track);
+            }
+          }
         },
       }
     ),
@@ -91,9 +108,10 @@ export const getCurrentTime = (state: SceneStoreState): number =>
 
 /**
  * Hook to select a specific actor by ID.
+ * Optimized with index for O(1) lookup.
  */
 export const useActorById = (id: string) =>
-  useSceneStore((state) => state.actors.find((a) => a.id === id));
+  useSceneStore((state) => state.actorsById[id]);
 
 /**
  * Hook to get the list of all actor IDs.
@@ -122,10 +140,13 @@ export const useSelectedActorId = () =>
 
 /**
  * Hook to get the currently selected actor.
+ * Optimized with useShallow and index.
  */
 export const useSelectedActor = () =>
-  useSceneStore((state) =>
-    state.selectedActorId ? state.actors.find((a) => a.id === state.selectedActorId) : undefined
+  useSceneStore(
+    useShallow((state) =>
+      state.selectedActorId ? state.actorsById[state.selectedActorId] : undefined
+    )
   );
 
 /**
@@ -138,3 +159,40 @@ export const useActorsByType = (type: Actor['type']) =>
  * Hook to get the list of all actors.
  */
 export const useActorList = () => useSceneStore((state) => state.actors);
+
+/**
+ * Hook to get the animation tracks for a specific actor.
+ * Optimized with index.
+ */
+export const useActorTracks = (actorId: string) =>
+  useSceneStore(useShallow((state) => state.tracksByTargetId[actorId] || []));
+
+/**
+ * Hook to get ambient light settings.
+ */
+export const useAmbientLight = () =>
+  useSceneStore(useShallow((state) => state.environment.ambientLight));
+
+/**
+ * Hook to get sun settings.
+ */
+export const useSun = () =>
+  useSceneStore(useShallow((state) => state.environment.sun));
+
+/**
+ * Hook to get sky color settings.
+ */
+export const useSkyColor = () =>
+  useSceneStore((state) => state.environment.skyColor);
+
+/**
+ * Hook to get fog settings.
+ */
+export const useFog = () =>
+  useSceneStore(useShallow((state) => state.environment.fog));
+
+/**
+ * Hook to get weather settings.
+ */
+export const useWeather = () =>
+  useSceneStore(useShallow((state) => state.environment.weather));

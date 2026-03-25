@@ -13,9 +13,19 @@ export const createTimelineSlice: StateCreator<
     animationTracks: [],
     markers: [],
   },
+  tracksByTargetId: {},
 
   setTimeline: (timeline) =>
     set((state) => {
       Object.assign(state.timeline, timeline);
+      if (timeline.animationTracks) {
+        state.tracksByTargetId = {};
+        for (const track of state.timeline.animationTracks) {
+          if (!state.tracksByTargetId[track.targetId]) {
+            state.tracksByTargetId[track.targetId] = [];
+          }
+          state.tracksByTargetId[track.targetId].push(track);
+        }
+      }
     }),
 });
