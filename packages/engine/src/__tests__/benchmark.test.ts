@@ -10,15 +10,35 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+class SeededRandom {
+    private state: number;
+    constructor(seed = 42) {
+        this.state = seed;
+    }
+    next() {
+        this.state = (this.state * 16807) % 2147483647;
+        return (this.state - 1) / 2147483646;
+    }
+}
+
 const results: Record<string, string> = {};
 
-function measure(name: string, fn: () => void) {
+function measure(name: string, iterations: number, fn: () => void) {
+    // 10% Warmup
+    const warmupCount = Math.max(1, Math.floor(iterations * 0.1));
+    for (let i = 0; i < warmupCount; i++) {
+        fn();
+    }
+
     const start = performance.now();
-    fn();
+    for (let i = 0; i < iterations; i++) {
+        fn();
+    }
     const end = performance.now();
-    const duration = (end - start).toFixed(2);
-    results[name] = `${duration}ms`;
-    console.log(`${name}: ${duration}ms`);
+    const totalDuration = end - start;
+    const msPerOp = (totalDuration / iterations).toFixed(6);
+    results[name] = `${msPerOp}ms/op`;
+    console.log(`${name}: ${msPerOp}ms/op`);
 }
 
 describe('Engine Benchmarks', () => {
@@ -34,9 +54,11 @@ describe('Engine Benchmarks', () => {
     });
 
     describe('Interpolation Performance', () => {
-        it('Number Interpolation (10k ops, 10k keyframes)', () => {
+        const random = new SeededRandom();
+
+        it('Number Interpolation', () => {
             const keyframes: Keyframe<number>[] = [];
-            for (let i = 0; i < 10000; i++) {
+            for (let i = 0; i < 1000; i++) {
                 keyframes.push({
                     time: i,
                     value: i * 10,
@@ -44,17 +66,15 @@ describe('Engine Benchmarks', () => {
                 });
             }
 
-            measure('Number Interpolation (10k ops)', () => {
-                for (let i = 0; i < 10000; i++) {
-                    const t = Math.random() * 10000;
-                    interpolateKeyframes(keyframes, t);
-                }
+            measure('Number Interpolation', 10000, () => {
+                const t = random.next() * 1000;
+                interpolateKeyframes(keyframes, t);
             });
         });
 
-        it('Vector3 Interpolation (10k ops, 10k keyframes)', () => {
+        it('Vector3 Interpolation', () => {
             const keyframes: Keyframe<Vector3>[] = [];
-            for (let i = 0; i < 10000; i++) {
+            for (let i = 0; i < 1000; i++) {
                 keyframes.push({
                     time: i,
                     value: [i, i * 2, i * 3],
@@ -62,17 +82,15 @@ describe('Engine Benchmarks', () => {
                 });
             }
 
-            measure('Vector3 Interpolation (10k ops)', () => {
-                for (let i = 0; i < 10000; i++) {
-                    const t = Math.random() * 10000;
-                    interpolateKeyframes(keyframes, t);
-                }
+            measure('Vector3 Interpolation', 10000, () => {
+                const t = random.next() * 1000;
+                interpolateKeyframes(keyframes, t);
             });
         });
 
-        it('Color Interpolation (10k ops, 10k keyframes)', () => {
+        it('Color Interpolation', () => {
             const keyframes: Keyframe<string>[] = [];
-            for (let i = 0; i < 10000; i++) {
+            for (let i = 0; i < 1000; i++) {
                 keyframes.push({
                     time: i,
                     value: '#ff0000',
@@ -80,17 +98,17 @@ describe('Engine Benchmarks', () => {
                 });
             }
 
-            measure('Color Interpolation (10k ops)', () => {
-                for (let i = 0; i < 10000; i++) {
-                    const t = Math.random() * 10000;
-                    interpolateKeyframes(keyframes, t);
-                }
+            measure('Color Interpolation', 10000, () => {
+                const t = random.next() * 1000;
+                interpolateKeyframes(keyframes, t);
             });
         });
     });
 
     describe('Schema Validation Performance', () => {
-        it('Project Schema Validation (100 runs, 100 actors)', () => {
+        const random = new SeededRandom();
+
+        it('Project Schema Validation', () => {
             const actors: Actor[] = [];
             for (let i = 0; i < 100; i++) {
                 const actor: PrimitiveActor = {
@@ -98,7 +116,7 @@ describe('Engine Benchmarks', () => {
                     name: `Actor ${i}`,
                     type: 'primitive',
                     transform: {
-                        position: [Math.random() * 10, 0, 0],
+                        position: [random.next() * 10, 0, 0],
                         rotation: [0, 0, 0],
                         scale: [1, 1, 1],
                     },
@@ -135,16 +153,16 @@ describe('Engine Benchmarks', () => {
                 library: { clips: [] },
             };
 
-            measure('Schema Validation Speed (100 runs)', () => {
-                for (let i = 0; i < 100; i++) {
-                    ProjectStateSchema.parse(projectState);
-                }
+            measure('Schema Validation Speed', 100, () => {
+                ProjectStateSchema.parse(projectState);
             });
         });
     });
 
     describe('Store Performance', () => {
-        it('Store Update Throughput (10k playback updates)', () => {
+        const random = new SeededRandom();
+
+        it('Store Playback Updates', () => {
             const { setState, getState } = useSceneStore;
 
             setState({
@@ -160,43 +178,43 @@ describe('Engine Benchmarks', () => {
                 playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, direction: 1, loopMode: 'none' },
             });
 
-            measure('Store Playback Updates (10k ops)', () => {
-                for (let i = 0; i < 10000; i++) {
-                    getState().setPlayback({ currentTime: i * 0.1 });
-                }
+            measure('Store Playback Updates', 10000, () => {
+                getState().setPlayback({ currentTime: random.next() });
             });
         });
 
-        it('Store Actor CRUD Throughput (1k actors)', () => {
+        it('Store Actor CRUD Throughput', () => {
             const { setState, getState } = useSceneStore;
+            let counter = 0;
 
             setState({
                 actors: [],
                 playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, direction: 1, loopMode: 'none' },
             } as any);
 
-            measure('Store Add Actor (1k ops)', () => {
-                for (let i = 0; i < 1000; i++) {
-                    getState().addActor({
-                        id: `bench-${i}`,
-                        name: `Actor ${i}`,
-                        type: 'primitive',
-                        transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
-                        visible: true,
-                        properties: { shape: 'box', color: '#ff0000', roughness: 0.5, metalness: 0.5, opacity: 1, wireframe: false }
-                    } as PrimitiveActor);
+            measure('Store Add Actor', 1000, () => {
+                const i = counter++;
+                getState().addActor({
+                    id: `bench-${i}`,
+                    name: `Actor ${i}`,
+                    type: 'primitive',
+                    transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
+                    visible: true,
+                    properties: { shape: 'box', color: '#ff0000', roughness: 0.5, metalness: 0.5, opacity: 1, wireframe: false }
+                } as PrimitiveActor);
+            });
+
+            measure('Store Update Actor', 1000, () => {
+                const actors = getState().actors;
+                if (actors.length > 0) {
+                    getState().updateActor(actors[0].id, { visible: !actors[0].visible });
                 }
             });
 
-            measure('Store Update Actor (1k ops)', () => {
-                for (let i = 0; i < 1000; i++) {
-                    getState().updateActor(`bench-${i}`, { visible: false });
-                }
-            });
-
-            measure('Store Remove Actor (1k ops)', () => {
-                for (let i = 0; i < 1000; i++) {
-                    getState().removeActor(`bench-${i}`);
+            measure('Store Remove Actor', 1000, () => {
+                const actors = getState().actors;
+                if (actors.length > 0) {
+                    getState().removeActor(actors[0].id);
                 }
             });
         });
