@@ -162,7 +162,7 @@ describe('Engine Benchmarks', () => {
                 library: { clips: [] },
             };
 
-            measure('Schema Validation Speed (100 runs)', 100, () => {
+            measure('Schema Validation Speed (100 runs)', 100, (_rng) => {
                 ProjectStateSchema.parse(projectState);
             });
         });
@@ -245,7 +245,7 @@ describe('Engine Benchmarks', () => {
                 removeActorIds.push(id);
             }
 
-            measure('Store Remove Actor (1k ops)', 1000, (rng) => {
+            measure('Store Remove Actor (1k ops)', 1000, (_rng) => {
                 const id = removeActorIds.pop();
                 if (id) getState().removeActor(id);
             });
