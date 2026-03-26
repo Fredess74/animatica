@@ -8,8 +8,12 @@ import { CharacterActor } from '../../types'
 // Mock R3F hooks
 vi.mock('@react-three/fiber', () => ({
   useFrame: vi.fn(),
-  // Mock Three.js elements
   extend: vi.fn(),
+  useThree: () => ({
+    camera: { position: [0, 0, 0] },
+    scene: { add: vi.fn(), remove: vi.fn() },
+    gl: { domElement: {} }
+  })
 }))
 
 // Mock character rig creation
@@ -90,8 +94,6 @@ describe('CharacterRenderer', () => {
     const group = container.querySelector('group')
 
     expect(group).not.toBeNull()
-    // JSDOM renders custom elements with lowercased attributes or as properties
-    // In R3F tests, we often check the mock calls or the container
     expect(group?.getAttribute('name')).toBe('char-1')
   })
 
@@ -99,8 +101,6 @@ describe('CharacterRenderer', () => {
     const invisibleActor = { ...mockActor, visible: false }
     const { container } = render(<CharacterRenderer actor={invisibleActor} />)
     const group = container.querySelector('group')
-    // visible={false} in React might not render a 'visible' attribute on a custom tag in JSDOM
-    // or it might render it as "false". If it's missing, it usually means it was passed as false.
     const visibleAttr = group?.getAttribute('visible')
     expect(visibleAttr === 'false' || visibleAttr === null).toBe(true)
   })
