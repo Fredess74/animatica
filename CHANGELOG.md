@@ -5,6 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-03-26
+
+### Added
+
+- **Phase 2: Characters** progress:
+    - `CharacterRenderer` with rig loading, animation, face morphs, and eye tracking.
+    - Bone controller and morph target mapping for humanoid characters.
+    - Initial character presets (cowboy, robot, android).
+- **Phase 3: Editor UI** progress:
+    - 3-panel layout with `EditorLayout`.
+    - `AssetLibrary` for actor creation.
+    - `PropertiesPanel` for real-time actor property editing.
+    - `TimelinePanel` with playhead scrubbing and keyframe rendering.
+    - `ScriptConsole` for JSON script validation and building.
+    - `ExportModal` for video configuration.
+- **Phase 1: Engine Core** enhancements:
+    - Playback controller improvements (speed controls, loop modes).
+    - Scene manager tests and SpeakerRenderer support.
+- **Platform** foundation:
+    - Initial Supabase schema for project and profile management.
+    - API routes for project CRUD operations.
+
+### Changed
+
+- Updated monorepo version to `0.2.0`.
+- Refactored `CharacterRenderer` to functional component with improved testability.
+- Standardized character bone naming for humanoid mapping.
+
+### Removed
+
+- Blockchain and crypto-related documentation and placeholders (Phase 8).
+
 ## [0.1.0] - 2026-02-22
 
 ### Added
