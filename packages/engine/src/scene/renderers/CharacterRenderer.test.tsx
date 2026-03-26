@@ -1,6 +1,5 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import React from 'react'
 import { render, cleanup } from '@testing-library/react'
 import { CharacterRenderer } from './CharacterRenderer'
 import { CharacterActor } from '../../types'
@@ -91,7 +90,7 @@ describe('CharacterRenderer', () => {
   })
 
   it('handles selection visibility', () => {
-    const { getByTestId, queryByTestId } = render(
+    const { getByTestId } = render(
       <CharacterRenderer actor={mockActor} isSelected={true} />
     )
     // The selection ring uses ringGeometry, not Edges/edges test id
