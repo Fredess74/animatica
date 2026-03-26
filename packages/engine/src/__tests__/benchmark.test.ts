@@ -10,15 +10,47 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+/**
+ * Seeded random number generator (Linear Congruential Generator)
+ * for deterministic benchmarks.
+ */
+class SeededRandom {
+    private seed: number;
+    constructor(seed = 12345) {
+        this.seed = seed;
+    }
+    next() {
+        this.seed = (this.seed * 1664525 + 1013904223) % 4294967296;
+        return this.seed / 4294967296;
+    }
+}
+
 const results: Record<string, string> = {};
 
-function measure(name: string, fn: () => void) {
+/**
+ * Measures performance of a function with a 10% warmup phase.
+ * Records results in ms/op.
+ */
+function measure(name: string, iterations: number, fn: (rng: SeededRandom) => void) {
+    const rng = new SeededRandom();
+    const warmup = Math.floor(iterations * 0.1);
+
+    // Warmup
+    for (let i = 0; i < warmup; i++) {
+        fn(rng);
+    }
+
+    // Measurement
     const start = performance.now();
-    fn();
+    for (let i = 0; i < iterations; i++) {
+        fn(rng);
+    }
     const end = performance.now();
-    const duration = (end - start).toFixed(2);
-    results[name] = `${duration}ms`;
-    console.log(`${name}: ${duration}ms`);
+    const totalDuration = end - start;
+    const msPerOp = (totalDuration / iterations).toFixed(4);
+
+    results[name] = `${msPerOp} ms/op`;
+    console.log(`${name}: ${msPerOp} ms/op (${iterations} iterations)`);
 }
 
 describe('Engine Benchmarks', () => {
@@ -44,11 +76,9 @@ describe('Engine Benchmarks', () => {
                 });
             }
 
-            measure('Number Interpolation (10k ops)', () => {
-                for (let i = 0; i < 10000; i++) {
-                    const t = Math.random() * 10000;
-                    interpolateKeyframes(keyframes, t);
-                }
+            measure('Number Interpolation (10k ops)', 10000, (rng) => {
+                const t = rng.next() * 10000;
+                interpolateKeyframes(keyframes, t);
             });
         });
 
@@ -62,11 +92,9 @@ describe('Engine Benchmarks', () => {
                 });
             }
 
-            measure('Vector3 Interpolation (10k ops)', () => {
-                for (let i = 0; i < 10000; i++) {
-                    const t = Math.random() * 10000;
-                    interpolateKeyframes(keyframes, t);
-                }
+            measure('Vector3 Interpolation (10k ops)', 10000, (rng) => {
+                const t = rng.next() * 10000;
+                interpolateKeyframes(keyframes, t);
             });
         });
 
@@ -80,17 +108,16 @@ describe('Engine Benchmarks', () => {
                 });
             }
 
-            measure('Color Interpolation (10k ops)', () => {
-                for (let i = 0; i < 10000; i++) {
-                    const t = Math.random() * 10000;
-                    interpolateKeyframes(keyframes, t);
-                }
+            measure('Color Interpolation (10k ops)', 10000, (rng) => {
+                const t = rng.next() * 10000;
+                interpolateKeyframes(keyframes, t);
             });
         });
     });
 
     describe('Schema Validation Performance', () => {
         it('Project Schema Validation (100 runs, 100 actors)', () => {
+            const rng = new SeededRandom();
             const actors: Actor[] = [];
             for (let i = 0; i < 100; i++) {
                 const actor: PrimitiveActor = {
@@ -98,7 +125,7 @@ describe('Engine Benchmarks', () => {
                     name: `Actor ${i}`,
                     type: 'primitive',
                     transform: {
-                        position: [Math.random() * 10, 0, 0],
+                        position: [rng.next() * 10, 0, 0],
                         rotation: [0, 0, 0],
                         scale: [1, 1, 1],
                     },
@@ -135,16 +162,14 @@ describe('Engine Benchmarks', () => {
                 library: { clips: [] },
             };
 
-            measure('Schema Validation Speed (100 runs)', () => {
-                for (let i = 0; i < 100; i++) {
-                    ProjectStateSchema.parse(projectState);
-                }
+            measure('Schema Validation Speed (100 runs)', 100, (_rng) => {
+                ProjectStateSchema.parse(projectState);
             });
         });
     });
 
     describe('Store Performance', () => {
-        it('Store Update Throughput (10k playback updates)', () => {
+        it('Store Playback Updates (10k playback updates)', () => {
             const { setState, getState } = useSceneStore;
 
             setState({
@@ -160,10 +185,8 @@ describe('Engine Benchmarks', () => {
                 playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, direction: 1, loopMode: 'none' },
             });
 
-            measure('Store Playback Updates (10k ops)', () => {
-                for (let i = 0; i < 10000; i++) {
-                    getState().setPlayback({ currentTime: i * 0.1 });
-                }
+            measure('Store Playback Updates (10k ops)', 10000, (rng) => {
+                getState().setPlayback({ currentTime: rng.next() * 100 });
             });
         });
 
@@ -175,30 +198,57 @@ describe('Engine Benchmarks', () => {
                 playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, direction: 1, loopMode: 'none' },
             } as any);
 
-            measure('Store Add Actor (1k ops)', () => {
-                for (let i = 0; i < 1000; i++) {
-                    getState().addActor({
-                        id: `bench-${i}`,
-                        name: `Actor ${i}`,
-                        type: 'primitive',
-                        transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
-                        visible: true,
-                        properties: { shape: 'box', color: '#ff0000', roughness: 0.5, metalness: 0.5, opacity: 1, wireframe: false }
-                    } as PrimitiveActor);
-                }
+            measure('Store Add Actor (1k ops)', 1000, (rng) => {
+                const i = Math.floor(rng.next() * 1000000);
+                getState().addActor({
+                    id: `bench-${i}`,
+                    name: `Actor ${i}`,
+                    type: 'primitive',
+                    transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
+                    visible: true,
+                    properties: { shape: 'box', color: '#ff0000', roughness: 0.5, metalness: 0.5, opacity: 1, wireframe: false }
+                } as PrimitiveActor);
             });
 
-            measure('Store Update Actor (1k ops)', () => {
-                for (let i = 0; i < 1000; i++) {
-                    getState().updateActor(`bench-${i}`, { visible: false });
-                }
+            // For updates, we need some actors first
+            const updateActorIds: string[] = [];
+            for(let i=0; i<1000; i++) {
+                const id = `update-bench-${i}`;
+                getState().addActor({
+                    id,
+                    name: `Actor ${i}`,
+                    type: 'primitive',
+                    transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
+                    visible: true,
+                    properties: { shape: 'box', color: '#ff0000', roughness: 0.5, metalness: 0.5, opacity: 1, wireframe: false }
+                } as PrimitiveActor);
+                updateActorIds.push(id);
+            }
+
+            measure('Store Update Actor (1k ops)', 1000, (rng) => {
+                const id = updateActorIds[Math.floor(rng.next() * updateActorIds.length)];
+                getState().updateActor(id, { visible: rng.next() > 0.5 });
             });
 
-            measure('Store Remove Actor (1k ops)', () => {
-                for (let i = 0; i < 1000; i++) {
-                    getState().removeActor(`bench-${i}`);
-                }
+            // For removal, we need a fresh set of 1.1k actors (100 for warmup, 1000 for measurement)
+            const removeActorIds: string[] = [];
+            for(let i=0; i<1100; i++) {
+                const id = `remove-bench-${i}`;
+                getState().addActor({
+                    id,
+                    name: `Actor ${i}`,
+                    type: 'primitive',
+                    transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
+                    visible: true,
+                    properties: { shape: 'box', color: '#ff0000', roughness: 0.5, metalness: 0.5, opacity: 1, wireframe: false }
+                } as PrimitiveActor);
+                removeActorIds.push(id);
+            }
+
+            measure('Store Remove Actor (1k ops)', 1000, (_rng) => {
+                const id = removeActorIds.pop();
+                if (id) getState().removeActor(id);
             });
-        });
+        }, 20000);
     });
 });
