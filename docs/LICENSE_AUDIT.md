@@ -1,15 +1,15 @@
 # License Audit
 
-**Date:** 2026-02-25
+**Date:** 2026-03-26
 **Auditor:** Jules (License Auditor)
 
 ## Summary
 
 This document lists all dependencies used in the project and their licenses. It also flags any non-MIT licenses and checks for the presence of the project's own LICENSE file.
 
-Total dependencies found: 687
+Total dependencies found: 683
 Direct dependencies: 33
-Transitive dependencies: 654
+Transitive dependencies: 650
 
 ## Project License
 
@@ -24,10 +24,10 @@ Transitive dependencies: 654
 
 ## Flagged Licenses (Non-MIT)
 
-The following dependencies have non-MIT licenses:
-
 | Dependency | Version | License | Type |
-| --- | --- | --- |
+| --- | --- | --- | --- |
+| lucide-react | 0.563.0 | ISC | **Direct** |
+| typescript | 5.9.3 | Apache-2.0 | **Direct** |
 | @dimforge/rapier3d-compat | 0.12.0 | Apache-2.0 | Transitive |
 | @ethereumjs/rlp | 4.0.1 | MPL-2.0 | Transitive |
 | @ethereumjs/util | 8.1.0 | MPL-2.0 | Transitive |
@@ -48,7 +48,6 @@ The following dependencies have non-MIT licenses:
 | ansi-align | 3.0.1 | ISC | Transitive |
 | antlr4ts | 0.5.0-alpha.4 | BSD-3-Clause | Transitive |
 | anymatch | 3.1.3 | ISC | Transitive |
-| argparse | 2.0.1 | Python-2.0 | Transitive |
 | aria-query | 5.3.0 | Apache-2.0 | Transitive |
 | at-least-node | 1.0.0 | ISC | Transitive |
 | baseline-browser-mapping | 2.10.0 | Apache-2.0 | Transitive |
@@ -91,13 +90,10 @@ The following dependencies have non-MIT licenses:
 | lightningcss-linux-x64-gnu | 1.31.1 | MPL-2.0 | Transitive |
 | lightningcss-linux-x64-musl | 1.31.1 | MPL-2.0 | Transitive |
 | lru-cache | 5.1.1 | ISC | Transitive |
-| lru-cache | 11.2.6 | BlueOak-1.0.0 | Transitive |
-| lucide-react | 0.563.0 | ISC | **Direct** |
 | make-error | 1.3.6 | ISC | Transitive |
 | mdn-data | 2.12.2 | CC0-1.0 | Transitive |
 | minimalistic-assert | 1.0.1 | ISC | Transitive |
 | minimatch | 3.1.3 | ISC | Transitive |
-| minimatch | 10.2.2 | BlueOak-1.0.0 | Transitive |
 | ndjson | 2.0.0 | BSD-3-Clause | Transitive |
 | nopt | 3.0.6 | ISC | Transitive |
 | once | 1.4.0 | ISC | Transitive |
@@ -118,7 +114,6 @@ The following dependencies have non-MIT licenses:
 | siginfo | 2.0.0 | ISC | Transitive |
 | solidity-coverage | 0.8.17 | ISC | Transitive |
 | source-map | 0.6.1 | BSD-3-Clause | Transitive |
-| source-map | 0.2.0 | BSD | Transitive |
 | source-map-js | 1.2.1 | BSD-3-Clause | Transitive |
 | split2 | 3.2.2 | ISC | Transitive |
 | sprintf-js | 1.0.3 | BSD-3-Clause | Transitive |
@@ -126,7 +121,6 @@ The following dependencies have non-MIT licenses:
 | tough-cookie | 6.0.0 | BSD-3-Clause | Transitive |
 | ts-command-line-args | 2.5.1 | ISC | Transitive |
 | tslib | 1.14.1 | 0BSD | Transitive |
-| typescript | 5.9.3 | Apache-2.0 | **Direct** |
 | uglify-js | 3.19.3 | BSD-2-Clause | Transitive |
 | web3-utils | 1.10.4 | LGPL-3.0 | Transitive |
 | webidl-conversions | 8.0.1 | BSD-2-Clause | Transitive |
@@ -144,7 +138,7 @@ The following dependencies have non-MIT licenses:
 | --- | --- | --- |
 | @nomicfoundation/hardhat-toolbox | MIT | @Animatica/contracts |
 | @openzeppelin/contracts | MIT | @Animatica/contracts |
-| @react-three/drei | MIT | @Animatica/engine |
+| @react-three/drei | MIT | @Animatica/editor, @Animatica/engine |
 | @react-three/fiber | MIT | @Animatica/editor, @Animatica/engine, @Animatica/web |
 | @tailwindcss/postcss | MIT | @Animatica/editor |
 | @testing-library/dom | MIT | @Animatica/web |
@@ -152,7 +146,7 @@ The following dependencies have non-MIT licenses:
 | @types/node | MIT | @Animatica/engine |
 | @types/react | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web |
 | @types/react-dom | MIT | @Animatica/editor, @Animatica/platform, @Animatica/web |
-| @types/three | MIT | @Animatica/engine |
+| @types/three | MIT | @Animatica/editor, @Animatica/engine |
 | @types/uuid | MIT | @Animatica/engine |
 | @vitejs/plugin-react | MIT | @Animatica/editor |
 | clsx | MIT | @Animatica/editor |
@@ -172,7 +166,7 @@ The following dependencies have non-MIT licenses:
 | uuid | MIT | @Animatica/engine |
 | vite | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform |
 | vitest | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web |
-| zod | MIT | @Animatica/engine |
+| zod | MIT | @Animatica/engine, @Animatica/web |
 | zundo | MIT | @Animatica/engine |
 | zustand | MIT | @Animatica/engine |
 
@@ -390,7 +384,6 @@ The following dependencies have non-MIT licenses:
 | anymatch | 3.1.3 | ISC |
 | arg | 4.1.3 | MIT |
 | argparse | 1.0.10 | MIT |
-| argparse | 2.0.1 | Python-2.0 |
 | aria-query | 5.3.0 | Apache-2.0 |
 | array-back | 3.1.0 | MIT |
 | array-union | 2.1.0 | MIT |
@@ -627,9 +620,8 @@ The following dependencies have non-MIT licenses:
 | lodash.isequal | 4.5.0 | MIT |
 | lodash.truncate | 4.4.2 | MIT |
 | log-symbols | 4.1.0 | MIT |
-| lru_map | 0.3.3 | MIT |
 | lru-cache | 5.1.1 | ISC |
-| lru-cache | 11.2.6 | BlueOak-1.0.0 |
+| lru_map | 0.3.3 | MIT |
 | lucide-react | 0.563.0 | ISC |
 | lz-string | 1.5.0 | MIT |
 | maath | 0.10.8 | MIT |
@@ -652,7 +644,6 @@ The following dependencies have non-MIT licenses:
 | minimalistic-assert | 1.0.1 | ISC |
 | minimalistic-crypto-utils | 1.0.1 | MIT |
 | minimatch | 3.1.3 | ISC |
-| minimatch | 10.2.2 | BlueOak-1.0.0 |
 | minimist | 1.2.8 | MIT |
 | mkdirp | 0.5.6 | MIT |
 | mnemonist | 0.38.5 | MIT |
@@ -759,7 +750,6 @@ The following dependencies have non-MIT licenses:
 | solc | 0.8.26 | MIT |
 | solidity-coverage | 0.8.17 | ISC |
 | source-map | 0.6.1 | BSD-3-Clause |
-| source-map | 0.2.0 | BSD |
 | source-map-js | 1.2.1 | BSD-3-Clause |
 | source-map-support | 0.5.21 | MIT |
 | split2 | 3.2.2 | ISC |
@@ -771,9 +761,9 @@ The following dependencies have non-MIT licenses:
 | stats.js | 0.17.0 | MIT |
 | statuses | 2.0.2 | MIT |
 | std-env | 3.10.0 | MIT |
-| string_decoder | 1.1.1 | MIT |
 | string-format | 2.0.0 | WTFPL OR MIT |
 | string-width | 2.1.1 | MIT |
+| string_decoder | 1.1.1 | MIT |
 | strip-ansi | 4.0.0 | MIT |
 | strip-hex-prefix | 1.0.0 | MIT |
 | strip-json-comments | 3.1.1 | MIT |
@@ -867,7 +857,7 @@ The following dependencies have non-MIT licenses:
 | yargs-unparser | 2.0.0 | MIT |
 | yn | 3.1.1 | MIT |
 | yocto-queue | 0.1.0 | MIT |
-| zod | 4.3.6 | MIT |
+| zod | 3.25.76 | MIT |
 | zundo | 2.3.0 | MIT |
 | zustand | 4.5.7 | MIT |
 
