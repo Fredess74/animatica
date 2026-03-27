@@ -27,10 +27,47 @@ vi.mock('@react-three/fiber', async () => {
     Canvas: ({ children }: { children: React.ReactNode }) => <div data-testid="canvas">{children}</div>,
     useThree: () => ({
       scene: { getObjectByName: mocks.mockGetObjectByName },
-      camera: { position: { set: vi.fn() }, lookAt: vi.fn() }
+      camera: { position: { set: vi.fn() }, lookAt: vi.fn() },
+      gl: { domElement: { onpointerdown: null } }
     }),
   }
 })
+
+// Mock Sub-components to avoid deep rendering issues
+vi.mock('./ViewportToolbar', () => ({
+    ViewportToolbar: ({ onViewModeChange }: any) => (
+        <div data-testid="viewport-toolbar">
+            <button title="Top View" onClick={() => {}} />
+            <button title="Front View" />
+            <button title="Side View" />
+            <button title="Perspective View" />
+        </div>
+    )
+}))
+
+vi.mock('./ViewportOverlay', () => ({
+    ViewportOverlay: () => <div data-testid="viewport-overlay" />
+}))
+
+vi.mock('./ViewportGrid', () => ({
+    ViewportGrid: () => <div data-testid="viewport-grid" />
+}))
+
+vi.mock('./ViewportControls', () => ({
+    ViewportControls: () => <div data-testid="viewport-controls" />
+}))
+
+vi.mock('./ViewportGizmo', () => ({
+    ViewportGizmo: ({ mode }: any) => mode === 'translate' ? <div data-testid="transform-controls" /> : null
+}))
+
+vi.mock('./SceneRenderer', () => ({
+    SceneRenderer: () => <div data-testid="scene-renderer" />
+}))
+
+vi.mock('./EnvironmentRenderer', () => ({
+    EnvironmentRenderer: () => <div data-testid="environment-renderer" />
+}))
 
 // Mock Drei
 vi.mock('@react-three/drei', () => ({
@@ -38,12 +75,15 @@ vi.mock('@react-three/drei', () => ({
   TransformControls: () => <div data-testid="transform-controls" />,
   Grid: () => <div data-testid="grid" />,
   Sky: () => <div data-testid="sky" />,
+  ContactShadows: () => <div data-testid="contact-shadows" />,
+  Environment: () => <div data-testid="environment" />,
 }))
 
 // Mock Engine
 vi.mock('@Animatica/engine', () => ({
   SceneManager: () => <div data-testid="scene-manager" />,
   useSceneStore: (selector: any) => selector({
+    actors: [],
     selectedActorId: 'test-actor-id',
     setSelectedActor: mocks.mockSetSelectedActor,
     updateActor: mocks.mockUpdateActor,
@@ -71,9 +111,9 @@ describe('Viewport', () => {
     render(<Viewport />)
 
     expect(screen.getByTestId('canvas')).toBeTruthy()
-    expect(screen.getByTestId('orbit-controls')).toBeTruthy()
-    expect(screen.getByTestId('grid')).toBeTruthy()
-    expect(screen.getByTestId('scene-manager')).toBeTruthy()
+    expect(screen.getByTestId('viewport-controls')).toBeTruthy()
+    expect(screen.getByTestId('viewport-grid')).toBeTruthy()
+    expect(screen.getByTestId('scene-renderer')).toBeTruthy()
   })
 
   it('renders the camera toolbar', () => {
@@ -94,7 +134,7 @@ describe('Viewport', () => {
     expect(topButton).toBeTruthy()
   })
 
-  it('renders gizmo when object is found', () => {
+  it('renders gizmo when object is found', async () => {
     // Mock found object
     mocks.mockGetObjectByName.mockReturnValue({
         position: { x: 0, y: 0, z: 0 },
@@ -104,6 +144,6 @@ describe('Viewport', () => {
 
     render(<Viewport />)
 
-    expect(screen.getByTestId('transform-controls')).toBeTruthy()
+    expect(await screen.findByTestId('transform-controls')).toBeTruthy()
   })
 })
