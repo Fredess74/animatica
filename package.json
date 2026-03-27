@@ -1,8 +1,8 @@
 {
   "name": "Animatica",
   "private": true,
-  "version": "0.1.0",
-  "description": "The Animation Platform for Everyone — Create, Animate, Earn",
+  "version": "0.2.0",
+  "description": "The Animation Platform for Everyone — Create and Animate",
   "workspaces": [
     "packages/*",
     "apps/*"
@@ -15,8 +15,12 @@
     "typecheck": "turbo run typecheck"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@vitejs/plugin-react": "^5.1.4",
+    "eslint": "^10.1.0",
     "turbo": "^2.5.0",
-    "typescript": "~5.9.3"
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.57.2"
   },
   "packageManager": "pnpm@10.28.0",
   "engines": {
