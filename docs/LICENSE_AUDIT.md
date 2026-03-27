@@ -1,6 +1,6 @@
 # License Audit
 
-**Date:** 2026-02-25
+**Date:** 2026-03-27
 **Auditor:** Jules (License Auditor)
 
 ## Summary
@@ -27,7 +27,7 @@ Transitive dependencies: 654
 The following dependencies have non-MIT licenses:
 
 | Dependency | Version | License | Type |
-| --- | --- | --- |
+| --- | --- | --- | --- |
 | @dimforge/rapier3d-compat | 0.12.0 | Apache-2.0 | Transitive |
 | @ethereumjs/rlp | 4.0.1 | MPL-2.0 | Transitive |
 | @ethereumjs/util | 8.1.0 | MPL-2.0 | Transitive |
@@ -45,6 +45,7 @@ The following dependencies have non-MIT licenses:
 | @swc/helpers | 0.5.15 | Apache-2.0 | Transitive |
 | @webgpu/types | 0.1.69 | BSD-3-Clause | Transitive |
 | abbrev | 1.0.9 | ISC | Transitive |
+| amdefine | 1.0.1 | BSD-3-Clause OR MIT | Transitive |
 | ansi-align | 3.0.1 | ISC | Transitive |
 | antlr4ts | 0.5.0-alpha.4 | BSD-3-Clause | Transitive |
 | anymatch | 3.1.3 | ISC | Transitive |
@@ -55,7 +56,6 @@ The following dependencies have non-MIT licenses:
 | browser-stdout | 1.3.1 | ISC | Transitive |
 | caniuse-lite | 1.0.30001770 | CC-BY-4.0 | Transitive |
 | caseless | 0.12.0 | Apache-2.0 | Transitive |
-| chai-as-promised | 7.1.2 | WTFPL | Transitive |
 | charenc | 0.0.2 | BSD-3-Clause | Transitive |
 | cliui | 7.0.4 | ISC | Transitive |
 | crypt | 0.0.2 | BSD-3-Clause | Transitive |
@@ -112,6 +112,7 @@ The following dependencies have non-MIT licenses:
 | semver | 5.7.2 | ISC | Transitive |
 | serialize-javascript | 6.0.2 | BSD-3-Clause | Transitive |
 | setprototypeof | 1.2.0 | ISC | Transitive |
+| sha.js | 2.4.12 | (MIT AND BSD-3-Clause) | Transitive |
 | sha1 | 1.1.1 | BSD-3-Clause | Transitive |
 | sharp | 0.34.5 | Apache-2.0 | Transitive |
 | shelljs | 0.8.5 | BSD-3-Clause | Transitive |
@@ -126,6 +127,7 @@ The following dependencies have non-MIT licenses:
 | tough-cookie | 6.0.0 | BSD-3-Clause | Transitive |
 | ts-command-line-args | 2.5.1 | ISC | Transitive |
 | tslib | 1.14.1 | 0BSD | Transitive |
+| type-fest | 0.7.1 | (MIT OR CC0-1.0) | Transitive |
 | typescript | 5.9.3 | Apache-2.0 | **Direct** |
 | uglify-js | 3.19.3 | BSD-2-Clause | Transitive |
 | web3-utils | 1.10.4 | LGPL-3.0 | Transitive |
@@ -144,7 +146,7 @@ The following dependencies have non-MIT licenses:
 | --- | --- | --- |
 | @nomicfoundation/hardhat-toolbox | MIT | @Animatica/contracts |
 | @openzeppelin/contracts | MIT | @Animatica/contracts |
-| @react-three/drei | MIT | @Animatica/engine |
+| @react-three/drei | MIT | @Animatica/editor, @Animatica/engine |
 | @react-three/fiber | MIT | @Animatica/editor, @Animatica/engine, @Animatica/web |
 | @tailwindcss/postcss | MIT | @Animatica/editor |
 | @testing-library/dom | MIT | @Animatica/web |
@@ -152,7 +154,7 @@ The following dependencies have non-MIT licenses:
 | @types/node | MIT | @Animatica/engine |
 | @types/react | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web |
 | @types/react-dom | MIT | @Animatica/editor, @Animatica/platform, @Animatica/web |
-| @types/three | MIT | @Animatica/engine |
+| @types/three | MIT | @Animatica/editor, @Animatica/engine |
 | @types/uuid | MIT | @Animatica/engine |
 | @vitejs/plugin-react | MIT | @Animatica/editor |
 | clsx | MIT | @Animatica/editor |
@@ -172,7 +174,7 @@ The following dependencies have non-MIT licenses:
 | uuid | MIT | @Animatica/engine |
 | vite | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform |
 | vitest | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web |
-| zod | MIT | @Animatica/engine |
+| zod | MIT | @Animatica/engine, @Animatica/web |
 | zundo | MIT | @Animatica/engine |
 | zustand | MIT | @Animatica/engine |
 
@@ -867,7 +869,7 @@ The following dependencies have non-MIT licenses:
 | yargs-unparser | 2.0.0 | MIT |
 | yn | 3.1.1 | MIT |
 | yocto-queue | 0.1.0 | MIT |
-| zod | 4.3.6 | MIT |
+| zod | 3.25.76 | MIT |
 | zundo | 2.3.0 | MIT |
 | zustand | 4.5.7 | MIT |
 
