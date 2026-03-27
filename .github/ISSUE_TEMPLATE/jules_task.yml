@@ -12,8 +12,8 @@ body:
     id: package
     attributes:
       label: Target Package
-      description: Which package does this task affect? (e.g., @animatica/engine, @animatica/editor)
-      placeholder: "@animatica/engine"
+      description: Which package does this task affect? (e.g., @Animatica/engine, @Animatica/editor)
+      placeholder: "@Animatica/engine"
     validations:
       required: true
 

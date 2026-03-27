@@ -2,7 +2,7 @@
  * Viewport — Main 3D canvas container for the Animatica editor.
  * Renders the scene with postprocessing, controls, grid, and gizmo.
  * 
- * @module @animatica/editor/viewport
+ * @module @Animatica/editor/viewport
  */
 import React, { Suspense, useCallback, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
