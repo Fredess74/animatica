@@ -34,7 +34,7 @@ describe('Engine Benchmarks', () => {
     });
 
     describe('Interpolation Performance', () => {
-        it('Number Interpolation (100k ops, 10k keyframes)', () => {
+        it('Number Interpolation (100k ops, 10k keyframes)', { timeout: 15000 }, () => {
             const keyframes: Keyframe<number>[] = [];
             for (let i = 0; i < 10000; i++) {
                 keyframes.push({
@@ -52,7 +52,7 @@ describe('Engine Benchmarks', () => {
             });
         });
 
-        it('Vector3 Interpolation (100k ops, 10k keyframes)', () => {
+        it('Vector3 Interpolation (100k ops, 10k keyframes)', { timeout: 15000 }, () => {
             const keyframes: Keyframe<Vector3>[] = [];
             for (let i = 0; i < 10000; i++) {
                 keyframes.push({
@@ -70,7 +70,7 @@ describe('Engine Benchmarks', () => {
             });
         });
 
-        it('Color Interpolation (100k ops, 10k keyframes)', () => {
+        it('Color Interpolation (100k ops, 10k keyframes)', { timeout: 15000 }, () => {
             const keyframes: Keyframe<string>[] = [];
             for (let i = 0; i < 10000; i++) {
                 keyframes.push({
