@@ -1,6 +1,5 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi } from 'vitest'
-import React from 'react'
 import { render } from '@testing-library/react'
 import { CharacterRenderer } from './CharacterRenderer'
 import { CharacterActor } from '../../types'
