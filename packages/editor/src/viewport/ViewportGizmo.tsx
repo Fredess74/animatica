@@ -24,8 +24,8 @@ export const ViewportGizmo: React.FC<ViewportGizmoProps> = ({
     space,
     snapEnabled,
 }) => {
-    const selectedActorId = useSceneStore((s) => s.selectedActorId)
-    const updateActor = useSceneStore((s) => s.updateActor)
+    const selectedActorId = useSceneStore((s: any) => s.selectedActorId)
+    const updateActor = useSceneStore((s: any) => s.updateActor)
     const { scene } = useThree()
     const [target, setTarget] = useState<THREE.Object3D | null>(null)
     const controlsRef = useRef<any>(null)

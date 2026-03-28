@@ -7,7 +7,7 @@ import { useSceneStore } from '@Animatica/engine'
 
 export const ViewportOverlay: React.FC = () => {
     const selectedActor = useSceneStore((s) =>
-        s.selectedActorId ? s.actors.find((a) => a.id === s.selectedActorId) : null
+        s.selectedActorId ? s.actors.find((a: any) => a.id === s.selectedActorId) : null
     )
 
     return (

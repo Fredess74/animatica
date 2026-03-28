@@ -15,8 +15,8 @@ export const useViewportHotkeys = ({
     onGizmoModeChange,
     onTransformSpaceToggle,
 }: HotkeyOptions) => {
-    const removeActor = useSceneStore((s) => s.removeActor)
-    const selectedActorId = useSceneStore((s) => s.selectedActorId)
+    const removeActor = useSceneStore((s: any) => s.removeActor)
+    const selectedActorId = useSceneStore((s: any) => s.selectedActorId)
     const setSelectedActor = useSceneStore((s) => s.setSelectedActor)
     const setPlayback = useSceneStore((s) => s.setPlayback)
     const isPlaying = useSceneStore((s) => s.playback.isPlaying)

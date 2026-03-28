@@ -7,7 +7,7 @@ import { Sky, ContactShadows, Environment } from '@react-three/drei'
 import { useSceneStore } from '@Animatica/engine'
 
 export const EnvironmentRenderer: React.FC = () => {
-    const env = useSceneStore((s) => s.environment)
+    const env = useSceneStore((s: any) => s.environment)
 
     return (
         <>

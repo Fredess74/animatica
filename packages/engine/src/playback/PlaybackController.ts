@@ -37,21 +37,18 @@ export interface PlaybackControls {
  * React hook that provides playback controls for the scene animation.
  * Uses requestAnimationFrame for smooth, frame-accurate playback.
  *
- * Note: This hook also manages the animation loop. It should ideally be used
- * by a single controller component to avoid multiple loops running simultaneously.
- *
  * @returns PlaybackControls object.
  */
 export function usePlayback(): PlaybackControls {
     const rafIdRef = useRef<number | null>(null);
     const lastFrameTimeRef = useRef<number | null>(null);
+    const tickRef = useRef<(timestamp: number) => void>(() => {});
 
     // Subscribe to playback state changes
     const isPlaying = useSceneStore((s) => s.playback.isPlaying);
 
     /**
-     * The core animation frame callback.
-     * Calculates delta time and advances the store's currentTime.
+     * The core animation frame callback logic.
      */
     const tick = useCallback(
         (timestamp: number) => {
@@ -66,23 +63,16 @@ export function usePlayback(): PlaybackControls {
             const { duration } = state.timeline;
             const { currentTime, speed, direction, loopMode } = state.playback;
 
-            // Convert to seconds and apply speed multiplier and direction
-            // Note: speed is magnitude, direction is sign (+1/-1)
             const deltaSec = (deltaMs / 1000) * speed * direction;
-
             let newTime = currentTime + deltaSec;
 
-            // Handle boundaries and loop modes
             if (direction === 1 && newTime >= duration) {
                 if (loopMode === 'loop') {
                     newTime = newTime % duration;
                 } else if (loopMode === 'pingpong') {
                     newTime = duration;
-                    // Reverse direction
                     state.setPlayback({ direction: -1, currentTime: newTime });
-                    // Continue loop
                 } else {
-                    // 'none': Stop at end
                     newTime = duration;
                     state.setPlayback({ currentTime: newTime, isPlaying: false });
                     rafIdRef.current = null;
@@ -91,15 +81,11 @@ export function usePlayback(): PlaybackControls {
                 }
             } else if (direction === -1 && newTime <= 0) {
                 if (loopMode === 'loop') {
-                    // Loop backwards? usually loop wraps to end
-                    // For reverse loop: 0 -> duration
                     newTime = duration;
                 } else if (loopMode === 'pingpong') {
                     newTime = 0;
-                    // Reverse direction
                     state.setPlayback({ direction: 1, currentTime: newTime });
                 } else {
-                    // 'none': Stop at start
                     newTime = 0;
                     state.setPlayback({ currentTime: newTime, isPlaying: false });
                     rafIdRef.current = null;
@@ -108,23 +94,25 @@ export function usePlayback(): PlaybackControls {
                 }
             }
 
-            // Smooth update (no quantization for now to ensure smooth motion)
             if (Math.abs(newTime - currentTime) > 0.00001) {
                 state.setPlayback({ currentTime: newTime });
             }
 
-            // Schedule next frame
-            rafIdRef.current = requestAnimationFrame(tick);
+            rafIdRef.current = requestAnimationFrame(tickRef.current);
         },
         []
     );
 
-    // Effect to start/stop loop based on isPlaying state changes
+    // Sync the ref to the latest tick function outside of render
+    useEffect(() => {
+        tickRef.current = tick;
+    }, [tick]);
+
     useEffect(() => {
         if (isPlaying) {
             if (rafIdRef.current === null) {
                 lastFrameTimeRef.current = null;
-                rafIdRef.current = requestAnimationFrame(tick);
+                rafIdRef.current = requestAnimationFrame(tickRef.current);
             }
         } else {
             if (rafIdRef.current !== null) {
@@ -140,21 +128,16 @@ export function usePlayback(): PlaybackControls {
                 rafIdRef.current = null;
             }
         }
-    }, [isPlaying, tick]);
+    }, [isPlaying]);
 
-    /**
-     * Starts the animation loop.
-     */
     const play = useCallback(() => {
         const state = useSceneStore.getState();
         const { duration } = state.timeline;
         const { currentTime, direction } = state.playback;
 
-        // If at the end and playing forward, reset to start
         if (direction === 1 && currentTime >= duration) {
             state.setPlayback({ currentTime: 0, isPlaying: true });
         }
-        // If at start and playing backward, reset to end?
         else if (direction === -1 && currentTime <= 0) {
             state.setPlayback({ currentTime: duration, isPlaying: true });
         } else {
@@ -162,23 +145,14 @@ export function usePlayback(): PlaybackControls {
         }
     }, []);
 
-    /**
-     * Pauses the animation loop.
-     */
     const pause = useCallback(() => {
         useSceneStore.getState().setPlayback({ isPlaying: false });
     }, []);
 
-    /**
-     * Stops playback and resets to time 0.
-     */
     const stop = useCallback(() => {
         useSceneStore.getState().setPlayback({ currentTime: 0, isPlaying: false, direction: 1 });
     }, []);
 
-    /**
-     * Seeks to a specific time in seconds.
-     */
     const seek = useCallback(
         (time: number) => {
             const state = useSceneStore.getState();
@@ -189,9 +163,6 @@ export function usePlayback(): PlaybackControls {
         []
     );
 
-    /**
-     * Toggles between play and pause.
-     */
     const toggle = useCallback(() => {
         const playing = useSceneStore.getState().playback.isPlaying;
         if (playing) {

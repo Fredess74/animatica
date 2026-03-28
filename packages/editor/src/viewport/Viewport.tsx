@@ -42,7 +42,7 @@ export const Viewport: React.FC<{ className?: string }> = ({ className }) => {
     const [gridVisible, setGridVisible] = useState(true)
     const [viewMode, setViewMode] = useState<ViewMode>('3d')
 
-    const isPlaying = useSceneStore((s) => s.playback.isPlaying)
+    const isPlaying = useSceneStore((s: any) => s.playback.isPlaying)
 
     const toggleSnap = useCallback(() => setSnapEnabled((v) => !v), [])
     const toggleGrid = useCallback(() => setGridVisible((v) => !v), [])

@@ -7,7 +7,7 @@ import { useThree } from '@react-three/fiber'
 import { useSceneStore } from '@Animatica/engine'
 
 export const useActorPicking = () => {
-    const setSelectedActor = useSceneStore((s) => s.setSelectedActor)
+    const setSelectedActor = useSceneStore((s: any) => s.setSelectedActor)
     const { gl } = useThree()
 
     // Listen for missed clicks (clicking empty space)
