@@ -41,8 +41,7 @@ describe('CharacterRenderer', () => {
   }
 
   it('renders a group containing primitive rig with correct transform', () => {
-    // CharacterRenderer is a functional component (not memoized in the source I read)
-    // If it was memoized, we'd use CharacterRenderer.type
+    // CharacterRenderer is a functional component
     const result = (CharacterRenderer as any)({ actor: mockActor }) as React.ReactElement
 
     expect(result).not.toBeNull()
@@ -63,9 +62,9 @@ describe('CharacterRenderer', () => {
 
   it('renders nothing when visible is false', () => {
     // In CharacterRenderer.tsx, visibility is handled via <group visible={actor.visible}>
-    // so it DOES NOT return null. The old test was wrong.
     const invisibleActor = { ...mockActor, visible: false }
     const result = (CharacterRenderer as any)({ actor: invisibleActor }) as React.ReactElement
-    expect(result.props.visible).toBe(false)
+    const props = result.props as any
+    expect(props.visible).toBe(false)
   })
 })
