@@ -32,8 +32,17 @@ export const useSceneStore = create<SceneStoreState>()(
         // Only persist project state, not playback or selection
         partialize: (state) => {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { playback, selectedActorId, ...rest } = state;
+          const { playback, selectedActorId, actorsById, ...rest } = state;
           return rest as unknown as SceneStoreState;
+        },
+        onRehydrateStorage: () => (state) => {
+          if (state) {
+            // Rebuild actorsById lookup on rehydration
+            state.actorsById = {};
+            state.actors.forEach((actor) => {
+              state.actorsById[actor.id] = actor;
+            });
+          }
         },
       }
     ),
@@ -41,6 +50,7 @@ export const useSceneStore = create<SceneStoreState>()(
       // Only track undo/redo for project state
       partialize: (state) => ({
         actors: state.actors,
+        actorsById: state.actorsById,
         environment: state.environment,
         timeline: state.timeline,
         meta: state.meta,
@@ -73,7 +83,7 @@ export type { SceneStoreState, PlaybackState, LoopMode } from './types';
  * Selector to get an actor by its ID.
  */
 export const getActorById = (id: string) => (state: SceneStoreState): Actor | undefined =>
-  state.actors.find((a) => a.id === id);
+  state.actorsById[id];
 
 /**
  * Selector to get all currently visible actors.
@@ -93,7 +103,7 @@ export const getCurrentTime = (state: SceneStoreState): number =>
  * Hook to select a specific actor by ID.
  */
 export const useActorById = (id: string) =>
-  useSceneStore((state) => state.actors.find((a) => a.id === id));
+  useSceneStore((state) => state.actorsById[id]);
 
 /**
  * Hook to get the list of all actor IDs.
@@ -125,8 +135,29 @@ export const useSelectedActorId = () =>
  */
 export const useSelectedActor = () =>
   useSceneStore((state) =>
-    state.selectedActorId ? state.actors.find((a) => a.id === state.selectedActorId) : undefined
+    state.selectedActorId ? state.actorsById[state.selectedActorId] : undefined
   );
+
+/**
+ * Hook to get the playback state.
+ * Optimized with useShallow to prevent re-renders when other parts of the store change.
+ */
+export const usePlaybackState = () =>
+  useSceneStore(useShallow((state) => state.playback));
+
+/**
+ * Hook to get the environment settings.
+ * Optimized with useShallow to prevent re-renders when other parts of the store change.
+ */
+export const useEnvironment = () =>
+  useSceneStore(useShallow((state) => state.environment));
+
+/**
+ * Hook to get the timeline data.
+ * Optimized with useShallow to prevent re-renders when other parts of the store change.
+ */
+export const useTimeline = () =>
+  useSceneStore(useShallow((state) => state.timeline));
 
 /**
  * Hook to get all actors of a specific type.

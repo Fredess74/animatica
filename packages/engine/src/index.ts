@@ -19,6 +19,9 @@ export {
   useIsPlaying,
   useSelectedActorId,
   useSelectedActor,
+  usePlaybackState,
+  useEnvironment,
+  useTimeline,
   useActorsByType,
   useActorList,
 } from './store/sceneStore';
