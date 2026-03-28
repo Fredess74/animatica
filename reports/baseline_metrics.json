@@ -1,11 +1,11 @@
 {
-  "Number Interpolation (100k ops)": "4531.92ms",
-  "Vector3 Interpolation (100k ops)": "4719.65ms",
-  "Color Interpolation (100k ops)": "4632.99ms",
-  "evaluateTracksAtTime (100 tracks)": "14.72ms",
-  "Schema Validation Speed (100 runs, complex)": "82.55ms",
-  "Store Playback Updates (10k ops)": "198.89ms",
-  "Store Add Actor (1k ops)": "127.90ms",
-  "Store Update Actor (1k ops)": "1253.09ms",
-  "Store Remove Actor (1k ops)": "1008.24ms"
+  "Number Interpolation (100k ops)": "4359.48ms",
+  "Vector3 Interpolation (100k ops)": "4393.60ms",
+  "Color Interpolation (100k ops)": "4684.57ms",
+  "evaluateTracksAtTime (100 tracks)": "15.34ms",
+  "Schema Validation Speed (100 runs, complex)": "79.42ms",
+  "Store Playback Updates (10k ops)": "190.72ms",
+  "Store Add Actor (1k ops)": "119.78ms",
+  "Store Update Actor (1k ops)": "1275.13ms",
+  "Store Remove Actor (1k ops)": "1038.55ms"
 }
