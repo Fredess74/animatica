@@ -14,6 +14,7 @@ describe('sceneStore', () => {
           skyColor: '#87CEEB',
       },
       playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, direction: 1, loopMode: 'none' },
+      actorsById: {},
     });
 
     // Clear undo history
@@ -31,25 +32,29 @@ describe('sceneStore', () => {
     properties: { shape: 'box', color: '#ffffff', roughness: 0.5, metalness: 0.5, opacity: 1, wireframe: false },
   });
 
-  it('should add an actor', () => {
+  it('should add an actor and maintain actorsById', () => {
     const actor = createActor('1');
     useSceneStore.getState().addActor(actor);
     expect(useSceneStore.getState().actors).toHaveLength(1);
     expect(useSceneStore.getState().actors[0]).toEqual(actor);
+    expect(useSceneStore.getState().actorsById['1']).toEqual(actor);
   });
 
-  it('should remove an actor', () => {
+  it('should remove an actor and maintain actorsById', () => {
     const actor = createActor('1');
     useSceneStore.getState().addActor(actor);
+    expect(useSceneStore.getState().actorsById['1']).toBeDefined();
     useSceneStore.getState().removeActor('1');
     expect(useSceneStore.getState().actors).toHaveLength(0);
+    expect(useSceneStore.getState().actorsById['1']).toBeUndefined();
   });
 
-  it('should update an actor', () => {
+  it('should update an actor and maintain actorsById', () => {
     const actor = createActor('1');
     useSceneStore.getState().addActor(actor);
     useSceneStore.getState().updateActor('1', { name: 'Updated Actor' });
     expect(useSceneStore.getState().actors[0].name).toBe('Updated Actor');
+    expect(useSceneStore.getState().actorsById['1']?.name).toBe('Updated Actor');
   });
 
   it('should set environment', () => {
