@@ -53,71 +53,68 @@ export function usePlayback(): PlaybackControls {
      * The core animation frame callback.
      * Calculates delta time and advances the store's currentTime.
      */
-    const tick = useCallback(
-        (timestamp: number) => {
-            if (lastFrameTimeRef.current === null) {
-                lastFrameTimeRef.current = timestamp;
-            }
-
-            const deltaMs = timestamp - lastFrameTimeRef.current;
+    function tick(timestamp: number) {
+        if (lastFrameTimeRef.current === null) {
             lastFrameTimeRef.current = timestamp;
+        }
 
-            const state = useSceneStore.getState();
-            const { duration } = state.timeline;
-            const { currentTime, speed, direction, loopMode } = state.playback;
+        const deltaMs = timestamp - lastFrameTimeRef.current;
+        lastFrameTimeRef.current = timestamp;
 
-            // Convert to seconds and apply speed multiplier and direction
-            // Note: speed is magnitude, direction is sign (+1/-1)
-            const deltaSec = (deltaMs / 1000) * speed * direction;
+        const state = useSceneStore.getState();
+        const { duration } = state.timeline;
+        const { currentTime, speed, direction, loopMode } = state.playback;
 
-            let newTime = currentTime + deltaSec;
+        // Convert to seconds and apply speed multiplier and direction
+        // Note: speed is magnitude, direction is sign (+1/-1)
+        const deltaSec = (deltaMs / 1000) * speed * direction;
 
-            // Handle boundaries and loop modes
-            if (direction === 1 && newTime >= duration) {
-                if (loopMode === 'loop') {
-                    newTime = newTime % duration;
-                } else if (loopMode === 'pingpong') {
-                    newTime = duration;
-                    // Reverse direction
-                    state.setPlayback({ direction: -1, currentTime: newTime });
-                    // Continue loop
-                } else {
-                    // 'none': Stop at end
-                    newTime = duration;
-                    state.setPlayback({ currentTime: newTime, isPlaying: false });
-                    rafIdRef.current = null;
-                    lastFrameTimeRef.current = null;
-                    return;
-                }
-            } else if (direction === -1 && newTime <= 0) {
-                if (loopMode === 'loop') {
-                    // Loop backwards? usually loop wraps to end
-                    // For reverse loop: 0 -> duration
-                    newTime = duration;
-                } else if (loopMode === 'pingpong') {
-                    newTime = 0;
-                    // Reverse direction
-                    state.setPlayback({ direction: 1, currentTime: newTime });
-                } else {
-                    // 'none': Stop at start
-                    newTime = 0;
-                    state.setPlayback({ currentTime: newTime, isPlaying: false });
-                    rafIdRef.current = null;
-                    lastFrameTimeRef.current = null;
-                    return;
-                }
+        let newTime = currentTime + deltaSec;
+
+        // Handle boundaries and loop modes
+        if (direction === 1 && newTime >= duration) {
+            if (loopMode === 'loop') {
+                newTime = newTime % duration;
+            } else if (loopMode === 'pingpong') {
+                newTime = duration;
+                // Reverse direction
+                state.setPlayback({ direction: -1, currentTime: newTime });
+                // Continue loop
+            } else {
+                // 'none': Stop at end
+                newTime = duration;
+                state.setPlayback({ currentTime: newTime, isPlaying: false });
+                rafIdRef.current = null;
+                lastFrameTimeRef.current = null;
+                return;
             }
-
-            // Smooth update (no quantization for now to ensure smooth motion)
-            if (Math.abs(newTime - currentTime) > 0.00001) {
-                state.setPlayback({ currentTime: newTime });
+        } else if (direction === -1 && newTime <= 0) {
+            if (loopMode === 'loop') {
+                // Loop backwards? usually loop wraps to end
+                // For reverse loop: 0 -> duration
+                newTime = duration;
+            } else if (loopMode === 'pingpong') {
+                newTime = 0;
+                // Reverse direction
+                state.setPlayback({ direction: 1, currentTime: newTime });
+            } else {
+                // 'none': Stop at start
+                newTime = 0;
+                state.setPlayback({ currentTime: newTime, isPlaying: false });
+                rafIdRef.current = null;
+                lastFrameTimeRef.current = null;
+                return;
             }
+        }
 
-            // Schedule next frame
-            rafIdRef.current = requestAnimationFrame(tick);
-        },
-        []
-    );
+        // Smooth update (no quantization for now to ensure smooth motion)
+        if (Math.abs(newTime - currentTime) > 0.00001) {
+            state.setPlayback({ currentTime: newTime });
+        }
+
+        // Schedule next frame
+        rafIdRef.current = requestAnimationFrame(tick);
+    }
 
     // Effect to start/stop loop based on isPlaying state changes
     useEffect(() => {
