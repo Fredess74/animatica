@@ -2,7 +2,7 @@
  * CharacterRenderer — R3F component for rendering a character actor.
  * Creates a procedural humanoid (or loads GLB), applies animation, face morphs, and eye tracking.
  */
-import React, { useEffect, useRef, useMemo } from 'react'
+import { useEffect, useRef, useMemo, memo, forwardRef, useImperativeHandle } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { createProceduralHumanoid } from '../../character/CharacterLoader'
@@ -28,12 +28,22 @@ interface CharacterRendererProps {
   onClick?: () => void
 }
 
-export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
+/**
+ * CharacterRenderer — R3F component for rendering a character actor.
+ * Creates a procedural humanoid (or loads GLB), applies animation, face morphs, and eye tracking.
+ *
+ * @component
+ */
+export const CharacterRenderer = memo(forwardRef<THREE.Group, CharacterRendererProps>(({
   actor,
   isSelected = false,
   onClick,
-}) => {
+}, ref) => {
   const groupRef = useRef<THREE.Group>(null)
+
+  // Safely expose the underlying THREE.Group to parents via ref
+  useImperativeHandle(ref, () => groupRef.current as THREE.Group)
+
   const animatorRef = useRef<CharacterAnimator | null>(null)
   const faceMorphRef = useRef<FaceMorphController | null>(null)
   const eyeControllerRef = useRef<EyeController | null>(null)
@@ -100,6 +110,8 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
 
   // Frame update — animation, face morphs, eye blinks
   useFrame((_state, delta) => {
+    if (!actor.visible) return
+
     // Skeletal animation
     if (animatorRef.current) {
       animatorRef.current.update(delta)
@@ -120,6 +132,8 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       faceMorphRef.current.setImmediate(eyeValues)
     }
   })
+
+  if (!actor.visible) return null
 
   return (
     <group
@@ -151,4 +165,6 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       )}
     </group>
   )
-}
+}))
+
+CharacterRenderer.displayName = 'CharacterRenderer'
