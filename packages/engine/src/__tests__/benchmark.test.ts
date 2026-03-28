@@ -1,11 +1,24 @@
-import { describe, it, afterAll } from 'vitest';
-import { interpolateKeyframes } from '../animation/interpolate';
+import { describe, it, afterAll, vi } from 'vitest';
+import { interpolateKeyframes, evaluateTracksAtTime } from '../animation/interpolate';
 import { ProjectStateSchema } from '../importer/schemas';
 import { useSceneStore } from '../store/sceneStore';
-import type { Keyframe, ProjectState, Actor, PrimitiveActor, Vector3 } from '../types';
+import type { Keyframe, ProjectState, Actor, PrimitiveActor, Vector3, AnimationTrack, ProjectMeta, Environment, Timeline, PlaybackState } from '../types';
 import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
+
+vi.hoisted(() => {
+    const localStorageMock = {
+        getItem: vi.fn(),
+        setItem: vi.fn(),
+        removeItem: vi.fn(),
+        clear: vi.fn(),
+        length: 0,
+        key: vi.fn(),
+    };
+    vi.stubGlobal('localStorage', localStorageMock);
+    vi.stubGlobal('window', { localStorage: localStorageMock });
+});
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -87,6 +100,31 @@ describe('Engine Benchmarks', () => {
                 }
             });
         });
+
+        it('evaluateTracksAtTime (1000 steps, 100 tracks, 10 keyframes)', () => {
+            const tracks: AnimationTrack[] = [];
+            for (let i = 0; i < 100; i++) {
+                const keyframes: Keyframe[] = [];
+                for (let j = 0; j < 10; j++) {
+                    keyframes.push({
+                        time: j * 10,
+                        value: [Math.random(), Math.random(), Math.random()] as Vector3,
+                        easing: 'easeInOut',
+                    });
+                }
+                tracks.push({
+                    targetId: `actor-${i}`,
+                    property: 'transform.position',
+                    keyframes,
+                });
+            }
+
+            measure('evaluateTracksAtTime (1k steps, 100 tracks)', () => {
+                for (let t = 0; t < 1000; t++) {
+                    evaluateTracksAtTime(tracks, t / 10);
+                }
+            });
+        });
     });
 
     describe('Schema Validation Performance', () => {
@@ -144,20 +182,44 @@ describe('Engine Benchmarks', () => {
     });
 
     describe('Store Performance', () => {
+        const defaultPlayback: PlaybackState = {
+            currentTime: 0,
+            isPlaying: false,
+            frameRate: 24,
+            speed: 1.0,
+            direction: 1,
+            loopMode: 'none'
+        };
+
+        const defaultMeta: ProjectMeta = {
+            title: 'Reset',
+            version: '1.0.0'
+        };
+
+        const defaultEnv: Environment = {
+            ambientLight: { intensity: 0.5, color: '#ffffff' },
+            sun: { position: [10, 10, 10], intensity: 1, color: '#ffffff' },
+            skyColor: '#87CEEB',
+        };
+
+        const defaultTimeline: Timeline = {
+            duration: 10,
+            cameraTrack: [],
+            animationTracks: [],
+            markers: []
+        };
+
         it('Store Update Throughput (10k playback updates)', () => {
             const { setState, getState } = useSceneStore;
 
             setState({
-                meta: { title: 'Reset', version: '1.0.0' },
-                environment: {
-                    ambientLight: { intensity: 0.5, color: '#ffffff' },
-                    sun: { position: [10, 10, 10], intensity: 1, color: '#ffffff' },
-                    skyColor: '#87CEEB',
-                },
+                meta: defaultMeta,
+                environment: defaultEnv,
                 actors: [],
-                timeline: { duration: 10, cameraTrack: [], animationTracks: [], markers: [] },
+                timeline: defaultTimeline,
                 library: { clips: [] },
-                playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, direction: 1, loopMode: 'none' },
+                playback: defaultPlayback,
+                selectedActorId: null,
             });
 
             measure('Store Playback Updates (10k ops)', () => {
@@ -167,13 +229,50 @@ describe('Engine Benchmarks', () => {
             });
         });
 
+        it('Store Update Throughput (Large Project: 1k updates, 150 actors)', () => {
+            const { setState, getState } = useSceneStore;
+
+            const actors: Actor[] = [];
+            for (let i = 0; i < 150; i++) {
+                actors.push({
+                    id: `large-bench-${i}`,
+                    name: `Actor ${i}`,
+                    type: 'primitive',
+                    transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
+                    visible: true,
+                    properties: { shape: 'box', color: '#ff0000', roughness: 0.5, metalness: 0.5, opacity: 1, wireframe: false }
+                } as PrimitiveActor);
+            }
+
+            setState({
+                actors,
+                playback: defaultPlayback,
+                meta: defaultMeta,
+                environment: defaultEnv,
+                timeline: defaultTimeline,
+                library: { clips: [] },
+                selectedActorId: null
+            });
+
+            measure('Store Update (Large Project, 1k ops)', () => {
+                for (let i = 0; i < 1000; i++) {
+                    getState().updateActor('large-bench-0', { visible: i % 2 === 0 });
+                }
+            });
+        });
+
         it('Store Actor CRUD Throughput (1k actors)', () => {
             const { setState, getState } = useSceneStore;
 
             setState({
                 actors: [],
-                playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, direction: 1, loopMode: 'none' },
-            } as any);
+                playback: defaultPlayback,
+                meta: defaultMeta,
+                environment: defaultEnv,
+                timeline: defaultTimeline,
+                library: { clips: [] },
+                selectedActorId: null
+            });
 
             measure('Store Add Actor (1k ops)', () => {
                 for (let i = 0; i < 1000; i++) {
@@ -199,6 +298,6 @@ describe('Engine Benchmarks', () => {
                     getState().removeActor(`bench-${i}`);
                 }
             });
-        });
+        }, 30000);
     });
 });
