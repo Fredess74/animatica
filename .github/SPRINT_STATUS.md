@@ -1,44 +1,41 @@
 # Sprint Status
 
-**Date:** 2026-02-23
-**Sprint Goal:** Align codebase with `JULES_GUIDE.md` sequence and complete Batch 1 (Engine Foundation) & Batch 2 (Rendering).
+**Date:** 2026-03-15
+**Sprint Goal:** Complete Phase 1 (Engine Core) and progress with Phase 2 (Characters) and Phase 3 (Editor UI).
 
 ## Status Overview
 
-The project is currently in **Phase 1: Engine Core**.
+The project has successfully completed **Phase 1: Engine Core**. Core renderers and scene management are operational, though some test regressions require attention.
 
 For a detailed list of all open tasks, acceptance criteria, and future backlog items, please refer to **[docs/BACKLOG.md](../docs/BACKLOG.md)**.
 
 ### Completed Tasks
-- **Task 1: Types & Interfaces** (`packages/engine/src/types/index.ts`)
-- **Task 3: Easing Functions** (`packages/engine/src/animation/easing.ts`)
-- **Task 4: Keyframe Engine** (`packages/engine/src/animation/interpolate.ts`)
-- **Task 5: Zustand Store** (`packages/engine/src/store/sceneStore.ts`)
-- **Task 6: Primitive Renderer** (`packages/engine/src/scene/renderers/PrimitiveRenderer.tsx`)
-- **Task 21: Script Importer + AI Prompt Template** (`packages/engine/src/importer/scriptImporter.ts`, `packages/engine/src/ai/promptTemplates.ts`) - **Note:** Executed out of order (Batch 5 task).
-
-### Tasks In Progress / Needs Attention
-- **Task 2: Zod Schemas** (`packages/engine/src/schemas/`)
-  - **Status:** Partially implemented but misplaced.
-  - **Action:** See `docs/BACKLOG.md` for refactor details.
-
-### Missing / Pending Tasks (Batch 2)
-- **Task 7: Light Renderer** - **Next Priority**
+- **Task 1: Types & Interfaces**
+- **Task 3: Easing Functions**
+- **Task 4: Keyframe Engine**
+- **Task 5: Zustand Store**
+- **Task 6: Primitive Renderer**
+- **Task 7: Light Renderer**
 - **Task 8: Camera Renderer**
 - **Task 9: Scene Manager**
 - **Task 10: Playback Controller**
+- **Task 21: Script Importer + AI Prompt Template**
 
-(See `docs/BACKLOG.md` for detailed acceptance criteria for these items.)
+### Tasks In Progress / Needs Attention
+- **Phase 2: Characters**
+  - **Task 11: Humanoid Base** (Implemented, tests failing)
+  - **Bone Controller**, **Morph Targets**, **Clothing System** (Backlog)
+- **Phase 3: Editor UI**
+  - Viewport, Panels, Modals are mostly implemented.
+  - Viewport import case fix needed.
 
 ## Blockers & Risks
-1. **Sequence Deviation:** Task 21 was implemented before critical rendering components (Tasks 7-10), potentially complicating integration.
-2. **Schema Location:** Discrepancy between code (`src/schemas/`) and guide (`src/importer/schemas/`). Needs refactor to ensure consistency.
-3. **Missing Core Components:** Light and Camera renderers are absent, preventing full scene visualization as per Phase 1 goals.
+1. **Test Regressions:** `CharacterRenderer.test.tsx` fails due to component access issues in Vitest.
+2. **Documentation Sync:** `BACKLOG.md` needs to be updated to reflect that Phase 1 tasks are completed.
+3. **Import Case Sensitivity:** Lowercase imports of `@Animatica/engine` causing failures in some environments.
 
 ## Next Steps
-Please refer to `docs/BACKLOG.md` for the prioritized task list.
-1.  **Refactor Task 2:** Move Zod schemas.
-2.  **Implement Task 7:** Create `LightRenderer` component.
-3.  **Implement Task 8:** Create `CameraRenderer` component.
-4.  **Implement Task 9:** Create `SceneManager`.
-5.  **Implement Task 10:** Create `PlaybackController`.
+1. **Fix Engine Tests:** Repair `CharacterRenderer.test.tsx`.
+2. **Correct Imports:** Fix case sensitivity in `Viewport.tsx`.
+3. **Backlog Grooming:** Sync `BACKLOG.md` with current codebase state.
+4. **Character System:** Proceed with Tasks 12-14.
