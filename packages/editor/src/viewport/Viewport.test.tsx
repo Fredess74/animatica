@@ -45,7 +45,7 @@ vi.mock('@react-three/drei', () => ({
 
 // Mock Engine
 vi.mock('@Animatica/engine', () => ({
-  SceneManager: () => <div data-testid="scene-manager" />,
+  SceneManager: ({ children }: { children?: React.ReactNode }) => <div data-testid="scene-manager">{children}</div>,
   useSceneStore: (selector: any) => selector({
     actors: [],
     selectedActorId: 'test-actor-id',
