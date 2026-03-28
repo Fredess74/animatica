@@ -17,47 +17,6 @@ This document tracks all open tasks, issues, and feature requests for the Animat
 
 ## Status: Backlog
 
-### [Task 7] Feat: Light Renderer
-- **Priority:** High
-- **Type:** Feature (Rendering)
-- **Description:** Implement the `LightRenderer` component in `packages/engine/src/scene/renderers/LightRenderer.tsx`. This component should render PointLight, SpotLight, and DirectionalLight based on the actor's properties. It must also include a visible helper gizmo when in editor mode.
-- **Acceptance Criteria:**
-  - [ ] Renders `PointLight`, `SpotLight`, and `DirectionalLight` correctly based on actor type.
-  - [ ] Updates light properties (color, intensity, position) from the store.
-  - [ ] Displays a helper gizmo (e.g., `PointLightHelper`) when `isSelected` is true or in editor debug mode.
-  - [ ] Unit tests pass.
-
-### [Task 8] Feat: Camera Renderer
-- **Priority:** High
-- **Type:** Feature (Rendering)
-- **Description:** Implement the `CameraRenderer` component in `packages/engine/src/scene/renderers/CameraRenderer.tsx`. It should manage the `PerspectiveCamera` for the "rec view" and render a camera helper (frustum wireframe) in the editor view.
-- **Acceptance Criteria:**
-  - [ ] Renders a `PerspectiveCamera` with `makeDefault` when active.
-  - [ ] Renders a `CameraHelper` to visualize the frustum when not active (or in debug mode).
-  - [ ] Updates camera transform and FOV from the store.
-  - [ ] Unit tests pass.
-
-### [Task 9] Feat: Scene Manager
-- **Priority:** High
-- **Type:** Feature (Core)
-- **Description:** Implement the `SceneManager` component in `packages/engine/src/scene/SceneManager.tsx`. This component acts as the orchestrator, reading actors from the store and dispatching them to the correct renderer (Primitive, Light, Camera, Character). It also handles global environment settings like ambient light, fog, and grid.
-- **Acceptance Criteria:**
-  - [ ] Subscribes to `useEngineStore` to get the list of actors.
-  - [ ] Maps each actor to its corresponding renderer component.
-  - [ ] Renders global environment (ambient light, sun light, fog, grid) based on store state.
-  - [ ] Integration tests verify actors appear in the scene.
-
-### [Task 10] Feat: Playback Controller
-- **Priority:** High
-- **Type:** Feature (Animation)
-- **Description:** Implement the `PlaybackController` component in `packages/engine/src/animation/PlaybackController.tsx`. This component uses the R3F `useFrame` hook to advance `currentTime` when playing, apply the Keyframe Engine to all tracks, and update actors in the store.
-- **Acceptance Criteria:**
-  - [ ] Implements `useFrame` loop.
-  - [ ] Advances `currentTime` in the store when `isPlaying` is true.
-  - [ ] Interpolates values for all tracks using `KeyframeEngine`.
-  - [ ] Updates actor properties in the store for the current frame.
-  - [ ] Supports pause and seek operations.
-
 ### [Task 11] Feat: Humanoid Base
 - **Priority:** Medium
 - **Type:** Feature (Character)
@@ -101,4 +60,8 @@ This document tracks all open tasks, issues, and feature requests for the Animat
 - **[Task 4] Keyframe Engine:** Implemented keyframe interpolation logic.
 - **[Task 5] Zustand Store:** Implemented global state management with Immer.
 - **[Task 6] Primitive Renderer:** Implemented basic shape rendering.
+- **[Task 7] Light Renderer:** Implemented rendering for Point, Spot, and Directional lights.
+- **[Task 8] Camera Renderer:** Implemented camera helper and perspective camera management.
+- **[Task 9] Scene Manager:** Implemented actor dispatching and environment rendering.
+- **[Task 10] Playback Controller:** Implemented animation playback loop and interpolation.
 - **[Task 21] Script Importer:** Implemented JSON script import and validation (executed out of order).
