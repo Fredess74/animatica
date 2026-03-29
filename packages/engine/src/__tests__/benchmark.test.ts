@@ -12,13 +12,53 @@ const __dirname = path.dirname(__filename);
 
 const results: Record<string, string> = {};
 
-function measure(name: string, fn: () => void) {
+/**
+ * Simple seedable pseudo-random number generator to ensure deterministic benchmarks.
+ * LCG (Linear Congruential Generator) algorithm.
+ */
+class SeededRandom {
+    private seed: number;
+    constructor(seed: number = 42) {
+        this.seed = seed;
+    }
+    next(): number {
+        this.seed = (this.seed * 1664525 + 1013904223) % 4294967296;
+        return this.seed / 4294967296;
+    }
+}
+
+/**
+ * Enhanced measure utility with warmup phase and deterministic execution.
+ */
+function measure(
+    name: string,
+    iterations: number,
+    fn: (i: number, rng: SeededRandom) => void,
+    onWarmupComplete?: (rng: SeededRandom) => void
+) {
+    const rng = new SeededRandom();
+    const warmupIterations = Math.floor(iterations * 0.1);
+
+    // Warmup phase (10% of iterations)
+    for (let i = 0; i < warmupIterations; i++) {
+        fn(i, rng);
+    }
+
+    if (onWarmupComplete) {
+        onWarmupComplete(rng);
+    }
+
+    // Timed phase
     const start = performance.now();
-    fn();
+    for (let i = 0; i < iterations; i++) {
+        fn(i, rng);
+    }
     const end = performance.now();
-    const duration = (end - start).toFixed(2);
-    results[name] = `${duration}ms`;
-    console.log(`${name}: ${duration}ms`);
+
+    const totalDuration = end - start;
+    const avgDuration = (totalDuration / iterations).toFixed(4);
+    results[name] = `${avgDuration}ms/op (${totalDuration.toFixed(2)}ms total)`;
+    console.log(`${name}: ${avgDuration}ms/op`);
 }
 
 describe('Engine Benchmarks', () => {
@@ -44,11 +84,9 @@ describe('Engine Benchmarks', () => {
                 });
             }
 
-            measure('Number Interpolation (10k ops)', () => {
-                for (let i = 0; i < 10000; i++) {
-                    const t = Math.random() * 10000;
-                    interpolateKeyframes(keyframes, t);
-                }
+            measure('Number Interpolation (10k ops)', 10000, (i, rng) => {
+                const t = rng.next() * 10000;
+                interpolateKeyframes(keyframes, t);
             });
         });
 
@@ -62,11 +100,9 @@ describe('Engine Benchmarks', () => {
                 });
             }
 
-            measure('Vector3 Interpolation (10k ops)', () => {
-                for (let i = 0; i < 10000; i++) {
-                    const t = Math.random() * 10000;
-                    interpolateKeyframes(keyframes, t);
-                }
+            measure('Vector3 Interpolation (10k ops)', 10000, (i, rng) => {
+                const t = rng.next() * 10000;
+                interpolateKeyframes(keyframes, t);
             });
         });
 
@@ -80,17 +116,16 @@ describe('Engine Benchmarks', () => {
                 });
             }
 
-            measure('Color Interpolation (10k ops)', () => {
-                for (let i = 0; i < 10000; i++) {
-                    const t = Math.random() * 10000;
-                    interpolateKeyframes(keyframes, t);
-                }
+            measure('Color Interpolation (10k ops)', 10000, (i, rng) => {
+                const t = rng.next() * 10000;
+                interpolateKeyframes(keyframes, t);
             });
         });
     });
 
     describe('Schema Validation Performance', () => {
         it('Project Schema Validation (100 runs, 100 actors)', () => {
+            const rng = new SeededRandom();
             const actors: Actor[] = [];
             for (let i = 0; i < 100; i++) {
                 const actor: PrimitiveActor = {
@@ -98,7 +133,7 @@ describe('Engine Benchmarks', () => {
                     name: `Actor ${i}`,
                     type: 'primitive',
                     transform: {
-                        position: [Math.random() * 10, 0, 0],
+                        position: [rng.next() * 10, 0, 0],
                         rotation: [0, 0, 0],
                         scale: [1, 1, 1],
                     },
@@ -119,6 +154,8 @@ describe('Engine Benchmarks', () => {
                 meta: {
                     title: 'Benchmark Project',
                     version: '1.0.0',
+                    author: 'Benchmarker',
+                    description: 'Benchmark Project',
                 },
                 environment: {
                     ambientLight: { intensity: 0.5, color: '#ffffff' },
@@ -135,10 +172,8 @@ describe('Engine Benchmarks', () => {
                 library: { clips: [] },
             };
 
-            measure('Schema Validation Speed (100 runs)', () => {
-                for (let i = 0; i < 100; i++) {
-                    ProjectStateSchema.parse(projectState);
-                }
+            measure('Schema Validation Speed (100 runs)', 100, () => {
+                ProjectStateSchema.parse(projectState);
             });
         });
     });
@@ -148,7 +183,7 @@ describe('Engine Benchmarks', () => {
             const { setState, getState } = useSceneStore;
 
             setState({
-                meta: { title: 'Reset', version: '1.0.0' },
+                meta: { author: 'Benchmarker', description: 'Reset' },
                 environment: {
                     ambientLight: { intensity: 0.5, color: '#ffffff' },
                     sun: { position: [10, 10, 10], intensity: 1, color: '#ffffff' },
@@ -160,23 +195,44 @@ describe('Engine Benchmarks', () => {
                 playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, direction: 1, loopMode: 'none' },
             });
 
-            measure('Store Playback Updates (10k ops)', () => {
-                for (let i = 0; i < 10000; i++) {
-                    getState().setPlayback({ currentTime: i * 0.1 });
-                }
+            measure('Store Playback Updates (10k ops)', 10000, (i) => {
+                getState().setPlayback({ currentTime: i * 0.1 });
             });
         });
 
-        it('Store Actor CRUD Throughput (1k actors)', () => {
+        it('Store Actor CRUD Throughput (500 actors)', () => {
             const { setState, getState } = useSceneStore;
 
-            setState({
-                actors: [],
-                playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, direction: 1, loopMode: 'none' },
-            } as any);
+            const resetStore = () => {
+                setState({
+                    actors: [],
+                    playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, direction: 1, loopMode: 'none' },
+                } as any);
+            };
 
-            measure('Store Add Actor (1k ops)', () => {
-                for (let i = 0; i < 1000; i++) {
+            resetStore();
+
+            measure('Store Add Actor (500 ops)', 500, (i) => {
+                getState().addActor({
+                    id: `bench-${i}`,
+                    name: `Actor ${i}`,
+                    type: 'primitive',
+                    transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
+                    visible: true,
+                    properties: { shape: 'box', color: '#ff0000', roughness: 0.5, metalness: 0.5, opacity: 1, wireframe: false }
+                } as PrimitiveActor);
+            });
+
+            measure('Store Update Actor (500 ops)', 500, (i) => {
+                getState().updateActor(`bench-${i}`, { visible: false });
+            });
+
+            measure('Store Remove Actor (500 ops)', 500, (i) => {
+                getState().removeActor(`bench-${i}`);
+            }, () => {
+                // onWarmupComplete: refill actors for the timed run
+                resetStore();
+                for (let i = 0; i < 500; i++) {
                     getState().addActor({
                         id: `bench-${i}`,
                         name: `Actor ${i}`,
@@ -185,18 +241,6 @@ describe('Engine Benchmarks', () => {
                         visible: true,
                         properties: { shape: 'box', color: '#ff0000', roughness: 0.5, metalness: 0.5, opacity: 1, wireframe: false }
                     } as PrimitiveActor);
-                }
-            });
-
-            measure('Store Update Actor (1k ops)', () => {
-                for (let i = 0; i < 1000; i++) {
-                    getState().updateActor(`bench-${i}`, { visible: false });
-                }
-            });
-
-            measure('Store Remove Actor (1k ops)', () => {
-                for (let i = 0; i < 1000; i++) {
-                    getState().removeActor(`bench-${i}`);
                 }
             });
         });
