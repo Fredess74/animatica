@@ -28,11 +28,11 @@ interface CharacterRendererProps {
   onClick?: () => void
 }
 
-export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
+export const CharacterRenderer = React.memo(({
   actor,
   isSelected = false,
   onClick,
-}) => {
+}: CharacterRendererProps) => {
   const groupRef = useRef<THREE.Group>(null)
   const animatorRef = useRef<CharacterAnimator | null>(null)
   const faceMorphRef = useRef<FaceMorphController | null>(null)
@@ -151,4 +151,6 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       )}
     </group>
   )
-}
+})
+
+CharacterRenderer.displayName = 'CharacterRenderer'

@@ -7,7 +7,13 @@ import { useSceneStore } from '../store/sceneStore'
 // Mock the store
 vi.mock('../store/sceneStore', () => ({
   useSceneStore: vi.fn(),
+  useEnvironment: vi.fn(),
+  useTimeline: vi.fn(),
+  useCurrentTime: vi.fn(),
+  useShallow: (val: any) => val,
 }))
+
+import { useEnvironment, useTimeline, useCurrentTime } from '../store/sceneStore'
 
 // Mock renderers to render visible elements we can query
 vi.mock('./renderers/PrimitiveRenderer', () => ({
@@ -44,25 +50,33 @@ describe('SceneManager', () => {
   beforeEach(() => {
     vi.clearAllMocks()
 
+    const defaultEnvironment = {
+      ambientLight: { intensity: 0.5, color: '#ffffff' },
+      sun: { position: [10, 10, 10], intensity: 1, color: '#ffffff' },
+      skyColor: '#87CEEB',
+    }
+    const defaultTimeline = {
+      cameraTrack: [],
+      animationTracks: [],
+    }
+    const defaultCurrentTime = 0
+
     // Setup default store mock behavior
     ;(useSceneStore as any).mockImplementation((selector: any) => {
       const state = {
         actors: [],
-        environment: {
-          ambientLight: { intensity: 0.5, color: '#ffffff' },
-          sun: { position: [10, 10, 10], intensity: 1, color: '#ffffff' },
-          skyColor: '#87CEEB',
-        },
-        timeline: {
-          cameraTrack: [],
-          animationTracks: [],
-        },
+        environment: defaultEnvironment,
+        timeline: defaultTimeline,
         playback: {
-          currentTime: 0,
+          currentTime: defaultCurrentTime,
         },
       }
       return selector(state)
     })
+
+    ;(useEnvironment as any).mockReturnValue(defaultEnvironment)
+    ;(useTimeline as any).mockReturnValue(defaultTimeline)
+    ;(useCurrentTime as any).mockReturnValue(defaultCurrentTime)
   })
 
   it('renders primitive actors', () => {
@@ -76,6 +90,9 @@ describe('SceneManager', () => {
        }
        return selector(state)
     })
+    ;(useEnvironment as any).mockReturnValue({ ambientLight: {}, sun: {}, skyColor: '#000' })
+    ;(useTimeline as any).mockReturnValue({ cameraTrack: [], animationTracks: [] })
+    ;(useCurrentTime as any).mockReturnValue(0)
 
     const { getByTestId } = render(<SceneManager />)
     expect(getByTestId('primitive-renderer')).toBeDefined()
@@ -92,6 +109,9 @@ describe('SceneManager', () => {
        }
        return selector(state)
     })
+    ;(useEnvironment as any).mockReturnValue({ ambientLight: {}, sun: {}, skyColor: '#000' })
+    ;(useTimeline as any).mockReturnValue({ cameraTrack: [], animationTracks: [] })
+    ;(useCurrentTime as any).mockReturnValue(0)
 
     const { getByTestId } = render(<SceneManager />)
     expect(getByTestId('light-renderer')).toBeDefined()
@@ -108,6 +128,9 @@ describe('SceneManager', () => {
        }
        return selector(state)
     })
+    ;(useEnvironment as any).mockReturnValue({ ambientLight: {}, sun: {}, skyColor: '#000' })
+    ;(useTimeline as any).mockReturnValue({ cameraTrack: [], animationTracks: [] })
+    ;(useCurrentTime as any).mockReturnValue(0)
 
     const { getByTestId } = render(<SceneManager />)
     expect(getByTestId('camera-renderer')).toBeDefined()
@@ -124,6 +147,9 @@ describe('SceneManager', () => {
        }
        return selector(state)
     })
+    ;(useEnvironment as any).mockReturnValue({ ambientLight: {}, sun: {}, skyColor: '#000' })
+    ;(useTimeline as any).mockReturnValue({ cameraTrack: [], animationTracks: [] })
+    ;(useCurrentTime as any).mockReturnValue(0)
 
     const { getByTestId } = render(<SceneManager />)
     expect(getByTestId('character-renderer')).toBeDefined()
@@ -140,6 +166,9 @@ describe('SceneManager', () => {
        }
        return selector(state)
     })
+    ;(useEnvironment as any).mockReturnValue({ ambientLight: {}, sun: {}, skyColor: '#000' })
+    ;(useTimeline as any).mockReturnValue({ cameraTrack: [], animationTracks: [] })
+    ;(useCurrentTime as any).mockReturnValue(0)
 
     const { getByTestId } = render(<SceneManager />)
     expect(getByTestId('speaker-renderer')).toBeDefined()
