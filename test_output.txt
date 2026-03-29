@@ -1,0 +1,85 @@
+
+> @Animatica/editor@0.1.0 test /app/packages/editor
+> vitest --run
+
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90m/app/packages/editor[39m
+
+[90mstderr[2m | src/viewport/Viewport.test.tsx
+[22m[39mTHREE.WARNING: Multiple instances of Three.js being imported.
+
+[90mstderr[2m | src/viewport/Viewport.test.tsx[2m > [22m[2mViewport[2m > [22m[2mrenders the 3D viewport components
+[22m[39m<ambientLight /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+The tag <ambientLight> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+<directionalLight /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+The tag <directionalLight> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+React does not recognize the `castShadow` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `castshadow` instead. If you accidentally passed it from a parent component, remove it from the DOM element.
+React does not recognize the `shadow-mapSize` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `shadow-mapsize` instead. If you accidentally passed it from a parent component, remove it from the DOM element.
+<hemisphereLight /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+The tag <hemisphereLight> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+React does not recognize the `groundColor` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `groundcolor` instead. If you accidentally passed it from a parent component, remove it from the DOM element.
+<bufferAttribute /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+The tag <bufferAttribute> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+React does not recognize the `itemSize` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `itemsize` instead. If you accidentally passed it from a parent component, remove it from the DOM element.
+<bufferGeometry /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+The tag <bufferGeometry> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+<lineBasicMaterial /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+The tag <lineBasicMaterial> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+Received `true` for a non-boolean attribute `transparent`.
+
+If you want to write it to the DOM, pass a string instead: transparent="true" or transparent={value.toString()}.
+The tag <line> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+<bufferAttribute /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+<bufferGeometry /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+<lineBasicMaterial /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+The tag <group> is unrecognized in this browser. If you meant to render a React component, start its name with an uppercase letter.
+
+[90mstderr[2m | src/viewport/Viewport.test.tsx[2m > [22m[2mViewport[2m > [22m[2mrenders the camera toolbar
+[22m[39m<ambientLight /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+<directionalLight /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+<hemisphereLight /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+<bufferAttribute /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+<bufferGeometry /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+<lineBasicMaterial /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+<bufferAttribute /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+<bufferGeometry /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+<lineBasicMaterial /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+
+[90mstderr[2m | src/viewport/Viewport.test.tsx[2m > [22m[2mViewport[2m > [22m[2mattempts to change camera view when toolbar button clicked
+[22m[39m<ambientLight /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+<directionalLight /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+<hemisphereLight /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+<bufferAttribute /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+<bufferGeometry /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+<lineBasicMaterial /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+<bufferAttribute /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+<bufferGeometry /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+<lineBasicMaterial /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+
+ [32m✓[39m src/panels/TimelinePanel.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 591[2mms[22m[39m
+[90mstderr[2m | src/viewport/Viewport.test.tsx[2m > [22m[2mViewport[2m > [22m[2mrenders gizmo when object is found
+[22m[39m<ambientLight /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+<directionalLight /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+<hemisphereLight /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+<bufferAttribute /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+<bufferGeometry /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+<lineBasicMaterial /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+<bufferAttribute /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+<bufferGeometry /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+<lineBasicMaterial /> is using incorrect casing. Use PascalCase for React components, or lowercase for HTML elements.
+
+ [32m✓[39m src/viewport/Viewport.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 405[2mms[22m[39m
+[90mstderr[2m | src/panels/PropertiesPanel.test.tsx
+[22m[39mTHREE.WARNING: Multiple instances of Three.js being imported.
+
+ [32m✓[39m src/panels/PropertiesPanel.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 705[2mms[22m[39m
+     [33m[2m✓[22m[39m renders properties for primitive actor [33m 325[2mms[22m[39m
+ [32m✓[39m src/panels/AssetLibrary.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 108[2mms[22m[39m
+ [32m✓[39m src/hooks/useKeyboardShortcuts.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 46[2mms[22m[39m
+ [32m✓[39m src/index.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/i18n/i18n.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 38[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m7 passed[39m[22m[90m (7)[39m
+[2m      Tests [22m [1m[32m34 passed[39m[22m[90m (34)[39m
+[2m   Start at [22m 08:15:40
+[2m   Duration [22m 5.14s[2m (transform 1.26s, setup 0ms, import 3.54s, tests 1.90s, environment 6.59s)[22m

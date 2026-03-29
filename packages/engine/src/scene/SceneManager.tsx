@@ -87,7 +87,7 @@ export const SceneManager: React.FC<SceneManagerProps> = ({
     );
 
     return (
-        <>
+        <group data-testid="scene-manager">
             {/* === Environment === */}
             <ambientLight
                 intensity={environment.ambientLight.intensity}
@@ -163,6 +163,6 @@ export const SceneManager: React.FC<SceneManagerProps> = ({
                         return null;
                 }
             })}
-        </>
+        </group>
     );
 };
