@@ -6,7 +6,7 @@
  * @module @animatica/engine/scene/SceneManager
  */
 import React, { useMemo } from 'react';
-import { useSceneStore } from '../store/sceneStore';
+import { useActors, useEnvironment, useTimeline, useCurrentTime } from '../store/sceneStore';
 import { evaluateTracksAtTime } from '../animation/interpolate';
 import { applyAnimationToActor, resolveActiveCamera } from './animationUtils';
 import { PrimitiveRenderer } from './renderers/PrimitiveRenderer';
@@ -54,10 +54,10 @@ export const SceneManager: React.FC<SceneManagerProps> = ({
     onActorSelect,
     showHelpers = false,
 }) => {
-    const actors = useSceneStore((s) => s.actors);
-    const environment = useSceneStore((s) => s.environment);
-    const timeline = useSceneStore((s) => s.timeline);
-    const currentTime = useSceneStore((s) => s.playback.currentTime);
+    const actors = useActors();
+    const environment = useEnvironment();
+    const timeline = useTimeline();
+    const currentTime = useCurrentTime();
 
     // Evaluate all animation tracks at the current time
     const animationValues = useMemo(
