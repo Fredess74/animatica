@@ -8,6 +8,7 @@ import React, { Suspense, useCallback, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 import * as THREE from 'three'
 import { SceneRenderer } from './SceneRenderer'
+import { SceneManager } from '@Animatica/engine'
 import { ViewportGrid } from './ViewportGrid'
 import { ViewportControls } from './ViewportControls'
 import { ViewportGizmo } from './ViewportGizmo'
@@ -107,7 +108,10 @@ export const Viewport: React.FC<{ className?: string }> = ({ className }) => {
                             {/* Ground grid */}
                             {gridVisible && <ViewportGrid />}
 
-                            {/* All scene actors */}
+                            {/* Scene Manager from engine */}
+                            <SceneManager />
+
+                            {/* All local scene actors (if any) */}
                             <SceneRenderer />
 
                             {/* Transform gizmo on selected actor */}

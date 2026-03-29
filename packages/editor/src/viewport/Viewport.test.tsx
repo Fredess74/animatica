@@ -27,7 +27,8 @@ vi.mock('@react-three/fiber', async () => {
     Canvas: ({ children }: { children: React.ReactNode }) => <div data-testid="canvas">{children}</div>,
     useThree: () => ({
       scene: { getObjectByName: mocks.mockGetObjectByName },
-      camera: { position: { set: vi.fn() }, lookAt: vi.fn() }
+      camera: { position: { set: vi.fn() }, lookAt: vi.fn() },
+      gl: { domElement: document.createElement('canvas') }
     }),
   }
 })
@@ -38,12 +39,15 @@ vi.mock('@react-three/drei', () => ({
   TransformControls: () => <div data-testid="transform-controls" />,
   Grid: () => <div data-testid="grid" />,
   Sky: () => <div data-testid="sky" />,
+  ContactShadows: () => <div data-testid="contact-shadows" />,
+  Environment: () => <div data-testid="environment" />,
 }))
 
 // Mock Engine
 vi.mock('@Animatica/engine', () => ({
   SceneManager: () => <div data-testid="scene-manager" />,
   useSceneStore: (selector: any) => selector({
+    actors: [],
     selectedActorId: 'test-actor-id',
     setSelectedActor: mocks.mockSetSelectedActor,
     updateActor: mocks.mockUpdateActor,
@@ -73,6 +77,7 @@ describe('Viewport', () => {
     expect(screen.getByTestId('canvas')).toBeTruthy()
     expect(screen.getByTestId('orbit-controls')).toBeTruthy()
     expect(screen.getByTestId('grid')).toBeTruthy()
+    // In actual component, SceneManager is used via @Animatica/engine
     expect(screen.getByTestId('scene-manager')).toBeTruthy()
   })
 
@@ -94,7 +99,7 @@ describe('Viewport', () => {
     expect(topButton).toBeTruthy()
   })
 
-  it('renders gizmo when object is found', () => {
+  it('renders gizmo when object is found', async () => {
     // Mock found object
     mocks.mockGetObjectByName.mockReturnValue({
         position: { x: 0, y: 0, z: 0 },
@@ -104,6 +109,6 @@ describe('Viewport', () => {
 
     render(<Viewport />)
 
-    expect(screen.getByTestId('transform-controls')).toBeTruthy()
+    expect(await screen.findByTestId('transform-controls')).toBeTruthy()
   })
 })
