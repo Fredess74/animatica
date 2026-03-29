@@ -1,5 +1,18 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { useSceneStore, getActorById, getActiveActors, getCurrentTime } from './sceneStore';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { renderHook } from '@testing-library/react';
+import {
+    useSceneStore,
+    getActorById,
+    getActiveActors,
+    getCurrentTime,
+    useActorList,
+    useActiveActors,
+    useEnvironment,
+    useTimeline,
+    usePlaybackState,
+    useMeta,
+    useLibrary,
+} from './sceneStore';
 import { PrimitiveActor } from '../types';
 
 describe('sceneStore', () => {
@@ -160,5 +173,50 @@ describe('sceneStore', () => {
       const result = useSceneStore.getState().actors.filter(a => a.type === 'primitive');
       expect(result).toHaveLength(1);
       expect(result[0].id).toBe('1');
+  });
+
+  describe('granular hooks', () => {
+    it('useActorList should return actors', () => {
+      const actor = createActor('1');
+      useSceneStore.getState().addActor(actor);
+      const { result } = renderHook(() => useActorList());
+      expect(result.current).toHaveLength(1);
+      expect(result.current[0]).toEqual(actor);
+    });
+
+    it('useActiveActors should return only visible actors', () => {
+      const actor1 = createActor('1', true);
+      const actor2 = createActor('2', false);
+      useSceneStore.getState().addActor(actor1);
+      useSceneStore.getState().addActor(actor2);
+      const { result } = renderHook(() => useActiveActors());
+      expect(result.current).toHaveLength(1);
+      expect(result.current[0].id).toBe('1');
+    });
+
+    it('useEnvironment should return environment', () => {
+      const { result } = renderHook(() => useEnvironment());
+      expect(result.current.skyColor).toBe('#87CEEB');
+    });
+
+    it('useTimeline should return timeline', () => {
+      const { result } = renderHook(() => useTimeline());
+      expect(result.current.duration).toBe(10);
+    });
+
+    it('usePlaybackState should return playback state', () => {
+      const { result } = renderHook(() => usePlaybackState());
+      expect(result.current.currentTime).toBe(0);
+    });
+
+    it('useMeta should return metadata', () => {
+      const { result } = renderHook(() => useMeta());
+      expect(result.current.title).toBe('Untitled Project');
+    });
+
+    it('useLibrary should return library', () => {
+      const { result } = renderHook(() => useLibrary());
+      expect(result.current.clips).toEqual([]);
+    });
   });
 });
