@@ -6,6 +6,7 @@ describe('sceneStore', () => {
   beforeEach(() => {
     useSceneStore.setState({
       actors: [],
+      actorsById: {},
       selectedActorId: null,
       timeline: { duration: 10, cameraTrack: [], animationTracks: [], markers: [] },
       environment: {
