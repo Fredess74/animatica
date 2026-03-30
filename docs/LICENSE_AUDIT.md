@@ -1,6 +1,6 @@
 # License Audit
 
-**Date:** 2026-02-25
+**Date:** 2026-03-30
 **Auditor:** Jules (License Auditor)
 
 ## Summary
@@ -8,7 +8,7 @@
 This document lists all dependencies used in the project and their licenses. It also flags any non-MIT licenses and checks for the presence of the project's own LICENSE file.
 
 Total dependencies found: 687
-Direct dependencies: 33
+Direct dependencies: 33 (Unique)
 Transitive dependencies: 654
 
 ## Project License
@@ -19,15 +19,17 @@ Transitive dependencies: 654
 
 ## Source Code Headers
 
-- **Checked:** `packages/engine/src/index.ts`
-- **Result:** No license header found.
+- **Checked:** `packages/engine/src/index.ts`, `packages/editor/src/index.ts`, `packages/platform/src/index.ts`
+- **Result:** No license headers found in these entry point files.
 
 ## Flagged Licenses (Non-MIT)
 
 The following dependencies have non-MIT licenses:
 
 | Dependency | Version | License | Type |
-| --- | --- | --- |
+| --- | --- | --- | --- |
+| lucide-react | 0.563.0 | ISC | **Direct** |
+| typescript | 5.9.3 | Apache-2.0 | **Direct** |
 | @dimforge/rapier3d-compat | 0.12.0 | Apache-2.0 | Transitive |
 | @ethereumjs/rlp | 4.0.1 | MPL-2.0 | Transitive |
 | @ethereumjs/util | 8.1.0 | MPL-2.0 | Transitive |
@@ -45,6 +47,7 @@ The following dependencies have non-MIT licenses:
 | @swc/helpers | 0.5.15 | Apache-2.0 | Transitive |
 | @webgpu/types | 0.1.69 | BSD-3-Clause | Transitive |
 | abbrev | 1.0.9 | ISC | Transitive |
+| amdefine | 1.0.1 | BSD-3-Clause OR MIT | Transitive |
 | ansi-align | 3.0.1 | ISC | Transitive |
 | antlr4ts | 0.5.0-alpha.4 | BSD-3-Clause | Transitive |
 | anymatch | 3.1.3 | ISC | Transitive |
@@ -92,7 +95,6 @@ The following dependencies have non-MIT licenses:
 | lightningcss-linux-x64-musl | 1.31.1 | MPL-2.0 | Transitive |
 | lru-cache | 5.1.1 | ISC | Transitive |
 | lru-cache | 11.2.6 | BlueOak-1.0.0 | Transitive |
-| lucide-react | 0.563.0 | ISC | **Direct** |
 | make-error | 1.3.6 | ISC | Transitive |
 | mdn-data | 2.12.2 | CC0-1.0 | Transitive |
 | minimalistic-assert | 1.0.1 | ISC | Transitive |
@@ -112,6 +114,7 @@ The following dependencies have non-MIT licenses:
 | semver | 5.7.2 | ISC | Transitive |
 | serialize-javascript | 6.0.2 | BSD-3-Clause | Transitive |
 | setprototypeof | 1.2.0 | ISC | Transitive |
+| sha.js | 2.4.12 | (MIT AND BSD-3-Clause) | Transitive |
 | sha1 | 1.1.1 | BSD-3-Clause | Transitive |
 | sharp | 0.34.5 | Apache-2.0 | Transitive |
 | shelljs | 0.8.5 | BSD-3-Clause | Transitive |
@@ -122,11 +125,12 @@ The following dependencies have non-MIT licenses:
 | source-map-js | 1.2.1 | BSD-3-Clause | Transitive |
 | split2 | 3.2.2 | ISC | Transitive |
 | sprintf-js | 1.0.3 | BSD-3-Clause | Transitive |
+| string-format | 2.0.0 | WTFPL OR MIT | Transitive |
 | table | 6.9.0 | BSD-3-Clause | Transitive |
 | tough-cookie | 6.0.0 | BSD-3-Clause | Transitive |
 | ts-command-line-args | 2.5.1 | ISC | Transitive |
 | tslib | 1.14.1 | 0BSD | Transitive |
-| typescript | 5.9.3 | Apache-2.0 | **Direct** |
+| type-fest | 0.7.1 | (MIT OR CC0-1.0) | Transitive |
 | uglify-js | 3.19.3 | BSD-2-Clause | Transitive |
 | web3-utils | 1.10.4 | LGPL-3.0 | Transitive |
 | webidl-conversions | 8.0.1 | BSD-2-Clause | Transitive |
@@ -144,7 +148,7 @@ The following dependencies have non-MIT licenses:
 | --- | --- | --- |
 | @nomicfoundation/hardhat-toolbox | MIT | @Animatica/contracts |
 | @openzeppelin/contracts | MIT | @Animatica/contracts |
-| @react-three/drei | MIT | @Animatica/engine |
+| @react-three/drei | MIT | @Animatica/editor, @Animatica/engine |
 | @react-three/fiber | MIT | @Animatica/editor, @Animatica/engine, @Animatica/web |
 | @tailwindcss/postcss | MIT | @Animatica/editor |
 | @testing-library/dom | MIT | @Animatica/web |
@@ -152,7 +156,7 @@ The following dependencies have non-MIT licenses:
 | @types/node | MIT | @Animatica/engine |
 | @types/react | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web |
 | @types/react-dom | MIT | @Animatica/editor, @Animatica/platform, @Animatica/web |
-| @types/three | MIT | @Animatica/engine |
+| @types/three | MIT | @Animatica/editor, @Animatica/engine |
 | @types/uuid | MIT | @Animatica/engine |
 | @vitejs/plugin-react | MIT | @Animatica/editor |
 | clsx | MIT | @Animatica/editor |
@@ -161,8 +165,8 @@ The following dependencies have non-MIT licenses:
 | jsdom | MIT | @Animatica/editor, @Animatica/engine, @Animatica/web |
 | lucide-react | ISC | @Animatica/editor, @Animatica/web |
 | next | MIT | @Animatica/web |
-| react | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web |
-| react-dom | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web |
+| react | MIT | @Animatica/engine, @Animatica/platform, @Animatica/web |
+| react-dom | MIT | @Animatica/engine, @Animatica/platform, @Animatica/web |
 | tailwind-merge | MIT | @Animatica/editor |
 | tailwindcss | MIT | @Animatica/editor |
 | three | MIT | @Animatica/editor, @Animatica/engine, @Animatica/web |
@@ -172,7 +176,7 @@ The following dependencies have non-MIT licenses:
 | uuid | MIT | @Animatica/engine |
 | vite | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform |
 | vitest | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web |
-| zod | MIT | @Animatica/engine |
+| zod | MIT | @Animatica/engine, @Animatica/web |
 | zundo | MIT | @Animatica/engine |
 | zustand | MIT | @Animatica/engine |
 
@@ -528,7 +532,6 @@ The following dependencies have non-MIT licenses:
 | fill-range | 7.1.1 | MIT |
 | find-replace | 3.0.0 | MIT |
 | find-up | 5.0.0 | MIT |
-| flat | 5.0.2 | BSD-3-Clause |
 | follow-redirects | 1.15.11 | MIT |
 | for-each | 0.3.5 | MIT |
 | form-data | 2.5.5 | MIT |
@@ -836,12 +839,11 @@ The following dependencies have non-MIT licenses:
 | utf8 | 3.0.0 | MIT |
 | util-deprecate | 1.0.2 | MIT |
 | utility-types | 3.11.0 | MIT |
-| uuid | 8.3.2 | MIT |
+| uuid | 13.0.0 | MIT |
 | v8-compile-cache-lib | 3.0.1 | MIT |
 | vite | 7.3.1 | MIT |
 | vitest | 4.0.18 | MIT |
 | w3c-xmlserializer | 5.0.0 | MIT |
-| web3-utils | 1.10.4 | LGPL-3.0 |
 | webgl-constants | 1.1.1 | MIT |
 | webgl-sdf-generator | 1.1.1 | MIT |
 | webidl-conversions | 8.0.1 | BSD-2-Clause |
@@ -869,6 +871,6 @@ The following dependencies have non-MIT licenses:
 | yocto-queue | 0.1.0 | MIT |
 | zod | 4.3.6 | MIT |
 | zundo | 2.3.0 | MIT |
-| zustand | 4.5.7 | MIT |
+| zustand | 5.0.11 | MIT |
 
 </details>
