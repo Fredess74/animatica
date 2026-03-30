@@ -14,6 +14,8 @@ export type { BlendShapeName, BlendShapeValues } from './FaceMorphController'
 export { EyeController } from './EyeController'
 export type { EyeState } from './EyeController'
 
+export { BoneController } from './BoneController'
+
 export { CHARACTER_PRESETS, getPreset, getPresetIds } from './CharacterPresets'
 export type { CharacterPreset } from './CharacterPresets'
 
