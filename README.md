@@ -15,7 +15,6 @@ Animatica is an open-source platform that democratizes animation. People write f
 1. **Create** — Turn text into 2D/3D animated scenes using AI and an intuitive editor
 2. **Collaborate** — Work together in real-time with roles: Director, Writer, Animator, Producer
 3. **Publish** — Upload films, series, shorts to a built-in social platform
-4. **Earn** — Get paid through a transparent donation pool powered by smart contracts
 
 ## Tech Stack
 
@@ -45,7 +44,6 @@ Animatica is an open-source platform that democratizes animation. People write f
 ### Platform (Roadmap)
 - 🤖 **AI Scene Generation**: Text-to-scene generation pipeline.
 - 🤝 **Real-time Collaboration**: Multi-user editing with role-based permissions.
-- 💰 **Crypto Monetization**: Smart contracts for creator payouts and royalties.
 - 🏪 **Asset Marketplace**: Buy, sell, and rent digital assets.
 
 ## Architecture
@@ -55,8 +53,7 @@ Animatica/
 ├── packages/
 │   ├── engine/       # 🎮 Core animation engine (Three.js + R3F + Zustand)
 │   ├── editor/       # 🖥️ Editor UI components (React)
-│   ├── platform/     # 🌐 Shared platform types and utilities
-│   └── contracts/    # 💰 Smart contracts (Solidity)
+│   └── platform/     # 🌐 Shared platform types and utilities
 ├── apps/
 │   └── web/          # 🌍 Next.js app (combines engine + editor + platform)
 └── docs/             # 📄 Full documentation
@@ -96,7 +93,6 @@ pnpm run typecheck
 | [Roles & Collaboration](docs/ROLES_AND_COLLABORATION.md) | Creator roles, editor modes, real-time sync |
 | [Asset Marketplace](docs/ASSET_MARKETPLACE.md) | Buy/sell/rent assets, royalty model |
 | [Monetization](docs/MONETIZATION.md) | Donation pool, creator fund, fiat on-ramp |
-| [Smart Contracts](docs/SMART_CONTRACTS.md) | Solidity contracts specification |
 | [Data Models](docs/DATA_MODELS.md) | TypeScript interfaces, DB schema |
 | [Branding](docs/BRANDING.md) | Brand identity, naming, visual identity |
 | [Roadmap](docs/ROADMAP.md) | 10-phase development plan |
