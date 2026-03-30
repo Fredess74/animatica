@@ -29,6 +29,8 @@ export interface PlaybackState {
 export interface ActorsSlice {
   /** List of actors in the scene. */
   actors: Actor[];
+  /** Normalized lookup map of actors by ID for O(1) access. */
+  actorsById: Record<string, Actor>;
   /** The ID of the currently selected actor, or null if none selected. */
   selectedActorId: string | null;
   /** Adds a new actor to the scene. */
