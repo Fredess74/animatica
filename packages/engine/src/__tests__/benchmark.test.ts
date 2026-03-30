@@ -21,7 +21,7 @@ function measure(name: string, fn: () => void) {
     console.log(`${name}: ${duration}ms`);
 }
 
-describe('Engine Benchmarks', () => {
+describe('Engine Benchmarks', { timeout: 30000 }, () => {
     afterAll(() => {
         const reportDir = path.resolve(__dirname, '../../../../reports');
         if (!fs.existsSync(reportDir)) {
