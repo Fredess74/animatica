@@ -1,5 +1,5 @@
 import { describe, it, afterAll } from 'vitest';
-import { interpolateKeyframes } from '../animation/interpolate';
+import { interpolateKeyframes, evaluateTracksAtTime } from '../animation/interpolate';
 import { ProjectStateSchema } from '../importer/schemas';
 import { useSceneStore } from '../store/sceneStore';
 import type { Keyframe, ProjectState, Actor, PrimitiveActor, Vector3 } from '../types';
@@ -10,18 +10,18 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const results: Record<string, string> = {};
+const baselineMetrics: Record<string, string> = {};
 
 function measure(name: string, fn: () => void) {
     const start = performance.now();
     fn();
     const end = performance.now();
     const duration = (end - start).toFixed(2);
-    results[name] = `${duration}ms`;
+    baselineMetrics[name] = `${duration}ms`;
     console.log(`${name}: ${duration}ms`);
 }
 
-describe('Engine Benchmarks', () => {
+describe('Engine Performance Benchmarks', { timeout: 30000 }, () => {
     afterAll(() => {
         const reportDir = path.resolve(__dirname, '../../../../reports');
         if (!fs.existsSync(reportDir)) {
@@ -29,14 +29,14 @@ describe('Engine Benchmarks', () => {
         }
         fs.writeFileSync(
             path.join(reportDir, 'baseline_metrics.json'),
-            JSON.stringify(results, null, 2)
+            JSON.stringify(baselineMetrics, null, 2)
         );
     });
 
-    describe('Interpolation Performance', () => {
-        it('Number Interpolation (10k ops, 10k keyframes)', () => {
+    describe('Interpolation Performance (100k ops)', () => {
+        it('Number Interpolation', () => {
             const keyframes: Keyframe<number>[] = [];
-            for (let i = 0; i < 10000; i++) {
+            for (let i = 0; i < 1000; i++) {
                 keyframes.push({
                     time: i,
                     value: i * 10,
@@ -44,17 +44,17 @@ describe('Engine Benchmarks', () => {
                 });
             }
 
-            measure('Number Interpolation (10k ops)', () => {
-                for (let i = 0; i < 10000; i++) {
-                    const t = Math.random() * 10000;
+            measure('Number Interpolation (100k ops)', () => {
+                for (let i = 0; i < 100000; i++) {
+                    const t = Math.random() * 1000;
                     interpolateKeyframes(keyframes, t);
                 }
             });
         });
 
-        it('Vector3 Interpolation (10k ops, 10k keyframes)', () => {
+        it('Vector3 Interpolation', () => {
             const keyframes: Keyframe<Vector3>[] = [];
-            for (let i = 0; i < 10000; i++) {
+            for (let i = 0; i < 1000; i++) {
                 keyframes.push({
                     time: i,
                     value: [i, i * 2, i * 3],
@@ -62,17 +62,17 @@ describe('Engine Benchmarks', () => {
                 });
             }
 
-            measure('Vector3 Interpolation (10k ops)', () => {
-                for (let i = 0; i < 10000; i++) {
-                    const t = Math.random() * 10000;
+            measure('Vector3 Interpolation (100k ops)', () => {
+                for (let i = 0; i < 100000; i++) {
+                    const t = Math.random() * 1000;
                     interpolateKeyframes(keyframes, t);
                 }
             });
         });
 
-        it('Color Interpolation (10k ops, 10k keyframes)', () => {
+        it('Color Interpolation', () => {
             const keyframes: Keyframe<string>[] = [];
-            for (let i = 0; i < 10000; i++) {
+            for (let i = 0; i < 1000; i++) {
                 keyframes.push({
                     time: i,
                     value: '#ff0000',
@@ -80,19 +80,41 @@ describe('Engine Benchmarks', () => {
                 });
             }
 
-            measure('Color Interpolation (10k ops)', () => {
-                for (let i = 0; i < 10000; i++) {
-                    const t = Math.random() * 10000;
+            measure('Color Interpolation (100k ops)', () => {
+                for (let i = 0; i < 100000; i++) {
+                    const t = Math.random() * 1000;
                     interpolateKeyframes(keyframes, t);
+                }
+            });
+        });
+
+        it('Timeline Track Evaluation (100 tracks, 10 keyframes each)', () => {
+            const tracks = [];
+            for (let i = 0; i < 100; i++) {
+                const keyframes: Keyframe<number>[] = [];
+                for (let k = 0; k < 10; k++) {
+                    keyframes.push({ time: k, value: k * 10, easing: 'linear' });
+                }
+                tracks.push({
+                    targetId: `actor-${i}`,
+                    property: 'transform.position.x',
+                    keyframes,
+                });
+            }
+
+            measure('Evaluate 100 Tracks (1000 iterations)', () => {
+                for (let i = 0; i < 1000; i++) {
+                    const t = Math.random() * 10;
+                    evaluateTracksAtTime(tracks, t);
                 }
             });
         });
     });
 
     describe('Schema Validation Performance', () => {
-        it('Project Schema Validation (100 runs, 100 actors)', () => {
+        it('Project Schema Validation (100 runs, 150 actors)', () => {
             const actors: Actor[] = [];
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < 150; i++) {
                 const actor: PrimitiveActor = {
                     id: `actor-${i}`,
                     name: `Actor ${i}`,
@@ -135,7 +157,7 @@ describe('Engine Benchmarks', () => {
                 library: { clips: [] },
             };
 
-            measure('Schema Validation Speed (100 runs)', () => {
+            measure('Schema Validation Speed (100 runs, 150 actors)', () => {
                 for (let i = 0; i < 100; i++) {
                     ProjectStateSchema.parse(projectState);
                 }
@@ -170,8 +192,10 @@ describe('Engine Benchmarks', () => {
         it('Store Actor CRUD Throughput (1k actors)', () => {
             const { setState, getState } = useSceneStore;
 
+            // Reset state
             setState({
                 actors: [],
+                selectedActorId: null,
                 playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, direction: 1, loopMode: 'none' },
             } as any);
 
