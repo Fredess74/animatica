@@ -6,6 +6,7 @@ describe('sceneStore', () => {
   beforeEach(() => {
     useSceneStore.setState({
       actors: [],
+      actorsById: {},
       selectedActorId: null,
       timeline: { duration: 10, cameraTrack: [], animationTracks: [], markers: [] },
       environment: {
@@ -50,6 +51,24 @@ describe('sceneStore', () => {
     useSceneStore.getState().addActor(actor);
     useSceneStore.getState().updateActor('1', { name: 'Updated Actor' });
     expect(useSceneStore.getState().actors[0].name).toBe('Updated Actor');
+    expect(useSceneStore.getState().actorsById['1'].name).toBe('Updated Actor');
+  });
+
+  it('should maintain actorsById consistency after multiple operations', () => {
+    const actor1 = createActor('1');
+    const actor2 = createActor('2');
+
+    useSceneStore.getState().addActor(actor1);
+    useSceneStore.getState().addActor(actor2);
+
+    expect(Object.keys(useSceneStore.getState().actorsById)).toHaveLength(2);
+    expect(useSceneStore.getState().actorsById['1']).toBe(useSceneStore.getState().actors[0]);
+    expect(useSceneStore.getState().actorsById['2']).toBe(useSceneStore.getState().actors[1]);
+
+    useSceneStore.getState().removeActor('1');
+    expect(Object.keys(useSceneStore.getState().actorsById)).toHaveLength(1);
+    expect(useSceneStore.getState().actorsById['1']).toBeUndefined();
+    expect(useSceneStore.getState().actorsById['2']).toBe(useSceneStore.getState().actors[0]);
   });
 
   it('should set environment', () => {
