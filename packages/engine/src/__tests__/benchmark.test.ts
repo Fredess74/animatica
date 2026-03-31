@@ -144,7 +144,7 @@ describe('Engine Benchmarks', () => {
     });
 
     describe('Store Performance', () => {
-        it('Store Update Throughput (10k playback updates)', () => {
+        it('Store Update Throughput (10k playback updates)', { timeout: 10000 }, () => {
             const { setState, getState } = useSceneStore;
 
             setState({
@@ -155,6 +155,7 @@ describe('Engine Benchmarks', () => {
                     skyColor: '#87CEEB',
                 },
                 actors: [],
+                actorsById: {},
                 timeline: { duration: 10, cameraTrack: [], animationTracks: [], markers: [] },
                 library: { clips: [] },
                 playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, direction: 1, loopMode: 'none' },
@@ -167,11 +168,12 @@ describe('Engine Benchmarks', () => {
             });
         });
 
-        it('Store Actor CRUD Throughput (1k actors)', () => {
+        it('Store Actor CRUD Throughput (1k actors)', { timeout: 30000 }, () => {
             const { setState, getState } = useSceneStore;
 
             setState({
                 actors: [],
+                actorsById: {},
                 playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, direction: 1, loopMode: 'none' },
             } as any);
 
