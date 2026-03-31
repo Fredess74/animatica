@@ -2,10 +2,11 @@
  * CharacterRenderer — R3F component for rendering a character actor.
  * Creates a procedural humanoid (or loads GLB), applies animation, face morphs, and eye tracking.
  */
-import React, { useEffect, useRef, useMemo } from 'react'
+import React, { useEffect, useRef, useMemo, memo, forwardRef, useImperativeHandle } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { createProceduralHumanoid } from '../../character/CharacterLoader'
+import { BoneController } from '../../character/BoneController'
 import {
   CharacterAnimator,
   createDanceClip,
@@ -28,13 +29,17 @@ interface CharacterRendererProps {
   onClick?: () => void
 }
 
-export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
+export const CharacterRenderer: React.FC<CharacterRendererProps> = memo(forwardRef<THREE.Group, CharacterRendererProps>(({
   actor,
   isSelected = false,
   onClick,
-}) => {
-  const groupRef = useRef<THREE.Group>(null)
+}, ref) => {
+  const localRef = useRef<THREE.Group>(null)
+  const groupRef = (ref as React.MutableRefObject<THREE.Group | null>) || localRef
+
+  useImperativeHandle(ref, () => groupRef.current!)
   const animatorRef = useRef<CharacterAnimator | null>(null)
+  const boneControllerRef = useRef<BoneController | null>(null)
   const faceMorphRef = useRef<FaceMorphController | null>(null)
   const eyeControllerRef = useRef<EyeController | null>(null)
 
@@ -63,6 +68,10 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     animator.registerClip('jump', createJumpClip())
     animator.play(actor.animation || 'idle')
     animatorRef.current = animator
+
+    // Setup bone controller
+    const boneController = new BoneController(rig.bones)
+    boneControllerRef.current = boneController
 
     // Setup face morph controller
     const faceMorph = new FaceMorphController(rig.bodyMesh, rig.morphTargetMap)
@@ -100,9 +109,14 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
 
   // Frame update — animation, face morphs, eye blinks
   useFrame((_state, delta) => {
-    // Skeletal animation
+    // Skeletal animation (clips)
     if (animatorRef.current) {
       animatorRef.current.update(delta)
+    }
+
+    // Manual bone posing (overrides)
+    if (boneControllerRef.current && actor.bodyPose) {
+      boneControllerRef.current.update(actor.bodyPose, delta)
     }
 
     // Face morph blending
@@ -120,6 +134,8 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       faceMorphRef.current.setImmediate(eyeValues)
     }
   })
+
+  if (!actor.visible) return null
 
   return (
     <group
@@ -151,4 +167,6 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       )}
     </group>
   )
-}
+}))
+
+CharacterRenderer.displayName = 'CharacterRenderer'
