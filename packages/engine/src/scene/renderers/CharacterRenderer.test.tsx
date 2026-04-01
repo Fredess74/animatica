@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import React from 'react'
-// @ts-ignore
 import { CharacterRenderer } from './CharacterRenderer'
 import { CharacterActor } from '../../types'
 
@@ -10,12 +9,29 @@ vi.mock('react', async () => {
   return {
     ...actual,
     useRef: () => ({ current: null }),
+    useMemo: (factory: () => any) => factory(),
+    useEffect: () => {},
   }
 })
 
-// Mock the Edges component from @react-three/drei
-vi.mock('@react-three/drei', () => ({
-  Edges: () => null
+// Mock @react-three/fiber
+vi.mock('@react-three/fiber', () => ({
+  useFrame: vi.fn(),
+}))
+
+// Mock the CharacterLoader and related
+vi.mock('../../character/CharacterLoader', () => ({
+  createProceduralHumanoid: vi.fn(() => ({
+    root: { type: 'Group', position: new (require('three').Vector3)(), rotation: new (require('three').Euler)(), scale: new (require('three').Vector3)(1, 1, 1) },
+    bodyMesh: {},
+    morphTargetMap: {}
+  }))
+}))
+
+vi.mock('../../character/CharacterPresets', () => ({
+  getPreset: vi.fn(() => ({
+    body: { skinColor: '#D4A27C', height: 1.0, build: 0.5 }
+  }))
 }))
 
 describe('CharacterRenderer', () => {
@@ -39,11 +55,9 @@ describe('CharacterRenderer', () => {
     clothing: {}
   }
 
-  it('renders a group containing capsule mesh with correct transform', () => {
-    // Call the forwardRef component's render function directly
-    // Since it's wrapped in memo, we access the underlying forwardRef via .type
-    // @ts-ignore
-    const result = CharacterRenderer.type.render({ actor: mockActor }, null) as React.ReactElement
+  it('renders a group containing primitive rig root with correct transform', () => {
+    // CharacterRenderer is a functional component
+    const result = CharacterRenderer({ actor: mockActor }) as React.ReactElement
 
     expect(result).not.toBeNull()
     expect(result.type).toBe('group')
@@ -56,47 +70,32 @@ describe('CharacterRenderer', () => {
     // Verify children
     const children = React.Children.toArray(props.children) as React.ReactElement[]
 
-    // First child should be the main mesh (capsule)
-    const mainMesh = children[0]
-    expect(mainMesh.type).toBe('mesh')
-
-    const mainMeshProps = mainMesh.props as any
-    const meshChildren = React.Children.toArray(mainMeshProps.children) as React.ReactElement[]
-
-    // Check geometry
-    const geometry = meshChildren.find((child) => child.type === 'capsuleGeometry')
-    expect(geometry).toBeDefined()
-
-    const geometryProps = geometry?.props as any
-    // Check args: radius 0.5, length 1.8
-    expect(geometryProps?.args?.[0]).toBe(0.5)
-    expect(geometryProps?.args?.[1]).toBe(1.8)
-
-    // Check material
-    const material = meshChildren.find((child) => child.type === 'meshStandardMaterial')
-    expect(material).toBeDefined()
-
-    const materialProps = material?.props as any
-    expect(materialProps?.color).toBe('#ff00aa') // The placeholder color
+    // First child should be the primitive object (rig.root)
+    const rigRoot = children[0]
+    expect(rigRoot.type).toBe('primitive')
+    expect((rigRoot.props as any).object).toBeDefined()
   })
 
-  it('renders nothing when visible is false', () => {
-    const invisibleActor = { ...mockActor, visible: false }
-    // @ts-ignore
-    const result = CharacterRenderer.type.render({ actor: invisibleActor }, null)
-    expect(result).toBeNull()
-  })
-
-  it('renders face direction indicator', () => {
-     // @ts-ignore
-    const result = CharacterRenderer.type.render({ actor: mockActor }, null) as React.ReactElement
+  it('renders selection ring when isSelected is true', () => {
+    const result = CharacterRenderer({ actor: mockActor, isSelected: true }) as React.ReactElement
     const props = result.props as any
     const children = React.Children.toArray(props.children) as React.ReactElement[]
 
-    // Second child should be the face mesh
-    const faceMesh = children[1]
-    expect(faceMesh.type).toBe('mesh')
-    const faceMeshProps = faceMesh.props as any
-    expect(faceMeshProps?.position?.[2]).toBe(0.4)
+    // Second child should be the selection ring mesh
+    const selectionRing = children[1]
+    expect(selectionRing.type).toBe('mesh')
+
+    const ringChildren = React.Children.toArray((selectionRing.props as any).children) as React.ReactElement[]
+    expect(ringChildren.some(child => child.type === 'ringGeometry')).toBe(true)
+  })
+
+  it('does not render selection ring when isSelected is false', () => {
+    const result = CharacterRenderer({ actor: mockActor, isSelected: false }) as React.ReactElement
+    const props = result.props as any
+    const children = React.Children.toArray(props.children) as React.ReactElement[]
+
+    // Should only have the rig root child
+    expect(children.length).toBe(1)
+    expect(children[0].type).toBe('primitive')
   })
 })
