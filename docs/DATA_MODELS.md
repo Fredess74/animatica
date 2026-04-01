@@ -231,7 +231,6 @@ export interface ValidationResult {
 -- Users
 CREATE TABLE users (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  wallet_address TEXT UNIQUE,
   email TEXT UNIQUE,
   display_name TEXT NOT NULL,
   avatar_url TEXT,
@@ -295,10 +294,9 @@ CREATE TABLE donations (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   donor_id UUID REFERENCES users(id),
   film_id UUID REFERENCES films(id),
-  amount_wei TEXT NOT NULL,
-  currency TEXT DEFAULT 'ETH',
-  tx_hash TEXT UNIQUE NOT NULL,
-  chain TEXT DEFAULT 'base',
+  amount_cents BIGINT NOT NULL,
+  currency TEXT DEFAULT 'USD',
+  stripe_payment_id TEXT UNIQUE,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 

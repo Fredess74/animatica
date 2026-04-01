@@ -13,7 +13,7 @@ We help people take their creative vision from idea to finished animated film �
 1. **Everyone is a director** — No skill barrier. Text in → animation out.
 2. **Creation is a game** — The process must be fun, beautiful, and rewarding.
 3. **Finish what you start** — AI helps you push through the "messy middle" to a polished result.
-4. **Global by default** — Crypto enables borderless payments. Any language. Any country.
+4. **Global by default** — Any language. Any country.
 5. **Community is currency** — Viewers fund creators. Creators fund each other.
 
 ---
@@ -74,7 +74,7 @@ These create "wow" moments and viral sharing:
 
 Users don't care about:
 
-- Blockchain technology details (just "it works")
+- Technical implementation details (just "it works")
 - Code-level customization
 - Enterprise features
 - Desktop app (web is enough)
@@ -84,7 +84,7 @@ Users don't care about:
 Features that would drive users away:
 
 - Complex UI requiring tutorials
-- Mandatory crypto wallet for viewing
+- Complex onboarding for viewing
 - Watermarks on free tier
 - Content restrictions on fanfic/parody
 

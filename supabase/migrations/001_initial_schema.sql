@@ -32,10 +32,9 @@ CREATE TABLE public.profiles (
   avatar_url TEXT,
   bio TEXT DEFAULT '',
   website TEXT,
-  wallet_address TEXT UNIQUE,
   total_films INTEGER DEFAULT 0,
   total_views BIGINT DEFAULT 0,
-  total_earned_wei TEXT DEFAULT '0',
+  total_earned_cents BIGINT DEFAULT 0,
   follower_count INTEGER DEFAULT 0,
   following_count INTEGER DEFAULT 0,
   creator_weight INTEGER DEFAULT 0,
@@ -46,7 +45,6 @@ CREATE TABLE public.profiles (
 );
 
 CREATE UNIQUE INDEX idx_profiles_username ON profiles(username);
-CREATE INDEX idx_profiles_wallet ON profiles(wallet_address) WHERE wallet_address IS NOT NULL;
 
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
@@ -110,9 +108,8 @@ CREATE TABLE public.films (
   view_count BIGINT DEFAULT 0,
   like_count INTEGER DEFAULT 0,
   comment_count INTEGER DEFAULT 0,
-  donation_total_wei TEXT DEFAULT '0',
+  donation_total_cents BIGINT DEFAULT 0,
   avg_retention_pct DECIMAL(5,2) DEFAULT 0,
-  chain_film_id BIGINT UNIQUE,
   published_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
@@ -214,17 +211,13 @@ CREATE TABLE public.donations (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   donor_id UUID REFERENCES profiles(id) ON DELETE SET NULL,
   film_id UUID NOT NULL REFERENCES films(id) ON DELETE CASCADE,
-  amount_wei TEXT NOT NULL,
+  amount_cents BIGINT NOT NULL,
   amount_usd DECIMAL(12,2),
-  currency TEXT DEFAULT 'ETH',
-  tx_hash TEXT UNIQUE NOT NULL,
-  chain TEXT DEFAULT 'base',
-  block_number BIGINT,
-  creator_amount_wei TEXT NOT NULL,
-  fund_amount_wei TEXT NOT NULL,
-  platform_amount_wei TEXT NOT NULL,
+  currency TEXT DEFAULT 'USD',
   stripe_payment_id TEXT UNIQUE,
-  is_fiat BOOLEAN DEFAULT FALSE,
+  creator_amount_cents BIGINT NOT NULL,
+  fund_amount_cents BIGINT NOT NULL,
+  platform_amount_cents BIGINT NOT NULL,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -329,10 +322,9 @@ CREATE TABLE public.assets (
   usage_count INTEGER DEFAULT 0,
   rating_avg DECIMAL(3,2) DEFAULT 0,
   rating_count INTEGER DEFAULT 0,
-  revenue_total_wei TEXT DEFAULT '0',
+  revenue_total_cents BIGINT DEFAULT 0,
   is_approved BOOLEAN DEFAULT FALSE,
   is_active BOOLEAN DEFAULT TRUE,
-  chain_asset_id BIGINT UNIQUE,
   fts tsvector GENERATED ALWAYS AS (
     setweight(to_tsvector('english', COALESCE(name, '')), 'A') ||
     setweight(to_tsvector('english', COALESCE(description, '')), 'B')
