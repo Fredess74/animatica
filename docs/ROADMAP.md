@@ -130,26 +130,7 @@ Each phase has clear deliverables and can be validated independently.
 
 ---
 
-## Phase 8: Crypto Monetization (Weeks 25-28)
-
-**Goal:** Transparent donation pool with automatic revenue splitting.
-
-| Task | Owner | Deliverable |
-|------|-------|-------------|
-| DonationPool.sol | Jules | Deploy + test on testnet |
-| CreatorFund.sol | Jules | Weight updates + claim |
-| AnimaticaTreasury.sol | Jules | Withdrawal by owner |
-| AssetMarketplace.sol | Jules | On-chain asset purchases |
-| Wallet connect (wagmi) | Jules | RainbowKit modal in app |
-| Donate button | Jules | One-click donation flow |
-| Fiat on-ramp (Stripe) | Human | Credit card → donation |
-| Earnings dashboard | Jules | Real-time balance, claim button |
-
-**Milestone:** Donate $1 to a film → see 70¢ in creator wallet instantly.
-
----
-
-## Phase 9: Collaboration (Weeks 29-32)
+## Phase 8: Collaboration (Weeks 25-28)
 
 **Goal:** Real-time multi-user editing with roles.
 
@@ -165,7 +146,7 @@ Each phase has clear deliverables and can be validated independently.
 
 ---
 
-## Phase 10: 2D Mode + Polish (Weeks 33-40)
+## Phase 9: 2D Mode + Polish (Weeks 29-36)
 
 **Goal:** Full 2D animation capability and production-ready polish.
 
@@ -196,9 +177,8 @@ Weeks 9-10:  Phase 4 (Export & Audio)
 Weeks 11-14: Phase 5 (AI Integration)
 Weeks 15-20: Phase 6 (Platform)
 Weeks 21-24: Phase 7 (Marketplace)
-Weeks 25-28: Phase 8 (Crypto)
-Weeks 29-32: Phase 9 (Collaboration)
-Weeks 33-40: Phase 10 (2D + Polish)
+Weeks 25-28: Phase 8 (Collaboration)
+Weeks 29-36: Phase 9 (2D + Polish)
 ```
 
 **Total: ~40 weeks (10 months) with Jules as primary developer.**

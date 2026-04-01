@@ -15,9 +15,8 @@
 | **Phase 5: AI Integration** | 🔨 Active | **25%** | **1.5/6** | Weeks 11-14 | 🟡 Foundation |
 | Phase 6: Platform / Auth | Pending | 15% | 2/11 | Weeks 15-20 | ⚪ Supabase schema exists |
 | Phase 7: Asset Marketplace | Pending | 0% | 0/6 | Weeks 21-24 | ⚪ Pending |
-| Phase 8: Monetization | ❌ Removed | N/A | N/A | N/A | 🔴 Was blockchain — removed |
-| Phase 9: Collaboration | Pending | 0% | 0/5 | Weeks 29-32 | ⚪ Pending |
-| Phase 10: 2D Mode + Polish | Pending | 0% | 0/11 | Weeks 33-40 | ⚪ Pending |
+| Phase 8: Collaboration | Pending | 0% | 0/5 | Weeks 25-28 | ⚪ Pending |
+| Phase 9: 2D Mode + Polish | Pending | 0% | 0/11 | Weeks 29-36 | ⚪ Pending |
 
 ---
 

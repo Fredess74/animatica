@@ -55,13 +55,10 @@ CREATE TABLE public.profiles (
   bio TEXT DEFAULT '',
   website TEXT,
   
-  -- Crypto
-  wallet_address TEXT UNIQUE,
-  
   -- Stats (denormalized for performance)
   total_films INTEGER DEFAULT 0,
   total_views BIGINT DEFAULT 0,
-  total_earned_wei TEXT DEFAULT '0',
+  total_earned_cents BIGINT DEFAULT 0,
   follower_count INTEGER DEFAULT 0,
   following_count INTEGER DEFAULT 0,
   
@@ -135,11 +132,8 @@ CREATE TABLE public.films (
   view_count BIGINT DEFAULT 0,
   like_count INTEGER DEFAULT 0,
   comment_count INTEGER DEFAULT 0,
-  donation_total_wei TEXT DEFAULT '0',
+  donation_total_cents BIGINT DEFAULT 0,
   avg_retention_pct DECIMAL(5,2) DEFAULT 0,
-  
-  -- Chain
-  chain_film_id BIGINT UNIQUE,  -- On-chain film ID for smart contracts
   
   -- Timestamps
   published_at TIMESTAMPTZ,
@@ -303,23 +297,17 @@ CREATE TABLE public.donations (
   film_id UUID NOT NULL REFERENCES films(id) ON DELETE CASCADE,
   
   -- Amount
-  amount_wei TEXT NOT NULL,
+  amount_cents BIGINT NOT NULL,
   amount_usd DECIMAL(12,2),  -- Cached USD value at time of donation
-  currency TEXT DEFAULT 'ETH',
-  
-  -- Chain
-  tx_hash TEXT UNIQUE NOT NULL,
-  chain TEXT DEFAULT 'base',
-  block_number BIGINT,
+  currency TEXT DEFAULT 'USD',
   
   -- Split record
-  creator_amount_wei TEXT NOT NULL,
-  fund_amount_wei TEXT NOT NULL,
-  platform_amount_wei TEXT NOT NULL,
+  creator_amount_cents BIGINT NOT NULL,
+  fund_amount_cents BIGINT NOT NULL,
+  platform_amount_cents BIGINT NOT NULL,
   
   -- Fiat (if paid via Stripe)
   stripe_payment_id TEXT UNIQUE,
-  is_fiat BOOLEAN DEFAULT FALSE,
   
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -333,8 +321,8 @@ CREATE OR REPLACE FUNCTION update_film_donation_stats()
 RETURNS TRIGGER AS $$
 BEGIN
   UPDATE films SET 
-    donation_total_wei = (
-      SELECT COALESCE(SUM(amount_wei::numeric), 0)::text 
+    donation_total_cents = (
+      SELECT COALESCE(SUM(amount_cents), 0)
       FROM donations WHERE film_id = NEW.film_id
     )
   WHERE id = NEW.film_id;
@@ -499,14 +487,11 @@ CREATE TABLE public.assets (
   usage_count INTEGER DEFAULT 0,  -- films using this asset
   rating_avg DECIMAL(3,2) DEFAULT 0,
   rating_count INTEGER DEFAULT 0,
-  revenue_total_wei TEXT DEFAULT '0',
+  revenue_total_cents BIGINT DEFAULT 0,
   
   -- Moderation
   is_approved BOOLEAN DEFAULT FALSE,
   is_active BOOLEAN DEFAULT TRUE,
-  
-  -- Chain
-  chain_asset_id BIGINT UNIQUE,
   
   -- Search
   fts tsvector GENERATED ALWAYS AS (
@@ -791,7 +776,7 @@ CREATE POLICY "Views are insertable"
 
 | Function | Trigger | Purpose |
 |----------|---------|---------|
-| `handle-donation` | Webhook from chain indexer | Record donation, update stats |
+| `handle-donation` | Webhook from Stripe/Payment provider | Record donation, update stats |
 | `generate-scene` | POST from editor | Call LLM API, return JSON |
 | `process-video` | On upload to `videos` bucket | Transcode, generate thumbnail |
 | `update-creator-weights` | Cron (daily) | Recalculate Creator Fund weights |

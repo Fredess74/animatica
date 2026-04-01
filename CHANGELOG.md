@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-03-30
+
+### Fixed
+
+- **Renderer Cleanup**: Fixed `CharacterRenderer.test.tsx` and `Viewport.test.tsx` to match current implementation and R3F mock requirements.
+- **Rule #2 Compliance**: Removed all blockchain, Web3, and cryptocurrency related code, documentation, and database fields.
+
+### Removed
+
+- `packages/contracts/` directory and related hardhat configurations.
+- `docs/SMART_CONTRACTS.md` and `docs/MONETIZATION.md`.
+- Blockchain references from `README.md`, `ROADMAP.md`, `PROGRESS.md`, and `SUPABASE_SCHEMA.md`.
+
+### Changed
+
+- Updated version to 0.2.0 across all packages.
+- Switched from Wei/ETH to cents/USD in database schema and documentation.
+- Reorganized roadmap and progress to reflect removal of crypto phase.
+
 ## [0.1.0] - 2026-02-22
 
 ### Added
