@@ -30,3 +30,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `JULES_GUIDE.md` for AI agent instructions.
 - Added `PROGRESS.md` to track project phases.
 - Updated `claude.md` with current project state and architecture details.
+
+### Fixed
+
+- Fixed `CharacterRenderer` test failures by updating mocks for React and R3F.
+- Standardized scene renderers in `@Animatica/engine` with `React.memo` and `React.forwardRef`.
+
+### Chore
+
+- Added `docs/RELEASE_CHECKLIST.md` for release readiness verification.
