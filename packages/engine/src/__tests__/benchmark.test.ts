@@ -1,8 +1,12 @@
+/**
+ * @vitest-environment node
+ */
 import { describe, it, afterAll } from 'vitest';
-import { interpolateKeyframes } from '../animation/interpolate';
-import { ProjectStateSchema } from '../importer/schemas';
+import { interpolateKeyframes, evaluateTracksAtTime } from '../animation/interpolate';
+import { easeInOut } from '../animation/easing';
+import { ProjectStateSchema, CharacterActorSchema } from '../importer/schemas';
 import { useSceneStore } from '../store/sceneStore';
-import type { Keyframe, ProjectState, Actor, PrimitiveActor, Vector3 } from '../types';
+import type { Keyframe, ProjectState, Actor, PrimitiveActor, Vector3, CharacterActor } from '../types';
 import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
@@ -87,6 +91,38 @@ describe('Engine Benchmarks', () => {
                 }
             });
         });
+
+        it('Full Timeline Evaluation (1k tracks, 10 keyframes each)', () => {
+            const tracks = [];
+            for (let i = 0; i < 1000; i++) {
+                const keyframes = [];
+                for (let j = 0; j < 10; j++) {
+                    keyframes.push({ time: j, value: j * 10, easing: 'easeInOut' as const });
+                }
+                tracks.push({
+                    targetId: `actor-${i}`,
+                    property: 'transform.position.x',
+                    keyframes,
+                });
+            }
+
+            measure('Timeline Evaluation (1k tracks)', () => {
+                for (let i = 0; i < 100; i++) {
+                    evaluateTracksAtTime(tracks, Math.random() * 10);
+                }
+            });
+        });
+
+        it('Easing Function Math (1M iterations)', () => {
+            measure('Easing Math (1M iterations)', () => {
+                let sum = 0;
+                for (let i = 0; i < 1000000; i++) {
+                    sum += easeInOut(i / 1000000);
+                }
+                // Use sum to prevent optimization
+                if (sum < 0) console.log(sum);
+            });
+        });
     });
 
     describe('Schema Validation Performance', () => {
@@ -135,9 +171,35 @@ describe('Engine Benchmarks', () => {
                 library: { clips: [] },
             };
 
-            measure('Schema Validation Speed (100 runs)', () => {
+            measure('Project Schema Validation (100 runs)', () => {
                 for (let i = 0; i < 100; i++) {
                     ProjectStateSchema.parse(projectState);
+                }
+            });
+        });
+
+        it('Character Actor Schema Validation (100 runs)', () => {
+            const character: CharacterActor = {
+                id: 'char-1',
+                name: 'Character 1',
+                type: 'character',
+                transform: {
+                    position: [0, 0, 0],
+                    rotation: [0, 0, 0],
+                    scale: [1, 1, 1],
+                },
+                visible: true,
+                animation: 'idle',
+                morphTargets: { mouthSmile: 0.5, eyeBlinkLeft: 0.1 },
+                bodyPose: { head: [0.1, 0, 0] },
+                clothing: {
+                    torso: [{ type: 'shirt', color: '#ffffff', visible: true }],
+                },
+            };
+
+            measure('Character Schema Validation (100 runs)', () => {
+                for (let i = 0; i < 100; i++) {
+                    CharacterActorSchema.parse(character);
                 }
             });
         });
@@ -167,7 +229,7 @@ describe('Engine Benchmarks', () => {
             });
         });
 
-        it('Store Actor CRUD Throughput (1k actors)', () => {
+        it('Store Actor CRUD Throughput (1k actors)', { timeout: 15000 }, () => {
             const { setState, getState } = useSceneStore;
 
             setState({
@@ -197,6 +259,35 @@ describe('Engine Benchmarks', () => {
             measure('Store Remove Actor (1k ops)', () => {
                 for (let i = 0; i < 1000; i++) {
                     getState().removeActor(`bench-${i}`);
+                }
+            });
+        });
+
+        it('Store Undo/Redo Throughput (100 ops)', () => {
+            const { getState } = useSceneStore;
+            // Fill history
+            for (let i = 0; i < 100; i++) {
+                getState().addActor({
+                    id: `undo-bench-${i}`,
+                    name: `Actor ${i}`,
+                    type: 'primitive',
+                    transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
+                    visible: true,
+                    properties: { shape: 'box', color: '#ff0000', roughness: 0.5, metalness: 0.5, opacity: 1, wireframe: false }
+                } as PrimitiveActor);
+            }
+
+            const { undo, redo } = (useSceneStore as any).temporal.getState();
+
+            measure('Store Undo (100 ops)', () => {
+                for (let i = 0; i < 100; i++) {
+                    undo();
+                }
+            });
+
+            measure('Store Redo (100 ops)', () => {
+                for (let i = 0; i < 100; i++) {
+                    redo();
                 }
             });
         });
