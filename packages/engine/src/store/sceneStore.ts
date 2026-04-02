@@ -32,8 +32,17 @@ export const useSceneStore = create<SceneStoreState>()(
         // Only persist project state, not playback or selection
         partialize: (state) => {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { playback, selectedActorId, ...rest } = state;
+          const { playback, selectedActorId, actorsById, ...rest } = state;
           return rest as unknown as SceneStoreState;
+        },
+        // Rebuild actorsById lookup on hydration
+        onRehydrateStorage: () => (state) => {
+          if (state && state.actors) {
+            state.actorsById = state.actors.reduce((acc, actor) => {
+              acc[actor.id] = actor;
+              return acc;
+            }, {} as Record<string, Actor>);
+          }
         },
       }
     ),
@@ -71,9 +80,10 @@ export type { SceneStoreState, PlaybackState, LoopMode } from './types';
 
 /**
  * Selector to get an actor by its ID.
+ * Optimized with O(1) lookup using actorsById.
  */
 export const getActorById = (id: string) => (state: SceneStoreState): Actor | undefined =>
-  state.actors.find((a) => a.id === id);
+  state.actorsById[id];
 
 /**
  * Selector to get all currently visible actors.
@@ -91,9 +101,10 @@ export const getCurrentTime = (state: SceneStoreState): number =>
 
 /**
  * Hook to select a specific actor by ID.
+ * Optimized with O(1) lookup using actorsById.
  */
 export const useActorById = (id: string) =>
-  useSceneStore((state) => state.actors.find((a) => a.id === id));
+  useSceneStore((state) => state.actorsById[id]);
 
 /**
  * Hook to get the list of all actor IDs.
@@ -122,10 +133,11 @@ export const useSelectedActorId = () =>
 
 /**
  * Hook to get the currently selected actor.
+ * Optimized with O(1) lookup using actorsById.
  */
 export const useSelectedActor = () =>
   useSceneStore((state) =>
-    state.selectedActorId ? state.actors.find((a) => a.id === state.selectedActorId) : undefined
+    state.selectedActorId ? state.actorsById[state.selectedActorId] : undefined
   );
 
 /**
