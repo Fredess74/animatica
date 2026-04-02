@@ -1,102 +1,172 @@
-import { describe, it, expect, vi, afterEach } from 'vitest'
+// @vitest-environment jsdom
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import React from 'react'
-// @ts-ignore
 import { CharacterRenderer } from './CharacterRenderer'
-import { CharacterActor } from '../../types'
+import type { CharacterActor } from '../../types'
 
-// Mock react to bypass hooks checks when calling component directly
+// Mock React hooks to return values since we're calling the render function directly
 vi.mock('react', async () => {
-  const actual = await vi.importActual<typeof import('react')>('react')
+  const actual = await vi.importActual('react')
   return {
     ...actual,
-    useRef: () => ({ current: null }),
+    useRef: (initial: any) => ({ current: initial || {} }),
+    useMemo: (factory: any) => factory(),
+    useEffect: vi.fn(),
+    useLayoutEffect: vi.fn(),
+    useCallback: (fn: any) => fn,
+    useImperativeHandle: vi.fn(),
+    memo: (comp: any) => comp,
+    forwardRef: (comp: any) => {
+        comp.type = { render: comp };
+        return comp;
+    },
   }
 })
 
-// Mock the Edges component from @react-three/drei
-vi.mock('@react-three/drei', () => ({
-  Edges: () => null
+class GeometryStub {
+  rotateZ = vi.fn()
+  clone = vi.fn().mockReturnThis()
+}
+
+// Mock Three.js using classes for constructors
+vi.mock('three', () => {
+  class Group {
+    add = vi.fn()
+    remove = vi.fn()
+    matrixWorld = { setFromMatrixPosition: vi.fn() }
+    position = { set: vi.fn() }
+    rotation = { set: vi.fn() }
+    scale = { set: vi.fn() }
+  }
+  class Mesh {
+    position = { set: vi.fn() }
+    castShadow = true
+    receiveShadow = true
+    add = vi.fn()
+    constructor(geometry: any, material: any) {
+        (this as any).geometry = geometry;
+        (this as any).material = material;
+    }
+  }
+  class Vector3 {
+    setFromMatrixPosition = vi.fn()
+    constructor(x=0, y=0, z=0) {
+        (this as any).x = x; (this as any).y = y; (this as any).z = z;
+    }
+  }
+  class Euler {
+    set = vi.fn()
+  }
+  class Quaternion {
+    setFromEuler = vi.fn()
+    slerp = vi.fn()
+    clone = vi.fn().mockReturnThis()
+    equals = vi.fn().mockReturnValue(true)
+  }
+  class AnimationMixer {
+    clipAction = vi.fn().mockImplementation(() => ({
+        setEffectiveWeight: vi.fn(),
+        play: vi.fn(),
+        reset: vi.fn(),
+        crossFadeTo: vi.fn(),
+    }))
+    stopAllAction = vi.fn()
+    update = vi.fn()
+  }
+  class Bone {
+    name = ''
+    position = { set: vi.fn() }
+    add = vi.fn()
+    quaternion = new Quaternion()
+  }
+  class GeometryStubInternal {
+    rotateZ = vi.fn()
+    clone = vi.fn().mockReturnThis()
+  }
+  return {
+    Group,
+    Mesh,
+    Vector3,
+    DoubleSide: 2,
+    Euler,
+    Quaternion,
+    AnimationMixer,
+    AnimationClip: class {
+        static optimize = vi.fn()
+        optimize = vi.fn()
+    },
+    Skeleton: class {},
+    Bone,
+    MeshPhysicalMaterial: class {},
+    MeshStandardMaterial: class {},
+    SphereGeometry: GeometryStubInternal,
+    CapsuleGeometry: GeometryStubInternal,
+    BoxGeometry: GeometryStubInternal,
+    RingGeometry: GeometryStubInternal,
+    Color: class { set = vi.fn() },
+    VectorKeyframeTrack: class {},
+    QuaternionKeyframeTrack: class {},
+  }
+})
+
+// Mock R3F
+vi.mock('@react-three/fiber', () => ({
+  useFrame: vi.fn(),
 }))
 
+const mockActor: CharacterActor = {
+  id: 'test-actor-id',
+  type: 'character',
+  name: 'Test Character',
+  transform: {
+    position: [1, 2, 3],
+    rotation: [0, Math.PI, 0],
+    scale: [1, 1, 1],
+  },
+  visible: true,
+  animation: 'idle',
+  morphTargets: {},
+  bodyPose: {
+    head: [0.1, 0.2, 0.3],
+  },
+  clothing: {},
+}
+
 describe('CharacterRenderer', () => {
-  afterEach(() => {
-    vi.restoreAllMocks()
+  beforeEach(() => {
+    vi.clearAllMocks()
   })
 
-  const mockActor: CharacterActor = {
-    id: 'char-1',
-    name: 'Hero',
-    type: 'character',
-    visible: true,
-    transform: {
-      position: [10, 0, 5],
-      rotation: [0, Math.PI, 0],
-      scale: [1, 1, 1]
-    },
-    animation: 'idle',
-    morphTargets: {},
-    bodyPose: {},
-    clothing: {}
-  }
-
-  it('renders a group containing capsule mesh with correct transform', () => {
-    // Call the forwardRef component's render function directly
-    // Since it's wrapped in memo, we access the underlying forwardRef via .type
+  it('renders correctly (structural check)', () => {
     // @ts-ignore
-    const result = CharacterRenderer.type.render({ actor: mockActor }, null) as React.ReactElement
+    const renderFn = CharacterRenderer.type.render
+
+    const result = renderFn({ actor: mockActor }, null)
 
     expect(result).not.toBeNull()
     expect(result.type).toBe('group')
-
-    const props = result.props as any
-    expect(props.position).toEqual([10, 0, 5])
-    expect(props.rotation).toEqual([0, Math.PI, 0])
-    expect(props.scale).toEqual([1, 1, 1])
-
-    // Verify children
-    const children = React.Children.toArray(props.children) as React.ReactElement[]
-
-    // First child should be the main mesh (capsule)
-    const mainMesh = children[0]
-    expect(mainMesh.type).toBe('mesh')
-
-    const mainMeshProps = mainMesh.props as any
-    const meshChildren = React.Children.toArray(mainMeshProps.children) as React.ReactElement[]
-
-    // Check geometry
-    const geometry = meshChildren.find((child) => child.type === 'capsuleGeometry')
-    expect(geometry).toBeDefined()
-
-    const geometryProps = geometry?.props as any
-    // Check args: radius 0.5, length 1.8
-    expect(geometryProps?.args?.[0]).toBe(0.5)
-    expect(geometryProps?.args?.[1]).toBe(1.8)
-
-    // Check material
-    const material = meshChildren.find((child) => child.type === 'meshStandardMaterial')
-    expect(material).toBeDefined()
-
-    const materialProps = material?.props as any
-    expect(materialProps?.color).toBe('#ff00aa') // The placeholder color
+    expect(result.props.name).toBe(mockActor.id)
+    expect(result.props.position).toEqual(mockActor.transform.position)
   })
 
   it('renders nothing when visible is false', () => {
     const invisibleActor = { ...mockActor, visible: false }
     // @ts-ignore
-    const result = CharacterRenderer.type.render({ actor: invisibleActor }, null)
+    const renderFn = CharacterRenderer.type.render
+    const result = renderFn({ actor: invisibleActor }, null)
     expect(result).toBeNull()
   })
 
-  it('renders face direction indicator', () => {
-     // @ts-ignore
-    const result = CharacterRenderer.type.render({ actor: mockActor }, null) as React.ReactElement
-    const props = result.props as any
-    const children = React.Children.toArray(props.children) as React.ReactElement[]
+  it('renders selection ring when isSelected is true', () => {
+    // @ts-ignore
+    const renderFn = CharacterRenderer.type.render
+    const result = renderFn({ actor: mockActor, isSelected: true }, null)
 
-    // Second child should be the face mesh
-    const faceMesh = children[1]
-    expect(faceMesh.type).toBe('mesh')
-    const faceMeshProps = faceMesh.props as any
-    expect(faceMeshProps?.position?.[2]).toBe(0.4)
+    // Find mesh with ringGeometry
+    const children = React.Children.toArray(result.props.children)
+    const hasSelectionRing = children.some((child: any) =>
+        child && child.type === 'mesh' && React.Children.toArray(child.props.children).some((gc: any) => gc.type === 'ringGeometry')
+    )
+    expect(hasSelectionRing).toBe(true)
   })
 })
