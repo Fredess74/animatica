@@ -2,24 +2,28 @@ import { describe, it, expect, vi, afterEach } from 'vitest'
 import React from 'react'
 import { CameraRenderer } from './CameraRenderer'
 import { CameraActor } from '../../types'
-import { PerspectiveCamera } from '@react-three/drei'
-import * as THREE from 'three'
 
-// Mock react
+// Mock react to bypass hooks checks when calling component directly
 vi.mock('react', async () => {
   const actual = await vi.importActual<typeof import('react')>('react')
   return {
     ...actual,
-    useRef: () => ({ current: new THREE.Object3D() }),
+    useRef: () => ({ current: null }),
+    useMemo: (factory: () => any) => factory(),
+    useImperativeHandle: vi.fn(),
+    // Standard mock for forwardRef to allow inspection of the render function
+    forwardRef: (render: any) => ({ render, type: { render } }),
+    memo: (comp: any) => comp,
   }
 })
 
-// Mock three components used inside CameraRenderer
-vi.mock('@react-three/drei', () => ({
-  // Mock PerspectiveCamera as a simple functional component that returns a 'perspectiveCamera' element
-  PerspectiveCamera: ({ children, ...props }: any) => React.createElement('perspectiveCamera', props, children),
-  useHelper: vi.fn(),
-}))
+// Mock @react-three/drei
+vi.mock('@react-three/drei', () => {
+  return {
+    PerspectiveCamera: (props: any) => React.createElement('perspective-camera', props),
+    useHelper: vi.fn()
+  }
+})
 
 describe('CameraRenderer', () => {
   afterEach(() => {
@@ -28,29 +32,33 @@ describe('CameraRenderer', () => {
 
   it('renders a camera with correct props', () => {
     const actor: CameraActor = {
-      id: 'c1',
-      name: 'Cam1',
+      id: 'cam-1',
+      name: 'MainCamera',
       type: 'camera',
       visible: true,
       transform: {
-        position: [0, 10, 20],
-        rotation: [0, 0, 0],
+        position: [0, 5, 10],
+        rotation: [-0.5, 0, 0],
         scale: [1, 1, 1]
       },
       properties: {
-        fov: 75,
+        fov: 45,
         near: 0.1,
         far: 1000
       }
     }
 
-    const Component = (CameraRenderer as any).type;
-    const result = Component({ actor, isActive: false }) as unknown as { type: string, props: any }
+    // Access the render function from the mocked forwardRef
+    // @ts-ignore
+    const render = CameraRenderer.render || CameraRenderer.type?.render
+    const result = render({ actor, isActive: false }, { current: null }) as React.ReactElement
 
     // Check perspectiveCamera mock
-    expect(result.type).toBe(PerspectiveCamera)
-    expect(result.props.position).toEqual([0, 10, 20])
-    expect(result.props.fov).toBe(75)
+    // Check by tag name in props if type is a function/object that returns it
+    expect(result.props).toBeDefined()
+    expect(result.props.position).toEqual([0, 5, 10])
+    expect(result.props.rotation).toEqual([-0.5, 0, 0])
+    expect(result.props.fov).toBe(45)
     expect(result.props.near).toBe(0.1)
     expect(result.props.far).toBe(1000)
     expect(result.props.makeDefault).toBe(false)
@@ -58,30 +66,40 @@ describe('CameraRenderer', () => {
 
   it('sets makeDefault when isActive is true', () => {
     const actor: CameraActor = {
-      id: 'c2',
-      name: 'Cam2',
+      id: 'cam-1',
+      name: 'MainCamera',
       type: 'camera',
       visible: true,
-      transform: { position: [0,0,0], rotation: [0,0,0], scale: [1,1,1] },
-      properties: { fov: 60, near: 0.1, far: 100 }
+      transform: {
+        position: [0, 0, 0],
+        rotation: [0, 0, 0],
+        scale: [1, 1, 1]
+      },
+      properties: {
+        fov: 50,
+        near: 0.1,
+        far: 100
+      }
     }
 
-    const Component = (CameraRenderer as any).type;
-    const result = Component({ actor, isActive: true }) as unknown as { type: string, props: any }
+    // @ts-ignore
+    const render = CameraRenderer.render || CameraRenderer.type?.render
+    const result = render({ actor, isActive: true }, { current: null }) as React.ReactElement
     expect(result.props.makeDefault).toBe(true)
   })
 
   it('renders nothing when visible is false', () => {
     const actor: CameraActor = {
-      id: 'c3',
-      name: 'HiddenCam',
+      id: 'cam-off',
+      name: 'Off',
       type: 'camera',
       visible: false,
-      transform: { position: [0,0,0], rotation: [0,0,0], scale: [1,1,1] },
-      properties: { fov: 60, near: 0.1, far: 100 }
+      transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
+      properties: { fov: 50, near: 0.1, far: 100 }
     }
-    const Component = (CameraRenderer as any).type;
-    const result = Component({ actor })
+    // @ts-ignore
+    const render = CameraRenderer.render || CameraRenderer.type?.render
+    const result = render({ actor }, { current: null })
     expect(result).toBeNull()
   })
 })

@@ -9,6 +9,11 @@ vi.mock('react', async () => {
   return {
     ...actual,
     useRef: () => ({ current: null }),
+    useMemo: (factory: () => any) => factory(),
+    useImperativeHandle: vi.fn(),
+    // Standard mock for forwardRef to allow inspection of the render function
+    forwardRef: (render: any) => ({ render, type: { render } }),
+    memo: (comp: any) => comp,
   }
 })
 
@@ -43,10 +48,10 @@ describe('PrimitiveRenderer', () => {
       }
     }
 
-    // Call the component as a function to inspect returned JSX
-    // Since it's wrapped in memo, we access the underlying function via .type
-    const Component = (PrimitiveRenderer as any).type;
-    const result = Component({ actor }) as React.ReactElement<{ [key: string]: any }>
+    // Access the render function from the mocked forwardRef
+    // @ts-ignore
+    const render = PrimitiveRenderer.render || PrimitiveRenderer.type?.render
+    const result = render({ actor }, { current: null }) as React.ReactElement
 
     // Verify mesh properties
     expect(result.type).toBe('mesh')
@@ -93,8 +98,9 @@ describe('PrimitiveRenderer', () => {
       }
     }
 
-    const Component = (PrimitiveRenderer as any).type;
-    const result = Component({ actor }) as React.ReactElement<{ [key: string]: any }>
+    // @ts-ignore
+    const render = PrimitiveRenderer.render || PrimitiveRenderer.type?.render
+    const result = render({ actor }, { current: null }) as React.ReactElement
     const children = React.Children.toArray(result.props.children) as React.ReactElement<{ [key: string]: any }>[]
     const geometry = children.find((child) => child.type === 'sphereGeometry')
     expect(geometry).toBeDefined()
@@ -121,8 +127,9 @@ describe('PrimitiveRenderer', () => {
       }
     }
 
-    const Component = (PrimitiveRenderer as any).type;
-    const result = Component({ actor })
+    // @ts-ignore
+    const render = PrimitiveRenderer.render || PrimitiveRenderer.type?.render
+    const result = render({ actor }, { current: null })
     expect(result).toBeNull()
   })
 })

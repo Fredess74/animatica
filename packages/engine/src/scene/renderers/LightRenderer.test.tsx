@@ -2,22 +2,24 @@ import { describe, it, expect, vi, afterEach } from 'vitest'
 import React from 'react'
 import { LightRenderer } from './LightRenderer'
 import { LightActor } from '../../types'
-import * as THREE from 'three'
 
-// Mock react to bypass hooks checks
+// Mock react to bypass hooks checks when calling component directly
 vi.mock('react', async () => {
   const actual = await vi.importActual<typeof import('react')>('react')
   return {
     ...actual,
-    useRef: () => ({ current: new THREE.Object3D() }),
-    useLayoutEffect: () => {}, // mock useLayoutEffect
-    useMemo: (fn: any) => fn(), // mock useMemo to just run the function
+    useRef: () => ({ current: null }),
+    useMemo: (factory: () => any) => factory(),
+    useImperativeHandle: vi.fn(),
+    // Standard mock for forwardRef to allow inspection of the render function
+    forwardRef: (render: any) => ({ render, type: { render } }),
+    memo: (comp: any) => comp,
   }
 })
 
-// Mock useHelper
+// Mock @react-three/drei hooks
 vi.mock('@react-three/drei', () => ({
-  useHelper: vi.fn(),
+  useHelper: vi.fn()
 }))
 
 describe('LightRenderer', () => {
@@ -32,36 +34,33 @@ describe('LightRenderer', () => {
       type: 'light',
       visible: true,
       transform: {
-        position: [0, 5, 0],
+        position: [5, 5, 5],
         rotation: [0, 0, 0],
         scale: [1, 1, 1]
       },
       properties: {
         lightType: 'point',
-        intensity: 2,
-        color: '#ff0000',
+        intensity: 1.5,
+        color: '#ffffff',
         castShadow: true
       }
     }
 
-    const Component = (LightRenderer as any).type;
-    const result = Component({ actor }) as unknown as { type: string, props: any }
+    // Access the render function from the mocked forwardRef
+    // @ts-ignore
+    const render = LightRenderer.render || LightRenderer.type?.render
+    const result = render({ actor }, { current: null }) as React.ReactElement
 
     // It returns a group
     expect(result.type).toBe('group')
-    expect(result.props.position).toEqual([0, 5, 0])
+    expect(result.props.position).toEqual([5, 5, 5])
 
-    const children = React.Children.toArray(result.props.children)
-    // First child is primitive (target)
-    const target = children.find((c: any) => c.type === 'primitive')
-    expect(target).toBeDefined()
-
-    // Second child is the light
-    const light = children.find((c: any) => c.type === 'pointLight')
+    const children = React.Children.toArray(result.props.children) as React.ReactElement[]
+    const light = children.find(child => child.type === 'pointLight')
     expect(light).toBeDefined()
-    expect((light as any).props.intensity).toBe(2)
-    expect((light as any).props.color).toBe('#ff0000')
-    expect((light as any).props.castShadow).toBe(true)
+    expect(light?.props.intensity).toBe(1.5)
+    expect(light?.props.color).toBe('#ffffff')
+    expect(light?.props.castShadow).toBe(true)
   })
 
   it('renders a directional light with target', () => {
@@ -71,35 +70,43 @@ describe('LightRenderer', () => {
       type: 'light',
       visible: true,
       transform: {
-        position: [10, 10, 10],
-        rotation: [0, 0, 0],
+        position: [0, 10, 0],
+        rotation: [-Math.PI / 4, 0, 0],
         scale: [1, 1, 1]
       },
       properties: {
         lightType: 'directional',
-        intensity: 1,
-        color: '#ffffff',
-        castShadow: false
+        intensity: 1.0,
+        color: '#ffff00',
+        castShadow: true
       }
     }
 
-    const Component = (LightRenderer as any).type;
-    const result = Component({ actor }) as unknown as { type: string, props: any }
-    const children = React.Children.toArray(result.props.children)
+    // @ts-ignore
+    const render = LightRenderer.render || LightRenderer.type?.render
+    const result = render({ actor }, { current: null }) as React.ReactElement
+    const children = React.Children.toArray(result.props.children) as React.ReactElement[]
 
-    const light = children.find((c: any) => c.type === 'directionalLight')
+    const light = children.find(child => child.type === 'directionalLight')
     expect(light).toBeDefined()
-    // Verify target prop is passed (it will be the mocked ref object)
-    expect((light as any).props.target).toBeDefined()
+    expect(light?.props.target).toBeDefined()
+
+    // Find the target primitive
+    const targetPrimitive = children.find(child => child.type === 'primitive')
+    expect(targetPrimitive).toBeDefined()
   })
 
   it('renders nothing when visible is false', () => {
-     const actor: LightActor = {
+    const actor: LightActor = {
       id: 'l3',
-      name: 'Hidden',
+      name: 'Off',
       type: 'light',
       visible: false,
-      transform: { position: [0,0,0], rotation: [0,0,0], scale: [1,1,1] },
+      transform: {
+        position: [0, 0, 0],
+        rotation: [0, 0, 0],
+        scale: [1, 1, 1]
+      },
       properties: {
         lightType: 'point',
         intensity: 1,
@@ -107,8 +114,10 @@ describe('LightRenderer', () => {
         castShadow: false
       }
     }
-    const Component = (LightRenderer as any).type;
-    const result = Component({ actor })
+
+    // @ts-ignore
+    const render = LightRenderer.render || LightRenderer.type?.render
+    const result = render({ actor }, { current: null })
     expect(result).toBeNull()
   })
 })
