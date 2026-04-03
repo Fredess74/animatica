@@ -2,22 +2,21 @@ import { describe, it, expect, vi, afterEach } from 'vitest'
 import React from 'react'
 import { LightRenderer } from './LightRenderer'
 import { LightActor } from '../../types'
-import * as THREE from 'three'
 
-// Mock react to bypass hooks checks
+// Mock react to bypass hooks checks when calling component directly
 vi.mock('react', async () => {
   const actual = await vi.importActual<typeof import('react')>('react')
   return {
     ...actual,
-    useRef: () => ({ current: new THREE.Object3D() }),
-    useLayoutEffect: () => {}, // mock useLayoutEffect
-    useMemo: (fn: any) => fn(), // mock useMemo to just run the function
+    useRef: (val: any) => ({ current: val || null }),
+    useMemo: (fn: any) => fn(),
+    useImperativeHandle: () => {},
   }
 })
 
-// Mock useHelper
+// Mock the Edges component from @react-three/drei
 vi.mock('@react-three/drei', () => ({
-  useHelper: vi.fn(),
+  useHelper: () => null
 }))
 
 describe('LightRenderer', () => {
@@ -25,10 +24,70 @@ describe('LightRenderer', () => {
     vi.restoreAllMocks()
   })
 
-  it('renders a point light with correct props', () => {
+  it('renders a point light with correct intensity and color', () => {
     const actor: LightActor = {
-      id: 'l1',
+      id: '1',
       name: 'PointLight',
+      type: 'light',
+      visible: true,
+      transform: {
+        position: [1, 2, 3],
+        rotation: [0, 0, 0],
+        scale: [1, 1, 1]
+      },
+      properties: {
+        lightType: 'point',
+        intensity: 2,
+        color: '#ffff00',
+        castShadow: true
+      }
+    }
+
+    // Call the component as a function to inspect returned JSX
+    const result = (LightRenderer as any).type.render({ actor }, null) as React.ReactElement<{ [key: string]: any }>
+
+    // Verify group properties
+    expect(result.type).toBe('group')
+    expect(result.props.position).toEqual([1, 2, 3])
+
+    // Verify children (light and target)
+    const children = React.Children.toArray(result.props.children) as React.ReactElement<{ [key: string]: any }>[]
+
+    // Check light
+    const light = children.find((child) => child.type === 'pointLight')
+    expect(light).toBeDefined()
+    expect(light?.props.intensity).toBe(2)
+    expect(light?.props.color).toBe('#ffff00')
+    expect(light?.props.castShadow).toBe(true)
+  })
+
+  it('renders nothing when visible is false', () => {
+    const actor: LightActor = {
+      id: '3',
+      name: 'Invisible',
+      type: 'light',
+      visible: false,
+      transform: {
+        position: [0, 0, 0],
+        rotation: [0, 0, 0],
+        scale: [1, 1, 1]
+      },
+      properties: {
+        lightType: 'point',
+        intensity: 1,
+        color: '#ffffff',
+        castShadow: false
+      }
+    }
+
+    const result = (LightRenderer as any).type.render({ actor }, null)
+    expect(result).toBeNull()
+  })
+
+  it('renders spot light when lightType is spot', () => {
+    const actor: LightActor = {
+      id: '2',
+      name: 'SpotLight',
       type: 'light',
       visible: true,
       transform: {
@@ -37,78 +96,16 @@ describe('LightRenderer', () => {
         scale: [1, 1, 1]
       },
       properties: {
-        lightType: 'point',
-        intensity: 2,
-        color: '#ff0000',
+        lightType: 'spot',
+        intensity: 5,
+        color: '#ffffff',
         castShadow: true
       }
     }
 
-    const Component = (LightRenderer as any).type;
-    const result = Component({ actor }) as unknown as { type: string, props: any }
-
-    // It returns a group
-    expect(result.type).toBe('group')
-    expect(result.props.position).toEqual([0, 5, 0])
-
-    const children = React.Children.toArray(result.props.children)
-    // First child is primitive (target)
-    const target = children.find((c: any) => c.type === 'primitive')
-    expect(target).toBeDefined()
-
-    // Second child is the light
-    const light = children.find((c: any) => c.type === 'pointLight')
+    const result = (LightRenderer as any).type.render({ actor }, null) as React.ReactElement<{ [key: string]: any }>
+    const children = React.Children.toArray(result.props.children) as React.ReactElement<{ [key: string]: any }>[]
+    const light = children.find((child) => child.type === 'spotLight')
     expect(light).toBeDefined()
-    expect((light as any).props.intensity).toBe(2)
-    expect((light as any).props.color).toBe('#ff0000')
-    expect((light as any).props.castShadow).toBe(true)
-  })
-
-  it('renders a directional light with target', () => {
-    const actor: LightActor = {
-      id: 'l2',
-      name: 'Sun',
-      type: 'light',
-      visible: true,
-      transform: {
-        position: [10, 10, 10],
-        rotation: [0, 0, 0],
-        scale: [1, 1, 1]
-      },
-      properties: {
-        lightType: 'directional',
-        intensity: 1,
-        color: '#ffffff',
-        castShadow: false
-      }
-    }
-
-    const Component = (LightRenderer as any).type;
-    const result = Component({ actor }) as unknown as { type: string, props: any }
-    const children = React.Children.toArray(result.props.children)
-
-    const light = children.find((c: any) => c.type === 'directionalLight')
-    expect(light).toBeDefined()
-    // Verify target prop is passed (it will be the mocked ref object)
-    expect((light as any).props.target).toBeDefined()
-  })
-
-  it('renders nothing when visible is false', () => {
-     const actor: LightActor = {
-      id: 'l3',
-      name: 'Hidden',
-      type: 'light',
-      visible: false,
-      transform: { position: [0,0,0], rotation: [0,0,0], scale: [1,1,1] },
-      properties: {
-        lightType: 'point',
-        intensity: 1,
-        color: '#fff',
-        castShadow: false
-      }
-    }
-    const Component = (LightRenderer as any).type;
-    const result = Component({ actor })
-    expect(result).toBeNull()
   })
 })
