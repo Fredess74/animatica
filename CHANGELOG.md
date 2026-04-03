@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-04-03
+
+### Added
+
+- **Phase 2 & 3: Characters and Editor UI**:
+    - `Humanoid` character base implementation.
+    - `BoneController` for manual skeletal pose overrides.
+    - `EditorLayout` with triple-panel structure.
+    - `AssetLibrary`, `PropertiesPanel`, and `TimelinePanel` components.
+    - `ScriptConsole` for AI scene generation and validation.
+    - `ExportModal` for video export configuration.
+- **2D Storyboard Mode**:
+    - Initial implementation of 2D storyboard visualization.
+- **Improved Testing**:
+    - Standardized unit tests for all Engine renderers.
+    - Performance benchmarks for core logic.
+
 ## [0.1.0] - 2026-02-22
 
 ### Added
