@@ -1,4 +1,4 @@
-import React, { useRef, useMemo, memo } from 'react'
+import React, { useRef, useMemo, memo, forwardRef, useImperativeHandle } from 'react'
 import * as THREE from 'three'
 import { useHelper } from '@react-three/drei'
 import { LightActor } from '../../types'
@@ -20,12 +20,15 @@ interface LightRendererProps {
  * <LightRenderer actor={myLightActor} showHelper={true} />
  * ```
  */
-export const LightRenderer: React.FC<LightRendererProps> = memo(({
+export const LightRenderer = memo(forwardRef<THREE.Light, LightRendererProps>(({
   actor,
   showHelper = false,
-}) => {
+}, ref) => {
   // Use a union type for the ref to satisfy all light types and MutableRefObject
   const lightRef = useRef<THREE.Light | null>(null)
+
+  // Expose the light ref to parent components
+  useImperativeHandle(ref, () => lightRef.current!)
 
   // We use a dedicated target object for Spot and Directional lights
   // Placed at (0,0,-1) in local space, so rotating the parent group aims the light.
@@ -88,7 +91,7 @@ export const LightRenderer: React.FC<LightRendererProps> = memo(({
       )}
     </group>
   )
-})
+}))
 
 LightRenderer.displayName = 'LightRenderer'
 

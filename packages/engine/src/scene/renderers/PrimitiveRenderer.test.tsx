@@ -8,7 +8,9 @@ vi.mock('react', async () => {
   const actual = await vi.importActual<typeof import('react')>('react')
   return {
     ...actual,
-    useRef: () => ({ current: null }),
+    useRef: (val: any) => ({ current: val || null }),
+    useMemo: (fn: any) => fn(),
+    useImperativeHandle: () => {},
   }
 })
 
@@ -44,9 +46,8 @@ describe('PrimitiveRenderer', () => {
     }
 
     // Call the component as a function to inspect returned JSX
-    // Since it's wrapped in memo, we access the underlying function via .type
-    const Component = (PrimitiveRenderer as any).type;
-    const result = Component({ actor }) as React.ReactElement<{ [key: string]: any }>
+    // Since it's wrapped in memo(forwardRef), we access the underlying function via .type.render
+    const result = (PrimitiveRenderer as any).type.render({ actor }, null) as React.ReactElement<{ [key: string]: any }>
 
     // Verify mesh properties
     expect(result.type).toBe('mesh')
@@ -93,8 +94,7 @@ describe('PrimitiveRenderer', () => {
       }
     }
 
-    const Component = (PrimitiveRenderer as any).type;
-    const result = Component({ actor }) as React.ReactElement<{ [key: string]: any }>
+    const result = (PrimitiveRenderer as any).type.render({ actor }, null) as React.ReactElement<{ [key: string]: any }>
     const children = React.Children.toArray(result.props.children) as React.ReactElement<{ [key: string]: any }>[]
     const geometry = children.find((child) => child.type === 'sphereGeometry')
     expect(geometry).toBeDefined()
@@ -121,8 +121,7 @@ describe('PrimitiveRenderer', () => {
       }
     }
 
-    const Component = (PrimitiveRenderer as any).type;
-    const result = Component({ actor })
+    const result = (PrimitiveRenderer as any).type.render({ actor }, null)
     expect(result).toBeNull()
   })
 })
