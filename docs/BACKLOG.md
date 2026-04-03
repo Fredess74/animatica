@@ -4,70 +4,6 @@ This document tracks all open tasks, issues, and feature requests for the Animat
 
 ## Status: In Progress
 
-### [Task 2] Refactor: Move Zod Schemas
-- **Priority:** High
-- **Type:** Refactor
-- **Description:** Move the Zod schema definitions from `packages/engine/src/schemas/` to `packages/engine/src/importer/schemas/` to align with the project structure defined in `JULES_GUIDE.md`. Update all import references accordingly.
-- **Acceptance Criteria:**
-  - [ ] `packages/engine/src/importer/schemas/` directory exists.
-  - [ ] All schema files are moved to the new location.
-  - [ ] All imports in the codebase are updated to the new path.
-  - [ ] `npm run test` passes without errors.
-  - [ ] `npm run typecheck` passes without errors.
-
-## Status: Backlog
-
-### [Task 7] Feat: Light Renderer
-- **Priority:** High
-- **Type:** Feature (Rendering)
-- **Description:** Implement the `LightRenderer` component in `packages/engine/src/scene/renderers/LightRenderer.tsx`. This component should render PointLight, SpotLight, and DirectionalLight based on the actor's properties. It must also include a visible helper gizmo when in editor mode.
-- **Acceptance Criteria:**
-  - [ ] Renders `PointLight`, `SpotLight`, and `DirectionalLight` correctly based on actor type.
-  - [ ] Updates light properties (color, intensity, position) from the store.
-  - [ ] Displays a helper gizmo (e.g., `PointLightHelper`) when `isSelected` is true or in editor debug mode.
-  - [ ] Unit tests pass.
-
-### [Task 8] Feat: Camera Renderer
-- **Priority:** High
-- **Type:** Feature (Rendering)
-- **Description:** Implement the `CameraRenderer` component in `packages/engine/src/scene/renderers/CameraRenderer.tsx`. It should manage the `PerspectiveCamera` for the "rec view" and render a camera helper (frustum wireframe) in the editor view.
-- **Acceptance Criteria:**
-  - [ ] Renders a `PerspectiveCamera` with `makeDefault` when active.
-  - [ ] Renders a `CameraHelper` to visualize the frustum when not active (or in debug mode).
-  - [ ] Updates camera transform and FOV from the store.
-  - [ ] Unit tests pass.
-
-### [Task 9] Feat: Scene Manager
-- **Priority:** High
-- **Type:** Feature (Core)
-- **Description:** Implement the `SceneManager` component in `packages/engine/src/scene/SceneManager.tsx`. This component acts as the orchestrator, reading actors from the store and dispatching them to the correct renderer (Primitive, Light, Camera, Character). It also handles global environment settings like ambient light, fog, and grid.
-- **Acceptance Criteria:**
-  - [ ] Subscribes to `useEngineStore` to get the list of actors.
-  - [ ] Maps each actor to its corresponding renderer component.
-  - [ ] Renders global environment (ambient light, sun light, fog, grid) based on store state.
-  - [ ] Integration tests verify actors appear in the scene.
-
-### [Task 10] Feat: Playback Controller
-- **Priority:** High
-- **Type:** Feature (Animation)
-- **Description:** Implement the `PlaybackController` component in `packages/engine/src/animation/PlaybackController.tsx`. This component uses the R3F `useFrame` hook to advance `currentTime` when playing, apply the Keyframe Engine to all tracks, and update actors in the store.
-- **Acceptance Criteria:**
-  - [ ] Implements `useFrame` loop.
-  - [ ] Advances `currentTime` in the store when `isPlaying` is true.
-  - [ ] Interpolates values for all tracks using `KeyframeEngine`.
-  - [ ] Updates actor properties in the store for the current frame.
-  - [ ] Supports pause and seek operations.
-
-### [Task 11] Feat: Humanoid Base
-- **Priority:** Medium
-- **Type:** Feature (Character)
-- **Description:** Implement the `Humanoid` component in `packages/engine/src/characters/Humanoid.tsx`. It should load a ReadyPlayerMe GLB model and display a basic idle animation.
-- **Acceptance Criteria:**
-  - [ ] Loads GLB model from a URL.
-  - [ ] Handles loading states (loading spinner/placeholder).
-  - [ ] Handles error states (fallback mesh).
-  - [ ] Plays a default idle animation if available.
-
 ### [Task 12] Feat: Bone Controller
 - **Priority:** Medium
 - **Type:** Feature (Character)
@@ -94,11 +30,39 @@ This document tracks all open tasks, issues, and feature requests for the Animat
   - [ ] Attaches meshes to the correct parent bones in the skeleton.
   - [ ] Supports color customization via material properties.
 
+## Status: Backlog
+
+### [Task 19] Feat: Script Console
+- **Priority:** Low
+- **Type:** Feature (Editor UI)
+- **Description:** Modal with textarea for JSON input. Buttons: Validate, Build Scene, Copy AI Prompt. Shows validation errors inline.
+- **Acceptance Criteria:**
+  - [ ] Validates JSON input with Zod.
+  - [ ] Dispatches store updates on "Build Scene".
+
+### [Task 20] Feat: Export Modal
+- **Priority:** Low
+- **Type:** Feature (Editor UI)
+- **Description:** Resolution selector (1080p/4K), FPS (24/30/60), format (MP4). Start/cancel export. Progress bar.
+- **Acceptance Criteria:**
+  - [ ] Selection options for resolution and FPS.
+  - [ ] Visual progress bar for export.
+
 ## Status: Done
 
 - **[Task 1] Types & Interfaces:** Defined core TypeScript interfaces.
+- **[Task 2] Refactor: Move Zod Schemas:** Moved schemas to `packages/engine/src/importer/schemas/`.
 - **[Task 3] Easing Functions:** Implemented standard easing functions.
 - **[Task 4] Keyframe Engine:** Implemented keyframe interpolation logic.
 - **[Task 5] Zustand Store:** Implemented global state management with Immer.
 - **[Task 6] Primitive Renderer:** Implemented basic shape rendering.
-- **[Task 21] Script Importer:** Implemented JSON script import and validation (executed out of order).
+- **[Task 7] Light Renderer:** Implemented light component with helpers.
+- **[Task 8] Camera Renderer:** Implemented camera component with helpers.
+- **[Task 9] Scene Manager:** Implemented scene orchestration and global environment.
+- **[Task 10] Playback Controller:** Implemented animation playback and store updates.
+- **[Task 11] Humanoid Base:** Implemented ReadyPlayerMe GLB loader and idle animation.
+- **[Task 15] Editor Layout:** Implemented 3-panel layout for the editor.
+- **[Task 16] Asset Library:** Implemented categorized list for actor creation.
+- **[Task 17] Properties Panel:** Implemented property editing for selected actors.
+- **[Task 18] Timeline Panel:** Implemented keyframe scrubber and playback controls.
+- **[Task 21] Script Importer:** Implemented JSON script import and validation.
