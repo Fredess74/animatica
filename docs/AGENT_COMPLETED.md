@@ -25,3 +25,8 @@
 - [DONE] [editor-modal-dev] [2026-02-24] Improve ScriptConsole/ExportModal and add useKeyboardShortcuts hook
 - [DONE] [conductor] [2026-02-24] Updated task queue for Phase 2 (Characters) and Phase 3 (Editor Viewport)
 - [DONE] [readme-updater] [2026-02-25] Update README.md with current features, quick start guide
+- [DONE] [engine-scene-dev] [2026-04-03] Implement Primitive, Light, and Camera renderers (Batch 2)
+- [DONE] [engine-scene-dev] [2026-04-03] Implement SceneManager and integration tests
+- [DONE] [engine-playback-dev] [2026-04-03] Implement PlaybackController and animation interpolation engine
+- [DONE] [editor-layout-dev] [2026-04-03] Implement EditorLayout and 3-panel UI
+- [DONE] [editor-viewport-dev] [2026-04-03] Implement Editor Viewport with R3F Canvas and gizmos
