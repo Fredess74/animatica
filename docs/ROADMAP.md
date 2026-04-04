@@ -97,7 +97,7 @@ Each phase has clear deliverables and can be validated independently.
 
 | Task | Owner | Deliverable |
 |------|-------|-------------|
-| Auth (email + OAuth + wallet) | Jules | Login/register working |
+| Auth (email + OAuth) | Jules | Login/register working |
 | Creator profiles | Jules | Avatar, bio, filmography |
 | Video upload + hosting | Jules | R2 storage + Cloudflare Stream |
 | Feed (discovery) | Jules | Browse latest/popular films |
@@ -130,22 +130,21 @@ Each phase has clear deliverables and can be validated independently.
 
 ---
 
-## Phase 8: Crypto Monetization (Weeks 25-28)
+## Phase 8: Monetization (Weeks 25-28)
 
-**Goal:** Transparent donation pool with automatic revenue splitting.
+**Goal:** Transparent donation system with automatic revenue splitting.
 
 | Task | Owner | Deliverable |
 |------|-------|-------------|
-| DonationPool.sol | Jules | Deploy + test on testnet |
-| CreatorFund.sol | Jules | Weight updates + claim |
-| AnimaticaTreasury.sol | Jules | Withdrawal by owner |
-| AssetMarketplace.sol | Jules | On-chain asset purchases |
-| Wallet connect (wagmi) | Jules | RainbowKit modal in app |
+| Donation system | Jules | Database schema + API |
+| Creator Fund | Jules | Revenue calculation logic |
+| Treasury management | Jules | Admin withdrawal interface |
+| Marketplace integration | Jules | Asset purchases in editor |
 | Donate button | Jules | One-click donation flow |
 | Fiat on-ramp (Stripe) | Human | Credit card → donation |
 | Earnings dashboard | Jules | Real-time balance, claim button |
 
-**Milestone:** Donate $1 to a film → see 70¢ in creator wallet instantly.
+**Milestone:** Donate $1 to a film → see 70¢ in creator account instantly.
 
 ---
 
@@ -196,7 +195,7 @@ Weeks 9-10:  Phase 4 (Export & Audio)
 Weeks 11-14: Phase 5 (AI Integration)
 Weeks 15-20: Phase 6 (Platform)
 Weeks 21-24: Phase 7 (Marketplace)
-Weeks 25-28: Phase 8 (Crypto)
+Weeks 25-28: Phase 8 (Monetization)
 Weeks 29-32: Phase 9 (Collaboration)
 Weeks 33-40: Phase 10 (2D + Polish)
 ```
