@@ -1,8 +1,10 @@
+// @vitest-environment node
 import { describe, it, afterAll } from 'vitest';
-import { interpolateKeyframes } from '../animation/interpolate';
-import { ProjectStateSchema } from '../importer/schemas';
+import { interpolateKeyframes, evaluateTracksAtTime } from '../animation/interpolate';
+import * as Easing from '../animation/easing';
+import { ProjectStateSchema, ActorSchema, CharacterActorSchema } from '../importer/schemas';
 import { useSceneStore } from '../store/sceneStore';
-import type { Keyframe, ProjectState, Actor, PrimitiveActor, Vector3 } from '../types';
+import type { Keyframe, ProjectState, Actor, PrimitiveActor, Vector3, AnimationTrack } from '../types';
 import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
@@ -33,7 +35,48 @@ describe('Engine Benchmarks', () => {
         );
     });
 
+    describe('Raw Easing Math (1M ops)', () => {
+        const ITERATIONS = 1000000;
+        const easings = ['linear', 'easeIn', 'easeOut', 'easeInOut', 'step', 'bounce', 'elastic'] as const;
+
+        easings.forEach((name) => {
+            it(`Easing: ${name}`, () => {
+                const fn = Easing[name];
+                measure(`Easing Math: ${name}`, () => {
+                    for (let i = 0; i < ITERATIONS; i++) {
+                        fn(Math.random());
+                    }
+                });
+            });
+        });
+    });
+
     describe('Interpolation Performance', () => {
+        it('Evaluate Tracks (100 tracks, 10 keyframes each)', () => {
+            const tracks: AnimationTrack[] = [];
+            for (let i = 0; i < 100; i++) {
+                const keyframes: Keyframe<number>[] = [];
+                for (let j = 0; j < 10; j++) {
+                    keyframes.push({
+                        time: j,
+                        value: j * 10,
+                        easing: 'easeInOut',
+                    });
+                }
+                tracks.push({
+                    targetId: `actor-${i}`,
+                    property: 'transform.position.x',
+                    keyframes,
+                });
+            }
+
+            measure('Evaluate 100 Tracks (1k ops)', () => {
+                for (let i = 0; i < 1000; i++) {
+                    evaluateTracksAtTime(tracks, Math.random() * 10);
+                }
+            });
+        });
+
         it('Number Interpolation (10k ops, 10k keyframes)', () => {
             const keyframes: Keyframe<number>[] = [];
             for (let i = 0; i < 10000; i++) {
@@ -90,6 +133,58 @@ describe('Engine Benchmarks', () => {
     });
 
     describe('Schema Validation Performance', () => {
+        it('Actor Schema Validation (1k runs)', () => {
+            const actor: PrimitiveActor = {
+                id: 'actor-0',
+                name: 'Actor 0',
+                type: 'primitive',
+                transform: {
+                    position: [0, 0, 0],
+                    rotation: [0, 0, 0],
+                    scale: [1, 1, 1],
+                },
+                visible: true,
+                properties: {
+                    shape: 'box',
+                    color: '#ff0000',
+                    roughness: 0.5,
+                    metalness: 0.5,
+                    opacity: 1,
+                    wireframe: false,
+                },
+            };
+
+            measure('Actor Schema Validation (1k runs)', () => {
+                for (let i = 0; i < 1000; i++) {
+                    ActorSchema.parse(actor);
+                }
+            });
+        });
+
+        it('Character Actor Schema Validation (1k runs)', () => {
+            const actor = {
+                id: 'actor-0',
+                name: 'Actor 0',
+                type: 'character',
+                transform: {
+                    position: [0, 0, 0],
+                    rotation: [0, 0, 0],
+                    scale: [1, 1, 1],
+                },
+                visible: true,
+                animation: 'idle',
+                morphTargets: { mouthSmile: 0.5 },
+                bodyPose: { head: [0.1, 0, 0] },
+                clothing: { torso: [{ type: 'shirt', color: '#ff0000', visible: true }] },
+            };
+
+            measure('Character Actor Schema Validation (1k runs)', () => {
+                for (let i = 0; i < 1000; i++) {
+                    CharacterActorSchema.parse(actor);
+                }
+            });
+        });
+
         it('Project Schema Validation (100 runs, 100 actors)', () => {
             const actors: Actor[] = [];
             for (let i = 0; i < 100; i++) {
@@ -197,6 +292,35 @@ describe('Engine Benchmarks', () => {
             measure('Store Remove Actor (1k ops)', () => {
                 for (let i = 0; i < 1000; i++) {
                     getState().removeActor(`bench-${i}`);
+                }
+            });
+        });
+
+        it('Store Undo/Redo Throughput (100 cycles)', () => {
+            const { getState } = useSceneStore;
+            const temporal = useSceneStore.temporal.getState();
+
+            // Setup: Perform some actions to create history
+            for (let i = 0; i < 100; i++) {
+                getState().addActor({
+                    id: `undo-bench-${i}`,
+                    name: `Actor ${i}`,
+                    type: 'primitive',
+                    transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
+                    visible: true,
+                    properties: { shape: 'box', color: '#ff0000', roughness: 0.5, metalness: 0.5, opacity: 1, wireframe: false }
+                } as PrimitiveActor);
+            }
+
+            measure('Store Undo (100 ops)', () => {
+                for (let i = 0; i < 100; i++) {
+                    temporal.undo();
+                }
+            });
+
+            measure('Store Redo (100 ops)', () => {
+                for (let i = 0; i < 100; i++) {
+                    temporal.redo();
                 }
             });
         });
