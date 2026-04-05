@@ -19,6 +19,9 @@ export default defineConfig({
                 'react',
                 'react-dom',
                 '@Animatica/engine',
+                'three',
+                '@react-three/fiber',
+                '@react-three/drei',
                 'lucide-react',
                 'clsx',
                 'tailwind-merge'
