@@ -138,3 +138,74 @@ export const useActorsByType = (type: Actor['type']) =>
  * Hook to get the list of all actors.
  */
 export const useActorList = () => useSceneStore((state) => state.actors);
+
+// Action Hooks (Action-only to prevent unnecessary re-renders)
+
+/**
+ * Hook to get actor-related actions.
+ */
+export const useActorActions = () =>
+  useSceneStore(
+    useShallow((state) => ({
+      addActor: state.addActor,
+      removeActor: state.removeActor,
+      updateActor: state.updateActor,
+      setSelectedActor: state.setSelectedActor,
+    }))
+  );
+
+/**
+ * Hook to get environment-related actions.
+ */
+export const useEnvironmentActions = () =>
+  useSceneStore((state) => state.setEnvironment);
+
+/**
+ * Hook to get timeline-related actions.
+ */
+export const useTimelineActions = () =>
+  useSceneStore((state) => state.setTimeline);
+
+/**
+ * Hook to get playback-related actions.
+ */
+export const usePlaybackActions = () =>
+  useSceneStore((state) => state.setPlayback);
+
+/**
+ * Hook to get metadata-related actions.
+ */
+export const useMetaActions = () =>
+  useSceneStore((state) => state.setMeta);
+
+// State Hooks (Granular state access with useShallow)
+
+/**
+ * Hook to get the current environment settings.
+ */
+export const useEnvironmentState = () =>
+  useSceneStore(useShallow((state) => state.environment));
+
+/**
+ * Hook to get the timeline configuration.
+ */
+export const useTimelineState = () =>
+  useSceneStore(useShallow((state) => state.timeline));
+
+/**
+ * Hook to get the current playback state.
+ */
+export const usePlaybackState = () =>
+  useSceneStore(useShallow((state) => state.playback));
+
+/**
+ * Hook to get the project metadata.
+ */
+export const useMetaState = () =>
+  useSceneStore(useShallow((state) => state.meta));
+
+/**
+ * Hook to get the asset library.
+ */
+export const useLibrary = () =>
+  useSceneStore(useShallow((state) => state.library));
