@@ -21,6 +21,16 @@ export {
   useSelectedActor,
   useActorsByType,
   useActorList,
+  useActorActions,
+  useEnvironmentActions,
+  useTimelineActions,
+  usePlaybackActions,
+  useMetaActions,
+  useEnvironmentState,
+  useTimelineState,
+  usePlaybackState,
+  useMetaState,
+  useLibrary,
 } from './store/sceneStore';
 
 // === COMPONENTS (R3F) ===
@@ -29,7 +39,6 @@ export { LightRenderer } from './scene/renderers/LightRenderer'
 export { CameraRenderer } from './scene/renderers/CameraRenderer'
 export { CharacterRenderer } from './scene/renderers/CharacterRenderer'
 export { SceneManager } from './scene/SceneManager'
-export { usePlayback } from './playback/PlaybackController'
 
 // === CHARACTER SYSTEM ===
 export * from './character/index'
