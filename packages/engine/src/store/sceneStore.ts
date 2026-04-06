@@ -90,20 +90,103 @@ export const getCurrentTime = (state: SceneStoreState): number =>
 // Hooks
 
 /**
+ * Hook to access actor-related state.
+ * Optimized with useShallow.
+ */
+export const useActorState = () =>
+  useSceneStore(
+    useShallow((state) => ({
+      actors: state.actors,
+      selectedActorId: state.selectedActorId,
+    }))
+  );
+
+/**
+ * Hook to access actor-related actions.
+ * Since actions are stable, this hook will not trigger re-renders.
+ */
+export const useActorActions = () =>
+  useSceneStore(
+    useShallow((state) => ({
+      addActor: state.addActor,
+      removeActor: state.removeActor,
+      updateActor: state.updateActor,
+      setSelectedActor: state.setSelectedActor,
+    }))
+  );
+
+/**
+ * Hook to access environment-related state.
+ */
+export const useEnvironmentState = () =>
+  useSceneStore((state) => state.environment);
+
+/**
+ * Hook to access environment-related actions.
+ */
+export const useEnvironmentActions = () =>
+  useSceneStore((state) => state.setEnvironment);
+
+/**
+ * Hook to access timeline-related state.
+ */
+export const useTimelineState = () =>
+  useSceneStore((state) => state.timeline);
+
+/**
+ * Hook to access timeline-related actions.
+ */
+export const useTimelineActions = () =>
+  useSceneStore((state) => state.setTimeline);
+
+/**
+ * Hook to access playback-related state.
+ */
+export const usePlaybackState = () =>
+  useSceneStore((state) => state.playback);
+
+/**
+ * Hook to access playback-related actions.
+ */
+export const usePlaybackActions = () =>
+  useSceneStore((state) => state.setPlayback);
+
+/**
+ * Hook to access project metadata.
+ */
+export const useMetaState = () =>
+  useSceneStore((state) => state.meta);
+
+/**
+ * Hook to access metadata-related actions.
+ */
+export const useMetaActions = () =>
+  useSceneStore((state) => state.setMeta);
+
+/**
+ * Hook to access the asset library.
+ */
+export const useLibrary = () =>
+  useSceneStore((state) => state.library);
+
+/**
  * Hook to select a specific actor by ID.
+ * Optimized: Only re-renders if the specific actor reference changes.
  */
 export const useActorById = (id: string) =>
   useSceneStore((state) => state.actors.find((a) => a.id === id));
 
 /**
  * Hook to get the list of all actor IDs.
- * Optimized with useShallow to prevent re-renders when actor properties change.
+ * Optimized with useShallow to prevent re-renders when actor properties change
+ * but the set of IDs remains identical.
  */
 export const useActorIds = () =>
   useSceneStore(useShallow((state) => state.actors.map((a) => a.id)));
 
 /**
  * Hook to get the current playback time.
+ * High-frequency update: use this only where necessary.
  */
 export const useCurrentTime = () =>
   useSceneStore((state) => state.playback.currentTime);
@@ -130,6 +213,7 @@ export const useSelectedActor = () =>
 
 /**
  * Hook to get all actors of a specific type.
+ * Optimized with useShallow.
  */
 export const useActorsByType = (type: Actor['type']) =>
   useSceneStore(useShallow((state) => state.actors.filter((a) => a.type === type)));
