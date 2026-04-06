@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-04-06
+
+### Added
+
+- **Phase 2: Characters** progress:
+    - Humanoid base renderer and skeletal mapping.
+    - Bone Controller for mapping body poses to skeleton.
+    - Improved character animation coverage.
+- **Phase 3: Editor UI** implementation:
+    - Three-panel layout (Sidebar, Viewport, Timeline).
+    - Asset Library for characters, props, and lights.
+    - Properties Panel with transform and material controls.
+    - Timeline Panel with playhead scrubber and keyframe management.
+    - 2D Storyboard mode for quick scene planning.
+- **Phase 4: Export** progress:
+    - Export Modal with resolution and FPS selection.
+
+### Fixed
+
+- Optimized `CharacterRenderer` lifecycle and visibility handling.
+- Improved store performance and state selector efficiency.
+
 ## [0.1.0] - 2026-02-22
 
 ### Added

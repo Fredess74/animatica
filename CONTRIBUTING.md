@@ -7,31 +7,31 @@ Thank you for your interest in contributing! This guide covers the development w
 ```bash
 git clone https://github.com/YOUR_ORG/Animatica.git
 cd Animatica
-npm install
+pnpm install
 ```
 
 ## Development
 
 ```bash
 # Run everything
-npm run dev
+pnpm run dev
 
 # Run specific package
-npm run dev --workspace=packages/engine
-npm run dev --workspace=packages/editor
+pnpm --filter @Animatica/engine dev
+pnpm --filter @Animatica/editor dev
 ```
 
 ## Testing
 
 ```bash
 # All packages
-npm run test
+pnpm run test
 
 # Specific package
-npm run test --workspace=packages/engine
+pnpm --filter @Animatica/engine test
 
 # Type checking
-npm run typecheck
+pnpm run typecheck
 ```
 
 ## PR Guidelines
