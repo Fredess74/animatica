@@ -20,6 +20,7 @@ import {
 import { FaceMorphController } from '../../character/FaceMorphController'
 import { EyeController } from '../../character/EyeController'
 import { getPreset } from '../../character/CharacterPresets'
+import { BoneController } from '../../character/BoneController'
 import type { CharacterActor } from '../../types'
 
 interface CharacterRendererProps {
@@ -35,6 +36,7 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
 }) => {
   const groupRef = useRef<THREE.Group>(null)
   const animatorRef = useRef<CharacterAnimator | null>(null)
+  const boneControllerRef = useRef<BoneController | null>(null)
   const faceMorphRef = useRef<FaceMorphController | null>(null)
   const eyeControllerRef = useRef<EyeController | null>(null)
 
@@ -63,6 +65,10 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     animator.registerClip('jump', createJumpClip())
     animator.play(actor.animation || 'idle')
     animatorRef.current = animator
+
+    // Setup bone controller for pose overrides
+    const boneController = new BoneController(rig.bones)
+    boneControllerRef.current = boneController
 
     // Setup face morph controller
     const faceMorph = new FaceMorphController(rig.bodyMesh, rig.morphTargetMap)
@@ -103,6 +109,11 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     // Skeletal animation
     if (animatorRef.current) {
       animatorRef.current.update(delta)
+    }
+
+    // Apply manual pose overrides on top of animation
+    if (boneControllerRef.current && actor.bodyPose) {
+      boneControllerRef.current.updatePose(actor.bodyPose)
     }
 
     // Face morph blending
