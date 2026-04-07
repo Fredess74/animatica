@@ -19,6 +19,7 @@ import {
 } from '../../character/CharacterAnimator'
 import { FaceMorphController } from '../../character/FaceMorphController'
 import { EyeController } from '../../character/EyeController'
+import { BoneController } from '../../character/BoneController'
 import { getPreset } from '../../character/CharacterPresets'
 import type { CharacterActor } from '../../types'
 
@@ -35,6 +36,7 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
 }) => {
   const groupRef = useRef<THREE.Group>(null)
   const animatorRef = useRef<CharacterAnimator | null>(null)
+  const boneControllerRef = useRef<BoneController | null>(null)
   const faceMorphRef = useRef<FaceMorphController | null>(null)
   const eyeControllerRef = useRef<EyeController | null>(null)
 
@@ -68,6 +70,11 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     const faceMorph = new FaceMorphController(rig.bodyMesh, rig.morphTargetMap)
     faceMorphRef.current = faceMorph
 
+    // Setup bone controller
+    const boneController = new BoneController(rig.bones)
+    boneController.updatePose(actor.bodyPose)
+    boneControllerRef.current = boneController
+
     // Setup eye controller
     const eyeController = new EyeController()
     eyeControllerRef.current = eyeController
@@ -91,6 +98,13 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     }
   }, [actor.animationSpeed])
 
+  // React to body pose changes
+  useEffect(() => {
+    if (boneControllerRef.current) {
+      boneControllerRef.current.updatePose(actor.bodyPose)
+    }
+  }, [actor.bodyPose])
+
   // React to morph target / expression changes from CharacterPanel
   useEffect(() => {
     if (faceMorphRef.current && actor.morphTargets) {
@@ -103,6 +117,11 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     // Skeletal animation
     if (animatorRef.current) {
       animatorRef.current.update(delta)
+    }
+
+    // Apply body pose overrides on top of animation
+    if (boneControllerRef.current) {
+      boneControllerRef.current.update(delta)
     }
 
     // Face morph blending
