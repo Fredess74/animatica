@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-04-07
+
+### Added
+
+- **Phase 2: Characters** progress:
+    - Bone Controller for mapping BodyPose to Three.js bones.
+- **Phase 3: Editor UI** progress:
+    - 2D Storyboard mode implementation.
+    - Improved test coverage for character animation.
+- **Phase 5: AI Integration** progress:
+    - AI Prompt Templates for scene generation.
+    - Script Importer for JSON-based scene descriptions.
+
+### Fixed
+
+- Resolved issues with character animation rendering in the editor.
+
+### Changed
+
+- Synchronized versions across the monorepo to 0.2.0.
+- Updated documentation and pre-release checklists.
+
 ## [0.1.0] - 2026-02-22
 
 ### Added
