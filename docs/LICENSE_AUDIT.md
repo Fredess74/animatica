@@ -1,6 +1,6 @@
 # License Audit
 
-**Date:** 2026-02-25
+**Date:** 2026-04-07
 **Auditor:** Jules (License Auditor)
 
 ## Summary
@@ -27,7 +27,9 @@ Transitive dependencies: 654
 The following dependencies have non-MIT licenses:
 
 | Dependency | Version | License | Type |
-| --- | --- | --- |
+| --- | --- | --- | --- |
+| @csstools/color-helpers | 6.0.2 | MIT-0 | Transitive |
+| @csstools/css-syntax-patches-for-csstree | 1.0.28 | MIT-0 | Transitive |
 | @dimforge/rapier3d-compat | 0.12.0 | Apache-2.0 | Transitive |
 | @ethereumjs/rlp | 4.0.1 | MPL-2.0 | Transitive |
 | @ethereumjs/util | 8.1.0 | MPL-2.0 | Transitive |
@@ -45,6 +47,7 @@ The following dependencies have non-MIT licenses:
 | @swc/helpers | 0.5.15 | Apache-2.0 | Transitive |
 | @webgpu/types | 0.1.69 | BSD-3-Clause | Transitive |
 | abbrev | 1.0.9 | ISC | Transitive |
+| amdefine | 1.0.1 | BSD-3-Clause OR MIT | Transitive |
 | ansi-align | 3.0.1 | ISC | Transitive |
 | antlr4ts | 0.5.0-alpha.4 | BSD-3-Clause | Transitive |
 | anymatch | 3.1.3 | ISC | Transitive |
@@ -112,6 +115,7 @@ The following dependencies have non-MIT licenses:
 | semver | 5.7.2 | ISC | Transitive |
 | serialize-javascript | 6.0.2 | BSD-3-Clause | Transitive |
 | setprototypeof | 1.2.0 | ISC | Transitive |
+| sha.js | 2.4.12 | (MIT AND BSD-3-Clause) | Transitive |
 | sha1 | 1.1.1 | BSD-3-Clause | Transitive |
 | sharp | 0.34.5 | Apache-2.0 | Transitive |
 | shelljs | 0.8.5 | BSD-3-Clause | Transitive |
@@ -122,10 +126,12 @@ The following dependencies have non-MIT licenses:
 | source-map-js | 1.2.1 | BSD-3-Clause | Transitive |
 | split2 | 3.2.2 | ISC | Transitive |
 | sprintf-js | 1.0.3 | BSD-3-Clause | Transitive |
+| string-format | 2.0.0 | WTFPL OR MIT | Transitive |
 | table | 6.9.0 | BSD-3-Clause | Transitive |
 | tough-cookie | 6.0.0 | BSD-3-Clause | Transitive |
 | ts-command-line-args | 2.5.1 | ISC | Transitive |
 | tslib | 1.14.1 | 0BSD | Transitive |
+| type-fest | 0.7.1 | (MIT OR CC0-1.0) | Transitive |
 | typescript | 5.9.3 | Apache-2.0 | **Direct** |
 | uglify-js | 3.19.3 | BSD-2-Clause | Transitive |
 | web3-utils | 1.10.4 | LGPL-3.0 | Transitive |
@@ -144,7 +150,7 @@ The following dependencies have non-MIT licenses:
 | --- | --- | --- |
 | @nomicfoundation/hardhat-toolbox | MIT | @Animatica/contracts |
 | @openzeppelin/contracts | MIT | @Animatica/contracts |
-| @react-three/drei | MIT | @Animatica/engine |
+| @react-three/drei | MIT | @Animatica/editor, @Animatica/engine |
 | @react-three/fiber | MIT | @Animatica/editor, @Animatica/engine, @Animatica/web |
 | @tailwindcss/postcss | MIT | @Animatica/editor |
 | @testing-library/dom | MIT | @Animatica/web |
@@ -152,7 +158,7 @@ The following dependencies have non-MIT licenses:
 | @types/node | MIT | @Animatica/engine |
 | @types/react | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web |
 | @types/react-dom | MIT | @Animatica/editor, @Animatica/platform, @Animatica/web |
-| @types/three | MIT | @Animatica/engine |
+| @types/three | MIT | @Animatica/editor, @Animatica/engine |
 | @types/uuid | MIT | @Animatica/engine |
 | @vitejs/plugin-react | MIT | @Animatica/editor |
 | clsx | MIT | @Animatica/editor |
@@ -168,11 +174,11 @@ The following dependencies have non-MIT licenses:
 | three | MIT | @Animatica/editor, @Animatica/engine, @Animatica/web |
 | tone | MIT | @Animatica/engine |
 | turbo | MIT | Animatica |
-| typescript | Apache-2.0 | @Animatica/contracts, @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web, Animatica |
+| typescript | Apache-2.0 | Animatica, @Animatica/contracts, @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web |
 | uuid | MIT | @Animatica/engine |
 | vite | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform |
 | vitest | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web |
-| zod | MIT | @Animatica/engine |
+| zod | MIT | @Animatica/engine, @Animatica/web |
 | zundo | MIT | @Animatica/engine |
 | zustand | MIT | @Animatica/engine |
 
@@ -867,7 +873,7 @@ The following dependencies have non-MIT licenses:
 | yargs-unparser | 2.0.0 | MIT |
 | yn | 3.1.1 | MIT |
 | yocto-queue | 0.1.0 | MIT |
-| zod | 4.3.6 | MIT |
+| zod | 3.25.76 | MIT |
 | zundo | 2.3.0 | MIT |
 | zustand | 4.5.7 | MIT |
 
