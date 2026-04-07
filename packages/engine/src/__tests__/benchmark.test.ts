@@ -1,11 +1,23 @@
-import { describe, it, afterAll } from 'vitest';
-import { interpolateKeyframes } from '../animation/interpolate';
+import { describe, it, afterAll, vi } from 'vitest';
+import { interpolateKeyframes, evaluateTracksAtTime } from '../animation/interpolate';
+import * as Easing from '../animation/easing';
 import { ProjectStateSchema } from '../importer/schemas';
 import { useSceneStore } from '../store/sceneStore';
 import type { Keyframe, ProjectState, Actor, PrimitiveActor, Vector3 } from '../types';
 import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
+
+// Mock localStorage for Zustand persist middleware
+const mockStorage = {
+    getItem: vi.fn(),
+    setItem: vi.fn(),
+    removeItem: vi.fn(),
+    clear: vi.fn(),
+    length: 0,
+    key: vi.fn(),
+};
+vi.stubGlobal('localStorage', mockStorage);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -27,13 +39,43 @@ describe('Engine Benchmarks', () => {
         if (!fs.existsSync(reportDir)) {
             fs.mkdirSync(reportDir, { recursive: true });
         }
+
+        const reportPath = path.join(reportDir, 'baseline_metrics.json');
+        let existingResults: Record<string, string> = {};
+
+        if (fs.existsSync(reportPath)) {
+            try {
+                existingResults = JSON.parse(fs.readFileSync(reportPath, 'utf-8'));
+            } catch (e) {
+                console.error('Failed to parse existing baseline_metrics.json', e);
+            }
+        }
+
+        const mergedResults = { ...existingResults, ...results };
+
         fs.writeFileSync(
-            path.join(reportDir, 'baseline_metrics.json'),
-            JSON.stringify(results, null, 2)
+            reportPath,
+            JSON.stringify(mergedResults, null, 2)
         );
     });
 
-    describe('Interpolation Performance', () => {
+    describe('Easing Math Performance', { timeout: 15000 }, () => {
+        it('Easing Functions (1M operations)', () => {
+            measure('Easing Functions (1M ops)', () => {
+                for (let i = 0; i < 1000000; i++) {
+                    const t = Math.random();
+                    Easing.linear(t);
+                    Easing.easeIn(t);
+                    Easing.easeOut(t);
+                    Easing.easeInOut(t);
+                    Easing.bounce(t);
+                    Easing.elastic(t);
+                }
+            });
+        });
+    });
+
+    describe('Interpolation Performance', { timeout: 15000 }, () => {
         it('Number Interpolation (10k ops, 10k keyframes)', () => {
             const keyframes: Keyframe<number>[] = [];
             for (let i = 0; i < 10000; i++) {
@@ -87,12 +129,32 @@ describe('Engine Benchmarks', () => {
                 }
             });
         });
+
+        it('evaluateTracksAtTime Performance (1k tracks)', () => {
+            const tracks = [];
+            for (let i = 0; i < 1000; i++) {
+                tracks.push({
+                    targetId: `actor-${i}`,
+                    property: 'position',
+                    keyframes: [
+                        { time: 0, value: [0, 0, 0] as Vector3, easing: 'linear' as const },
+                        { time: 10, value: [10, 10, 10] as Vector3, easing: 'linear' as const },
+                    ],
+                });
+            }
+
+            measure('evaluateTracksAtTime (1k tracks)', () => {
+                for (let i = 0; i < 100; i++) {
+                    evaluateTracksAtTime(tracks, Math.random() * 10);
+                }
+            });
+        });
     });
 
-    describe('Schema Validation Performance', () => {
-        it('Project Schema Validation (100 runs, 100 actors)', () => {
+    describe('Schema Validation Performance', { timeout: 15000 }, () => {
+        it('Project Schema Validation (10 runs, 1k actors)', () => {
             const actors: Actor[] = [];
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < 1000; i++) {
                 const actor: PrimitiveActor = {
                     id: `actor-${i}`,
                     name: `Actor ${i}`,
@@ -135,16 +197,16 @@ describe('Engine Benchmarks', () => {
                 library: { clips: [] },
             };
 
-            measure('Schema Validation Speed (100 runs)', () => {
-                for (let i = 0; i < 100; i++) {
+            measure('Large Schema Validation (10 runs, 1k actors)', () => {
+                for (let i = 0; i < 10; i++) {
                     ProjectStateSchema.parse(projectState);
                 }
             });
         });
     });
 
-    describe('Store Performance', () => {
-        it('Store Update Throughput (10k playback updates)', () => {
+    describe('Store Performance', { timeout: 15000 }, () => {
+        it('Store Playback Updates (10k playback updates)', () => {
             const { setState, getState } = useSceneStore;
 
             setState({
