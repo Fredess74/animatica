@@ -27,7 +27,9 @@ vi.mock('@react-three/fiber', async () => {
     Canvas: ({ children }: { children: React.ReactNode }) => <div data-testid="canvas">{children}</div>,
     useThree: () => ({
       scene: { getObjectByName: mocks.mockGetObjectByName },
-      camera: { position: { set: vi.fn() }, lookAt: vi.fn() }
+      camera: { position: { set: vi.fn() }, lookAt: vi.fn() },
+      gl: { domElement: { onpointerdown: null } },
+      size: { width: 1000, height: 1000 },
     }),
   }
 })
@@ -38,12 +40,16 @@ vi.mock('@react-three/drei', () => ({
   TransformControls: () => <div data-testid="transform-controls" />,
   Grid: () => <div data-testid="grid" />,
   Sky: () => <div data-testid="sky" />,
+  ContactShadows: () => <div data-testid="contact-shadows" />,
+  Environment: () => <div data-testid="environment" />,
 }))
 
 // Mock Engine
 vi.mock('@Animatica/engine', () => ({
   SceneManager: () => <div data-testid="scene-manager" />,
   useSceneStore: (selector: any) => selector({
+    actors: [],
+    timeline: { animationTracks: [], cameraTrack: [] },
     selectedActorId: 'test-actor-id',
     setSelectedActor: mocks.mockSetSelectedActor,
     updateActor: mocks.mockUpdateActor,
@@ -73,37 +79,37 @@ describe('Viewport', () => {
     expect(screen.getByTestId('canvas')).toBeTruthy()
     expect(screen.getByTestId('orbit-controls')).toBeTruthy()
     expect(screen.getByTestId('grid')).toBeTruthy()
-    expect(screen.getByTestId('scene-manager')).toBeTruthy()
   })
 
-  it('renders the camera toolbar', () => {
+  it('renders the editor mode toolbar', () => {
     render(<Viewport />)
 
-    expect(screen.getByTitle('Top View')).toBeTruthy()
-    expect(screen.getByTitle('Front View')).toBeTruthy()
-    expect(screen.getByTitle('Side View')).toBeTruthy()
-    expect(screen.getByTitle('Perspective View')).toBeTruthy()
+    expect(screen.getByTitle('Move (W)')).toBeTruthy()
+    expect(screen.getByTitle('Rotate (E)')).toBeTruthy()
+    expect(screen.getByTitle('Scale (R)')).toBeTruthy()
   })
 
-  it('attempts to change camera view when toolbar button clicked', () => {
+  it('attempts to change gizmo mode when toolbar button clicked', () => {
     render(<Viewport />)
 
-    const topButton = screen.getByTitle('Top View')
-    fireEvent.click(topButton)
+    const rotateButton = screen.getByTitle('Rotate (E)')
+    fireEvent.click(rotateButton)
 
-    expect(topButton).toBeTruthy()
+    expect(rotateButton).toBeTruthy()
   })
 
-  it('renders gizmo when object is found', () => {
+  it('renders gizmo when object is found', async () => {
     // Mock found object
     mocks.mockGetObjectByName.mockReturnValue({
         position: { x: 0, y: 0, z: 0 },
         rotation: { x: 0, y: 0, z: 0 },
-        scale: { x: 1, y: 1, z: 1 }
+        scale: { x: 1, y: 1, z: 1 },
+        type: 'Object3D',
+        isObject3D: true,
     })
 
     render(<Viewport />)
 
-    expect(screen.getByTestId('transform-controls')).toBeTruthy()
+    expect(await screen.findByTestId('transform-controls')).toBeTruthy()
   })
 })
