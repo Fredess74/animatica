@@ -69,6 +69,8 @@ export interface PlaybackSlice {
   playback: PlaybackState;
   /** Updates playback state (play/pause, time, etc.). */
   setPlayback: (playback: Partial<PlaybackState>) => void;
+  /** Specialized high-frequency update for current playback time. */
+  setCurrentTime: (time: number) => void;
 }
 
 /**
