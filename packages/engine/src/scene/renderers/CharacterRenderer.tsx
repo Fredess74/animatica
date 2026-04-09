@@ -18,6 +18,7 @@ import {
   createWaveClip,
 } from '../../character/CharacterAnimator'
 import { FaceMorphController } from '../../character/FaceMorphController'
+import { BoneController } from '../../character/BoneController'
 import { EyeController } from '../../character/EyeController'
 import { getPreset } from '../../character/CharacterPresets'
 import type { CharacterActor } from '../../types'
@@ -36,6 +37,7 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
   const groupRef = useRef<THREE.Group>(null)
   const animatorRef = useRef<CharacterAnimator | null>(null)
   const faceMorphRef = useRef<FaceMorphController | null>(null)
+  const boneControllerRef = useRef<BoneController | null>(null)
   const eyeControllerRef = useRef<EyeController | null>(null)
 
   // Build character rig
@@ -68,6 +70,10 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     const faceMorph = new FaceMorphController(rig.bodyMesh, rig.morphTargetMap)
     faceMorphRef.current = faceMorph
 
+    // Setup bone controller
+    const boneController = new BoneController(rig.bones)
+    boneControllerRef.current = boneController
+
     // Setup eye controller
     const eyeController = new EyeController()
     eyeControllerRef.current = eyeController
@@ -98,7 +104,16 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     }
   }, [actor.morphTargets])
 
-  // Frame update — animation, face morphs, eye blinks
+  // React to body pose changes
+  useEffect(() => {
+    if (boneControllerRef.current && actor.bodyPose) {
+      boneControllerRef.current.setPose(actor.bodyPose)
+    }
+  }, [actor.bodyPose])
+
+  if (!actor.visible) return null
+
+  // Frame update — animation, face morphs, bone rotations, eye blinks
   useFrame((_state, delta) => {
     // Skeletal animation
     if (animatorRef.current) {
@@ -108,6 +123,11 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     // Face morph blending
     if (faceMorphRef.current) {
       faceMorphRef.current.update(delta)
+    }
+
+    // Body pose (bone) smoothing
+    if (boneControllerRef.current) {
+      boneControllerRef.current.update(delta)
     }
 
     // Eye auto-blink + look-at
