@@ -20,4 +20,9 @@ export const createPlaybackSlice: StateCreator<
     set((state) => {
       Object.assign(state.playback, playback);
     }),
+
+  setCurrentTime: (time) =>
+    set((state) => {
+      state.playback.currentTime = time;
+    }),
 });
