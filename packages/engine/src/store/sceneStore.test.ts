@@ -67,6 +67,11 @@ describe('sceneStore', () => {
     expect(useSceneStore.getState().playback.currentTime).toBe(5);
   });
 
+  it('should set current time optimized', () => {
+    useSceneStore.getState().setCurrentTime(7);
+    expect(useSceneStore.getState().playback.currentTime).toBe(7);
+  });
+
   it('should get actor by id selector', () => {
     const actor = createActor('1');
     useSceneStore.getState().addActor(actor);
