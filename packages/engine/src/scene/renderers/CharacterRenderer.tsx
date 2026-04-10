@@ -28,7 +28,7 @@ interface CharacterRendererProps {
   onClick?: () => void
 }
 
-export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
+export const CharacterRenderer: React.FC<CharacterRendererProps> = React.memo(({
   actor,
   isSelected = false,
   onClick,
@@ -121,6 +121,9 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     }
   })
 
+  // Visibility guard (must be after ALL hooks)
+  if (!actor.visible) return null
+
   return (
     <group
       ref={groupRef}
@@ -128,7 +131,6 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       position={actor.transform.position}
       rotation={actor.transform.rotation}
       scale={actor.transform.scale}
-      visible={actor.visible}
       onClick={(e) => {
         e.stopPropagation()
         onClick?.()
@@ -151,4 +153,4 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       )}
     </group>
   )
-}
+})
