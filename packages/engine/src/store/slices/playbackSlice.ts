@@ -18,6 +18,18 @@ export const createPlaybackSlice: StateCreator<
 
   setPlayback: (playback) =>
     set((state) => {
-      Object.assign(state.playback, playback);
+      const hasChanges = Object.entries(playback).some(
+        ([key, value]) => (state.playback as any)[key] !== value
+      );
+      if (hasChanges) {
+        Object.assign(state.playback, playback);
+      }
+    }),
+
+  setCurrentTime: (time) =>
+    set((state) => {
+      if (state.playback.currentTime !== time) {
+        state.playback.currentTime = time;
+      }
     }),
 });

@@ -67,6 +67,22 @@ describe('sceneStore', () => {
     expect(useSceneStore.getState().playback.currentTime).toBe(5);
   });
 
+  it('should set current time optimized', () => {
+    useSceneStore.getState().setCurrentTime(7);
+    expect(useSceneStore.getState().playback.currentTime).toBe(7);
+  });
+
+  it('should not update actor if properties are identical', () => {
+    const actor = createActor('1');
+    useSceneStore.getState().addActor(actor);
+
+    const originalActor = useSceneStore.getState().actors[0];
+    useSceneStore.getState().updateActor('1', { name: 'Test Actor' });
+
+    const updatedActor = useSceneStore.getState().actors[0];
+    expect(updatedActor).toBe(originalActor); // Reference should be identical in Immer if no changes
+  });
+
   it('should get actor by id selector', () => {
     const actor = createActor('1');
     useSceneStore.getState().addActor(actor);
