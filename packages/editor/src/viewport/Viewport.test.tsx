@@ -26,6 +26,7 @@ vi.mock('@react-three/fiber', async () => {
     ...actual,
     Canvas: ({ children }: { children: React.ReactNode }) => <div data-testid="canvas">{children}</div>,
     useThree: () => ({
+      gl: { domElement: document.createElement('canvas') },
       scene: { getObjectByName: mocks.mockGetObjectByName },
       camera: { position: { set: vi.fn() }, lookAt: vi.fn() }
     }),
@@ -38,12 +39,15 @@ vi.mock('@react-three/drei', () => ({
   TransformControls: () => <div data-testid="transform-controls" />,
   Grid: () => <div data-testid="grid" />,
   Sky: () => <div data-testid="sky" />,
+  ContactShadows: () => <div data-testid="contact-shadows" />,
+  Environment: () => <div data-testid="environment" />,
 }))
 
 // Mock Engine
 vi.mock('@Animatica/engine', () => ({
   SceneManager: () => <div data-testid="scene-manager" />,
   useSceneStore: (selector: any) => selector({
+    actors: [],
     selectedActorId: 'test-actor-id',
     setSelectedActor: mocks.mockSetSelectedActor,
     updateActor: mocks.mockUpdateActor,
@@ -64,6 +68,7 @@ describe('Viewport', () => {
   })
 
   afterEach(() => {
+    vi.restoreAllMocks()
     cleanup()
   })
 
@@ -97,9 +102,14 @@ describe('Viewport', () => {
   it('renders gizmo when object is found', () => {
     // Mock found object
     mocks.mockGetObjectByName.mockReturnValue({
+        id: 'test-actor-id',
+        name: 'test-actor',
         position: { x: 0, y: 0, z: 0 },
         rotation: { x: 0, y: 0, z: 0 },
-        scale: { x: 1, y: 1, z: 1 }
+        scale: { x: 1, y: 1, z: 1 },
+        traverse: vi.fn(),
+        add: vi.fn(),
+        remove: vi.fn(),
     })
 
     render(<Viewport />)
