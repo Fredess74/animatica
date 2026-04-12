@@ -27,7 +27,12 @@ export const createActorsSlice: StateCreator<
     set((state) => {
       const actor = state.actors.find((a) => a.id === actorId);
       if (actor) {
-        Object.assign(actor, updates);
+        const hasChanges = Object.entries(updates).some(
+          ([key, value]) => (actor as any)[key] !== value
+        );
+        if (hasChanges) {
+          Object.assign(actor, updates);
+        }
       }
     }),
 

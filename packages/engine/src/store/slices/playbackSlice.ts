@@ -16,8 +16,20 @@ export const createPlaybackSlice: StateCreator<
     loopMode: 'none' as const,
   },
 
-  setPlayback: (playback) =>
+  setPlayback: (updates) =>
     set((state) => {
-      Object.assign(state.playback, playback);
+      const hasChanges = Object.entries(updates).some(
+        ([key, value]) => state.playback[key as keyof typeof updates] !== value
+      );
+      if (hasChanges) {
+        Object.assign(state.playback, updates);
+      }
+    }),
+
+  setCurrentTime: (time) =>
+    set((state) => {
+      if (state.playback.currentTime !== time) {
+        state.playback.currentTime = time;
+      }
     }),
 });
