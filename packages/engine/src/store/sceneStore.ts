@@ -138,3 +138,28 @@ export const useActorsByType = (type: Actor['type']) =>
  * Hook to get the list of all actors.
  */
 export const useActorList = () => useSceneStore((state) => state.actors);
+
+/**
+ * Hook to get the playback state.
+ */
+export const usePlaybackState = () => useSceneStore(useShallow((state) => state.playback));
+
+/**
+ * Hook to get the environment state.
+ */
+export const useEnvironment = () => useSceneStore(useShallow((state) => state.environment));
+
+/**
+ * Hook to get the timeline state.
+ */
+export const useTimeline = () => useSceneStore(useShallow((state) => state.timeline));
+
+/**
+ * Hook to get the project metadata.
+ */
+export const useMeta = () => useSceneStore(useShallow((state) => state.meta));
+
+/**
+ * Hook to get the library state.
+ */
+export const useLibrary = () => useSceneStore(useShallow((state) => state.library));
