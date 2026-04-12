@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-04-12
+
+### Added
+
+- **Phase 2: Characters** (In Progress):
+    - Humanoid base type and skeletal animation foundation.
+- **Phase 3: Editor UI** (85% complete):
+    - Layout components: `EditorLayout`, `AssetLibrary`, `PropertiesPanel`, `TimelinePanel`.
+    - Modal components: `ScriptConsole`, `ExportModal`.
+- **Phase 4: Export & Audio**:
+    - Export Modal UI for resolution and format selection.
+- **Phase 5: AI Integration**:
+    - AI prompt templates and `ScriptImporter` logic.
+- **Infrastructure**:
+    - Initial Supabase schema for platform features.
+
+### Changed
+
+- Optimized Zustand store with explicit change checks for better performance.
+- Improved `CharacterRenderer` with better hook safety and visibility handling.
+- Increased test coverage and added performance benchmarks.
+
 ## [0.1.0] - 2026-02-22
 
 ### Added
