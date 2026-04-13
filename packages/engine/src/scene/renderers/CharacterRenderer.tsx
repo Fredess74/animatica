@@ -19,6 +19,7 @@ import {
 } from '../../character/CharacterAnimator'
 import { FaceMorphController } from '../../character/FaceMorphController'
 import { EyeController } from '../../character/EyeController'
+import { BoneController } from '../../character/BoneController'
 import { getPreset } from '../../character/CharacterPresets'
 import type { CharacterActor } from '../../types'
 
@@ -37,6 +38,7 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
   const animatorRef = useRef<CharacterAnimator | null>(null)
   const faceMorphRef = useRef<FaceMorphController | null>(null)
   const eyeControllerRef = useRef<EyeController | null>(null)
+  const boneControllerRef = useRef<BoneController | null>(null)
 
   // Build character rig
   const rig = useMemo(() => {
@@ -72,6 +74,10 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     const eyeController = new EyeController()
     eyeControllerRef.current = eyeController
 
+    // Setup bone controller
+    const boneController = new BoneController(rig)
+    boneControllerRef.current = boneController
+
     return () => {
       animator.dispose()
     }
@@ -98,14 +104,21 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     }
   }, [actor.morphTargets])
 
-  // Frame update — animation, face morphs, eye blinks
+  if (!actor.visible) return null
+
+  // Frame update — animation, face morphs, eye blinks, and custom pose
   useFrame((_state, delta) => {
-    // Skeletal animation
+    // 1. Skeletal animation (e.g. idle/walk)
     if (animatorRef.current) {
       animatorRef.current.update(delta)
     }
 
-    // Face morph blending
+    // 2. Custom bone pose (overrides or augments animation)
+    if (boneControllerRef.current && actor.bodyPose) {
+      boneControllerRef.current.setPose(actor.bodyPose)
+    }
+
+    // 3. Face morph blending
     if (faceMorphRef.current) {
       faceMorphRef.current.update(delta)
     }
