@@ -33,6 +33,8 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
   isSelected = false,
   onClick,
 }) => {
+  if (!actor.visible) return null
+
   const groupRef = useRef<THREE.Group>(null)
   const animatorRef = useRef<CharacterAnimator | null>(null)
   const faceMorphRef = useRef<FaceMorphController | null>(null)
