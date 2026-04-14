@@ -124,8 +124,10 @@ export const useSelectedActorId = () =>
  * Hook to get the currently selected actor.
  */
 export const useSelectedActor = () =>
-  useSceneStore((state) =>
-    state.selectedActorId ? state.actors.find((a) => a.id === state.selectedActorId) : undefined
+  useSceneStore(
+    useShallow((state) =>
+      state.selectedActorId ? state.actors.find((a) => a.id === state.selectedActorId) : undefined
+    )
   );
 
 /**
@@ -137,4 +139,29 @@ export const useActorsByType = (type: Actor['type']) =>
 /**
  * Hook to get the list of all actors.
  */
-export const useActorList = () => useSceneStore((state) => state.actors);
+export const useActorList = () => useSceneStore(useShallow((state) => state.actors));
+
+/**
+ * Hook to get the playback state.
+ */
+export const usePlaybackState = () => useSceneStore(useShallow((state) => state.playback));
+
+/**
+ * Hook to get the environment settings.
+ */
+export const useEnvironment = () => useSceneStore(useShallow((state) => state.environment));
+
+/**
+ * Hook to get the timeline configuration.
+ */
+export const useTimeline = () => useSceneStore(useShallow((state) => state.timeline));
+
+/**
+ * Hook to get project metadata.
+ */
+export const useMeta = () => useSceneStore(useShallow((state) => state.meta));
+
+/**
+ * Hook to get the asset library.
+ */
+export const useLibrary = () => useSceneStore(useShallow((state) => state.library));
