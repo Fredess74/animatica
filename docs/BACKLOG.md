@@ -73,9 +73,9 @@ This document tracks all open tasks, issues, and feature requests for the Animat
 - **Type:** Feature (Character)
 - **Description:** Implement `BoneController.ts` to map the abstract `bodyPose` object to actual skeleton bone rotations (head, spine, leftArm, rightArm, leftLeg, rightLeg).
 - **Acceptance Criteria:**
-  - [ ] Function to traverse the GLTF skeleton and find relevant bones.
-  - [ ] Applies rotations from `bodyPose` to the bones.
-  - [ ] Smoothly interpolates updates if needed.
+  - [x] Function to traverse the GLTF skeleton and find relevant bones.
+  - [x] Applies rotations from `bodyPose` to the bones.
+  - [x] Smoothly interpolates updates if needed.
 
 ### [Task 13] Feat: Morph Targets
 - **Priority:** Medium
