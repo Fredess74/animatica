@@ -1,6 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { useSceneStore, getActorById, getActiveActors, getCurrentTime } from './sceneStore';
+import * as SceneStore from './sceneStore';
 import { PrimitiveActor } from '../types';
+
+const { useSceneStore, getActorById, getActiveActors, getCurrentTime } = SceneStore;
 
 describe('sceneStore', () => {
   beforeEach(() => {
@@ -160,5 +162,15 @@ describe('sceneStore', () => {
       const result = useSceneStore.getState().actors.filter(a => a.type === 'primitive');
       expect(result).toHaveLength(1);
       expect(result[0].id).toBe('1');
+  });
+
+  it('should have all optimized hooks defined', () => {
+    expect(SceneStore.usePlaybackState).toBeDefined();
+    expect(SceneStore.useEnvironment).toBeDefined();
+    expect(SceneStore.useTimeline).toBeDefined();
+    expect(SceneStore.useMeta).toBeDefined();
+    expect(SceneStore.useLibrary).toBeDefined();
+    expect(SceneStore.useActorList).toBeDefined();
+    expect(SceneStore.useSelectedActor).toBeDefined();
   });
 });
