@@ -103,6 +103,13 @@ export const useActorIds = () =>
   useSceneStore(useShallow((state) => state.actors.map((a) => a.id)));
 
 /**
+ * Hook to get the current playback state.
+ * Optimized with useShallow to prevent re-renders when other slices change.
+ */
+export const usePlaybackState = () =>
+  useSceneStore(useShallow((state) => state.playback));
+
+/**
  * Hook to get the current playback time.
  */
 export const useCurrentTime = () =>
@@ -115,6 +122,34 @@ export const useIsPlaying = () =>
   useSceneStore((state) => state.playback.isPlaying);
 
 /**
+ * Hook to get the environment settings.
+ * Optimized with useShallow.
+ */
+export const useEnvironment = () =>
+  useSceneStore(useShallow((state) => state.environment));
+
+/**
+ * Hook to get the timeline configuration.
+ * Optimized with useShallow.
+ */
+export const useTimeline = () =>
+  useSceneStore(useShallow((state) => state.timeline));
+
+/**
+ * Hook to get the project metadata.
+ * Optimized with useShallow.
+ */
+export const useMeta = () =>
+  useSceneStore(useShallow((state) => state.meta));
+
+/**
+ * Hook to get the asset library.
+ * Optimized with useShallow.
+ */
+export const useLibrary = () =>
+  useSceneStore(useShallow((state) => state.library));
+
+/**
  * Hook to get the ID of the currently selected actor.
  */
 export const useSelectedActorId = () =>
@@ -122,19 +157,24 @@ export const useSelectedActorId = () =>
 
 /**
  * Hook to get the currently selected actor.
+ * Optimized with useShallow.
  */
 export const useSelectedActor = () =>
-  useSceneStore((state) =>
-    state.selectedActorId ? state.actors.find((a) => a.id === state.selectedActorId) : undefined
+  useSceneStore(
+    useShallow((state) =>
+      state.selectedActorId ? state.actors.find((a) => a.id === state.selectedActorId) : undefined
+    )
   );
 
 /**
  * Hook to get all actors of a specific type.
+ * Optimized with useShallow.
  */
 export const useActorsByType = (type: Actor['type']) =>
   useSceneStore(useShallow((state) => state.actors.filter((a) => a.type === type)));
 
 /**
  * Hook to get the list of all actors.
+ * Optimized with useShallow.
  */
-export const useActorList = () => useSceneStore((state) => state.actors);
+export const useActorList = () => useSceneStore(useShallow((state) => state.actors));
