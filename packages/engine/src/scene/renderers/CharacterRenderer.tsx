@@ -19,6 +19,7 @@ import {
 } from '../../character/CharacterAnimator'
 import { FaceMorphController } from '../../character/FaceMorphController'
 import { EyeController } from '../../character/EyeController'
+import { BoneController } from '../../character/BoneController'
 import { getPreset } from '../../character/CharacterPresets'
 import type { CharacterActor } from '../../types'
 
@@ -37,6 +38,7 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
   const animatorRef = useRef<CharacterAnimator | null>(null)
   const faceMorphRef = useRef<FaceMorphController | null>(null)
   const eyeControllerRef = useRef<EyeController | null>(null)
+  const boneControllerRef = useRef<BoneController | null>(null)
 
   // Build character rig
   const rig = useMemo(() => {
@@ -72,6 +74,10 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     const eyeController = new EyeController()
     eyeControllerRef.current = eyeController
 
+    // Setup bone controller
+    const boneController = new BoneController(rig.bones)
+    boneControllerRef.current = boneController
+
     return () => {
       animator.dispose()
     }
@@ -100,9 +106,15 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
 
   // Frame update — animation, face morphs, eye blinks
   useFrame((_state, delta) => {
+    if (!actor.visible) return
     // Skeletal animation
     if (animatorRef.current) {
       animatorRef.current.update(delta)
+    }
+
+    // Manual skeletal pose (applied after animator to allow overrides)
+    if (boneControllerRef.current && actor.bodyPose) {
+      boneControllerRef.current.setPose(actor.bodyPose)
     }
 
     // Face morph blending
@@ -120,6 +132,8 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       faceMorphRef.current.setImmediate(eyeValues)
     }
   })
+
+  if (!actor.visible) return null
 
   return (
     <group
