@@ -33,6 +33,8 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
   isSelected = false,
   onClick,
 }) => {
+  if (!actor.visible) return null
+
   const groupRef = useRef<THREE.Group>(null)
   const animatorRef = useRef<CharacterAnimator | null>(null)
   const faceMorphRef = useRef<FaceMorphController | null>(null)
@@ -100,6 +102,8 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
 
   // Frame update — animation, face morphs, eye blinks
   useFrame((_state, delta) => {
+    if (!actor.visible) return
+
     // Skeletal animation
     if (animatorRef.current) {
       animatorRef.current.update(delta)

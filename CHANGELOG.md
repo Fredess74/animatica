@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-04-15
+
+### Added
+
+- **Phase 2: Characters**
+    - `BoneController` for procedural skeletal posing and humanoid rigging.
+    - Character animation system foundation.
+- **Phase 3: Editor UI**
+    - Full Editor Layout with sidebars and timeline.
+    - `AssetLibrary`, `PropertiesPanel`, `TimelinePanel`, and `ScriptConsole` components.
+    - `ExportModal` for video configuration.
+    - Viewport with R3F Canvas and Gizmo support.
+- **Phase 5: AI Integration**
+    - Script importer and prompt template improvements.
+
+### Fixed
+
+- Resolved `CharacterRenderer` visibility bugs and test regressions.
+- Optimized Zustand store selectors for performance.
+
 ## [0.1.0] - 2026-02-22
 
 ### Added

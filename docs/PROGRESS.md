@@ -1,16 +1,16 @@
 # Project Progress Report
 
-**Last Updated:** 2026-02-25
+**Last Updated:** 2026-04-15
 **Project Start:** 2026-02-10
-**Current Sprint:** Phase 2 + Phase 3 (Characters + Editor UI)
+**Current Sprint:** Phase 4 + Phase 5 (Export + AI Integration)
 
 ## Status Summary
 
 | Phase | Status | Completion | Tasks | Target | Flag |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Phase 1: Engine Core** | ✅ Done | **100%** | **10/10** | Weeks 1-4 | 🎉 Complete! |
-| **Phase 2: Characters** | 🔨 Active | **30%** | **1/4** | Weeks 5-6 | 🟡 In Progress |
-| **Phase 3: Editor UI** | 🔨 Active | **85%** | **6/7** | Weeks 5-8 | 🟢 Almost Done |
+| **Phase 2: Characters** | 🔨 Active | **40%** | **2/5** | Weeks 5-6 | 🟡 In Progress |
+| **Phase 3: Editor UI** | ✅ Done | **100%** | **7/7** | Weeks 5-8 | 🎉 Complete! |
 | Phase 4: Export & Audio | Pending | 10% | 1/3 | Weeks 9-10 | ⚪ Export modal done |
 | **Phase 5: AI Integration** | 🔨 Active | **25%** | **1.5/6** | Weeks 11-14 | 🟡 Foundation |
 | Phase 6: Platform / Auth | Pending | 15% | 2/11 | Weeks 15-20 | ⚪ Supabase schema exists |
@@ -37,11 +37,12 @@
 ## Phase 2: Characters — IN PROGRESS
 
 - [x] Humanoid base type defined in schemas
+- [x] Bone Controller (`character/BoneController.ts`)
 - [ ] Humanoid renderer (`scene/renderers/HumanoidRenderer.tsx`)
 - [ ] Character animation system
 - [ ] Character presets (cowboy, robot, android)
 
-## Phase 3: Editor UI — 85% DONE
+## Phase 3: Editor UI — COMPLETE ✅
 
 - [x] EditorLayout (`layouts/EditorLayout.tsx`)
 - [x] AssetLibrary (`panels/AssetLibrary.tsx`)
@@ -49,7 +50,7 @@
 - [x] TimelinePanel (`panels/TimelinePanel.tsx`)
 - [x] ScriptConsole (`modals/ScriptConsole.tsx`)
 - [x] ExportModal (`modals/ExportModal.tsx`)
-- [ ] Viewport with R3F Canvas + OrbitControls + gizmos
+- [x] Viewport with R3F Canvas + OrbitControls + gizmos (`viewport/Viewport.tsx`)
 
 ## Phase 4: Export & Audio
 
