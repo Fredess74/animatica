@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-04-16
+
+### Added
+
+- **Phase 2: Characters** initial implementation:
+    - Procedural humanoid rig generation (`character/CharacterLoader.ts`).
+    - Character animation system with preset clips (`character/CharacterAnimator.ts`).
+    - Face morph and eye tracking controllers (`character/FaceMorphController.ts`, `character/EyeController.ts`).
+    - `CharacterRenderer` R3F component with support for animations and expressions.
+- **Phase 3: Editor UI** core components:
+    - Modern 3-panel layout (`layouts/EditorLayout.tsx`).
+    - Asset library, properties panel, and timeline UI.
+    - Script console and export modal.
+    - `Viewport` with interactive scene rendering, orbit controls, and actor picking.
+- Enhanced benchmarking suite for engine performance tracking.
+- Improved documentation including license audit and Web3 readiness reports.
+
+### Changed
+
+- Refactored `SceneManager` and `CharacterRenderer` for better performance and granular state updates.
+- Standardized directory structure for Zod schemas in `packages/engine`.
+
 ## [0.1.0] - 2026-02-22
 
 ### Added
