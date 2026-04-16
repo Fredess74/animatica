@@ -10,6 +10,7 @@ import { createEnvironmentSlice } from './slices/environmentSlice';
 import { createTimelineSlice } from './slices/timelineSlice';
 import { createPlaybackSlice } from './slices/playbackSlice';
 import { createMetaSlice } from './slices/metaSlice';
+import { createLibrarySlice } from './slices/librarySlice';
 
 /**
  * Zustand store for managing the scene state, including actors, timeline, environment, and playback.
@@ -25,7 +26,7 @@ export const useSceneStore = create<SceneStoreState>()(
         ...createTimelineSlice(...a),
         ...createPlaybackSlice(...a),
         ...createMetaSlice(...a),
-        library: { clips: [] },
+        ...createLibrarySlice(...a),
       })),
       {
         name: 'animatica-scene',
@@ -115,6 +116,41 @@ export const useIsPlaying = () =>
   useSceneStore((state) => state.playback.isPlaying);
 
 /**
+ * Hook to get the playback state.
+ * Optimized with useShallow as it returns an object.
+ */
+export const usePlaybackState = () =>
+  useSceneStore(useShallow((state) => state.playback));
+
+/**
+ * Hook to get the environment settings.
+ * Optimized with useShallow as it returns an object.
+ */
+export const useEnvironment = () =>
+  useSceneStore(useShallow((state) => state.environment));
+
+/**
+ * Hook to get the timeline configuration.
+ * Optimized with useShallow as it returns an object.
+ */
+export const useTimeline = () =>
+  useSceneStore(useShallow((state) => state.timeline));
+
+/**
+ * Hook to get the project metadata.
+ * Optimized with useShallow as it returns an object.
+ */
+export const useMeta = () =>
+  useSceneStore(useShallow((state) => state.meta));
+
+/**
+ * Hook to get the asset library.
+ * Optimized with useShallow as it returns an object.
+ */
+export const useLibrary = () =>
+  useSceneStore(useShallow((state) => state.library));
+
+/**
  * Hook to get the ID of the currently selected actor.
  */
 export const useSelectedActorId = () =>
@@ -136,5 +172,6 @@ export const useActorsByType = (type: Actor['type']) =>
 
 /**
  * Hook to get the list of all actors.
+ * Optimized with useShallow as it returns an array.
  */
-export const useActorList = () => useSceneStore((state) => state.actors);
+export const useActorList = () => useSceneStore(useShallow((state) => state.actors));
