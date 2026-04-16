@@ -1,4 +1,13 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+
+// Stub localStorage for Zustand persist middleware
+vi.stubGlobal('localStorage', {
+  getItem: vi.fn(),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  clear: vi.fn(),
+});
+
 import { useSceneStore, getActorById, getActiveActors, getCurrentTime } from './sceneStore';
 import { PrimitiveActor } from '../types';
 
@@ -160,5 +169,15 @@ describe('sceneStore', () => {
       const result = useSceneStore.getState().actors.filter(a => a.type === 'primitive');
       expect(result).toHaveLength(1);
       expect(result[0].id).toBe('1');
+  });
+
+  it('should handle library actions', () => {
+      const clip = { id: 'clip-1', name: 'Test Clip' };
+      useSceneStore.getState().addClip(clip);
+      expect(useSceneStore.getState().library.clips).toHaveLength(1);
+      expect(useSceneStore.getState().library.clips[0]).toEqual(clip);
+
+      useSceneStore.getState().setLibrary({ clips: [] });
+      expect(useSceneStore.getState().library.clips).toHaveLength(0);
   });
 });
