@@ -2,7 +2,7 @@
  * CharacterRenderer — R3F component for rendering a character actor.
  * Creates a procedural humanoid (or loads GLB), applies animation, face morphs, and eye tracking.
  */
-import React, { useEffect, useRef, useMemo } from 'react'
+import React, { useEffect, useRef, useMemo, memo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { createProceduralHumanoid } from '../../character/CharacterLoader'
@@ -19,6 +19,7 @@ import {
 } from '../../character/CharacterAnimator'
 import { FaceMorphController } from '../../character/FaceMorphController'
 import { EyeController } from '../../character/EyeController'
+import { BoneController } from '../../character/BoneController'
 import { getPreset } from '../../character/CharacterPresets'
 import type { CharacterActor } from '../../types'
 
@@ -28,7 +29,7 @@ interface CharacterRendererProps {
   onClick?: () => void
 }
 
-export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
+export const CharacterRenderer: React.FC<CharacterRendererProps> = memo(({
   actor,
   isSelected = false,
   onClick,
@@ -37,6 +38,7 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
   const animatorRef = useRef<CharacterAnimator | null>(null)
   const faceMorphRef = useRef<FaceMorphController | null>(null)
   const eyeControllerRef = useRef<EyeController | null>(null)
+  const boneControllerRef = useRef<BoneController | null>(null)
 
   // Build character rig
   const rig = useMemo(() => {
@@ -72,6 +74,10 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     const eyeController = new EyeController()
     eyeControllerRef.current = eyeController
 
+    // Setup bone controller
+    const boneController = new BoneController(rig)
+    boneControllerRef.current = boneController
+
     return () => {
       animator.dispose()
     }
@@ -98,11 +104,29 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     }
   }, [actor.morphTargets])
 
+  // React to body pose changes
+  useEffect(() => {
+    if (boneControllerRef.current) {
+      if (actor.bodyPose) {
+        boneControllerRef.current.setPose(actor.bodyPose)
+      } else {
+        boneControllerRef.current.reset()
+      }
+    }
+  }, [actor.bodyPose])
+
+  if (!actor.visible) return null
+
   // Frame update — animation, face morphs, eye blinks
   useFrame((_state, delta) => {
     // Skeletal animation
     if (animatorRef.current) {
       animatorRef.current.update(delta)
+    }
+
+    // Manual bone overrides (applied after animation)
+    if (boneControllerRef.current) {
+      boneControllerRef.current.update(delta)
     }
 
     // Face morph blending
@@ -128,7 +152,7 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       position={actor.transform.position}
       rotation={actor.transform.rotation}
       scale={actor.transform.scale}
-      visible={actor.visible}
+      visible={true}
       onClick={(e) => {
         e.stopPropagation()
         onClick?.()
@@ -151,4 +175,6 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       )}
     </group>
   )
-}
+})
+
+CharacterRenderer.displayName = 'CharacterRenderer'
