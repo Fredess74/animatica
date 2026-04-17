@@ -1,44 +1,28 @@
 # Sprint Status
 
-**Date:** 2026-02-23
-**Sprint Goal:** Align codebase with `JULES_GUIDE.md` sequence and complete Batch 1 (Engine Foundation) & Batch 2 (Rendering).
+**Date:** 2026-04-17
+**Sprint Goal:** Complete Phase 2 (Characters) and Phase 3 (Editor UI).
 
 ## Status Overview
 
-The project is currently in **Phase 1: Engine Core**.
+The project is currently transitioning between **Phase 2: Characters** and **Phase 3: Editor UI**.
 
-For a detailed list of all open tasks, acceptance criteria, and future backlog items, please refer to **[docs/BACKLOG.md](../docs/BACKLOG.md)**.
+### Recently Completed Tasks (recorded in AGENT_COMPLETED.md)
+- [DONE] [editor-viewport-dev] Create Viewport component with R3F Canvas + OrbitControls + SceneManager
+- [DONE] [engine-scene-dev] Add SpeakerRenderer and SceneManager tests
+- [DONE] [feature-flag-manager] Create feature flag system
+- [DONE] [engine-scene-dev] Add CharacterRenderer placeholder
 
-### Completed Tasks
-- **Task 1: Types & Interfaces** (`packages/engine/src/types/index.ts`)
-- **Task 3: Easing Functions** (`packages/engine/src/animation/easing.ts`)
-- **Task 4: Keyframe Engine** (`packages/engine/src/animation/interpolate.ts`)
-- **Task 5: Zustand Store** (`packages/engine/src/store/sceneStore.ts`)
-- **Task 6: Primitive Renderer** (`packages/engine/src/scene/renderers/PrimitiveRenderer.tsx`)
-- **Task 21: Script Importer + AI Prompt Template** (`packages/engine/src/importer/scriptImporter.ts`, `packages/engine/src/ai/promptTemplates.ts`) - **Note:** Executed out of order (Batch 5 task).
+### Current Sprint Focus
+- **Phase 2:** Humanoid rendering and animation.
+- **Phase 3:** Viewport polish and editor integration.
 
-### Tasks In Progress / Needs Attention
-- **Task 2: Zod Schemas** (`packages/engine/src/schemas/`)
-  - **Status:** Partially implemented but misplaced.
-  - **Action:** See `docs/BACKLOG.md` for refactor details.
-
-### Missing / Pending Tasks (Batch 2)
-- **Task 7: Light Renderer** - **Next Priority**
-- **Task 8: Camera Renderer**
-- **Task 9: Scene Manager**
-- **Task 10: Playback Controller**
-
-(See `docs/BACKLOG.md` for detailed acceptance criteria for these items.)
-
-## Blockers & Risks
-1. **Sequence Deviation:** Task 21 was implemented before critical rendering components (Tasks 7-10), potentially complicating integration.
-2. **Schema Location:** Discrepancy between code (`src/schemas/`) and guide (`src/importer/schemas/`). Needs refactor to ensure consistency.
-3. **Missing Core Components:** Light and Camera renderers are absent, preventing full scene visualization as per Phase 1 goals.
+### Blockers & Risks
+1. **Critical Merge Conflict:** `docs/AGENT_TASKS.md` has a major conflict between `HEAD` and `ceb56b06`, blocking task assignment.
+2. **Test Regressions:** `CharacterRenderer.test.tsx` and `Viewport.test.tsx` are failing due to outdated test logic and missing mocks.
+3. **Task Misalignment:** Some Phase 5 tasks (AI) were implemented ahead of Phase 2/3 core features.
 
 ## Next Steps
-Please refer to `docs/BACKLOG.md` for the prioritized task list.
-1.  **Refactor Task 2:** Move Zod schemas.
-2.  **Implement Task 7:** Create `LightRenderer` component.
-3.  **Implement Task 8:** Create `CameraRenderer` component.
-4.  **Implement Task 9:** Create `SceneManager`.
-5.  **Implement Task 10:** Create `PlaybackController`.
+1. **Resolve Merge Conflicts:** Fix `docs/AGENT_TASKS.md`.
+2. **Fix Test Suite:** Update failing rendering and viewport tests to restore CI health.
+3. **Character System:** Implement `BoneController.ts` and `MorphTargets.ts`.
