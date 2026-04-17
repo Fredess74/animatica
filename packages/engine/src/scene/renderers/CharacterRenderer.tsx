@@ -2,10 +2,11 @@
  * CharacterRenderer — R3F component for rendering a character actor.
  * Creates a procedural humanoid (or loads GLB), applies animation, face morphs, and eye tracking.
  */
-import React, { useEffect, useRef, useMemo } from 'react'
+import React, { useEffect, useRef, useMemo, memo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { createProceduralHumanoid } from '../../character/CharacterLoader'
+import { BoneController } from '../../character/BoneController'
 import {
   CharacterAnimator,
   createDanceClip,
@@ -28,13 +29,14 @@ interface CharacterRendererProps {
   onClick?: () => void
 }
 
-export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
+export const CharacterRenderer: React.FC<CharacterRendererProps> = memo(({
   actor,
   isSelected = false,
   onClick,
 }) => {
   const groupRef = useRef<THREE.Group>(null)
   const animatorRef = useRef<CharacterAnimator | null>(null)
+  const boneControllerRef = useRef<BoneController | null>(null)
   const faceMorphRef = useRef<FaceMorphController | null>(null)
   const eyeControllerRef = useRef<EyeController | null>(null)
 
@@ -64,6 +66,13 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     animator.play(actor.animation || 'idle')
     animatorRef.current = animator
 
+    // Setup bone controller
+    const boneController = new BoneController(rig.bones)
+    if (actor.bodyPose) {
+      boneController.update(actor.bodyPose)
+    }
+    boneControllerRef.current = boneController
+
     // Setup face morph controller
     const faceMorph = new FaceMorphController(rig.bodyMesh, rig.morphTargetMap)
     faceMorphRef.current = faceMorph
@@ -90,6 +99,13 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       animatorRef.current.setSpeed(actor.animationSpeed)
     }
   }, [actor.animationSpeed])
+
+  // React to body pose changes
+  useEffect(() => {
+    if (boneControllerRef.current && actor.bodyPose) {
+      boneControllerRef.current.update(actor.bodyPose)
+    }
+  }, [actor.bodyPose])
 
   // React to morph target / expression changes from CharacterPanel
   useEffect(() => {
@@ -121,6 +137,8 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     }
   })
 
+  if (!actor.visible) return null
+
   return (
     <group
       ref={groupRef}
@@ -151,4 +169,6 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       )}
     </group>
   )
-}
+})
+
+CharacterRenderer.displayName = 'CharacterRenderer'
