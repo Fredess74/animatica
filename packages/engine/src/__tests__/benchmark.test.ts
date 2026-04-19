@@ -1,5 +1,16 @@
-import { describe, it, afterAll } from 'vitest';
-import { interpolateKeyframes } from '../animation/interpolate';
+import { describe, it, afterAll, vi } from 'vitest';
+
+// Stub localStorage before importing the store to handle Zustand persistence
+vi.hoisted(() => {
+    vi.stubGlobal('localStorage', {
+        getItem: vi.fn(),
+        setItem: vi.fn(),
+        removeItem: vi.fn(),
+        clear: vi.fn(),
+    });
+});
+
+import { interpolateKeyframes, evaluateTracksAtTime } from '../animation/interpolate';
 import { ProjectStateSchema } from '../importer/schemas';
 import { useSceneStore } from '../store/sceneStore';
 import type { Keyframe, ProjectState, Actor, PrimitiveActor, Vector3 } from '../types';
@@ -84,6 +95,28 @@ describe('Engine Benchmarks', () => {
                 for (let i = 0; i < 10000; i++) {
                     const t = Math.random() * 10000;
                     interpolateKeyframes(keyframes, t);
+                }
+            });
+        });
+
+        it('evaluateTracksAtTime (1k ops, 100 tracks)', () => {
+            const tracks: any[] = [];
+            for (let i = 0; i < 100; i++) {
+                const keyframes: any[] = [];
+                for (let j = 0; j < 10; j++) {
+                    keyframes.push({ time: j, value: j * 10 });
+                }
+                tracks.push({
+                    targetId: `actor-${i}`,
+                    property: 'position.x',
+                    keyframes
+                });
+            }
+
+            measure('evaluateTracksAtTime (1k ops)', () => {
+                for (let i = 0; i < 1000; i++) {
+                    const t = Math.random() * 10;
+                    evaluateTracksAtTime(tracks, t);
                 }
             });
         });
