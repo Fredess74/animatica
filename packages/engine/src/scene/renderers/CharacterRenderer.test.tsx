@@ -9,13 +9,40 @@ vi.mock('react', async () => {
   const actual = await vi.importActual<typeof import('react')>('react')
   return {
     ...actual,
-    useRef: () => ({ current: null }),
+    useRef: (val: any) => ({ current: val || null }),
+    useEffect: () => {},
+    useMemo: (fn: any) => fn(),
+    useCallback: (fn: any) => fn,
   }
 })
+
+// Mock R3F
+vi.mock('@react-three/fiber', () => ({
+  useFrame: vi.fn(),
+}))
 
 // Mock the Edges component from @react-three/drei
 vi.mock('@react-three/drei', () => ({
   Edges: () => null
+}))
+
+// Mock CharacterAnimator
+vi.mock('../../character/CharacterAnimator', () => ({
+  CharacterAnimator: vi.fn().mockImplementation(() => ({
+    registerClip: vi.fn(),
+    play: vi.fn(),
+    update: vi.fn(),
+    setSpeed: vi.fn(),
+    dispose: vi.fn(),
+  })),
+  createIdleClip: vi.fn(),
+  createWalkClip: vi.fn(),
+  createRunClip: vi.fn(),
+  createTalkClip: vi.fn(),
+  createWaveClip: vi.fn(),
+  createDanceClip: vi.fn(),
+  createSitClip: vi.fn(),
+  createJumpClip: vi.fn(),
 }))
 
 describe('CharacterRenderer', () => {
@@ -39,11 +66,10 @@ describe('CharacterRenderer', () => {
     clothing: {}
   }
 
-  it('renders a group containing capsule mesh with correct transform', () => {
-    // Call the forwardRef component's render function directly
-    // Since it's wrapped in memo, we access the underlying forwardRef via .type
-    // @ts-ignore
-    const result = CharacterRenderer.type.render({ actor: mockActor }, null) as React.ReactElement
+  it('renders a group with correct transform', () => {
+    // CharacterRenderer is wrapped in React.memo
+    // When calling directly, use the function itself
+    const result = CharacterRenderer({ actor: mockActor }) as React.ReactElement
 
     expect(result).not.toBeNull()
     expect(result.type).toBe('group')
@@ -56,47 +82,25 @@ describe('CharacterRenderer', () => {
     // Verify children
     const children = React.Children.toArray(props.children) as React.ReactElement[]
 
-    // First child should be the main mesh (capsule)
-    const mainMesh = children[0]
-    expect(mainMesh.type).toBe('mesh')
-
-    const mainMeshProps = mainMesh.props as any
-    const meshChildren = React.Children.toArray(mainMeshProps.children) as React.ReactElement[]
-
-    // Check geometry
-    const geometry = meshChildren.find((child) => child.type === 'capsuleGeometry')
-    expect(geometry).toBeDefined()
-
-    const geometryProps = geometry?.props as any
-    // Check args: radius 0.5, length 1.8
-    expect(geometryProps?.args?.[0]).toBe(0.5)
-    expect(geometryProps?.args?.[1]).toBe(1.8)
-
-    // Check material
-    const material = meshChildren.find((child) => child.type === 'meshStandardMaterial')
-    expect(material).toBeDefined()
-
-    const materialProps = material?.props as any
-    expect(materialProps?.color).toBe('#ff00aa') // The placeholder color
+    // Check for rig root
+    const rigRoot = children.find((c: any) => c.type === 'primitive')
+    expect(rigRoot).toBeDefined()
   })
 
-  it('renders nothing when visible is false', () => {
+  it('sets visibility correctly on the root group', () => {
     const invisibleActor = { ...mockActor, visible: false }
-    // @ts-ignore
-    const result = CharacterRenderer.type.render({ actor: invisibleActor }, null)
-    expect(result).toBeNull()
+    const result = CharacterRenderer({ actor: invisibleActor }) as React.ReactElement<any>
+    expect(result.props.visible).toBe(false)
   })
 
-  it('renders face direction indicator', () => {
-     // @ts-ignore
-    const result = CharacterRenderer.type.render({ actor: mockActor }, null) as React.ReactElement
-    const props = result.props as any
+  it('renders the rig root using primitive', () => {
+    const result = CharacterRenderer({ actor: mockActor }) as React.ReactElement<any>
+    const props = result.props
     const children = React.Children.toArray(props.children) as React.ReactElement[]
 
-    // Second child should be the face mesh
-    const faceMesh = children[1]
-    expect(faceMesh.type).toBe('mesh')
-    const faceMeshProps = faceMesh.props as any
-    expect(faceMeshProps?.position?.[2]).toBe(0.4)
+    // Check for rig root primitive
+    const rigRoot = children.find((c: any) => c.type === 'primitive')
+    expect(rigRoot).toBeDefined()
+    expect((rigRoot as any).props.object).toBeDefined()
   })
 })
