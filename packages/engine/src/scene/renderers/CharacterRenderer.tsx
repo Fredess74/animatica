@@ -28,11 +28,11 @@ interface CharacterRendererProps {
   onClick?: () => void
 }
 
-export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
+export const CharacterRenderer = React.memo(({
   actor,
   isSelected = false,
   onClick,
-}) => {
+}: CharacterRendererProps) => {
   const groupRef = useRef<THREE.Group>(null)
   const animatorRef = useRef<CharacterAnimator | null>(null)
   const faceMorphRef = useRef<FaceMorphController | null>(null)
@@ -100,6 +100,8 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
 
   // Frame update — animation, face morphs, eye blinks
   useFrame((_state, delta) => {
+    if (!actor.visible) return
+
     // Skeletal animation
     if (animatorRef.current) {
       animatorRef.current.update(delta)
@@ -120,6 +122,8 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       faceMorphRef.current.setImmediate(eyeValues)
     }
   })
+
+  if (!actor.visible) return null
 
   return (
     <group
@@ -151,4 +155,4 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       )}
     </group>
   )
-}
+})
