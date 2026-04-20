@@ -9,7 +9,7 @@
 | Phase | Status | Completion | Tasks | Target | Flag |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Phase 1: Engine Core** | ✅ Done | **100%** | **10/10** | Weeks 1-4 | 🎉 Complete! |
-| **Phase 2: Characters** | 🔨 Active | **30%** | **1/4** | Weeks 5-6 | 🟡 In Progress |
+| **Phase 2: Characters** | 🔨 Active | **60%** | **2/4** | Weeks 5-6 | 🟡 In Progress |
 | **Phase 3: Editor UI** | 🔨 Active | **85%** | **6/7** | Weeks 5-8 | 🟢 Almost Done |
 | Phase 4: Export & Audio | Pending | 10% | 1/3 | Weeks 9-10 | ⚪ Export modal done |
 | **Phase 5: AI Integration** | 🔨 Active | **25%** | **1.5/6** | Weeks 11-14 | 🟡 Foundation |
@@ -37,9 +37,12 @@
 ## Phase 2: Characters — IN PROGRESS
 
 - [x] Humanoid base type defined in schemas
-- [ ] Humanoid renderer (`scene/renderers/HumanoidRenderer.tsx`)
-- [ ] Character animation system
-- [ ] Character presets (cowboy, robot, android)
+- [x] Bone Controller (`character/BoneController.ts`)
+- [x] Character Animator (`character/CharacterAnimator.ts`)
+- [x] Character Renderer (`scene/renderers/CharacterRenderer.tsx`)
+- [ ] Humanoid base component (`character/Humanoid.tsx`)
+- [ ] Morph Targets (`character/FaceMorphController.ts`)
+- [ ] Clothing system
 
 ## Phase 3: Editor UI — 85% DONE
 

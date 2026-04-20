@@ -25,3 +25,6 @@
 - [DONE] [editor-modal-dev] [2026-02-24] Improve ScriptConsole/ExportModal and add useKeyboardShortcuts hook
 - [DONE] [conductor] [2026-02-24] Updated task queue for Phase 2 (Characters) and Phase 3 (Editor Viewport)
 - [DONE] [readme-updater] [2026-02-25] Update README.md with current features, quick start guide
+- [DONE] [editor-viewport-dev] [2026-02-24] Create `packages/editor/src/viewport/Viewport.tsx` — R3F Canvas with OrbitControls, SceneManager, grid helper, and transform gizmo for selected actor
+- [DONE] [engine-scene-dev] [2026-04-14] Create `packages/engine/src/scene/renderers/CharacterRenderer.tsx` — base procedural humanoid with head, torso, limbs
+- [DONE] [engine-animation-dev] [2026-04-14] Add character animation system — walk, idle, wave poses using keyframe engine

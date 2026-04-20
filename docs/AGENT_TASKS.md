@@ -20,7 +20,6 @@
 
 ## Phase 3: Editor UI — Viewport (Priority: HIGH)
 
-- [ ] [ROLE: editor-viewport-dev] Create `packages/editor/src/viewport/Viewport.tsx` — R3F Canvas with OrbitControls, SceneManager, grid helper, and transform gizmo for selected actor
 - [ ] [ROLE: editor-viewport-dev] Add camera controls toolbar (top/front/side/perspective views)
 - [ ] [ROLE: editor-components-dev] Create shared UI primitives in `packages/editor/src/components/` — Button, Input, Select, Tooltip, IconButton
 - [ ] [ROLE: editor-style-polisher] Create `panels.css`, `modals.css`, `timeline.css` using design-tokens.css variables
@@ -28,8 +27,6 @@
 
 ## Phase 2: Characters (Priority: HIGH)
 
-- [ ] [ROLE: engine-scene-dev] Create `packages/engine/src/scene/renderers/HumanoidRenderer.tsx` — base procedural humanoid with head, torso, limbs
-- [ ] [ROLE: engine-animation-dev] Add character animation system — walk, idle, wave poses using keyframe engine
 - [ ] [ROLE: engine-scene-dev] Create character presets: cowboy (hat + vest), robot (metallic), android (glowing)
 - [ ] [ROLE: engine-type-hardener] Add Character-specific types to `types/index.ts`
 =======
