@@ -28,7 +28,7 @@ interface CharacterRendererProps {
   onClick?: () => void
 }
 
-export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
+const CharacterRendererComponent: React.FC<CharacterRendererProps> = ({
   actor,
   isSelected = false,
   onClick,
@@ -152,3 +152,5 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     </group>
   )
 }
+
+export const CharacterRenderer = React.memo(CharacterRendererComponent)

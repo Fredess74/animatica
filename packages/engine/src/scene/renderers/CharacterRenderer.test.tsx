@@ -1,22 +1,45 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import React from 'react'
-// @ts-ignore
 import { CharacterRenderer } from './CharacterRenderer'
 import { CharacterActor } from '../../types'
 
-// Mock react to bypass hooks checks when calling component directly
+// Mock react hooks
 vi.mock('react', async () => {
   const actual = await vi.importActual<typeof import('react')>('react')
   return {
     ...actual,
-    useRef: () => ({ current: null }),
+    useRef: vi.fn(() => ({ current: null })),
+    useMemo: vi.fn((fn) => fn()),
+    useEffect: vi.fn(),
   }
 })
 
-// Mock the Edges component from @react-three/drei
-vi.mock('@react-three/drei', () => ({
-  Edges: () => null
+// Mock R3F useFrame
+vi.mock('@react-three/fiber', () => ({
+  useFrame: vi.fn(),
 }))
+
+// Mock CharacterAnimator to avoid errors during initialization
+vi.mock('../../character/CharacterAnimator', () => {
+  const CharacterAnimator = vi.fn()
+  CharacterAnimator.prototype.registerClip = vi.fn()
+  CharacterAnimator.prototype.play = vi.fn()
+  CharacterAnimator.prototype.update = vi.fn()
+  CharacterAnimator.prototype.dispose = vi.fn()
+  CharacterAnimator.prototype.setSpeed = vi.fn()
+
+  return {
+    CharacterAnimator,
+    createIdleClip: vi.fn(),
+    createWalkClip: vi.fn(),
+    createRunClip: vi.fn(),
+    createTalkClip: vi.fn(),
+    createWaveClip: vi.fn(),
+    createDanceClip: vi.fn(),
+    createSitClip: vi.fn(),
+    createJumpClip: vi.fn(),
+  }
+})
 
 describe('CharacterRenderer', () => {
   afterEach(() => {
@@ -39,11 +62,10 @@ describe('CharacterRenderer', () => {
     clothing: {}
   }
 
-  it('renders a group containing capsule mesh with correct transform', () => {
-    // Call the forwardRef component's render function directly
-    // Since it's wrapped in memo, we access the underlying forwardRef via .type
-    // @ts-ignore
-    const result = CharacterRenderer.type.render({ actor: mockActor }, null) as React.ReactElement
+  it('renders a group containing the rig root with correct transform', () => {
+    // @ts-ignore - CharacterRenderer is a memoized component
+    const render = CharacterRenderer.type
+    const result = render({ actor: mockActor }) as React.ReactElement
 
     expect(result).not.toBeNull()
     expect(result.type).toBe('group')
@@ -53,50 +75,31 @@ describe('CharacterRenderer', () => {
     expect(props.rotation).toEqual([0, Math.PI, 0])
     expect(props.scale).toEqual([1, 1, 1])
 
-    // Verify children
+    // Verify children contains primitive for rig root
     const children = React.Children.toArray(props.children) as React.ReactElement[]
-
-    // First child should be the main mesh (capsule)
-    const mainMesh = children[0]
-    expect(mainMesh.type).toBe('mesh')
-
-    const mainMeshProps = mainMesh.props as any
-    const meshChildren = React.Children.toArray(mainMeshProps.children) as React.ReactElement[]
-
-    // Check geometry
-    const geometry = meshChildren.find((child) => child.type === 'capsuleGeometry')
-    expect(geometry).toBeDefined()
-
-    const geometryProps = geometry?.props as any
-    // Check args: radius 0.5, length 1.8
-    expect(geometryProps?.args?.[0]).toBe(0.5)
-    expect(geometryProps?.args?.[1]).toBe(1.8)
-
-    // Check material
-    const material = meshChildren.find((child) => child.type === 'meshStandardMaterial')
-    expect(material).toBeDefined()
-
-    const materialProps = material?.props as any
-    expect(materialProps?.color).toBe('#ff00aa') // The placeholder color
+    const primitive = children.find(child => child.type === 'primitive')
+    expect(primitive).toBeDefined()
   })
 
-  it('renders nothing when visible is false', () => {
+  it('sets visibility prop correctly', () => {
     const invisibleActor = { ...mockActor, visible: false }
     // @ts-ignore
-    const result = CharacterRenderer.type.render({ actor: invisibleActor }, null)
-    expect(result).toBeNull()
+    const render = CharacterRenderer.type
+    const result = render({ actor: invisibleActor }) as React.ReactElement
+    expect(result.props.visible).toBe(false)
   })
 
-  it('renders face direction indicator', () => {
-     // @ts-ignore
-    const result = CharacterRenderer.type.render({ actor: mockActor }, null) as React.ReactElement
-    const props = result.props as any
-    const children = React.Children.toArray(props.children) as React.ReactElement[]
+  it('renders selection indicator when isSelected is true', () => {
+    // @ts-ignore
+    const render = CharacterRenderer.type
+    const result = render({ actor: mockActor, isSelected: true }) as React.ReactElement
+    const children = React.Children.toArray(result.props.children) as React.ReactElement[]
 
-    // Second child should be the face mesh
-    const faceMesh = children[1]
-    expect(faceMesh.type).toBe('mesh')
-    const faceMeshProps = faceMesh.props as any
-    expect(faceMeshProps?.position?.[2]).toBe(0.4)
+    // The selection indicator is the second child (mesh with ringGeometry)
+    const ring = children.find(child =>
+      child.type === 'mesh' &&
+      React.Children.toArray((child.props as any).children).some((c: any) => c.type === 'ringGeometry')
+    )
+    expect(ring).toBeDefined()
   })
 })
