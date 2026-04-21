@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.0] - 2026-02-22
+## [0.1.0] - 2026-04-21
 
 ### Added
 
@@ -23,6 +23,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - `PlaybackController` for managing animation playback loop.
     - AI Prompt Templates (`ai/promptTemplates.ts`) for scene generation.
     - Comprehensive unit tests for core engine components.
+- **Phase 3: Editor UI** (Foundational Panels):
+    - `EditorLayout`: Standardized 3-panel workspace.
+    - `AssetLibrary`: Categorized list of character, prop, and light templates.
+    - `PropertiesPanel`: Context-aware inspector for actor and environment settings.
+    - `TimelinePanel`: Keyframe-based animation timeline with playback controls.
+    - `ScriptConsole`: Interface for importing and validating AI-generated scene scripts.
+    - `ExportModal`: Configuration for video output (Resolution, FPS, Format).
 
 ### Documentation
 
