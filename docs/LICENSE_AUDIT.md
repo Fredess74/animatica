@@ -1,11 +1,9 @@
 # License Audit
 
-**Date:** 2026-02-25
+**Date:** 2026-04-21
 **Auditor:** Jules (License Auditor)
 
 ## Summary
-
-This document lists all dependencies used in the project and their licenses. It also flags any non-MIT licenses and checks for the presence of the project's own LICENSE file.
 
 Total dependencies found: 687
 Direct dependencies: 33
@@ -20,14 +18,14 @@ Transitive dependencies: 654
 ## Source Code Headers
 
 - **Checked:** `packages/engine/src/index.ts`
-- **Result:** No license header found.
+- **Result:** No license header found. (Status: Checked on 2026-04-21)
 
 ## Flagged Licenses (Non-MIT)
 
 The following dependencies have non-MIT licenses:
 
 | Dependency | Version | License | Type |
-| --- | --- | --- |
+| --- | --- | --- | --- |
 | @dimforge/rapier3d-compat | 0.12.0 | Apache-2.0 | Transitive |
 | @ethereumjs/rlp | 4.0.1 | MPL-2.0 | Transitive |
 | @ethereumjs/util | 8.1.0 | MPL-2.0 | Transitive |
@@ -138,13 +136,14 @@ The following dependencies have non-MIT licenses:
 | yallist | 3.1.1 | ISC | Transitive |
 | yargs-parser | 20.2.9 | ISC | Transitive |
 
+
 ## Direct Dependencies
 
 | Dependency | License | Used In |
-| --- | --- | --- |
+| --- | --- | --- | --- |
 | @nomicfoundation/hardhat-toolbox | MIT | @Animatica/contracts |
 | @openzeppelin/contracts | MIT | @Animatica/contracts |
-| @react-three/drei | MIT | @Animatica/engine |
+| @react-three/drei | MIT | @Animatica/editor, @Animatica/engine |
 | @react-three/fiber | MIT | @Animatica/editor, @Animatica/engine, @Animatica/web |
 | @tailwindcss/postcss | MIT | @Animatica/editor |
 | @testing-library/dom | MIT | @Animatica/web |
@@ -152,7 +151,7 @@ The following dependencies have non-MIT licenses:
 | @types/node | MIT | @Animatica/engine |
 | @types/react | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web |
 | @types/react-dom | MIT | @Animatica/editor, @Animatica/platform, @Animatica/web |
-| @types/three | MIT | @Animatica/engine |
+| @types/three | MIT | @Animatica/editor, @Animatica/engine |
 | @types/uuid | MIT | @Animatica/engine |
 | @vitejs/plugin-react | MIT | @Animatica/editor |
 | clsx | MIT | @Animatica/editor |
@@ -172,9 +171,10 @@ The following dependencies have non-MIT licenses:
 | uuid | MIT | @Animatica/engine |
 | vite | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform |
 | vitest | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web |
-| zod | MIT | @Animatica/engine |
+| zod | MIT | @Animatica/engine, @Animatica/web |
 | zundo | MIT | @Animatica/engine |
 | zustand | MIT | @Animatica/engine |
+
 
 ## All Dependencies (including transitive)
 
@@ -867,7 +867,7 @@ The following dependencies have non-MIT licenses:
 | yargs-unparser | 2.0.0 | MIT |
 | yn | 3.1.1 | MIT |
 | yocto-queue | 0.1.0 | MIT |
-| zod | 4.3.6 | MIT |
+| zod | 3.25.76 | MIT |
 | zundo | 2.3.0 | MIT |
 | zustand | 4.5.7 | MIT |
 
