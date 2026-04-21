@@ -21,6 +21,11 @@ export {
   useSelectedActor,
   useActorsByType,
   useActorList,
+  usePlaybackState,
+  useEnvironment,
+  useTimeline,
+  useMeta,
+  useLibrary,
 } from './store/sceneStore';
 
 // === COMPONENTS (R3F) ===
