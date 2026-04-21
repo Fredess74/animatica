@@ -9,22 +9,32 @@ function getPackageJsons() {
 
 function loadLicenses() {
     console.log('Running pnpm licenses list --json...');
-    const output = execSync('pnpm licenses list --json', { maxBuffer: 20 * 1024 * 1024 }).toString();
+    const output = execSync('pnpm licenses list --json', { maxBuffer: 50 * 1024 * 1024 }).toString();
     const data = JSON.parse(output);
 
     const pkgToLicense = {};
+    const allPkgs = [];
     for (const [licenseName, packages] of Object.entries(data)) {
         for (const pkg of packages) {
-            pkgToLicense[pkg.name] = licenseName;
+            pkgToLicense[pkg.name] = {
+                license: licenseName,
+                version: pkg.versions ? pkg.versions[0] : 'Unknown'
+            };
+            allPkgs.push({
+                name: pkg.name,
+                license: licenseName,
+                version: pkg.versions ? pkg.versions[0] : 'Unknown'
+            });
         }
     }
-    return pkgToLicense;
+    return { pkgToLicense, allPkgs };
 }
 
 function main() {
-    const pkgToLicense = loadLicenses();
+    const { pkgToLicense, allPkgs } = loadLicenses();
 
-    const allDeps = {};
+    const directDeps = {};
+    const allDepNames = new Set();
 
     for (const pjPath of getPackageJsons()) {
         const pj = JSON.parse(fs.readFileSync(pjPath, 'utf8'));
@@ -37,60 +47,89 @@ function main() {
             if (name.startsWith('@Animatica/') || (typeof version === 'string' && version.startsWith('workspace:'))) {
                 continue;
             }
-            if (!allDeps[name]) {
-                allDeps[name] = new Set();
+            if (!directDeps[name]) {
+                directDeps[name] = new Set();
             }
-            allDeps[name].add(pj.name || 'root');
+            directDeps[name].add(pj.name || 'root');
+            allDepNames.add(name);
         }
     }
 
-    const sortedDeps = Object.keys(allDeps).sort();
+    const sortedDirectDeps = Object.keys(directDeps).sort();
+    const totalDeps = allPkgs.length;
+    const directDepCount = sortedDirectDeps.length;
+    const transitiveDepCount = totalDeps - directDepCount;
 
-    let table = "| Dependency | License | Flag | Used In |\n";
-    table += "| --- | --- | --- | --- |\n";
+    // Summary Section
+    const summaryContent = `Total dependencies found: ${totalDeps}\nDirect dependencies: ${directDepCount}\nTransitive dependencies: ${transitiveDepCount}`;
 
-    const flagged = [];
+    // Flagged Licenses Section
+    let flaggedTable = "| Dependency | Version | License | Type |\n";
+    flaggedTable += "| --- | --- | --- | --- |\n";
 
-    for (const dep of sortedDeps) {
-        const license = pkgToLicense[dep] || 'Unknown';
-        let flag = "";
+    const sortedAllPkgs = allPkgs.sort((a, b) => a.name.localeCompare(b.name));
+
+    for (const pkg of sortedAllPkgs) {
+        const license = pkg.license;
         if (license !== 'MIT' && !license.includes('MIT')) {
-            flag = "⚠️ Non-MIT";
-            flagged.push(`- **\`${dep}\`**: ${license}`);
+            const isDirect = directDeps[pkg.name] ? "**Direct**" : "Transitive";
+            flaggedTable += `| ${pkg.name} | ${pkg.version} | ${license} | ${isDirect} |\n`;
         }
-
-        const usedIn = Array.from(allDeps[dep]).sort().join(', ');
-        table += `| ${dep} | ${license} | ${flag} | ${usedIn} |\n`;
     }
+
+    // Direct Dependencies Section
+    let directTable = "| Dependency | License | Used In |\n";
+    directTable += "| --- | --- | --- | --- |\n";
+    for (const name of sortedDirectDeps) {
+        const info = pkgToLicense[name] || { license: 'Unknown', version: 'Unknown' };
+        const usedIn = Array.from(directDeps[name]).sort().join(', ');
+        directTable += `| ${name} | ${info.license} | ${usedIn} |\n`;
+    }
+
+    // All Dependencies Section
+    let allTable = "<details>\n<summary>Click to expand full dependency list</summary>\n\n";
+    allTable += "| Dependency | Version | License |\n";
+    allTable += "| --- | --- | --- |\n";
+    for (const pkg of sortedAllPkgs) {
+        allTable += `| ${pkg.name} | ${pkg.version} | ${pkg.license} |\n`;
+    }
+    allTable += "\n</details>";
 
     const auditPath = path.join(process.cwd(), 'docs/LICENSE_AUDIT.md');
     let auditContent = fs.readFileSync(auditPath, 'utf8');
 
-    // Update Dependency Licenses section
-    // Look for the table or the header
-    const depSectionStart = "## Dependency Licenses\n\nThe following dependencies were audited:\n\n";
-    const depSectionEnd = "\n\n## Flagged Licenses";
-
-    const startIndex = auditContent.indexOf(depSectionStart);
-    const endIndex = auditContent.indexOf(depSectionEnd);
-
-    if (startIndex !== -1 && endIndex !== -1) {
-        auditContent = auditContent.substring(0, startIndex + depSectionStart.length) +
-                       table +
-                       auditContent.substring(endIndex);
+    // Update Summary
+    const summaryHeader = "## Summary\n\n";
+    const summaryEnd = "\n\n## Project License";
+    const sStart = auditContent.indexOf(summaryHeader);
+    const sEnd = auditContent.indexOf(summaryEnd);
+    if (sStart !== -1 && sEnd !== -1) {
+        auditContent = auditContent.substring(0, sStart + summaryHeader.length) + summaryContent + auditContent.substring(sEnd);
     }
 
-    // Update Flagged Licenses section
-    const flaggedSectionStart = "## Flagged Licenses (Non-MIT/Apache-2.0)\n\n";
-    const flaggedSectionEnd = "\n\n## Missing Licenses";
+    // Update Flagged Licenses
+    const flaggedHeader = "## Flagged Licenses (Non-MIT)\n\nThe following dependencies have non-MIT licenses:\n\n";
+    const flaggedEnd = "\n\n## Direct Dependencies";
+    const fStart = auditContent.indexOf(flaggedHeader);
+    const fEnd = auditContent.indexOf(flaggedEnd);
+    if (fStart !== -1 && fEnd !== -1) {
+        auditContent = auditContent.substring(0, fStart + flaggedHeader.length) + flaggedTable + auditContent.substring(fEnd);
+    }
 
-    const fStartIndex = auditContent.indexOf(flaggedSectionStart);
-    const fEndIndex = auditContent.indexOf(flaggedSectionEnd);
+    // Update Direct Dependencies
+    const directHeader = "## Direct Dependencies\n\n";
+    const directEnd = "\n\n## All Dependencies (including transitive)";
+    const dStart = auditContent.indexOf(directHeader);
+    const dEnd = auditContent.indexOf(directEnd);
+    if (dStart !== -1 && dEnd !== -1) {
+        auditContent = auditContent.substring(0, dStart + directHeader.length) + directTable + auditContent.substring(dEnd);
+    }
 
-    if (fStartIndex !== -1 && fEndIndex !== -1) {
-        auditContent = auditContent.substring(0, fStartIndex + flaggedSectionStart.length) +
-                       flagged.join('\n') +
-                       auditContent.substring(fEndIndex);
+    // Update All Dependencies
+    const allHeader = "## All Dependencies (including transitive)\n\n";
+    const aStart = auditContent.indexOf(allHeader);
+    if (aStart !== -1) {
+        auditContent = auditContent.substring(0, aStart + allHeader.length) + allTable + "\n";
     }
 
     // Update Date
