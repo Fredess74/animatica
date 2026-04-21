@@ -1,11 +1,20 @@
-import { describe, it, afterAll } from 'vitest';
-import { interpolateKeyframes } from '../animation/interpolate';
+import { describe, it, afterAll, vi } from 'vitest';
+import { interpolateKeyframes, evaluateTracksAtTime } from '../animation/interpolate';
 import { ProjectStateSchema } from '../importer/schemas';
 import { useSceneStore } from '../store/sceneStore';
-import type { Keyframe, ProjectState, Actor, PrimitiveActor, Vector3 } from '../types';
+import type { Keyframe, ProjectState, Actor, PrimitiveActor, Vector3, AnimationTrack } from '../types';
 import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
+
+vi.hoisted(() => {
+  vi.stubGlobal('localStorage', {
+    getItem: vi.fn(),
+    setItem: vi.fn(),
+    removeItem: vi.fn(),
+    clear: vi.fn(),
+  });
+});
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -87,6 +96,32 @@ describe('Engine Benchmarks', () => {
                 }
             });
         });
+
+        it('evaluateTracksAtTime (100 tracks, 100 keyframes each, 1k evals)', () => {
+            const tracks: AnimationTrack[] = [];
+            for (let i = 0; i < 100; i++) {
+                const keyframes: Keyframe[] = [];
+                for (let j = 0; j < 100; j++) {
+                    keyframes.push({
+                        time: j,
+                        value: Math.random(),
+                        easing: 'linear',
+                    });
+                }
+                tracks.push({
+                    targetId: `actor-${i}`,
+                    property: 'opacity',
+                    keyframes,
+                });
+            }
+
+            measure('evaluateTracksAtTime (1k ops)', () => {
+                for (let i = 0; i < 1000; i++) {
+                    const t = Math.random() * 100;
+                    evaluateTracksAtTime(tracks, t);
+                }
+            });
+        });
     });
 
     describe('Schema Validation Performance', () => {
@@ -144,7 +179,7 @@ describe('Engine Benchmarks', () => {
     });
 
     describe('Store Performance', () => {
-        it('Store Update Throughput (10k playback updates)', () => {
+        it('Store Playback Updates (10k playback updates)', () => {
             const { setState, getState } = useSceneStore;
 
             setState({
@@ -169,6 +204,9 @@ describe('Engine Benchmarks', () => {
 
         it('Store Actor CRUD Throughput (1k actors)', () => {
             const { setState, getState } = useSceneStore;
+
+            // Pause temporal to avoid undo/redo overhead during benchmark
+            (useSceneStore as any).temporal.getState().pause();
 
             setState({
                 actors: [],
@@ -199,6 +237,9 @@ describe('Engine Benchmarks', () => {
                     getState().removeActor(`bench-${i}`);
                 }
             });
+
+            // Resume temporal
+            (useSceneStore as any).temporal.getState().resume();
         });
     });
 });
