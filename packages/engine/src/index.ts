@@ -1,5 +1,11 @@
-// @Animatica/engine — Public API
-// Re-exports all public types, components, schemas, and utilities.
+/**
+ * @Animatica/engine — Public API
+ * Re-exports all public types, components, schemas, and utilities.
+ *
+ * @license MIT
+ * Copyright (c) 2025 Fredess
+ */
+
 
 // === TYPES ===
 export * from './types/index'
