@@ -2,25 +2,15 @@
  * CharacterRenderer — R3F component for rendering a character actor.
  * Creates a procedural humanoid (or loads GLB), applies animation, face morphs, and eye tracking.
  */
-import React, { useEffect, useRef, useMemo } from 'react'
+import React, { useEffect, useRef, memo, forwardRef, useImperativeHandle, useCallback, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
-import { createProceduralHumanoid } from '../../character/CharacterLoader'
-import {
-  CharacterAnimator,
-  createDanceClip,
-  createIdleClip,
-  createJumpClip,
-  createRunClip,
-  createSitClip,
-  createTalkClip,
-  createWalkClip,
-  createWaveClip,
-} from '../../character/CharacterAnimator'
+import { Humanoid } from '../../character/Humanoid'
 import { FaceMorphController } from '../../character/FaceMorphController'
 import { EyeController } from '../../character/EyeController'
 import { getPreset } from '../../character/CharacterPresets'
 import type { CharacterActor } from '../../types'
+import type { CharacterRig } from '../../character/CharacterLoader'
 
 interface CharacterRendererProps {
   actor: CharacterActor
@@ -28,83 +18,48 @@ interface CharacterRendererProps {
   onClick?: () => void
 }
 
-export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
+/**
+ * CharacterRenderer — R3F component for rendering a character actor.
+ *
+ * @component
+ */
+export const CharacterRenderer = memo(forwardRef<THREE.Group, CharacterRendererProps>(({
   actor,
   isSelected = false,
   onClick,
-}) => {
+}, ref) => {
   const groupRef = useRef<THREE.Group>(null)
-  const animatorRef = useRef<CharacterAnimator | null>(null)
   const faceMorphRef = useRef<FaceMorphController | null>(null)
   const eyeControllerRef = useRef<EyeController | null>(null)
 
-  // Build character rig
-  const rig = useMemo(() => {
-    const preset = getPreset(actor.name.toLowerCase())
-    const skinColor = preset?.body.skinColor || '#D4A27C'
-    const height = preset?.body.height || 1.0
-    const build = preset?.body.build || 0.5
+  // Expose groupRef to parent via forwardRef
+  useImperativeHandle(ref, () => groupRef.current as THREE.Group)
 
-    return createProceduralHumanoid({ skinColor, height, build })
-  }, [actor.name])
+  // Look up preset for customization
+  const preset = useMemo(() => getPreset(actor.name.toLowerCase()), [actor.name])
 
-  // Setup animator
-  useEffect(() => {
-    if (!rig.root) return
-
-    const animator = new CharacterAnimator(rig.root)
-    animator.registerClip('idle', createIdleClip())
-    animator.registerClip('walk', createWalkClip())
-    animator.registerClip('run', createRunClip())
-    animator.registerClip('talk', createTalkClip())
-    animator.registerClip('wave', createWaveClip())
-    animator.registerClip('dance', createDanceClip())
-    animator.registerClip('sit', createSitClip())
-    animator.registerClip('jump', createJumpClip())
-    animator.play(actor.animation || 'idle')
-    animatorRef.current = animator
-
+  // Handle rig loading and setup controllers
+  const handleRigLoad = useCallback((rig: CharacterRig) => {
     // Setup face morph controller
-    const faceMorph = new FaceMorphController(rig.bodyMesh, rig.morphTargetMap)
-    faceMorphRef.current = faceMorph
+    if (rig.bodyMesh) {
+      const faceMorph = new FaceMorphController(rig.bodyMesh, rig.morphTargetMap)
+      faceMorphRef.current = faceMorph
+    }
 
     // Setup eye controller
     const eyeController = new EyeController()
     eyeControllerRef.current = eyeController
+  }, [])
 
-    return () => {
-      animator.dispose()
-    }
-  }, [rig, actor.animation])
-
-  // React to animation state changes
-  useEffect(() => {
-    if (animatorRef.current && actor.animation) {
-      animatorRef.current.play(actor.animation as any)
-    }
-  }, [actor.animation])
-
-  // React to animation speed changes
-  useEffect(() => {
-    if (animatorRef.current && actor.animationSpeed) {
-      animatorRef.current.setSpeed(actor.animationSpeed)
-    }
-  }, [actor.animationSpeed])
-
-  // React to morph target / expression changes from CharacterPanel
+  // React to morph target / expression changes
   useEffect(() => {
     if (faceMorphRef.current && actor.morphTargets) {
       faceMorphRef.current.setTarget(actor.morphTargets as any)
     }
   }, [actor.morphTargets])
 
-  // Frame update — animation, face morphs, eye blinks
+  // Frame update — face morphs, eye blinks
   useFrame((_state, delta) => {
-    // Skeletal animation
-    if (animatorRef.current) {
-      animatorRef.current.update(delta)
-    }
-
     // Face morph blending
     if (faceMorphRef.current) {
       faceMorphRef.current.update(delta)
@@ -121,6 +76,9 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     }
   })
 
+  // Rule of Hooks: Place conditional return after all hooks
+  if (!actor.visible) return null
+
   return (
     <group
       ref={groupRef}
@@ -128,14 +86,19 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       position={actor.transform.position}
       rotation={actor.transform.rotation}
       scale={actor.transform.scale}
-      visible={actor.visible}
       onClick={(e) => {
         e.stopPropagation()
         onClick?.()
       }}
     >
-      {/* Character rig */}
-      <primitive object={rig.root} />
+      <Humanoid
+        animation={actor.animation}
+        animationSpeed={actor.animationSpeed}
+        height={preset?.body.height}
+        build={preset?.body.build}
+        skinColor={preset?.body.skinColor}
+        onLoad={handleRigLoad}
+      />
 
       {/* Selection indicator ring */}
       {isSelected && (
@@ -149,6 +112,14 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
           />
         </mesh>
       )}
+
+      {/* Face direction indicator (for editor) */}
+      <mesh position={[0, 1.5, 0.4]}>
+        <boxGeometry args={[0.1, 0.1, 0.2]} />
+        <meshBasicMaterial color="#22C55E" />
+      </mesh>
     </group>
   )
-}
+}))
+
+CharacterRenderer.displayName = 'CharacterRenderer'
