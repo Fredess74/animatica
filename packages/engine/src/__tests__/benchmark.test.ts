@@ -1,8 +1,9 @@
 import { describe, it, afterAll } from 'vitest';
-import { interpolateKeyframes } from '../animation/interpolate';
+import { interpolateKeyframes, evaluateTracksAtTime } from '../animation/interpolate';
 import { ProjectStateSchema } from '../importer/schemas';
 import { useSceneStore } from '../store/sceneStore';
-import type { Keyframe, ProjectState, Actor, PrimitiveActor, Vector3 } from '../types';
+import type { SceneStoreState } from '../store/types';
+import type { Keyframe, ProjectState, Actor, PrimitiveActor, Vector3, AnimationTrack } from '../types';
 import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
@@ -87,6 +88,45 @@ describe('Engine Benchmarks', () => {
                 }
             });
         });
+
+        it('Step Interpolation (10k ops, 1k keyframes)', () => {
+            const keyframes: Keyframe<string>[] = [];
+            for (let i = 0; i < 1000; i++) {
+                keyframes.push({
+                    time: i,
+                    value: i % 2 === 0 ? 'visible' : 'hidden',
+                    easing: 'step',
+                });
+            }
+
+            measure('Step Interpolation (10k ops)', () => {
+                for (let i = 0; i < 10000; i++) {
+                    const t = Math.random() * 1000;
+                    interpolateKeyframes(keyframes, t);
+                }
+            });
+        });
+
+        it('evaluateTracksAtTime (1k tracks, 10 keyframes each)', () => {
+            const tracks: AnimationTrack[] = [];
+            for (let i = 0; i < 1000; i++) {
+                const keyframes: Keyframe<number>[] = [];
+                for (let k = 0; k < 10; k++) {
+                    keyframes.push({ time: k, value: k * 10, easing: 'linear' });
+                }
+                tracks.push({
+                    targetId: `actor-${i}`,
+                    property: 'transform.position[0]',
+                    keyframes,
+                });
+            }
+
+            measure('evaluateTracksAtTime (1k tracks)', () => {
+                for (let i = 0; i < 100; i++) {
+                    evaluateTracksAtTime(tracks, Math.random() * 10);
+                }
+            });
+        });
     });
 
     describe('Schema Validation Performance', () => {
@@ -158,7 +198,8 @@ describe('Engine Benchmarks', () => {
                 timeline: { duration: 10, cameraTrack: [], animationTracks: [], markers: [] },
                 library: { clips: [] },
                 playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, direction: 1, loopMode: 'none' },
-            });
+                selectedActorId: null,
+            } as SceneStoreState);
 
             measure('Store Playback Updates (10k ops)', () => {
                 for (let i = 0; i < 10000; i++) {
@@ -173,7 +214,8 @@ describe('Engine Benchmarks', () => {
             setState({
                 actors: [],
                 playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, direction: 1, loopMode: 'none' },
-            } as any);
+                selectedActorId: null,
+            } as unknown as SceneStoreState);
 
             measure('Store Add Actor (1k ops)', () => {
                 for (let i = 0; i < 1000; i++) {
@@ -197,6 +239,42 @@ describe('Engine Benchmarks', () => {
             measure('Store Remove Actor (1k ops)', () => {
                 for (let i = 0; i < 1000; i++) {
                     getState().removeActor(`bench-${i}`);
+                }
+            });
+        });
+
+        it('Store Undo/Redo Throughput (100 ops)', () => {
+            const { setState, getState, temporal } = useSceneStore as any;
+
+            // Reset store
+            setState({
+                actors: [],
+                selectedActorId: null,
+            } as unknown as SceneStoreState);
+
+            // Make some changes to build history
+            for (let i = 0; i < 100; i++) {
+                getState().addActor({
+                    id: `undo-${i}`,
+                    name: `Actor ${i}`,
+                    type: 'primitive',
+                    transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
+                    visible: true,
+                    properties: { shape: 'box', color: '#ff0000', roughness: 0.5, metalness: 0.5, opacity: 1, wireframe: false }
+                } as PrimitiveActor);
+            }
+
+            const { undo, redo } = temporal.getState();
+
+            measure('Store Undo (100 ops)', () => {
+                for (let i = 0; i < 100; i++) {
+                    undo();
+                }
+            });
+
+            measure('Store Redo (100 ops)', () => {
+                for (let i = 0; i < 100; i++) {
+                    redo();
                 }
             });
         });
