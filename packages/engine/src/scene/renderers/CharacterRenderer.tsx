@@ -1,11 +1,13 @@
 /**
  * CharacterRenderer — R3F component for rendering a character actor.
- * Creates a procedural humanoid (or loads GLB), applies animation, face morphs, and eye tracking.
+ * delegates core humanoid rendering to the Humanoid component,
+ * and handles higher-level animation, face morphs, and eye tracking.
  */
-import React, { useEffect, useRef, useMemo } from 'react'
+import React, { useEffect, useRef, useCallback } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
-import { createProceduralHumanoid } from '../../character/CharacterLoader'
+import { Humanoid } from '../../characters/Humanoid'
+import { CharacterRig } from '../../character/CharacterLoader'
 import {
   CharacterAnimator,
   createDanceClip,
@@ -38,21 +40,18 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
   const faceMorphRef = useRef<FaceMorphController | null>(null)
   const eyeControllerRef = useRef<EyeController | null>(null)
 
-  // Build character rig
-  const rig = useMemo(() => {
-    const preset = getPreset(actor.name.toLowerCase())
-    const skinColor = preset?.body.skinColor || '#D4A27C'
-    const height = preset?.body.height || 1.0
-    const build = preset?.body.build || 0.5
+  // Get preset values for fallback
+  const preset = getPreset(actor.name.toLowerCase())
+  const skinColor = preset?.body.skinColor || '#D4A27C'
+  const height = preset?.body.height || 1.0
+  const build = preset?.body.build || 0.5
 
-    return createProceduralHumanoid({ skinColor, height, build })
-  }, [actor.name])
+  // Handle rig loading from Humanoid component
+  const handleLoad = useCallback((loadedRig: CharacterRig) => {
+    // Cleanup previous animator if it exists
+    animatorRef.current?.dispose()
 
-  // Setup animator
-  useEffect(() => {
-    if (!rig.root) return
-
-    const animator = new CharacterAnimator(rig.root)
+    const animator = new CharacterAnimator(loadedRig.root)
     animator.registerClip('idle', createIdleClip())
     animator.registerClip('walk', createWalkClip())
     animator.registerClip('run', createRunClip())
@@ -61,21 +60,26 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     animator.registerClip('dance', createDanceClip())
     animator.registerClip('sit', createSitClip())
     animator.registerClip('jump', createJumpClip())
-    animator.play(actor.animation || 'idle')
+
     animatorRef.current = animator
 
     // Setup face morph controller
-    const faceMorph = new FaceMorphController(rig.bodyMesh, rig.morphTargetMap)
-    faceMorphRef.current = faceMorph
+    if (loadedRig.bodyMesh) {
+      const faceMorph = new FaceMorphController(loadedRig.bodyMesh, loadedRig.morphTargetMap)
+      faceMorphRef.current = faceMorph
+    }
 
     // Setup eye controller
     const eyeController = new EyeController()
     eyeControllerRef.current = eyeController
+  }, [])
 
+  // Cleanup on unmount
+  useEffect(() => {
     return () => {
-      animator.dispose()
+      animatorRef.current?.dispose()
     }
-  }, [rig, actor.animation])
+  }, [])
 
   // React to animation state changes
   useEffect(() => {
@@ -86,12 +90,12 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
 
   // React to animation speed changes
   useEffect(() => {
-    if (animatorRef.current && actor.animationSpeed) {
+    if (animatorRef.current && actor.animationSpeed !== undefined) {
       animatorRef.current.setSpeed(actor.animationSpeed)
     }
   }, [actor.animationSpeed])
 
-  // React to morph target / expression changes from CharacterPanel
+  // React to morph target / expression changes
   useEffect(() => {
     if (faceMorphRef.current && actor.morphTargets) {
       faceMorphRef.current.setTarget(actor.morphTargets as any)
@@ -121,6 +125,8 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     }
   })
 
+  if (!actor.visible) return null
+
   return (
     <group
       ref={groupRef}
@@ -128,14 +134,18 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       position={actor.transform.position}
       rotation={actor.transform.rotation}
       scale={actor.transform.scale}
-      visible={actor.visible}
       onClick={(e) => {
         e.stopPropagation()
         onClick?.()
       }}
     >
-      {/* Character rig */}
-      <primitive object={rig.root} />
+      <Humanoid
+        url={(actor as any).url}
+        skinColor={skinColor}
+        height={height}
+        build={build}
+        onLoad={handleLoad}
+      />
 
       {/* Selection indicator ring */}
       {isSelected && (
@@ -149,6 +159,12 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
           />
         </mesh>
       )}
+
+      {/* Face direction indicator (debug/editor helper) */}
+      <mesh position={[0, height * 1.5, 0.4]}>
+        <sphereGeometry args={[0.05]} />
+        <meshBasicMaterial color="#FFD700" />
+      </mesh>
     </group>
   )
 }
