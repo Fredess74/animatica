@@ -136,5 +136,32 @@ export const useActorsByType = (type: Actor['type']) =>
 
 /**
  * Hook to get the list of all actors.
+ * Optimized with useShallow to prevent re-renders when actor references in the list change but the list content is shallowly equal.
  */
-export const useActorList = () => useSceneStore((state) => state.actors);
+export const useActorList = () => useSceneStore(useShallow((state) => state.actors));
+
+/**
+ * Hook to get all currently active (visible) actors.
+ */
+export const useActiveActors = () =>
+  useSceneStore(useShallow((state) => state.actors.filter((a) => a.visible)));
+
+/**
+ * Hook to get the full playback state.
+ */
+export const usePlaybackState = () => useSceneStore(useShallow((state) => state.playback));
+
+/**
+ * Hook to get the environment settings.
+ */
+export const useEnvironment = () => useSceneStore(useShallow((state) => state.environment));
+
+/**
+ * Hook to get the timeline configuration.
+ */
+export const useTimeline = () => useSceneStore(useShallow((state) => state.timeline));
+
+/**
+ * Hook to get the project metadata.
+ */
+export const useMeta = () => useSceneStore(useShallow((state) => state.meta));
