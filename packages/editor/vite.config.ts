@@ -18,6 +18,9 @@ export default defineConfig({
             external: [
                 'react',
                 'react-dom',
+                'three',
+                '@react-three/fiber',
+                '@react-three/drei',
                 '@Animatica/engine',
                 'lucide-react',
                 'clsx',
