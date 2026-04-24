@@ -27,7 +27,8 @@ vi.mock('@react-three/fiber', async () => {
     Canvas: ({ children }: { children: React.ReactNode }) => <div data-testid="canvas">{children}</div>,
     useThree: () => ({
       scene: { getObjectByName: mocks.mockGetObjectByName },
-      camera: { position: { set: vi.fn() }, lookAt: vi.fn() }
+      camera: { position: { set: vi.fn() }, lookAt: vi.fn() },
+      gl: { domElement: { onpointerdown: null } },
     }),
   }
 })
@@ -38,6 +39,8 @@ vi.mock('@react-three/drei', () => ({
   TransformControls: () => <div data-testid="transform-controls" />,
   Grid: () => <div data-testid="grid" />,
   Sky: () => <div data-testid="sky" />,
+  ContactShadows: () => <div data-testid="contact-shadows" />,
+  Environment: () => <div data-testid="environment" />,
 }))
 
 // Mock Engine
@@ -53,7 +56,9 @@ vi.mock('@Animatica/engine', () => ({
       sun: { position: [10, 10, 10], intensity: 1, color: '#fff' },
       skyColor: '#87ceeb',
     },
+    actors: [],
   }),
+  useActiveActors: () => [],
 }))
 
 describe('Viewport', () => {
@@ -73,28 +78,28 @@ describe('Viewport', () => {
     expect(screen.getByTestId('canvas')).toBeTruthy()
     expect(screen.getByTestId('orbit-controls')).toBeTruthy()
     expect(screen.getByTestId('grid')).toBeTruthy()
-    expect(screen.getByTestId('scene-manager')).toBeTruthy()
+    expect(screen.getByTestId('sky')).toBeTruthy()
   })
 
   it('renders the camera toolbar', () => {
     render(<Viewport />)
 
-    expect(screen.getByTitle('Top View')).toBeTruthy()
-    expect(screen.getByTitle('Front View')).toBeTruthy()
-    expect(screen.getByTitle('Side View')).toBeTruthy()
-    expect(screen.getByTitle('Perspective View')).toBeTruthy()
+    // ViewportToolbar uses buttons with specific titles
+    expect(screen.getByTitle('Move (W)')).toBeTruthy()
+    expect(screen.getByTitle('Rotate (E)')).toBeTruthy()
+    expect(screen.getByTitle('Scale (R)')).toBeTruthy()
   })
 
-  it('attempts to change camera view when toolbar button clicked', () => {
+  it('attempts to toggle grid when toolbar button clicked', () => {
     render(<Viewport />)
 
-    const topButton = screen.getByTitle('Top View')
-    fireEvent.click(topButton)
+    const gridButton = screen.getByTitle('Toggle grid')
+    fireEvent.click(gridButton)
 
-    expect(topButton).toBeTruthy()
+    expect(gridButton).toBeTruthy()
   })
 
-  it('renders gizmo when object is found', () => {
+  it('renders gizmo when object is found', async () => {
     // Mock found object
     mocks.mockGetObjectByName.mockReturnValue({
         position: { x: 0, y: 0, z: 0 },
@@ -103,6 +108,9 @@ describe('Viewport', () => {
     })
 
     render(<Viewport />)
+
+    // Wait for the timeout in ViewportGizmo
+    await new Promise(resolve => setTimeout(resolve, 100))
 
     expect(screen.getByTestId('transform-controls')).toBeTruthy()
   })
