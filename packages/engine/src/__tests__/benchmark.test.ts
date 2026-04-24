@@ -1,5 +1,5 @@
 import { describe, it, afterAll } from 'vitest';
-import { interpolateKeyframes } from '../animation/interpolate';
+import { interpolateKeyframes, evaluateTracksAtTime } from '../animation/interpolate';
 import { ProjectStateSchema } from '../importer/schemas';
 import { useSceneStore } from '../store/sceneStore';
 import type { Keyframe, ProjectState, Actor, PrimitiveActor, Vector3 } from '../types';
@@ -84,6 +84,49 @@ describe('Engine Benchmarks', () => {
                 for (let i = 0; i < 10000; i++) {
                     const t = Math.random() * 10000;
                     interpolateKeyframes(keyframes, t);
+                }
+            });
+        });
+
+        it('Step Interpolation (10k ops)', () => {
+            const keyframes: Keyframe<boolean>[] = [];
+            for (let i = 0; i < 10000; i++) {
+                keyframes.push({
+                    time: i,
+                    value: i % 2 === 0,
+                    easing: 'step',
+                });
+            }
+
+            measure('Step Interpolation (10k ops)', () => {
+                for (let i = 0; i < 10000; i++) {
+                    const t = Math.random() * 10000;
+                    interpolateKeyframes(keyframes, t);
+                }
+            });
+        });
+
+        it('evaluateTracksAtTime (100 tracks, 100 keyframes each)', () => {
+            const tracks: any[] = [];
+            for (let i = 0; i < 100; i++) {
+                const keyframes: any[] = [];
+                for (let j = 0; j < 100; j++) {
+                    keyframes.push({
+                        time: j,
+                        value: j * 10,
+                        easing: 'linear',
+                    });
+                }
+                tracks.push({
+                    targetId: `actor-${i}`,
+                    property: 'position.x',
+                    keyframes,
+                });
+            }
+
+            measure('evaluateTracksAtTime (10k keyframes total)', () => {
+                for (let i = 0; i < 100; i++) {
+                    evaluateTracksAtTime(tracks, Math.random() * 100);
                 }
             });
         });
@@ -197,6 +240,35 @@ describe('Engine Benchmarks', () => {
             measure('Store Remove Actor (1k ops)', () => {
                 for (let i = 0; i < 1000; i++) {
                     getState().removeActor(`bench-${i}`);
+                }
+            });
+        });
+
+        it('Store Undo/Redo (100 ops)', () => {
+            const { getState } = useSceneStore;
+            const temporalStore = (useSceneStore as any).temporal;
+
+            // Setup: add 100 actors to have something to undo/redo
+            for (let i = 0; i < 100; i++) {
+                getState().addActor({
+                    id: `undo-bench-${i}`,
+                    name: `Actor ${i}`,
+                    type: 'primitive',
+                    transform: { position: [0, 0, 0], rotation: [0, 0, 0], scale: [1, 1, 1] },
+                    visible: true,
+                    properties: { shape: 'box', color: '#ff0000', roughness: 0.5, metalness: 0.5, opacity: 1, wireframe: false }
+                } as PrimitiveActor);
+            }
+
+            measure('Store Undo (100 ops)', () => {
+                for (let i = 0; i < 100; i++) {
+                    temporalStore.getState().undo();
+                }
+            });
+
+            measure('Store Redo (100 ops)', () => {
+                for (let i = 0; i < 100; i++) {
+                    temporalStore.getState().redo();
                 }
             });
         });
