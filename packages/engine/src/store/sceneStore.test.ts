@@ -1,5 +1,7 @@
+/** @vitest-environment jsdom */
 import { describe, it, expect, beforeEach } from 'vitest';
-import { useSceneStore, getActorById, getActiveActors, getCurrentTime } from './sceneStore';
+import { renderHook } from '@testing-library/react';
+import { useSceneStore, getActorById, getActiveActors, getCurrentTime, usePlaybackState, useEnvironment, useTimeline, useMeta, useActiveActors, useSceneActions } from './sceneStore';
 import { PrimitiveActor } from '../types';
 
 describe('sceneStore', () => {
@@ -160,5 +162,47 @@ describe('sceneStore', () => {
       const result = useSceneStore.getState().actors.filter(a => a.type === 'primitive');
       expect(result).toHaveLength(1);
       expect(result[0].id).toBe('1');
+  });
+
+  describe('granular hooks', () => {
+    it('usePlaybackState returns playback slice', () => {
+        const { result } = renderHook(() => usePlaybackState());
+        expect(result.current).toEqual(useSceneStore.getState().playback);
+    });
+
+    it('useEnvironment returns environment slice', () => {
+        const { result } = renderHook(() => useEnvironment());
+        expect(result.current).toEqual(useSceneStore.getState().environment);
+    });
+
+    it('useTimeline returns timeline slice', () => {
+        const { result } = renderHook(() => useTimeline());
+        expect(result.current).toEqual(useSceneStore.getState().timeline);
+    });
+
+    it('useMeta returns meta slice', () => {
+        const { result } = renderHook(() => useMeta());
+        expect(result.current).toEqual(useSceneStore.getState().meta);
+    });
+
+    it('useActiveActors returns only visible actors', () => {
+        useSceneStore.getState().addActor(createActor('1', true));
+        useSceneStore.getState().addActor(createActor('2', false));
+        const { result } = renderHook(() => useActiveActors());
+        expect(result.current).toHaveLength(1);
+        expect(result.current[0].id).toBe('1');
+    });
+
+    it('useSceneActions returns stable actions', () => {
+        const { result } = renderHook(() => useSceneActions());
+        expect(result.current.addActor).toBeTypeOf('function');
+        expect(result.current.setPlayback).toBeTypeOf('function');
+
+        const firstResult = result.current;
+        useSceneStore.getState().setPlayback({ currentTime: 10 });
+
+        const { result: result2 } = renderHook(() => useSceneActions());
+        expect(result2.current.addActor).toBe(firstResult.addActor);
+    });
   });
 });
