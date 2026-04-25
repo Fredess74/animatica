@@ -90,6 +90,25 @@ export const getCurrentTime = (state: SceneStoreState): number =>
 // Hooks
 
 /**
+ * Hook to access all store actions without subscribing to any state.
+ * Returns stable references to actions.
+ * Optimized with useShallow to prevent unnecessary re-renders.
+ */
+export const useSceneActions = () =>
+  useSceneStore(
+    useShallow((state) => ({
+      addActor: state.addActor,
+      removeActor: state.removeActor,
+      updateActor: state.updateActor,
+      setSelectedActor: state.setSelectedActor,
+      setEnvironment: state.setEnvironment,
+      setTimeline: state.setTimeline,
+      setPlayback: state.setPlayback,
+      setMeta: state.setMeta,
+    }))
+  );
+
+/**
  * Hook to select a specific actor by ID.
  */
 export const useActorById = (id: string) =>
@@ -115,6 +134,34 @@ export const useIsPlaying = () =>
   useSceneStore((state) => state.playback.isPlaying);
 
 /**
+ * Hook to get the entire playback state.
+ * Optimized with useShallow.
+ */
+export const usePlaybackState = () =>
+  useSceneStore(useShallow((state) => state.playback));
+
+/**
+ * Hook to get the current scene environment.
+ * Optimized with useShallow.
+ */
+export const useEnvironment = () =>
+  useSceneStore(useShallow((state) => state.environment));
+
+/**
+ * Hook to get the current timeline configuration.
+ * Optimized with useShallow.
+ */
+export const useTimeline = () =>
+  useSceneStore(useShallow((state) => state.timeline));
+
+/**
+ * Hook to get the project metadata.
+ * Optimized with useShallow.
+ */
+export const useMeta = () =>
+  useSceneStore(useShallow((state) => state.meta));
+
+/**
  * Hook to get the ID of the currently selected actor.
  */
 export const useSelectedActorId = () =>
@@ -130,11 +177,20 @@ export const useSelectedActor = () =>
 
 /**
  * Hook to get all actors of a specific type.
+ * Optimized with useShallow.
  */
 export const useActorsByType = (type: Actor['type']) =>
   useSceneStore(useShallow((state) => state.actors.filter((a) => a.type === type)));
 
 /**
- * Hook to get the list of all actors.
+ * Hook to get the list of all currently active (visible) actors.
+ * Optimized with useShallow.
  */
-export const useActorList = () => useSceneStore((state) => state.actors);
+export const useActiveActors = () =>
+  useSceneStore(useShallow(getActiveActors));
+
+/**
+ * Hook to get the list of all actors.
+ * Optimized with useShallow.
+ */
+export const useActorList = () => useSceneStore(useShallow((state) => state.actors));
