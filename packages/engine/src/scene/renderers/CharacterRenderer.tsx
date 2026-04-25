@@ -105,13 +105,13 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       animatorRef.current.update(delta)
     }
 
-    // Face morph blending
-    if (faceMorphRef.current) {
+    // Face morph blending (only if we have a skinned mesh with morphs)
+    if (faceMorphRef.current && rig.bodyMesh) {
       faceMorphRef.current.update(delta)
     }
 
     // Eye auto-blink + look-at
-    if (eyeControllerRef.current && faceMorphRef.current) {
+    if (eyeControllerRef.current && faceMorphRef.current && rig.bodyMesh) {
       const headPos = groupRef.current
         ? new THREE.Vector3().setFromMatrixPosition(groupRef.current.matrixWorld)
         : undefined
