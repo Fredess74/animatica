@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- Phase 2: Characters - Humanoid base type and procedural generation system.
+- Phase 3: Editor UI - Component library, layout system, and property panels.
+- Phase 4: Export & Audio - Initial export modal UI.
+
+### Changed
+- Reorganized documentation structure for better clarity.
+- Optimized engine store with Immer middleware.
+
+### Fixed
+- Various type safety issues across the engine and editor packages.
+
 ## [0.1.0] - 2026-02-22
 
 ### Added
