@@ -17,6 +17,7 @@ import {
   createWalkClip,
   createWaveClip,
 } from '../../character/CharacterAnimator'
+import { BoneController } from '../../character/BoneController'
 import { FaceMorphController } from '../../character/FaceMorphController'
 import { EyeController } from '../../character/EyeController'
 import { getPreset } from '../../character/CharacterPresets'
@@ -35,6 +36,7 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
 }) => {
   const groupRef = useRef<THREE.Group>(null)
   const animatorRef = useRef<CharacterAnimator | null>(null)
+  const boneControllerRef = useRef<BoneController | null>(null)
   const faceMorphRef = useRef<FaceMorphController | null>(null)
   const eyeControllerRef = useRef<EyeController | null>(null)
 
@@ -64,6 +66,10 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     animator.play(actor.animation || 'idle')
     animatorRef.current = animator
 
+    // Setup bone controller for manual posing
+    const boneController = new BoneController(rig.bones)
+    boneControllerRef.current = boneController
+
     // Setup face morph controller
     const faceMorph = new FaceMorphController(rig.bodyMesh, rig.morphTargetMap)
     faceMorphRef.current = faceMorph
@@ -91,6 +97,13 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     }
   }, [actor.animationSpeed])
 
+  // React to body pose changes
+  useEffect(() => {
+    if (boneControllerRef.current && actor.bodyPose) {
+      boneControllerRef.current.setPose(actor.bodyPose)
+    }
+  }, [actor.bodyPose])
+
   // React to morph target / expression changes from CharacterPanel
   useEffect(() => {
     if (faceMorphRef.current && actor.morphTargets) {
@@ -103,6 +116,11 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     // Skeletal animation
     if (animatorRef.current) {
       animatorRef.current.update(delta)
+    }
+
+    // Manual bone posing (overrides animation)
+    if (boneControllerRef.current) {
+      boneControllerRef.current.update(delta)
     }
 
     // Face morph blending
