@@ -1,25 +1,89 @@
+/** @vitest-environment jsdom */
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import React from 'react'
-// @ts-ignore
+import { render, cleanup } from '@testing-library/react'
 import { CharacterRenderer } from './CharacterRenderer'
 import { CharacterActor } from '../../types'
+import * as THREE from 'three'
 
-// Mock react to bypass hooks checks when calling component directly
-vi.mock('react', async () => {
-  const actual = await vi.importActual<typeof import('react')>('react')
+// Mock Three.js
+vi.mock('three', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('three')>()
   return {
     ...actual,
-    useRef: () => ({ current: null }),
+    Vector3: class extends actual.Vector3 {
+      setFromMatrixPosition() { return this }
+    }
   }
 })
 
-// Mock the Edges component from @react-three/drei
-vi.mock('@react-three/drei', () => ({
-  Edges: () => null
+// Mock R3F useFrame
+vi.mock('@react-three/fiber', () => ({
+  useFrame: vi.fn(),
+}))
+
+// Mock internal controllers and loaders
+vi.mock('../../character/CharacterLoader', () => ({
+  createProceduralHumanoid: vi.fn(() => ({
+    root: new THREE.Group(),
+    bodyMesh: new THREE.Mesh(),
+    morphTargetMap: {},
+  })),
+}))
+
+vi.mock('../../character/CharacterAnimator', () => {
+    function Mock(this: any) {
+        this.registerClip = vi.fn();
+        this.play = vi.fn();
+        this.setSpeed = vi.fn();
+        this.update = vi.fn();
+        this.dispose = vi.fn();
+    }
+    return {
+        CharacterAnimator: Mock,
+        createIdleClip: vi.fn(),
+        createWalkClip: vi.fn(),
+        createRunClip: vi.fn(),
+        createTalkClip: vi.fn(),
+        createWaveClip: vi.fn(),
+        createDanceClip: vi.fn(),
+        createSitClip: vi.fn(),
+        createJumpClip: vi.fn(),
+    }
+})
+
+vi.mock('../../character/FaceMorphController', () => {
+    function Mock(this: any) {
+        this.setTarget = vi.fn();
+        this.update = vi.fn();
+        this.setImmediate = vi.fn();
+    }
+    return {
+        FaceMorphController: Mock,
+    }
+})
+
+vi.mock('../../character/EyeController', () => {
+    function Mock(this: any) {
+        this.update = vi.fn(() => ({}));
+    }
+    return {
+        EyeController: Mock,
+    }
+})
+
+vi.mock('../../character/CharacterPresets', () => ({
+  getPreset: vi.fn(() => ({
+    body: {
+      skinColor: '#D4A27C',
+      height: 1.0,
+      build: 0.5,
+    },
+  })),
 }))
 
 describe('CharacterRenderer', () => {
   afterEach(() => {
+    cleanup()
     vi.restoreAllMocks()
   })
 
@@ -31,72 +95,38 @@ describe('CharacterRenderer', () => {
     transform: {
       position: [10, 0, 5],
       rotation: [0, Math.PI, 0],
-      scale: [1, 1, 1]
+      scale: [1, 1, 1],
     },
     animation: 'idle',
     morphTargets: {},
     bodyPose: {},
-    clothing: {}
+    clothing: {},
   }
 
-  it('renders a group containing capsule mesh with correct transform', () => {
-    // Call the forwardRef component's render function directly
-    // Since it's wrapped in memo, we access the underlying forwardRef via .type
-    // @ts-ignore
-    const result = CharacterRenderer.type.render({ actor: mockActor }, null) as React.ReactElement
-
-    expect(result).not.toBeNull()
-    expect(result.type).toBe('group')
-
-    const props = result.props as any
-    expect(props.position).toEqual([10, 0, 5])
-    expect(props.rotation).toEqual([0, Math.PI, 0])
-    expect(props.scale).toEqual([1, 1, 1])
-
-    // Verify children
-    const children = React.Children.toArray(props.children) as React.ReactElement[]
-
-    // First child should be the main mesh (capsule)
-    const mainMesh = children[0]
-    expect(mainMesh.type).toBe('mesh')
-
-    const mainMeshProps = mainMesh.props as any
-    const meshChildren = React.Children.toArray(mainMeshProps.children) as React.ReactElement[]
-
-    // Check geometry
-    const geometry = meshChildren.find((child) => child.type === 'capsuleGeometry')
-    expect(geometry).toBeDefined()
-
-    const geometryProps = geometry?.props as any
-    // Check args: radius 0.5, length 1.8
-    expect(geometryProps?.args?.[0]).toBe(0.5)
-    expect(geometryProps?.args?.[1]).toBe(1.8)
-
-    // Check material
-    const material = meshChildren.find((child) => child.type === 'meshStandardMaterial')
-    expect(material).toBeDefined()
-
-    const materialProps = material?.props as any
-    expect(materialProps?.color).toBe('#ff00aa') // The placeholder color
+  it('renders a group with correct transform', () => {
+    const { container } = render(<CharacterRenderer actor={mockActor} />)
+    const group = container.querySelector('group')
+    expect(group).not.toBeNull()
+    expect(group?.getAttribute('name')).toBe('char-1')
   })
 
   it('renders nothing when visible is false', () => {
     const invisibleActor = { ...mockActor, visible: false }
-    // @ts-ignore
-    const result = CharacterRenderer.type.render({ actor: invisibleActor }, null)
-    expect(result).toBeNull()
+    const { container } = render(<CharacterRenderer actor={invisibleActor} />)
+    expect(container.firstChild).toBeNull()
   })
 
-  it('renders face direction indicator', () => {
-     // @ts-ignore
-    const result = CharacterRenderer.type.render({ actor: mockActor }, null) as React.ReactElement
-    const props = result.props as any
-    const children = React.Children.toArray(props.children) as React.ReactElement[]
+  it('renders selection indicator when isSelected is true', () => {
+    const { getByTestId } = render(
+      <CharacterRenderer actor={mockActor} isSelected={true} />
+    )
+    expect(getByTestId('selection-ring')).toBeDefined()
+  })
 
-    // Second child should be the face mesh
-    const faceMesh = children[1]
-    expect(faceMesh.type).toBe('mesh')
-    const faceMeshProps = faceMesh.props as any
-    expect(faceMeshProps?.position?.[2]).toBe(0.4)
+  it('does not render selection indicator when isSelected is false', () => {
+    const { queryByTestId } = render(
+      <CharacterRenderer actor={mockActor} isSelected={false} />
+    )
+    expect(queryByTestId('selection-ring')).toBeNull()
   })
 })

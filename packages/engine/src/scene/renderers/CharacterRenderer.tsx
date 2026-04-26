@@ -33,6 +33,8 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
   isSelected = false,
   onClick,
 }) => {
+  if (!actor.visible) return null
+
   const groupRef = useRef<THREE.Group>(null)
   const animatorRef = useRef<CharacterAnimator | null>(null)
   const faceMorphRef = useRef<FaceMorphController | null>(null)
@@ -139,7 +141,7 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
 
       {/* Selection indicator ring */}
       {isSelected && (
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
+        <mesh data-testid="selection-ring" rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
           <ringGeometry args={[0.4, 0.5, 32]} />
           <meshBasicMaterial
             color="#22C55E"
