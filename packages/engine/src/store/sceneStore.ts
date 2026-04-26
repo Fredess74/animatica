@@ -103,16 +103,22 @@ export const useActorIds = () =>
   useSceneStore(useShallow((state) => state.actors.map((a) => a.id)));
 
 /**
- * Hook to get the current playback time.
+ * Hook to get the list of all actors.
  */
-export const useCurrentTime = () =>
-  useSceneStore((state) => state.playback.currentTime);
+export const useActorList = () =>
+  useSceneStore(useShallow((state) => state.actors));
 
 /**
- * Hook to get the current playback playing status.
+ * Hook to get all currently visible actors.
  */
-export const useIsPlaying = () =>
-  useSceneStore((state) => state.playback.isPlaying);
+export const useActiveActors = () =>
+  useSceneStore(useShallow((state) => state.actors.filter((a) => a.visible)));
+
+/**
+ * Hook to get all actors of a specific type.
+ */
+export const useActorsByType = (type: Actor['type']) =>
+  useSceneStore(useShallow((state) => state.actors.filter((a) => a.type === type)));
 
 /**
  * Hook to get the ID of the currently selected actor.
@@ -129,12 +135,48 @@ export const useSelectedActor = () =>
   );
 
 /**
- * Hook to get all actors of a specific type.
+ * Hook to get the current environment settings.
  */
-export const useActorsByType = (type: Actor['type']) =>
-  useSceneStore(useShallow((state) => state.actors.filter((a) => a.type === type)));
+export const useEnvironment = () =>
+  useSceneStore(useShallow((state) => state.environment));
 
 /**
- * Hook to get the list of all actors.
+ * Hook to get the current timeline configuration.
  */
-export const useActorList = () => useSceneStore((state) => state.actors);
+export const useTimeline = () =>
+  useSceneStore(useShallow((state) => state.timeline));
+
+/**
+ * Hook to get the current playback state.
+ */
+export const usePlaybackState = () =>
+  useSceneStore(useShallow((state) => state.playback));
+
+/**
+ * Hook to get the current playback time.
+ */
+export const useCurrentTime = () =>
+  useSceneStore((state) => state.playback.currentTime);
+
+/**
+ * Hook to get the current playback playing status.
+ */
+export const useIsPlaying = () =>
+  useSceneStore((state) => state.playback.isPlaying);
+
+/**
+ * Hook to get all store actions in a stable object.
+ */
+export const useSceneActions = () =>
+  useSceneStore(
+    useShallow((state) => ({
+      addActor: state.addActor,
+      removeActor: state.removeActor,
+      updateActor: state.updateActor,
+      setSelectedActor: state.setSelectedActor,
+      setEnvironment: state.setEnvironment,
+      setTimeline: state.setTimeline,
+      setPlayback: state.setPlayback,
+      setMeta: state.setMeta,
+    }))
+  );
