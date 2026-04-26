@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **Phase 2: Characters** (In Progress):
+    - Humanoid base type definitions and schemas.
+    - Bone Controller for skeletal mapping.
+    - Morph Targets for facial expressions.
+- **Phase 3: Editor UI** (Almost Done):
+    - `EditorLayout` with 3-panel system.
+    - `AssetLibrary` for actor creation.
+    - `PropertiesPanel` for real-time attribute editing.
+    - `TimelinePanel` for playback and keyframe management.
+    - `ScriptConsole` for AI scene generation.
+    - `ExportModal` for video export configuration.
+- **Phase 5: AI Integration**:
+    - AI prompt templates for scene generation.
+    - Script importer enhancements.
+
+### Changed
+
+- Updated `JULES_GUIDE.md` to reflect strict rules against blockchain and Web3 topics.
+- Reorganized monorepo structure for better package isolation.
+
+### Removed
+
+- Removed all blockchain, Web3, and cryptocurrency related references and placeholders.
+
 ## [0.1.0] - 2026-02-22
 
 ### Added
