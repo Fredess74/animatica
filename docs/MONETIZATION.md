@@ -2,7 +2,7 @@
 
 ## Overview
 
-Animatica uses a **transparent donation pool** model. Viewers donate to films they love. Donations are split automatically by smart contracts. No subscriptions, no ads, no paywall.
+Animatica uses a **transparent donation pool** model. Viewers donate to films they love. Donations are split automatically by the platform. No subscriptions, no ads, no paywall.
 
 ---
 
@@ -13,7 +13,7 @@ Viewer donates $10 to a film
         │
         ▼
 ┌─────────────────────┐
-│   DonationPool.sol  │
+│    Donation System  │
 └─────────────────────┘
         │
         ├──── 70% ($7.00) → Film Creator(s)
@@ -33,10 +33,10 @@ Viewer donates $10 to a film
 | Rule | Value |
 |------|-------|
 | Minimum donation | $0.01 (or equivalent) |
-| Accepted currencies | ETH, USDC, USDT, DAI, AVAX + fiat (credit card) |
-| Fiat on-ramp | MoonPay + Stripe |
+| Accepted currencies | USD, EUR, GBP + other major currencies |
+| Payment processor | Stripe |
 | Split ratio | 70% creator / 20% fund / 10% platform |
-| Split execution | Instant on-chain (every donation triggers split) |
+| Split execution | Automated on donation |
 | Multi-creator films | 70% is further split by role weights set at publish time |
 
 ### Multi-Creator Split Example
@@ -81,9 +81,8 @@ creatorWeight = (totalContentMinutes × 1.0)
 
 ### Claim Process
 
-- Creators can `claim()` their share at any time
-- Minimum claim: $1.00 equivalent
-- Claims are on-chain transactions
+- Creators can request payouts of their share at any time
+- Minimum payout: $1.00
 - Dashboard shows accrued balance in real-time
 
 ---
@@ -101,20 +100,18 @@ Creators can sell or rent their custom assets (3D models, 2D sprites, environmen
 
 ---
 
-## Fiat On-Ramp
+## Payments
 
-For users without crypto wallets:
+1. **Credit/Debit Card** — Automated processing via Stripe
+2. **Direct Bank Transfer** — For large payouts
+3. **Platform Balances** — Earned funds can be used for donations or purchases
 
-1. **Stripe** — Credit/debit card → platform converts to on-chain donation
-2. **MoonPay** — Direct crypto purchase in-app
-3. **Platform holds conversion** — User pays in USD, platform batches on-chain transactions
-
-### Viewer Experience (no crypto knowledge required)
+### Viewer Experience
 
 ```
 1. Click "Donate" on a film
 2. Choose amount ($1, $5, $10, custom)
-3. Pay with credit card (Stripe) or crypto wallet
+3. Pay with credit card or platform balance
 4. Receipt shows split breakdown
 5. Creator receives instant notification
 ```
@@ -134,30 +131,4 @@ Every creator has a real-time dashboard showing:
 - Per-film analytics:
   - Views, retention, donation rate
   - Top donors (anonymous option)
-- Withdrawal button → send to wallet or bank (via off-ramp)
-
----
-
-## Blockchain Choice
-
-### Primary: Base (Coinbase L2) or Avalanche C-Chain
-
-| Feature | Base | Avalanche |
-|---------|------|-----------|
-| Gas cost | ~$0.001 | ~$0.01 |
-| Finality | ~2 sec | ~1 sec |
-| EVM compatible | ✅ | ✅ |
-| USDC native | ✅ | ✅ |
-| Fiat on-ramp | Coinbase | MoonPay |
-| Ecosystem | Growing | Mature |
-
-**Decision deferred:** Both are viable. Will choose based on partnership opportunities and developer tooling at implementation time.
-
-### No Custom Token
-
-We do NOT create a $FRED token. Rationale:
-
-- Regulatory complexity (securities law)
-- Users don't want another token
-- USDC/ETH are universally understood
-- Simpler smart contracts
+- Withdrawal button → send to bank account
