@@ -1,5 +1,7 @@
+/** @vitest-environment jsdom */
 import { describe, it, expect, beforeEach } from 'vitest';
-import { useSceneStore, getActorById, getActiveActors, getCurrentTime } from './sceneStore';
+import { renderHook } from '@testing-library/react';
+import { useSceneStore, getActorById, getActiveActors, getCurrentTime, usePlaybackState, useEnvironment, useTimeline, useMeta, useActiveActors, useSceneActions } from './sceneStore';
 import { PrimitiveActor } from '../types';
 
 describe('sceneStore', () => {
@@ -160,5 +162,51 @@ describe('sceneStore', () => {
       const result = useSceneStore.getState().actors.filter(a => a.type === 'primitive');
       expect(result).toHaveLength(1);
       expect(result[0].id).toBe('1');
+  });
+
+  describe('new hooks', () => {
+    it('should return playback state via usePlaybackState', () => {
+      const { result } = renderHook(() => usePlaybackState());
+      expect(result.current).toEqual(useSceneStore.getState().playback);
+    });
+
+    it('should return environment state via useEnvironment', () => {
+      const { result } = renderHook(() => useEnvironment());
+      expect(result.current).toEqual(useSceneStore.getState().environment);
+    });
+
+    it('should return timeline state via useTimeline', () => {
+      const { result } = renderHook(() => useTimeline());
+      expect(result.current).toEqual(useSceneStore.getState().timeline);
+    });
+
+    it('should return meta state via useMeta', () => {
+      const { result } = renderHook(() => useMeta());
+      expect(result.current).toEqual(useSceneStore.getState().meta);
+    });
+
+    it('should return active actors via useActiveActors', () => {
+      const actor1 = createActor('1', true);
+      const actor2 = createActor('2', false);
+      useSceneStore.getState().addActor(actor1);
+      useSceneStore.getState().addActor(actor2);
+
+      const { result } = renderHook(() => useActiveActors());
+      expect(result.current).toHaveLength(1);
+      expect(result.current[0].id).toBe('1');
+    });
+
+    it('should return stable actions via useSceneActions', () => {
+      const { result, rerender } = renderHook(() => useSceneActions());
+      const actionsBefore = result.current;
+
+      useSceneStore.getState().addActor(createActor('1'));
+      rerender();
+
+      const actionsAfter = result.current;
+      expect(actionsBefore.addActor).toBe(actionsAfter.addActor);
+      expect(actionsBefore.setPlayback).toBe(actionsAfter.setPlayback);
+      expect(actionsBefore.addActor).toBeDefined();
+    });
   });
 });
