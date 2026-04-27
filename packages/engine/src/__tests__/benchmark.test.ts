@@ -1,5 +1,6 @@
 import { describe, it, afterAll } from 'vitest';
-import { interpolateKeyframes } from '../animation/interpolate';
+import { interpolateKeyframes, evaluateTracksAtTime } from '../animation/interpolate';
+import * as Easing from '../animation/easing';
 import { ProjectStateSchema } from '../importer/schemas';
 import { useSceneStore } from '../store/sceneStore';
 import type { Keyframe, ProjectState, Actor, PrimitiveActor, Vector3 } from '../types';
@@ -52,6 +53,44 @@ describe('Engine Benchmarks', () => {
             });
         });
 
+        it('Unsorted Keyframe Overhead (1k ops, 100 keyframes)', () => {
+            const keyframes: Keyframe<number>[] = [];
+            for (let i = 0; i < 100; i++) {
+                keyframes.push({
+                    time: Math.random() * 100,
+                    value: Math.random() * 100,
+                    easing: 'linear',
+                });
+            }
+
+            measure('Unsorted Keyframe Interpolation (1k ops)', () => {
+                for (let i = 0; i < 1000; i++) {
+                    const t = Math.random() * 100;
+                    // Force sorting by passing a shallow copy
+                    interpolateKeyframes([...keyframes], t);
+                }
+            });
+        });
+
+        it('Multi-track Evaluation (1k tracks, 10 keyframes each)', () => {
+            const tracks: { targetId: string; property: string; keyframes: Keyframe<number>[] }[] = [];
+            for (let i = 0; i < 1000; i++) {
+                const kfs: Keyframe<number>[] = [];
+                for (let j = 0; j < 10; j++) {
+                    kfs.push({ time: j, value: j, easing: 'linear' });
+                }
+                tracks.push({
+                    targetId: `actor-${i}`,
+                    property: 'position.x',
+                    keyframes: kfs,
+                });
+            }
+
+            measure('Multi-track Evaluation (1k tracks)', () => {
+                evaluateTracksAtTime(tracks, 5);
+            });
+        });
+
         it('Vector3 Interpolation (10k ops, 10k keyframes)', () => {
             const keyframes: Keyframe<Vector3>[] = [];
             for (let i = 0; i < 10000; i++) {
@@ -89,10 +128,24 @@ describe('Engine Benchmarks', () => {
         });
     });
 
+    describe('Easing Function Performance', () => {
+        it('Easing Functions (1M operations)', () => {
+            const functions = Object.values(Easing).filter(f => typeof f === 'function');
+            measure('Easing Functions (1M ops)', () => {
+                for (let i = 0; i < 1000000; i++) {
+                    const t = Math.random();
+                    for (const fn of functions) {
+                        fn(t);
+                    }
+                }
+            });
+        });
+    });
+
     describe('Schema Validation Performance', () => {
-        it('Project Schema Validation (100 runs, 100 actors)', () => {
+        it('Project Schema Validation (100 runs, 1k actors)', () => {
             const actors: Actor[] = [];
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < 1000; i++) {
                 const actor: PrimitiveActor = {
                     id: `actor-${i}`,
                     name: `Actor ${i}`,
@@ -135,7 +188,7 @@ describe('Engine Benchmarks', () => {
                 library: { clips: [] },
             };
 
-            measure('Schema Validation Speed (100 runs)', () => {
+            measure('Schema Validation Speed (100 runs, 1k actors)', () => {
                 for (let i = 0; i < 100; i++) {
                     ProjectStateSchema.parse(projectState);
                 }
@@ -143,8 +196,8 @@ describe('Engine Benchmarks', () => {
         });
     });
 
-    describe('Store Performance', () => {
-        it('Store Update Throughput (10k playback updates)', () => {
+    describe('Store Performance', { timeout: 30000 }, () => {
+        it('Store Playback Updates (10k playback updates)', () => {
             const { setState, getState } = useSceneStore;
 
             setState({
