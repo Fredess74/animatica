@@ -121,6 +121,8 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     }
   })
 
+  if (!actor.visible) return null
+
   return (
     <group
       ref={groupRef}
@@ -139,7 +141,7 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
 
       {/* Selection indicator ring */}
       {isSelected && (
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
+        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]} data-testid="selection-ring">
           <ringGeometry args={[0.4, 0.5, 32]} />
           <meshBasicMaterial
             color="#22C55E"
