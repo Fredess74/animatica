@@ -2,7 +2,7 @@
  * CharacterRenderer — R3F component for rendering a character actor.
  * Creates a procedural humanoid (or loads GLB), applies animation, face morphs, and eye tracking.
  */
-import React, { useEffect, useRef, useMemo } from 'react'
+import React, { useEffect, useRef, useMemo, memo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { createProceduralHumanoid } from '../../character/CharacterLoader'
@@ -19,6 +19,7 @@ import {
 } from '../../character/CharacterAnimator'
 import { FaceMorphController } from '../../character/FaceMorphController'
 import { EyeController } from '../../character/EyeController'
+import { BoneController } from '../../character/BoneController'
 import { getPreset } from '../../character/CharacterPresets'
 import type { CharacterActor } from '../../types'
 
@@ -28,7 +29,7 @@ interface CharacterRendererProps {
   onClick?: () => void
 }
 
-export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
+export const CharacterRenderer: React.FC<CharacterRendererProps> = memo(({
   actor,
   isSelected = false,
   onClick,
@@ -37,6 +38,10 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
   const animatorRef = useRef<CharacterAnimator | null>(null)
   const faceMorphRef = useRef<FaceMorphController | null>(null)
   const eyeControllerRef = useRef<EyeController | null>(null)
+  const boneControllerRef = useRef<BoneController | null>(null)
+
+  // Visibility guard
+  if (!actor.visible) return null
 
   // Build character rig
   const rig = useMemo(() => {
@@ -48,7 +53,7 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     return createProceduralHumanoid({ skinColor, height, build })
   }, [actor.name])
 
-  // Setup animator
+  // Setup controllers
   useEffect(() => {
     if (!rig.root) return
 
@@ -63,6 +68,10 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     animator.registerClip('jump', createJumpClip())
     animator.play(actor.animation || 'idle')
     animatorRef.current = animator
+
+    // Setup bone controller
+    const boneController = new BoneController(rig.bones)
+    boneControllerRef.current = boneController
 
     // Setup face morph controller
     const faceMorph = new FaceMorphController(rig.bodyMesh, rig.morphTargetMap)
@@ -91,18 +100,30 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     }
   }, [actor.animationSpeed])
 
-  // React to morph target / expression changes from CharacterPanel
+  // React to morph target / expression changes
   useEffect(() => {
     if (faceMorphRef.current && actor.morphTargets) {
       faceMorphRef.current.setTarget(actor.morphTargets as any)
     }
   }, [actor.morphTargets])
 
-  // Frame update — animation, face morphs, eye blinks
+  // React to body pose changes
+  useEffect(() => {
+    if (boneControllerRef.current && actor.bodyPose) {
+      boneControllerRef.current.setPose(actor.bodyPose)
+    }
+  }, [actor.bodyPose])
+
+  // Frame update — animation, face morphs, eye blinks, bone pose
   useFrame((_state, delta) => {
     // Skeletal animation
     if (animatorRef.current) {
       animatorRef.current.update(delta)
+    }
+
+    // Manual bone pose (overrides or complements animation)
+    if (boneControllerRef.current) {
+      boneControllerRef.current.update(delta)
     }
 
     // Face morph blending
@@ -139,7 +160,11 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
 
       {/* Selection indicator ring */}
       {isSelected && (
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
+        <mesh
+          rotation={[-Math.PI / 2, 0, 0]}
+          position={[0, 0.01, 0]}
+          data-testid="selection-ring"
+        >
           <ringGeometry args={[0.4, 0.5, 32]} />
           <meshBasicMaterial
             color="#22C55E"
@@ -151,4 +176,6 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       )}
     </group>
   )
-}
+})
+
+CharacterRenderer.displayName = 'CharacterRenderer'
