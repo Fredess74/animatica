@@ -4,14 +4,38 @@
  */
 import React from 'react'
 import { useSceneStore } from '@Animatica/engine'
+import { useCameraPreset } from './ViewportControls'
 
 export const ViewportOverlay: React.FC = () => {
+    const { goToPreset } = useCameraPreset()
     const selectedActor = useSceneStore((s) =>
         s.selectedActorId ? s.actors.find((a) => a.id === s.selectedActorId) : null
     )
 
     return (
         <div style={overlayContainerStyle}>
+            {/* Top-right: camera presets */}
+            <div
+                style={{
+                    position: 'absolute',
+                    top: 10,
+                    right: 10,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 4,
+                    pointerEvents: 'auto',
+                }}
+            >
+                <PresetBtn label="Top" onClick={() => goToPreset('top')} title="Top View" />
+                <PresetBtn label="Front" onClick={() => goToPreset('front')} title="Front View" />
+                <PresetBtn label="Side" onClick={() => goToPreset('right')} title="Side View" />
+                <PresetBtn
+                    label="Persp"
+                    onClick={() => goToPreset('perspective')}
+                    title="Perspective View"
+                />
+            </div>
+
             {/* Bottom-left: selected actor transform */}
             {selectedActor && (
                 <div style={transformReadoutStyle}>
@@ -83,3 +107,29 @@ const labelStyle: React.CSSProperties = {
     marginBottom: 4,
     fontFamily: 'var(--font-display, Space Grotesk)',
 }
+
+const PresetBtn: React.FC<{ label: string; onClick: () => void; title: string }> = ({
+    label,
+    onClick,
+    title,
+}) => (
+    <button
+        title={title}
+        onClick={onClick}
+        style={{
+            background: 'var(--bg-surface, #1A1A1A)',
+            border: '1px solid var(--border-subtle, #2A2A2A)',
+            color: 'var(--text-secondary, #A3A3A3)',
+            borderRadius: 4,
+            padding: '2px 6px',
+            fontSize: 10,
+            cursor: 'pointer',
+            fontFamily: 'var(--font-mono, monospace)',
+            textAlign: 'left',
+            minWidth: 50,
+            pointerEvents: 'auto',
+        }}
+    >
+        {label}
+    </button>
+)
