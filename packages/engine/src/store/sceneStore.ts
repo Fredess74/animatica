@@ -122,6 +122,7 @@ export const useSelectedActorId = () =>
 
 /**
  * Hook to get the currently selected actor.
+ * Returns the actor object if found, or undefined.
  */
 export const useSelectedActor = () =>
   useSceneStore((state) =>
@@ -130,6 +131,7 @@ export const useSelectedActor = () =>
 
 /**
  * Hook to get all actors of a specific type.
+ * Optimized with useShallow because filter() returns a new array.
  */
 export const useActorsByType = (type: Actor['type']) =>
   useSceneStore(useShallow((state) => state.actors.filter((a) => a.type === type)));
@@ -138,3 +140,59 @@ export const useActorsByType = (type: Actor['type']) =>
  * Hook to get the list of all actors.
  */
 export const useActorList = () => useSceneStore((state) => state.actors);
+
+/**
+ * Hook to get only the active (visible) actors.
+ * Optimized with useShallow to prevent re-renders if the list of visible actors hasn't changed.
+ */
+export const useActiveActors = () =>
+    useSceneStore(useShallow((state) => state.actors.filter((a) => a.visible)));
+
+/**
+ * Hook to get the environment settings.
+ */
+export const useEnvironment = () => useSceneStore((state) => state.environment);
+
+/**
+ * Hook to get the timeline configuration.
+ */
+export const useTimeline = () => useSceneStore((state) => state.timeline);
+
+/**
+ * Hook to get only the camera track from the timeline.
+ */
+export const useCameraTrack = () => useSceneStore((state) => state.timeline.cameraTrack);
+
+/**
+ * Hook to get only the animation tracks from the timeline.
+ */
+export const useAnimationTracks = () => useSceneStore((state) => state.timeline.animationTracks);
+
+/**
+ * Hook to get the playback state.
+ */
+export const usePlaybackState = () => useSceneStore((state) => state.playback);
+
+/**
+ * Hook to get the project metadata.
+ */
+export const useMeta = () => useSceneStore((state) => state.meta);
+
+/**
+ * Hook to get all scene actions (dispatchers) without subscribing to state.
+ * This is useful for components that only need to trigger updates.
+ */
+export const useSceneActions = () => {
+    return useSceneStore(
+        useShallow((state) => ({
+            addActor: state.addActor,
+            removeActor: state.removeActor,
+            updateActor: state.updateActor,
+            setSelectedActor: state.setSelectedActor,
+            setEnvironment: state.setEnvironment,
+            setTimeline: state.setTimeline,
+            setPlayback: state.setPlayback,
+            setMeta: state.setMeta,
+        }))
+    );
+};
