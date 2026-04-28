@@ -1,34 +1,35 @@
-# Bundle Size Report - 2026-02-25
+# Bundle Size Report - 2026-04-28
 
 ## Package Sizes
 
 | Package | Size | Comparison | Notes |
 | :--- | :--- | :--- | :--- |
-| **@Animatica/web** | 102K | NEW | First Load JS (built successfully) |
-| **@Animatica/engine** | 71K | +23K | Includes index.js (41K) and index.cjs (30K) |
-| **@Animatica/editor** | 76K | +64K | Includes index.js (46K) and index.cjs (30K) |
-| **@Animatica/platform** | 0.2K | -11.8K | Minimal exports only |
-| **@Animatica/contracts** | 8K | 0K | Cache size (no compiled contracts) |
+| **@Animatica/web** | 102 kB | 0K | First Load JS (Stable) |
+| **@Animatica/engine** | 78.8 kB | +7.8K | Includes index.js (78.8K) and index.cjs (56.6K) |
+| **@Animatica/editor** | 2.1 MB | +2.0M | **REGRESSION**: Bundling Three.js, R3F, and Drei |
+| **@Animatica/platform** | 0.1 kB | -0.1K | Minimal exports |
+| **@Animatica/contracts** | 0 kB | -8K | No compiled artifacts |
 
 ## Total Size
-**155.2K** (excluding web), **257.2K** (including web)
+**2.2 MB** (excluding web), **2.3 MB** (including web)
 
 ## Largest Dependencies
-### @Animatica/editor (76K)
-- `dist/index.js`: 46K
-- `dist/index.cjs`: 30K
+### @Animatica/editor (2.1 MB)
+- `dist/index.js`: 2,181.24 kB
+- `dist/index.cjs`: 1,307.75 kB
+- **Root Cause**: `three`, `@react-three/fiber`, and `@react-three/drei` are listed in `dependencies` and NOT externalized in `vite.config.ts`.
 
-### @Animatica/engine (71K)
-- `dist/index.js`: 41K
-- `dist/index.cjs`: 30K
+### @Animatica/engine (78.8 kB)
+- `dist/index.js`: 78.78 kB
+- `dist/index.cjs`: 56.64 kB
 
 ## Changes
-- Updated audit for 2026-02-25.
-- `apps/web` now builds successfully using Next.js 15.
-- Significant growth in `@Animatica/engine` and `@Animatica/editor` as features are implemented.
-- `@Animatica/platform` remains minimal.
+- Updated audit for 2026-04-28.
+- **CRITICAL**: `@Animatica/editor` has ballooned from 76K to 2.1MB.
+- This regression was previously identified in memory (April 27, 2026) and remains unresolved.
+- dependencies in `packages/editor/package.json` need to be moved to `peerDependencies` and added to `rollupOptions.external` in `vite.config.ts`.
 
 ## Suggestions
-- **@Animatica/engine**: Monitor size as more R3F components are added.
-- **@Animatica/editor**: Keep an eye on UI component library weight.
-- **@Animatica/web**: 102K First Load JS is good for a Next.js app, but watch for bloating as more routes are added.
+- **@Animatica/editor**: Immediate action required to externalize `three` and `@react-three` suites to restore bundle size.
+- **@Animatica/engine**: Size is creeping up but remains within acceptable limits (under 100K).
+- **@Animatica/web**: Stable at 102 kB First Load JS.
