@@ -16,7 +16,8 @@ import {
   createTalkClip,
   createWalkClip,
   createWaveClip,
-} from '../../character/CharacterAnimator'
+  BoneController,
+} from '../../character'
 import { FaceMorphController } from '../../character/FaceMorphController'
 import { EyeController } from '../../character/EyeController'
 import { getPreset } from '../../character/CharacterPresets'
@@ -35,6 +36,7 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
 }) => {
   const groupRef = useRef<THREE.Group>(null)
   const animatorRef = useRef<CharacterAnimator | null>(null)
+  const boneControllerRef = useRef<BoneController | null>(null)
   const faceMorphRef = useRef<FaceMorphController | null>(null)
   const eyeControllerRef = useRef<EyeController | null>(null)
 
@@ -63,6 +65,10 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     animator.registerClip('jump', createJumpClip())
     animator.play(actor.animation || 'idle')
     animatorRef.current = animator
+
+    // Setup bone controller
+    const boneController = new BoneController(rig.bones)
+    boneControllerRef.current = boneController
 
     // Setup face morph controller
     const faceMorph = new FaceMorphController(rig.bodyMesh, rig.morphTargetMap)
@@ -105,6 +111,11 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       animatorRef.current.update(delta)
     }
 
+    // Manual pose overrides
+    if (boneControllerRef.current && actor.bodyPose) {
+      boneControllerRef.current.update(actor.bodyPose, delta)
+    }
+
     // Face morph blending
     if (faceMorphRef.current) {
       faceMorphRef.current.update(delta)
@@ -120,6 +131,8 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       faceMorphRef.current.setImmediate(eyeValues)
     }
   })
+
+  if (!actor.visible) return null
 
   return (
     <group
