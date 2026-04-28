@@ -4,6 +4,7 @@
  */
 import React from 'react'
 import type { GizmoMode, TransformSpace, ViewMode } from './Viewport'
+import { useCameraPreset } from './ViewportControls'
 
 interface ViewportToolbarProps {
     gizmoMode: GizmoMode
@@ -30,6 +31,8 @@ export const ViewportToolbar: React.FC<ViewportToolbarProps> = ({
     viewMode,
     onViewModeChange,
 }) => {
+    const { goToPreset } = useCameraPreset()
+
     return (
         <div style={toolbarStyle}>
             {/* Gizmo mode group */}
@@ -93,6 +96,37 @@ export const ViewportToolbar: React.FC<ViewportToolbarProps> = ({
                     icon="🖼️"
                 />
             </div>
+
+            {/* Camera View Presets */}
+            {viewMode === '3d' && (
+                <div style={groupStyle}>
+                    <Divider />
+                    <ToolBtn
+                        tooltip="Top View"
+                        active={false}
+                        onClick={() => goToPreset('top')}
+                        icon="⤓"
+                    />
+                    <ToolBtn
+                        tooltip="Front View"
+                        active={false}
+                        onClick={() => goToPreset('front')}
+                        icon="⮕"
+                    />
+                    <ToolBtn
+                        tooltip="Side View"
+                        active={false}
+                        onClick={() => goToPreset('right')}
+                        icon="⬵"
+                    />
+                    <ToolBtn
+                        tooltip="Perspective View"
+                        active={false}
+                        onClick={() => goToPreset('perspective')}
+                        icon="🎥"
+                    />
+                </div>
+            )}
         </div>
     )
 }
