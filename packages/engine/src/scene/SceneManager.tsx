@@ -5,8 +5,14 @@
  *
  * @module @animatica/engine/scene/SceneManager
  */
-import React, { useMemo } from 'react';
-import { useSceneStore } from '../store/sceneStore';
+import React, { useMemo, memo } from 'react';
+import {
+    useActorList,
+    useEnvironment,
+    useAnimationTracks,
+    useCameraTrack,
+    useCurrentTime,
+} from '../store/sceneStore';
 import { evaluateTracksAtTime } from '../animation/interpolate';
 import { applyAnimationToActor, resolveActiveCamera } from './animationUtils';
 import { PrimitiveRenderer } from './renderers/PrimitiveRenderer';
@@ -33,6 +39,39 @@ interface SceneManagerProps {
 }
 
 /**
+ * SceneEnvironment — Internal component to render environment elements.
+ * Separated to prevent re-rendering of environment when currentTime changes.
+ */
+const SceneEnvironment: React.FC = memo(() => {
+    const environment = useEnvironment();
+
+    return (
+        <>
+            <ambientLight
+                intensity={environment.ambientLight.intensity}
+                color={environment.ambientLight.color}
+            />
+            <directionalLight
+                position={environment.sun.position as unknown as [number, number, number]}
+                intensity={environment.sun.intensity}
+                color={environment.sun.color}
+                castShadow
+            />
+            <color attach="background" args={[environment.skyColor]} />
+
+            {environment.fog && (
+                <fog
+                    attach="fog"
+                    args={[environment.fog.color, environment.fog.near, environment.fog.far]}
+                />
+            )}
+        </>
+    );
+});
+
+SceneEnvironment.displayName = 'SceneEnvironment';
+
+/**
  * SceneManager — the main scene orchestrator.
  * Reads actors, timeline, and environment from the Zustand store
  * and renders everything using the appropriate renderer components.
@@ -54,21 +93,21 @@ export const SceneManager: React.FC<SceneManagerProps> = ({
     onActorSelect,
     showHelpers = false,
 }) => {
-    const actors = useSceneStore((s) => s.actors);
-    const environment = useSceneStore((s) => s.environment);
-    const timeline = useSceneStore((s) => s.timeline);
-    const currentTime = useSceneStore((s) => s.playback.currentTime);
+    const actors = useActorList();
+    const animationTracks = useAnimationTracks();
+    const cameraTrack = useCameraTrack();
+    const currentTime = useCurrentTime();
 
     // Evaluate all animation tracks at the current time
     const animationValues = useMemo(
-        () => evaluateTracksAtTime(timeline.animationTracks, currentTime),
-        [timeline.animationTracks, currentTime],
+        () => evaluateTracksAtTime(animationTracks, currentTime),
+        [animationTracks, currentTime],
     );
 
     // Sort camera cuts only when the track changes, not every frame
     const sortedCameraCuts = useMemo(
-        () => [...timeline.cameraTrack].sort((a, b) => a.time - b.time),
-        [timeline.cameraTrack]
+        () => [...cameraTrack].sort((a, b) => a.time - b.time),
+        [cameraTrack]
     );
 
     // Determine the active camera from the sorted camera cuts
@@ -89,24 +128,7 @@ export const SceneManager: React.FC<SceneManagerProps> = ({
     return (
         <>
             {/* === Environment === */}
-            <ambientLight
-                intensity={environment.ambientLight.intensity}
-                color={environment.ambientLight.color}
-            />
-            <directionalLight
-                position={environment.sun.position as unknown as [number, number, number]}
-                intensity={environment.sun.intensity}
-                color={environment.sun.color}
-                castShadow
-            />
-            <color attach="background" args={[environment.skyColor]} />
-
-            {environment.fog && (
-                <fog
-                    attach="fog"
-                    args={[environment.fog.color, environment.fog.near, environment.fog.far]}
-                />
-            )}
+            <SceneEnvironment />
 
             {/* === Actors === */}
             {animatedActors.map((actor: Actor) => {
