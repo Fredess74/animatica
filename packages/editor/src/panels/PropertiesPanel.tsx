@@ -493,6 +493,38 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({ selectedActorI
                         step={0.1}
                         onChange={(speed) => handleUpdate({ animationSpeed: speed })}
                     />
+
+                    <div className="prop-section">
+                        <h4 className="prop-section__title">Body Pose</h4>
+                        <Vector3Input
+                            label="Head"
+                            value={(actor as CharacterActor).bodyPose.head || [0, 0, 0]}
+                            onChange={(head) => handleUpdate({
+                                bodyPose: { ...(actor as CharacterActor).bodyPose, head }
+                            })}
+                        />
+                        <Vector3Input
+                            label="Spine"
+                            value={(actor as CharacterActor).bodyPose.spine || [0, 0, 0]}
+                            onChange={(spine) => handleUpdate({
+                                bodyPose: { ...(actor as CharacterActor).bodyPose, spine }
+                            })}
+                        />
+                        <Vector3Input
+                            label="Left Arm"
+                            value={(actor as CharacterActor).bodyPose.leftArm || [0, 0, 0]}
+                            onChange={(leftArm) => handleUpdate({
+                                bodyPose: { ...(actor as CharacterActor).bodyPose, leftArm }
+                            })}
+                        />
+                        <Vector3Input
+                            label="Right Arm"
+                            value={(actor as CharacterActor).bodyPose.rightArm || [0, 0, 0]}
+                            onChange={(rightArm) => handleUpdate({
+                                bodyPose: { ...(actor as CharacterActor).bodyPose, rightArm }
+                            })}
+                        />
+                    </div>
                 </div>
             )}
         </div>
