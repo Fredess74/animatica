@@ -1,5 +1,24 @@
+/**
+ * @vitest-environment jsdom
+ */
 import { describe, it, expect, beforeEach } from 'vitest';
-import { useSceneStore, getActorById, getActiveActors, getCurrentTime } from './sceneStore';
+import { renderHook, act } from '@testing-library/react';
+import {
+  useSceneStore,
+  getActorById,
+  getActiveActors,
+  getCurrentTime,
+  getEnvironment,
+  getTimeline,
+  getMeta,
+  getPlaybackState,
+  useEnvironment,
+  useTimeline,
+  useMeta,
+  usePlaybackState,
+  useSceneActions,
+  useSelectedActor,
+} from './sceneStore';
 import { PrimitiveActor } from '../types';
 
 describe('sceneStore', () => {
@@ -93,7 +112,31 @@ describe('sceneStore', () => {
     expect(result).toBe(10);
   });
 
-  // New Tests
+  it('should get environment selector', () => {
+    const env = useSceneStore.getState().environment;
+    const result = getEnvironment(useSceneStore.getState());
+    expect(result).toEqual(env);
+  });
+
+  it('should get timeline selector', () => {
+    const timeline = useSceneStore.getState().timeline;
+    const result = getTimeline(useSceneStore.getState());
+    expect(result).toEqual(timeline);
+  });
+
+  it('should get meta selector', () => {
+    const meta = useSceneStore.getState().meta;
+    const result = getMeta(useSceneStore.getState());
+    expect(result).toEqual(meta);
+  });
+
+  it('should get playback state selector', () => {
+    const playback = useSceneStore.getState().playback;
+    const result = getPlaybackState(useSceneStore.getState());
+    expect(result).toEqual(playback);
+  });
+
+  // Hooks Tests
 
   it('should set selected actor', () => {
     useSceneStore.getState().setSelectedActor('1');
@@ -160,5 +203,76 @@ describe('sceneStore', () => {
       const result = useSceneStore.getState().actors.filter(a => a.type === 'primitive');
       expect(result).toHaveLength(1);
       expect(result[0].id).toBe('1');
+  });
+
+  it('should provide environment through hook', () => {
+    const { result } = renderHook(() => useEnvironment());
+    expect(result.current).toEqual(useSceneStore.getState().environment);
+
+    act(() => {
+      useSceneStore.getState().setEnvironment({ skyColor: '#ff0000' });
+    });
+
+    expect(result.current.skyColor).toBe('#ff0000');
+  });
+
+  it('should provide timeline through hook', () => {
+    const { result } = renderHook(() => useTimeline());
+    expect(result.current).toEqual(useSceneStore.getState().timeline);
+
+    act(() => {
+      useSceneStore.getState().setTimeline({ duration: 50 });
+    });
+
+    expect(result.current.duration).toBe(50);
+  });
+
+  it('should provide meta through hook', () => {
+    const { result } = renderHook(() => useMeta());
+    expect(result.current).toEqual(useSceneStore.getState().meta);
+
+    act(() => {
+      useSceneStore.getState().setMeta({ title: 'New Title' });
+    });
+
+    expect(result.current.title).toBe('New Title');
+  });
+
+  it('should provide playback state through hook', () => {
+    const { result } = renderHook(() => usePlaybackState());
+    expect(result.current).toEqual(useSceneStore.getState().playback);
+
+    act(() => {
+      useSceneStore.getState().setPlayback({ currentTime: 15 });
+    });
+
+    expect(result.current.currentTime).toBe(15);
+  });
+
+  it('should provide scene actions through hook', () => {
+    const { result } = renderHook(() => useSceneActions());
+    expect(result.current.addActor).toBeDefined();
+    expect(result.current.setEnvironment).toBeDefined();
+
+    const actor = createActor('actions-test');
+    act(() => {
+      result.current.addActor(actor);
+    });
+
+    expect(useSceneStore.getState().actors).toContainEqual(actor);
+  });
+
+  it('should provide selected actor through hook', () => {
+    const actor = createActor('selected-test');
+    useSceneStore.getState().addActor(actor);
+
+    const { result } = renderHook(() => useSelectedActor());
+    expect(result.current).toBeUndefined();
+
+    act(() => {
+      useSceneStore.getState().setSelectedActor('selected-test');
+    });
+
+    expect(result.current).toEqual(actor);
   });
 });
