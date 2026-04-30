@@ -1,5 +1,6 @@
 import { describe, it, afterAll } from 'vitest';
-import { interpolateKeyframes } from '../animation/interpolate';
+import { interpolateKeyframes, evaluateTracksAtTime } from '../animation/interpolate';
+import * as Easing from '../animation/easing';
 import { ProjectStateSchema } from '../importer/schemas';
 import { useSceneStore } from '../store/sceneStore';
 import type { Keyframe, ProjectState, Actor, PrimitiveActor, Vector3 } from '../types';
@@ -27,6 +28,9 @@ describe('Engine Benchmarks', () => {
         if (!fs.existsSync(reportDir)) {
             fs.mkdirSync(reportDir, { recursive: true });
         }
+        // Load existing metrics to merge or overwrite?
+        // User wants to "Record baseline metrics", so overwriting is fine for now,
+        // or we could merge if we wanted to keep old ones, but the plan is to "add" benchmarks.
         fs.writeFileSync(
             path.join(reportDir, 'baseline_metrics.json'),
             JSON.stringify(results, null, 2)
@@ -70,19 +74,48 @@ describe('Engine Benchmarks', () => {
             });
         });
 
-        it('Color Interpolation (10k ops, 10k keyframes)', () => {
-            const keyframes: Keyframe<string>[] = [];
-            for (let i = 0; i < 10000; i++) {
+        it('Easing Functions (1M ops)', () => {
+            const easings = Object.values(Easing).filter(fn => typeof fn === 'function');
+            measure('Easing Functions 1M ops', () => {
+                for (let i = 0; i < 1000000; i++) {
+                    const t = Math.random();
+                    const fn = easings[i % easings.length] as (t: number) => number;
+                    fn(t);
+                }
+            });
+        });
+
+        it('Multi-track Evaluation (1k tracks)', () => {
+            const tracks = [];
+            for (let i = 0; i < 1000; i++) {
+                tracks.push({
+                    targetId: `actor-${i}`,
+                    property: 'transform.position',
+                    keyframes: [
+                        { time: 0, value: [0, 0, 0], easing: 'easeInOut' as const },
+                        { time: 10, value: [10, 10, 10], easing: 'easeInOut' as const }
+                    ]
+                });
+            }
+
+            measure('Multi-track Evaluation 1k tracks', () => {
+                evaluateTracksAtTime(tracks, 5);
+            });
+        });
+
+        it('Unsorted Keyframe Overhead (1k ops, 100 keyframes)', () => {
+            const keyframes: Keyframe<number>[] = [];
+            for (let i = 0; i < 100; i++) {
                 keyframes.push({
-                    time: i,
-                    value: '#ff0000',
+                    time: Math.random() * 100,
+                    value: Math.random(),
                     easing: 'linear',
                 });
             }
 
-            measure('Color Interpolation (10k ops)', () => {
-                for (let i = 0; i < 10000; i++) {
-                    const t = Math.random() * 10000;
+            measure('Unsorted Keyframe Overhead (1k ops)', () => {
+                for (let i = 0; i < 1000; i++) {
+                    const t = Math.random() * 100;
                     interpolateKeyframes(keyframes, t);
                 }
             });
@@ -90,9 +123,9 @@ describe('Engine Benchmarks', () => {
     });
 
     describe('Schema Validation Performance', () => {
-        it('Project Schema Validation (100 runs, 100 actors)', () => {
+        it('Project Schema Validation (1k actors)', () => {
             const actors: Actor[] = [];
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < 1000; i++) {
                 const actor: PrimitiveActor = {
                     id: `actor-${i}`,
                     name: `Actor ${i}`,
@@ -117,7 +150,7 @@ describe('Engine Benchmarks', () => {
 
             const projectState: ProjectState = {
                 meta: {
-                    title: 'Benchmark Project',
+                    title: 'Benchmark Project Large',
                     version: '1.0.0',
                 },
                 environment: {
@@ -135,10 +168,8 @@ describe('Engine Benchmarks', () => {
                 library: { clips: [] },
             };
 
-            measure('Schema Validation Speed (100 runs)', () => {
-                for (let i = 0; i < 100; i++) {
-                    ProjectStateSchema.parse(projectState);
-                }
+            measure('Schema Validation 1k actors', () => {
+                ProjectStateSchema.parse(projectState);
             });
         });
     });
