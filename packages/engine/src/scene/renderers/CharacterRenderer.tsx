@@ -20,6 +20,7 @@ import {
 import { FaceMorphController } from '../../character/FaceMorphController'
 import { EyeController } from '../../character/EyeController'
 import { getPreset } from '../../character/CharacterPresets'
+import { BoneController } from '../../character/BoneController'
 import type { CharacterActor } from '../../types'
 
 interface CharacterRendererProps {
@@ -37,6 +38,7 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
   const animatorRef = useRef<CharacterAnimator | null>(null)
   const faceMorphRef = useRef<FaceMorphController | null>(null)
   const eyeControllerRef = useRef<EyeController | null>(null)
+  const boneControllerRef = useRef<BoneController | null>(null)
 
   // Build character rig
   const rig = useMemo(() => {
@@ -72,6 +74,10 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     const eyeController = new EyeController()
     eyeControllerRef.current = eyeController
 
+    // Setup bone controller for manual posing
+    const boneController = new BoneController(rig.bones)
+    boneControllerRef.current = boneController
+
     return () => {
       animator.dispose()
     }
@@ -103,6 +109,11 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     // Skeletal animation
     if (animatorRef.current) {
       animatorRef.current.update(delta)
+    }
+
+    // Manual bone posing (applied after animation)
+    if (boneControllerRef.current && actor.bodyPose) {
+      boneControllerRef.current.update(actor.bodyPose, delta)
     }
 
     // Face morph blending
