@@ -87,6 +87,26 @@ export const getActiveActors = (state: SceneStoreState): Actor[] =>
 export const getCurrentTime = (state: SceneStoreState): number =>
   state.playback.currentTime;
 
+/**
+ * Selector to get the environment state.
+ */
+export const getEnvironment = (state: SceneStoreState) => state.environment;
+
+/**
+ * Selector to get the timeline state.
+ */
+export const getTimeline = (state: SceneStoreState) => state.timeline;
+
+/**
+ * Selector to get the project metadata.
+ */
+export const getMeta = (state: SceneStoreState) => state.meta;
+
+/**
+ * Selector to get the playback state.
+ */
+export const getPlaybackState = (state: SceneStoreState) => state.playback;
+
 // Hooks
 
 /**
@@ -122,10 +142,13 @@ export const useSelectedActorId = () =>
 
 /**
  * Hook to get the currently selected actor.
+ * Optimized with useShallow to minimize re-renders.
  */
 export const useSelectedActor = () =>
-  useSceneStore((state) =>
-    state.selectedActorId ? state.actors.find((a) => a.id === state.selectedActorId) : undefined
+  useSceneStore(
+    useShallow((state) =>
+      state.selectedActorId ? state.actors.find((a) => a.id === state.selectedActorId) : undefined
+    )
   );
 
 /**
@@ -138,3 +161,51 @@ export const useActorsByType = (type: Actor['type']) =>
  * Hook to get the list of all actors.
  */
 export const useActorList = () => useSceneStore((state) => state.actors);
+
+/**
+ * Hook to get the environment state.
+ */
+export const useEnvironment = () => useSceneStore(useShallow((state) => state.environment));
+
+/**
+ * Hook to get the timeline state.
+ */
+export const useTimeline = () => useSceneStore(useShallow((state) => state.timeline));
+
+/**
+ * Hook to get the project metadata.
+ */
+export const useMeta = () => useSceneStore(useShallow((state) => state.meta));
+
+/**
+ * Hook to get the full playback state.
+ */
+export const usePlaybackState = () => useSceneStore(useShallow((state) => state.playback));
+
+/**
+ * Hook to get the camera track from the timeline.
+ */
+export const useCameraTrack = () => useSceneStore(useShallow((state) => state.timeline.cameraTrack));
+
+/**
+ * Hook to get the animation tracks from the timeline.
+ */
+export const useAnimationTracks = () =>
+  useSceneStore(useShallow((state) => state.timeline.animationTracks));
+
+/**
+ * Hook to get all store actions without subscribing to state changes.
+ */
+export const useSceneActions = () =>
+  useSceneStore(
+    useShallow((state) => ({
+      addActor: state.addActor,
+      removeActor: state.removeActor,
+      updateActor: state.updateActor,
+      setSelectedActor: state.setSelectedActor,
+      setEnvironment: state.setEnvironment,
+      setTimeline: state.setTimeline,
+      setPlayback: state.setPlayback,
+      setMeta: state.setMeta,
+    }))
+  );
