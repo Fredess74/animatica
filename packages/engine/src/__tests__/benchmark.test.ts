@@ -1,5 +1,6 @@
 import { describe, it, afterAll } from 'vitest';
-import { interpolateKeyframes } from '../animation/interpolate';
+import { interpolateKeyframes, evaluateTracksAtTime } from '../animation/interpolate';
+import * as Easing from '../animation/easing';
 import { ProjectStateSchema } from '../importer/schemas';
 import { useSceneStore } from '../store/sceneStore';
 import type { Keyframe, ProjectState, Actor, PrimitiveActor, Vector3 } from '../types';
@@ -87,12 +88,59 @@ describe('Engine Benchmarks', () => {
                 }
             });
         });
+
+        it('Easing Functions (1M ops)', () => {
+            const easingFns = Object.values(Easing).filter(fn => typeof fn === 'function');
+            measure('Easing Functions 1M ops', () => {
+                for (let i = 0; i < 1000000; i++) {
+                    const t = Math.random();
+                    const fn = easingFns[i % easingFns.length];
+                    fn(t);
+                }
+            });
+        });
+
+        it('Multi-track Evaluation (1k tracks, 100 keyframes each)', () => {
+            const tracks = [];
+            for (let i = 0; i < 1000; i++) {
+                const keyframes = [];
+                for (let j = 0; j < 100; j++) {
+                    keyframes.push({ time: j, value: Math.random() });
+                }
+                tracks.push({
+                    targetId: `actor-${i}`,
+                    property: 'position.x',
+                    keyframes,
+                });
+            }
+
+            measure('Multi-track Evaluation 1k tracks', () => {
+                evaluateTracksAtTime(tracks, 50);
+            });
+        });
+
+        it('Unsorted Keyframe Overhead (1k ops, 1k keyframes)', () => {
+            const keyframes: Keyframe<number>[] = [];
+            for (let i = 0; i < 1000; i++) {
+                keyframes.push({
+                    time: Math.random() * 1000,
+                    value: Math.random(),
+                    easing: 'linear',
+                });
+            }
+
+            measure('Unsorted Keyframe Overhead 1k ops', () => {
+                for (let i = 0; i < 1000; i++) {
+                    interpolateKeyframes(keyframes, 500);
+                }
+            });
+        });
     });
 
     describe('Schema Validation Performance', () => {
-        it('Project Schema Validation (100 runs, 100 actors)', () => {
+        it('Project Schema Validation (100 runs, 1k actors)', () => {
             const actors: Actor[] = [];
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < 1000; i++) {
                 const actor: PrimitiveActor = {
                     id: `actor-${i}`,
                     name: `Actor ${i}`,
@@ -135,7 +183,7 @@ describe('Engine Benchmarks', () => {
                 library: { clips: [] },
             };
 
-            measure('Schema Validation Speed (100 runs)', () => {
+            measure('Schema Validation 1k actors', () => {
                 for (let i = 0; i < 100; i++) {
                     ProjectStateSchema.parse(projectState);
                 }
@@ -160,7 +208,7 @@ describe('Engine Benchmarks', () => {
                 playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, direction: 1, loopMode: 'none' },
             });
 
-            measure('Store Playback Updates (10k ops)', () => {
+            measure('Store Playback Updates 10k ops', () => {
                 for (let i = 0; i < 10000; i++) {
                     getState().setPlayback({ currentTime: i * 0.1 });
                 }
@@ -175,7 +223,7 @@ describe('Engine Benchmarks', () => {
                 playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, direction: 1, loopMode: 'none' },
             } as any);
 
-            measure('Store Add Actor (1k ops)', () => {
+            measure('Store Add Actor 1k ops', () => {
                 for (let i = 0; i < 1000; i++) {
                     getState().addActor({
                         id: `bench-${i}`,
@@ -188,13 +236,13 @@ describe('Engine Benchmarks', () => {
                 }
             });
 
-            measure('Store Update Actor (1k ops)', () => {
+            measure('Store Update Actor 1k ops', () => {
                 for (let i = 0; i < 1000; i++) {
                     getState().updateActor(`bench-${i}`, { visible: false });
                 }
             });
 
-            measure('Store Remove Actor (1k ops)', () => {
+            measure('Store Remove Actor 1k ops', () => {
                 for (let i = 0; i < 1000; i++) {
                     getState().removeActor(`bench-${i}`);
                 }
