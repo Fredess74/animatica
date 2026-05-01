@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-05-01
+
+### Added
+- **Phase 2: Characters** progress:
+    - `BoneController` for skeletal animation mapping.
+    - Improved `CharacterAnimator` with quality-of-life updates.
+- **Phase 10: 2D Mode** early implementation:
+    - 2D storyboard mode for scene planning.
+
+### Changed
+- Refactored `CharacterRenderer` and `Viewport` tests for better stability and coverage.
+- Updated documentation and guidelines for AI agents.
+
+### Removed
+- Removed legacy blockchain and Web3 references from documentation and package descriptors.
+
 ## [0.1.0] - 2026-02-22
 
 ### Added
