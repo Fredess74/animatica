@@ -11,6 +11,8 @@ export type { AnimState, AnimationTransition } from './CharacterAnimator'
 export { FaceMorphController, BLEND_SHAPES, EXPRESSION_PRESETS, VISEME_MAP } from './FaceMorphController'
 export type { BlendShapeName, BlendShapeValues } from './FaceMorphController'
 
+export { BoneController } from './BoneController'
+
 export { EyeController } from './EyeController'
 export type { EyeState } from './EyeController'
 
