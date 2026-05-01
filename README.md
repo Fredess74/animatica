@@ -1,6 +1,6 @@
 # 🎬 Animatica — The Animation Platform for Everyone
 
-> **Create. Animate. Earn.** — A web-based platform where anyone can turn ideas into animated films and get paid globally via crypto.
+> **Create. Animate. Visualize.** — A web-based platform where anyone can turn ideas into animated films.
 
 [![CI](https://github.com/YOUR_ORG/Animatica/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_ORG/Animatica/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -15,7 +15,6 @@ Animatica is an open-source platform that democratizes animation. People write f
 1. **Create** — Turn text into 2D/3D animated scenes using AI and an intuitive editor
 2. **Collaborate** — Work together in real-time with roles: Director, Writer, Animator, Producer
 3. **Publish** — Upload films, series, shorts to a built-in social platform
-4. **Earn** — Get paid through a transparent donation pool powered by smart contracts
 
 ## Tech Stack
 
@@ -45,7 +44,6 @@ Animatica is an open-source platform that democratizes animation. People write f
 ### Platform (Roadmap)
 - 🤖 **AI Scene Generation**: Text-to-scene generation pipeline.
 - 🤝 **Real-time Collaboration**: Multi-user editing with role-based permissions.
-- 💰 **Crypto Monetization**: Smart contracts for creator payouts and royalties.
 - 🏪 **Asset Marketplace**: Buy, sell, and rent digital assets.
 
 ## Architecture
@@ -73,10 +71,10 @@ Prerequisites: Node.js 20+ and [pnpm](https://pnpm.io/).
 git clone https://github.com/YOUR_ORG/Animatica.git
 cd Animatica
 
-# Install dependencies (frozen lockfile)
+# Install dependencies
 pnpm install
 
-# Run development server (starts all apps)
+# Run development server (starts all apps via Turbo)
 pnpm run dev
 
 # Run tests
@@ -84,6 +82,9 @@ pnpm run test
 
 # Typecheck
 pnpm run typecheck
+
+# Build for production
+pnpm run build
 ```
 
 ## Documentation
@@ -95,8 +96,6 @@ pnpm run typecheck
 | [AI Pipeline](docs/AI_PIPELINE.md) | Text-to-animation workflow (Phase A & B) |
 | [Roles & Collaboration](docs/ROLES_AND_COLLABORATION.md) | Creator roles, editor modes, real-time sync |
 | [Asset Marketplace](docs/ASSET_MARKETPLACE.md) | Buy/sell/rent assets, royalty model |
-| [Monetization](docs/MONETIZATION.md) | Donation pool, creator fund, fiat on-ramp |
-| [Smart Contracts](docs/SMART_CONTRACTS.md) | Solidity contracts specification |
 | [Data Models](docs/DATA_MODELS.md) | TypeScript interfaces, DB schema |
 | [Branding](docs/BRANDING.md) | Brand identity, naming, visual identity |
 | [Roadmap](docs/ROADMAP.md) | 10-phase development plan |
