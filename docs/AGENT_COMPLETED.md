@@ -10,6 +10,9 @@
 ## Completed Log
 
 <!-- Agents append completed tasks below this line -->
+- [DONE] [engine-scene-dev] [2026-05-01] Implement BoneController for manual posing (#12)
+- [DONE] [engine-scene-dev] [2026-04-30] Resolve CharacterRenderer test regression and optimize with memo/forwardRef
+- [DONE] [benchmarker] [2026-04-30] Add animation engine performance benchmarks
 - [DONE] [editor-viewport-dev] [2026-02-24] Create Viewport component with R3F Canvas + OrbitControls + SceneManager
 - [DONE] [web-api-dev] [2026-02-25] Create API routes for project CRUD operations
 - [DONE] [engine-scene-dev] [2026-02-23] Add SpeakerRenderer and SceneManager tests
