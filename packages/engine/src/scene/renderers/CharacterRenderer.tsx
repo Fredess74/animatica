@@ -2,7 +2,7 @@
  * CharacterRenderer — R3F component for rendering a character actor.
  * Creates a procedural humanoid (or loads GLB), applies animation, face morphs, and eye tracking.
  */
-import React, { useEffect, useRef, useMemo } from 'react'
+import { useEffect, useRef, useMemo, memo, forwardRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { createProceduralHumanoid } from '../../character/CharacterLoader'
@@ -28,12 +28,24 @@ interface CharacterRendererProps {
   onClick?: () => void
 }
 
-export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
+export const CharacterRenderer = memo(forwardRef<THREE.Group, CharacterRendererProps>(({
   actor,
   isSelected = false,
   onClick,
-}) => {
+}, ref) => {
   const groupRef = useRef<THREE.Group>(null)
+
+  // Standard ref forwarding
+  useEffect(() => {
+    if (!ref) return
+    if (typeof ref === 'function') {
+      ref(groupRef.current)
+    } else {
+      ref.current = groupRef.current
+    }
+  }, [ref])
+
+  const { visible, id, transform, animation, animationSpeed, morphTargets } = actor
   const animatorRef = useRef<CharacterAnimator | null>(null)
   const faceMorphRef = useRef<FaceMorphController | null>(null)
   const eyeControllerRef = useRef<EyeController | null>(null)
@@ -100,6 +112,7 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
 
   // Frame update — animation, face morphs, eye blinks
   useFrame((_state, delta) => {
+    if (!visible) return
     // Skeletal animation
     if (animatorRef.current) {
       animatorRef.current.update(delta)
@@ -121,14 +134,16 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     }
   })
 
+  if (!visible) return null
+
   return (
     <group
       ref={groupRef}
-      name={actor.id}
-      position={actor.transform.position}
-      rotation={actor.transform.rotation}
-      scale={actor.transform.scale}
-      visible={actor.visible}
+      name={id}
+      position={transform.position}
+      rotation={transform.rotation}
+      scale={transform.scale}
+      visible={visible}
       onClick={(e) => {
         e.stopPropagation()
         onClick?.()
@@ -151,4 +166,6 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       )}
     </group>
   )
-}
+}))
+
+CharacterRenderer.displayName = 'CharacterRenderer'
