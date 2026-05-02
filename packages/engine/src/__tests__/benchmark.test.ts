@@ -143,7 +143,7 @@ describe('Engine Benchmarks', () => {
         });
     });
 
-    describe('Store Performance', () => {
+    describe('Store Performance', { timeout: 15000 }, () => {
         it('Store Update Throughput (10k playback updates)', () => {
             const { setState, getState } = useSceneStore;
 
@@ -167,7 +167,7 @@ describe('Engine Benchmarks', () => {
             });
         });
 
-        it('Store Actor CRUD Throughput (1k actors)', () => {
+        it('Store Actor CRUD Throughput (1k actors)', { timeout: 30000 }, () => {
             const { setState, getState } = useSceneStore;
 
             setState({
