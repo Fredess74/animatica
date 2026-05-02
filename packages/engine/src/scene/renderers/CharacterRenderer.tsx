@@ -6,6 +6,7 @@ import React, { useEffect, useRef, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { createProceduralHumanoid } from '../../character/CharacterLoader'
+import { BoneController } from '../../character/BoneController'
 import {
   CharacterAnimator,
   createDanceClip,
@@ -28,13 +29,14 @@ interface CharacterRendererProps {
   onClick?: () => void
 }
 
-export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
+export const CharacterRenderer: React.FC<CharacterRendererProps> = React.memo(React.forwardRef<THREE.Group, CharacterRendererProps>(({
   actor,
   isSelected = false,
   onClick,
-}) => {
+}, ref) => {
   const groupRef = useRef<THREE.Group>(null)
   const animatorRef = useRef<CharacterAnimator | null>(null)
+  const boneControllerRef = useRef<BoneController | null>(null)
   const faceMorphRef = useRef<FaceMorphController | null>(null)
   const eyeControllerRef = useRef<EyeController | null>(null)
 
@@ -48,7 +50,7 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     return createProceduralHumanoid({ skinColor, height, build })
   }, [actor.name])
 
-  // Setup animator
+    // Setup animator and bone controller
   useEffect(() => {
     if (!rig.root) return
 
@@ -63,6 +65,10 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     animator.registerClip('jump', createJumpClip())
     animator.play(actor.animation || 'idle')
     animatorRef.current = animator
+
+    // Setup bone controller for manual posing
+    const boneController = new BoneController(rig.bones)
+    boneControllerRef.current = boneController
 
     // Setup face morph controller
     const faceMorph = new FaceMorphController(rig.bodyMesh, rig.morphTargetMap)
@@ -98,11 +104,16 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     }
   }, [actor.morphTargets])
 
-  // Frame update — animation, face morphs, eye blinks
+  // Frame update — animation, bone posing, face morphs, eye blinks
   useFrame((_state, delta) => {
     // Skeletal animation
     if (animatorRef.current) {
       animatorRef.current.update(delta)
+    }
+
+    // Manual bone posing (overrides animation)
+    if (boneControllerRef.current && actor.bodyPose) {
+      boneControllerRef.current.update(actor.bodyPose, delta)
     }
 
     // Face morph blending
@@ -121,9 +132,16 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     }
   })
 
+  if (!actor.visible) return null
+
   return (
     <group
-      ref={groupRef}
+      ref={(node) => {
+        // @ts-ignore
+        groupRef.current = node
+        if (typeof ref === 'function') ref(node)
+        else if (ref) ref.current = node
+      }}
       name={actor.id}
       position={actor.transform.position}
       rotation={actor.transform.rotation}
@@ -151,4 +169,6 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       )}
     </group>
   )
-}
+}))
+
+CharacterRenderer.displayName = 'CharacterRenderer'
