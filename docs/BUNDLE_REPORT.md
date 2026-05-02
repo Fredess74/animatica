@@ -1,34 +1,35 @@
-# Bundle Size Report - 2026-02-25
+# Bundle Size Report - 2026-05-02
 
 ## Package Sizes
 
 | Package | Size | Comparison | Notes |
 | :--- | :--- | :--- | :--- |
-| **@Animatica/web** | 102K | NEW | First Load JS (built successfully) |
-| **@Animatica/engine** | 71K | +23K | Includes index.js (41K) and index.cjs (30K) |
-| **@Animatica/editor** | 76K | +64K | Includes index.js (46K) and index.cjs (30K) |
-| **@Animatica/platform** | 0.2K | -11.8K | Minimal exports only |
-| **@Animatica/contracts** | 8K | 0K | Cache size (no compiled contracts) |
+| **@Animatica/web** | 102 kB | 0 kB | First Load JS (stable) |
+| **@Animatica/engine** | 135.42 kB | +64.42 kB | Includes index.js (78.78 kB) and index.cjs (56.64 kB) |
+| **@Animatica/editor** | 3,488.99 kB | +3,412.99 kB | Includes index.js (2,181.24 kB) and index.cjs (1,307.75 kB) |
+| **@Animatica/platform** | 0.18 kB | -0.02 kB | Minimal exports only |
+| **@Animatica/contracts** | 4 kB | -4 kB | Cache size |
 
 ## Total Size
-**155.2K** (excluding web), **257.2K** (including web)
+**3,628.59 kB** (excluding web), **3,730.59 kB** (including web)
 
 ## Largest Dependencies
-### @Animatica/editor (76K)
-- `dist/index.js`: 46K
-- `dist/index.cjs`: 30K
+### @Animatica/editor (3,488.99 kB)
+- `dist/index.js`: 2,181.24 kB
+- `dist/index.cjs`: 1,307.75 kB
+- **CRITICAL REGRESSION**: Size increased significantly due to bundling Three.js, @react-three/fiber, and @react-three/drei instead of externalizing them.
 
-### @Animatica/engine (71K)
-- `dist/index.js`: 41K
-- `dist/index.cjs`: 30K
+### @Animatica/engine (135.42 kB)
+- `dist/index.js`: 78.78 kB
+- `dist/index.cjs`: 56.64 kB
 
 ## Changes
-- Updated audit for 2026-02-25.
-- `apps/web` now builds successfully using Next.js 15.
-- Significant growth in `@Animatica/engine` and `@Animatica/editor` as features are implemented.
-- `@Animatica/platform` remains minimal.
+- Updated audit for 2026-05-02.
+- Major regression detected in `@Animatica/editor`.
+- `@Animatica/engine` size has grown as more core features and R3F components were added.
+- `@Animatica/web` remains stable at 102 kB First Load JS.
 
 ## Suggestions
-- **@Animatica/engine**: Monitor size as more R3F components are added.
-- **@Animatica/editor**: Keep an eye on UI component library weight.
-- **@Animatica/web**: 102K First Load JS is good for a Next.js app, but watch for bloating as more routes are added.
+- **@Animatica/editor**: IMMEDIATELY externalize `three`, `@react-three/fiber`, and `@react-three/drei` in the Vite build configuration to reduce bundle size.
+- **@Animatica/engine**: Continue to monitor as animation logic expands.
+- **@Animatica/web**: Monitor first-load JS as more editor features are integrated into the main application.
