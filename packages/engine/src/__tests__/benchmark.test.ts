@@ -1,5 +1,6 @@
 import { describe, it, afterAll } from 'vitest';
-import { interpolateKeyframes } from '../animation/interpolate';
+import { interpolateKeyframes, evaluateTracksAtTime } from '../animation/interpolate';
+import { quad } from '../animation/easing';
 import { ProjectStateSchema } from '../importer/schemas';
 import { useSceneStore } from '../store/sceneStore';
 import type { Keyframe, ProjectState, Actor, PrimitiveActor, Vector3 } from '../types';
@@ -50,7 +51,7 @@ describe('Engine Benchmarks', () => {
                     interpolateKeyframes(keyframes, t);
                 }
             });
-        });
+        }, 15000);
 
         it('Vector3 Interpolation (10k ops, 10k keyframes)', () => {
             const keyframes: Keyframe<Vector3>[] = [];
@@ -68,7 +69,7 @@ describe('Engine Benchmarks', () => {
                     interpolateKeyframes(keyframes, t);
                 }
             });
-        });
+        }, 15000);
 
         it('Color Interpolation (10k ops, 10k keyframes)', () => {
             const keyframes: Keyframe<string>[] = [];
@@ -86,13 +87,42 @@ describe('Engine Benchmarks', () => {
                     interpolateKeyframes(keyframes, t);
                 }
             });
-        });
+        }, 15000);
+
+        it('Easing Functions (1M ops)', () => {
+            measure('Easing Functions 1M ops', () => {
+                for (let i = 0; i < 1000000; i++) {
+                    quad(Math.random());
+                }
+            });
+        }, 15000);
+
+        it('Multi-track Evaluation (1k tracks, 10 keyframes each)', () => {
+            const tracks: any[] = [];
+            for (let i = 0; i < 1000; i++) {
+                const keyframes: Keyframe<number>[] = [];
+                for (let j = 0; j < 10; j++) {
+                    keyframes.push({ time: j, value: j, easing: 'linear' });
+                }
+                tracks.push({
+                    targetId: `actor-${i}`,
+                    property: 'position.x',
+                    keyframes,
+                });
+            }
+
+            measure('Multi-track Evaluation 1k tracks', () => {
+                for (let i = 0; i < 100; i++) {
+                    evaluateTracksAtTime(tracks, Math.random() * 10);
+                }
+            });
+        }, 15000);
     });
 
     describe('Schema Validation Performance', () => {
-        it('Project Schema Validation (100 runs, 100 actors)', () => {
+        it('Project Schema Validation (10 runs, 1000 actors)', () => {
             const actors: Actor[] = [];
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < 1000; i++) {
                 const actor: PrimitiveActor = {
                     id: `actor-${i}`,
                     name: `Actor ${i}`,
@@ -118,7 +148,7 @@ describe('Engine Benchmarks', () => {
             const projectState: ProjectState = {
                 meta: {
                     title: 'Benchmark Project',
-                    version: '1.0.0',
+                    version: '0.2.0',
                 },
                 environment: {
                     ambientLight: { intensity: 0.5, color: '#ffffff' },
@@ -135,20 +165,20 @@ describe('Engine Benchmarks', () => {
                 library: { clips: [] },
             };
 
-            measure('Schema Validation Speed (100 runs)', () => {
-                for (let i = 0; i < 100; i++) {
+            measure('Schema Validation 1k actors', () => {
+                for (let i = 0; i < 10; i++) {
                     ProjectStateSchema.parse(projectState);
                 }
             });
-        });
+        }, 15000);
     });
 
     describe('Store Performance', () => {
-        it('Store Update Throughput (10k playback updates)', () => {
+        it('Store Playback Updates (10k playback updates)', () => {
             const { setState, getState } = useSceneStore;
 
             setState({
-                meta: { title: 'Reset', version: '1.0.0' },
+                meta: { title: 'Reset', version: '0.2.0' },
                 environment: {
                     ambientLight: { intensity: 0.5, color: '#ffffff' },
                     sun: { position: [10, 10, 10], intensity: 1, color: '#ffffff' },
@@ -165,7 +195,7 @@ describe('Engine Benchmarks', () => {
                     getState().setPlayback({ currentTime: i * 0.1 });
                 }
             });
-        });
+        }, 15000);
 
         it('Store Actor CRUD Throughput (1k actors)', () => {
             const { setState, getState } = useSceneStore;
@@ -199,6 +229,6 @@ describe('Engine Benchmarks', () => {
                     getState().removeActor(`bench-${i}`);
                 }
             });
-        });
+        }, 15000);
     });
 });
