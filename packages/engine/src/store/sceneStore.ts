@@ -138,3 +138,53 @@ export const useActorsByType = (type: Actor['type']) =>
  * Hook to get the list of all actors.
  */
 export const useActorList = () => useSceneStore((state) => state.actors);
+
+/**
+ * Hook to get the environment settings.
+ */
+export const useEnvironment = () => useSceneStore((state) => state.environment);
+
+/**
+ * Hook to get the timeline configuration.
+ */
+export const useTimeline = () => useSceneStore((state) => state.timeline);
+
+/**
+ * Hook to get the camera track.
+ */
+export const useCameraTrack = () =>
+  useSceneStore(useShallow((state) => state.timeline.cameraTrack));
+
+/**
+ * Hook to get the animation tracks.
+ */
+export const useAnimationTracks = () =>
+  useSceneStore(useShallow((state) => state.timeline.animationTracks));
+
+/**
+ * Hook to get the playback state.
+ */
+export const usePlaybackState = () => useSceneStore((state) => state.playback);
+
+/**
+ * Hook to get the project metadata.
+ */
+export const useMeta = () => useSceneStore((state) => state.meta);
+
+/**
+ * Hook to get all store actions.
+ * Provides stable access to actions without subscribing to state updates.
+ */
+export const useSceneActions = () =>
+  useSceneStore(
+    useShallow((state) => ({
+      addActor: state.addActor,
+      removeActor: state.removeActor,
+      updateActor: state.updateActor,
+      setSelectedActor: state.setSelectedActor,
+      setEnvironment: state.setEnvironment,
+      setTimeline: state.setTimeline,
+      setPlayback: state.setPlayback,
+      setMeta: state.setMeta,
+    }))
+  );
