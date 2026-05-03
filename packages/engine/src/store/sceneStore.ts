@@ -136,5 +136,55 @@ export const useActorsByType = (type: Actor['type']) =>
 
 /**
  * Hook to get the list of all actors.
+ * Optimized with useShallow to prevent re-renders when the array reference changes but content is identical.
  */
-export const useActorList = () => useSceneStore((state) => state.actors);
+export const useActorList = () => useSceneStore(useShallow((state) => state.actors));
+
+/**
+ * Hook to access all scene store actions.
+ * Optimized to prevent re-renders when state changes, as it only selects action functions.
+ */
+export const useSceneActions = () =>
+  useSceneStore(
+    useShallow((state) => ({
+      addActor: state.addActor,
+      removeActor: state.removeActor,
+      updateActor: state.updateActor,
+      setSelectedActor: state.setSelectedActor,
+      setEnvironment: state.setEnvironment,
+      setTimeline: state.setTimeline,
+      setPlayback: state.setPlayback,
+      setMeta: state.setMeta,
+    }))
+  );
+
+/**
+ * Hook to get the environment settings.
+ */
+export const useEnvironment = () => useSceneStore((state) => state.environment);
+
+/**
+ * Hook to get the timeline configuration.
+ */
+export const useTimeline = () => useSceneStore((state) => state.timeline);
+
+/**
+ * Hook to get the animation tracks.
+ * Optimized with useShallow to prevent re-renders unless the tracks themselves change.
+ */
+export const useAnimationTracks = () =>
+  useSceneStore(useShallow((state) => state.timeline.animationTracks));
+
+/**
+ * Hook to get the camera track.
+ * Optimized with useShallow to prevent re-renders unless the camera cuts change.
+ */
+export const useCameraTrack = () =>
+  useSceneStore(useShallow((state) => state.timeline.cameraTrack));
+
+/**
+ * Hook to get only the timeline duration.
+ * Optimized to prevent re-renders when other timeline properties (like tracks) change.
+ */
+export const useDuration = () =>
+  useSceneStore((state) => state.timeline.duration);

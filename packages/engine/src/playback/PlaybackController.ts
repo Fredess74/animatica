@@ -6,7 +6,12 @@
  * @module @animatica/engine/playback/PlaybackController
  */
 import { useCallback, useEffect, useRef } from 'react';
-import { useSceneStore } from '../store/sceneStore';
+import {
+    useSceneStore,
+    useIsPlaying,
+    useSceneActions,
+    useDuration,
+} from '../store/sceneStore';
 import type { LoopMode } from '../store/types';
 
 /**
@@ -47,7 +52,9 @@ export function usePlayback(): PlaybackControls {
     const lastFrameTimeRef = useRef<number | null>(null);
 
     // Subscribe to playback state changes
-    const isPlaying = useSceneStore((s) => s.playback.isPlaying);
+    const isPlaying = useIsPlaying();
+    const duration = useDuration();
+    const { setPlayback } = useSceneActions();
 
     /**
      * The core animation frame callback.
@@ -147,46 +154,43 @@ export function usePlayback(): PlaybackControls {
      */
     const play = useCallback(() => {
         const state = useSceneStore.getState();
-        const { duration } = state.timeline;
         const { currentTime, direction } = state.playback;
 
         // If at the end and playing forward, reset to start
         if (direction === 1 && currentTime >= duration) {
-            state.setPlayback({ currentTime: 0, isPlaying: true });
+            setPlayback({ currentTime: 0, isPlaying: true });
         }
         // If at start and playing backward, reset to end?
         else if (direction === -1 && currentTime <= 0) {
-            state.setPlayback({ currentTime: duration, isPlaying: true });
+            setPlayback({ currentTime: duration, isPlaying: true });
         } else {
-            state.setPlayback({ isPlaying: true });
+            setPlayback({ isPlaying: true });
         }
-    }, []);
+    }, [duration, setPlayback]);
 
     /**
      * Pauses the animation loop.
      */
     const pause = useCallback(() => {
-        useSceneStore.getState().setPlayback({ isPlaying: false });
-    }, []);
+        setPlayback({ isPlaying: false });
+    }, [setPlayback]);
 
     /**
      * Stops playback and resets to time 0.
      */
     const stop = useCallback(() => {
-        useSceneStore.getState().setPlayback({ currentTime: 0, isPlaying: false, direction: 1 });
-    }, []);
+        setPlayback({ currentTime: 0, isPlaying: false, direction: 1 });
+    }, [setPlayback]);
 
     /**
      * Seeks to a specific time in seconds.
      */
     const seek = useCallback(
         (time: number) => {
-            const state = useSceneStore.getState();
-            const { duration } = state.timeline;
             const clampedTime = Math.max(0, Math.min(time, duration));
-            state.setPlayback({ currentTime: clampedTime });
+            setPlayback({ currentTime: clampedTime });
         },
-        []
+        [duration, setPlayback]
     );
 
     /**
@@ -202,29 +206,28 @@ export function usePlayback(): PlaybackControls {
     }, [play, pause]);
 
     const setSpeed = useCallback((speed: number) => {
-        useSceneStore.getState().setPlayback({ speed: Math.max(0.1, Math.min(speed, 10)) });
-    }, []);
+        setPlayback({ speed: Math.max(0.1, Math.min(speed, 10)) });
+    }, [setPlayback]);
 
     const setLoopMode = useCallback((mode: LoopMode) => {
-        useSceneStore.getState().setPlayback({ loopMode: mode });
-    }, []);
+        setPlayback({ loopMode: mode });
+    }, [setPlayback]);
 
     const nextFrame = useCallback(() => {
         const state = useSceneStore.getState();
         const { frameRate, currentTime } = state.playback;
-        const { duration } = state.timeline;
         const frameDuration = 1 / (frameRate || 24);
         const newTime = Math.min(duration, currentTime + frameDuration);
-        state.setPlayback({ currentTime: newTime, isPlaying: false });
-    }, []);
+        setPlayback({ currentTime: newTime, isPlaying: false });
+    }, [duration, setPlayback]);
 
     const prevFrame = useCallback(() => {
         const state = useSceneStore.getState();
         const { frameRate, currentTime } = state.playback;
         const frameDuration = 1 / (frameRate || 24);
         const newTime = Math.max(0, currentTime - frameDuration);
-        state.setPlayback({ currentTime: newTime, isPlaying: false });
-    }, []);
+        setPlayback({ currentTime: newTime, isPlaying: false });
+    }, [setPlayback]);
 
     return {
         play,
