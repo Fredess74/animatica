@@ -1,5 +1,6 @@
 import { describe, it, afterAll } from 'vitest';
-import { interpolateKeyframes } from '../animation/interpolate';
+import { interpolateKeyframes, evaluateTracksAtTime } from '../animation/interpolate';
+import * as Easing from '../animation/easing';
 import { ProjectStateSchema } from '../importer/schemas';
 import { useSceneStore } from '../store/sceneStore';
 import type { Keyframe, ProjectState, Actor, PrimitiveActor, Vector3 } from '../types';
@@ -33,7 +34,39 @@ describe('Engine Benchmarks', () => {
         );
     });
 
+    describe('Easing Performance', () => {
+        it('Easing Functions (1M ops)', () => {
+            const functions = Object.values(Easing).filter(f => typeof f === 'function');
+            measure('Easing Functions (1M ops)', () => {
+                for (let i = 0; i < 1000000; i++) {
+                    const f = functions[i % functions.length];
+                    f(Math.random());
+                }
+            });
+        });
+    });
+
     describe('Interpolation Performance', () => {
+        it('Multi-track Evaluation (1k tracks, 100 evaluations)', () => {
+            const tracks: { targetId: string; property: string; keyframes: Keyframe<number>[] }[] = [];
+            for (let i = 0; i < 1000; i++) {
+                tracks.push({
+                    targetId: `actor-${Math.floor(i / 3)}`,
+                    property: ['position.x', 'position.y', 'position.z'][i % 3],
+                    keyframes: [
+                        { time: 0, value: 0, easing: 'linear' },
+                        { time: 10, value: 100, easing: 'easeInOut' },
+                    ],
+                });
+            }
+
+            measure('Multi-track Evaluation (1k tracks, 100 evals)', () => {
+                for (let i = 0; i < 100; i++) {
+                    evaluateTracksAtTime(tracks, i * 0.1);
+                }
+            });
+        });
+
         it('Number Interpolation (10k ops, 10k keyframes)', () => {
             const keyframes: Keyframe<number>[] = [];
             for (let i = 0; i < 10000; i++) {
@@ -90,9 +123,9 @@ describe('Engine Benchmarks', () => {
     });
 
     describe('Schema Validation Performance', () => {
-        it('Project Schema Validation (100 runs, 100 actors)', () => {
+        it('Project Schema Validation (100 runs, 1k actors)', () => {
             const actors: Actor[] = [];
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < 1000; i++) {
                 const actor: PrimitiveActor = {
                     id: `actor-${i}`,
                     name: `Actor ${i}`,
@@ -135,12 +168,12 @@ describe('Engine Benchmarks', () => {
                 library: { clips: [] },
             };
 
-            measure('Schema Validation Speed (100 runs)', () => {
+            measure('Schema Validation Speed (100 runs, 1k actors)', () => {
                 for (let i = 0; i < 100; i++) {
                     ProjectStateSchema.parse(projectState);
                 }
             });
-        });
+        }, 15000);
     });
 
     describe('Store Performance', () => {
@@ -165,7 +198,7 @@ describe('Engine Benchmarks', () => {
                     getState().setPlayback({ currentTime: i * 0.1 });
                 }
             });
-        });
+        }, 15000);
 
         it('Store Actor CRUD Throughput (1k actors)', () => {
             const { setState, getState } = useSceneStore;
