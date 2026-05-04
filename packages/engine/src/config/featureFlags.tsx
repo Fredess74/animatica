@@ -34,8 +34,8 @@ const getRawEnv = (key: string, env: Record<string, string | boolean | undefined
 };
 
 export const getFeatureFlags = (
-  envMode: string = import.meta.env.MODE,
-  env: Record<string, string | boolean | undefined> = import.meta.env as unknown as Record<string, string | boolean | undefined>
+  envMode: string = typeof import.meta !== 'undefined' && import.meta.env ? import.meta.env.MODE : 'production',
+  env: Record<string, string | boolean | undefined> = typeof import.meta !== 'undefined' && import.meta.env ? (import.meta.env as unknown as Record<string, string | boolean | undefined>) : {}
 ): FeatureFlags => {
   const isDev = envMode === 'development';
   const defaults = isDev ? DEFAULT_FLAGS_DEV : DEFAULT_FLAGS_PROD;
