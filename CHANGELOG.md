@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-05-04
+
+### Added
+
+- **Phase 2: Characters** initial implementation:
+    - `HumanoidRenderer` for ReadyPlayerMe and custom humanoid models.
+    - `CharacterAnimator` for handling character-specific animation tracks.
+    - `BoneController` for skeletal manipulation via `bodyPose`.
+    - `FaceMorphController` for facial expressions via morph targets.
+- **Phase 3: Editor UI** enhancements:
+    - Implemented `Viewport` with R3F Canvas, OrbitControls, and Gizmos.
+    - Improved `PropertiesPanel` with character-specific controls.
+    - Integrated `TimelinePanel` with playback system.
+- **2D Storyboard Mode**: Added support for 2D animation and storyboard visualization.
+- **Performance Benchmarks**: Added comprehensive benchmark suite for engine performance tracking.
+
+### Fixed
+
+- Resolved bundle size regressions by externalizing heavy dependencies in Vite/Next.js configurations.
+- Fixed `CharacterRenderer` visibility toggle logic to comply with React hook rules.
+- Stabilized `Viewport.test.tsx` by mocking R3F and Drei components correctly.
+
 ## [0.1.0] - 2026-02-22
 
 ### Added
