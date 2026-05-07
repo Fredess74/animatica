@@ -52,7 +52,7 @@ export default function LandingPage() {
           <p className="landing-hero__subtitle">
             The Animation Platform for Everyone.
             <br />
-            <strong>Create. Animate. Earn.</strong>
+            <strong>Create. Animate. Share.</strong>
           </p>
           <p className="landing-hero__desc">
             Build stunning 3D animated scenes in your browser — no downloads, no plugins.
