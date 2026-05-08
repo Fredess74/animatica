@@ -27,7 +27,8 @@ vi.mock('@react-three/fiber', async () => {
     Canvas: ({ children }: { children: React.ReactNode }) => <div data-testid="canvas">{children}</div>,
     useThree: () => ({
       scene: { getObjectByName: mocks.mockGetObjectByName },
-      camera: { position: { set: vi.fn() }, lookAt: vi.fn() }
+      camera: { position: { set: vi.fn() }, lookAt: vi.fn() },
+      gl: { domElement: document.createElement('canvas') }
     }),
   }
 })
@@ -38,23 +39,46 @@ vi.mock('@react-three/drei', () => ({
   TransformControls: () => <div data-testid="transform-controls" />,
   Grid: () => <div data-testid="grid" />,
   Sky: () => <div data-testid="sky" />,
+  ContactShadows: () => <div data-testid="contact-shadows" />,
+  Environment: () => <div data-testid="environment" />,
+  GizmoHelper: () => <div data-testid="gizmo-helper" />,
+  GizmoViewport: () => <div data-testid="gizmo-viewport" />,
 }))
 
 // Mock Engine
-vi.mock('@Animatica/engine', () => ({
-  SceneManager: () => <div data-testid="scene-manager" />,
-  useSceneStore: (selector: any) => selector({
+vi.mock('@Animatica/engine', () => {
+  const state = {
+    actors: [],
     selectedActorId: 'test-actor-id',
     setSelectedActor: mocks.mockSetSelectedActor,
     updateActor: mocks.mockUpdateActor,
-    playback: { isPlaying: false },
+    removeActor: vi.fn(),
+    playback: { isPlaying: false, currentTime: 0, speed: 1, direction: 1, loopMode: 'none', frameRate: 24 },
     environment: {
       ambientLight: { intensity: 0.5, color: '#fff' },
       sun: { position: [10, 10, 10], intensity: 1, color: '#fff' },
       skyColor: '#87ceeb',
     },
-  }),
-}))
+    timeline: { duration: 10, cameraTrack: [], animationTracks: [], markers: [] },
+    setPlayback: vi.fn(),
+  };
+
+  return {
+    SceneManager: () => <div data-testid="scene-manager" />,
+    PrimitiveRenderer: () => <div data-testid="primitive-renderer" />,
+    LightRenderer: () => <div data-testid="light-renderer" />,
+    CameraRenderer: () => <div data-testid="camera-renderer" />,
+    useSceneStore: vi.fn((selector: any) => selector(state)),
+    useActors: vi.fn(() => state.actors),
+    useSelectedActorId: vi.fn(() => state.selectedActorId),
+    useSelectedActor: vi.fn(() => undefined),
+    useEnvironment: vi.fn(() => state.environment),
+    useTimeline: vi.fn(() => state.timeline),
+    usePlaybackState: vi.fn(() => state.playback),
+    useCurrentTime: vi.fn(() => state.playback.currentTime),
+    useIsPlaying: vi.fn(() => state.playback.isPlaying),
+  };
+})
 
 describe('Viewport', () => {
   beforeEach(() => {
@@ -79,22 +103,21 @@ describe('Viewport', () => {
   it('renders the camera toolbar', () => {
     render(<Viewport />)
 
-    expect(screen.getByTitle('Top View')).toBeTruthy()
-    expect(screen.getByTitle('Front View')).toBeTruthy()
-    expect(screen.getByTitle('Side View')).toBeTruthy()
-    expect(screen.getByTitle('Perspective View')).toBeTruthy()
+    expect(screen.getByTitle('Move (W)')).toBeTruthy()
+    expect(screen.getByTitle('Rotate (E)')).toBeTruthy()
+    expect(screen.getByTitle('Scale (R)')).toBeTruthy()
   })
 
-  it('attempts to change camera view when toolbar button clicked', () => {
+  it('attempts to change gizmo mode when toolbar button clicked', () => {
     render(<Viewport />)
 
-    const topButton = screen.getByTitle('Top View')
-    fireEvent.click(topButton)
+    const rotateButton = screen.getByTitle('Rotate (E)')
+    fireEvent.click(rotateButton)
 
-    expect(topButton).toBeTruthy()
+    expect(rotateButton).toBeTruthy()
   })
 
-  it('renders gizmo when object is found', () => {
+  it('renders gizmo when object is found', async () => {
     // Mock found object
     mocks.mockGetObjectByName.mockReturnValue({
         position: { x: 0, y: 0, z: 0 },
@@ -104,6 +127,6 @@ describe('Viewport', () => {
 
     render(<Viewport />)
 
-    expect(screen.getByTestId('transform-controls')).toBeTruthy()
+    expect(await screen.findByTestId('transform-controls')).toBeTruthy()
   })
 })

@@ -87,20 +87,38 @@ export const getActiveActors = (state: SceneStoreState): Actor[] =>
 export const getCurrentTime = (state: SceneStoreState): number =>
   state.playback.currentTime;
 
+/**
+ * Selector to get the current environment.
+ */
+export const getEnvironment = (state: SceneStoreState) => state.environment;
+
+/**
+ * Selector to get the current timeline.
+ */
+export const getTimeline = (state: SceneStoreState) => state.timeline;
+
 // Hooks
 
 /**
  * Hook to select a specific actor by ID.
+ * Returns the actor object.
  */
 export const useActorById = (id: string) =>
   useSceneStore((state) => state.actors.find((a) => a.id === id));
 
 /**
  * Hook to get the list of all actor IDs.
- * Optimized with useShallow to prevent re-renders when actor properties change.
+ * Optimized with useShallow to prevent re-renders unless the IDs change.
  */
 export const useActorIds = () =>
   useSceneStore(useShallow((state) => state.actors.map((a) => a.id)));
+
+/**
+ * Hook to get the list of all actors.
+ * Optimized with useShallow to prevent re-renders unless the actor list content changes.
+ */
+export const useActors = () =>
+  useSceneStore(useShallow((state) => state.actors));
 
 /**
  * Hook to get the current playback time.
@@ -122,19 +140,43 @@ export const useSelectedActorId = () =>
 
 /**
  * Hook to get the currently selected actor.
+ * Optimized with useShallow to prevent re-renders when other actors change.
  */
 export const useSelectedActor = () =>
-  useSceneStore((state) =>
+  useSceneStore(useShallow((state) =>
     state.selectedActorId ? state.actors.find((a) => a.id === state.selectedActorId) : undefined
-  );
+  ));
 
 /**
  * Hook to get all actors of a specific type.
+ * Optimized with useShallow.
  */
 export const useActorsByType = (type: Actor['type']) =>
   useSceneStore(useShallow((state) => state.actors.filter((a) => a.type === type)));
 
 /**
+ * Hook to get the scene environment settings.
+ * Optimized with useShallow.
+ */
+export const useEnvironment = () =>
+  useSceneStore(useShallow((state) => state.environment));
+
+/**
+ * Hook to get the timeline configuration.
+ * Optimized with useShallow.
+ */
+export const useTimeline = () =>
+  useSceneStore(useShallow((state) => state.timeline));
+
+/**
+ * Hook to get the full playback state.
+ * Optimized with useShallow.
+ */
+export const usePlaybackState = () =>
+  useSceneStore(useShallow((state) => state.playback));
+
+/**
  * Hook to get the list of all actors.
+ * @deprecated Use useActors instead.
  */
 export const useActorList = () => useSceneStore((state) => state.actors);
