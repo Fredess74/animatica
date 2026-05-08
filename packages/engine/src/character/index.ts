@@ -17,3 +17,5 @@ export type { EyeState } from './EyeController'
 export { CHARACTER_PRESETS, getPreset, getPresetIds } from './CharacterPresets'
 export type { CharacterPreset } from './CharacterPresets'
 
+export { Humanoid } from './Humanoid'
+export type { HumanoidProps } from './Humanoid'
