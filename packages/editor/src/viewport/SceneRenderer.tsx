@@ -1,9 +1,11 @@
 /**
  * SceneRenderer — Iterates all actors from the store and renders the correct component.
  */
-import React from 'react'
+import React, { memo } from 'react'
 import {
     useSceneStore,
+    useActors,
+    useSelectedActorId,
     PrimitiveRenderer,
     LightRenderer,
     CameraRenderer,
@@ -11,18 +13,18 @@ import {
 import type { Actor } from '@Animatica/engine'
 
 export const SceneRenderer: React.FC = () => {
-    const actors = useSceneStore((s) => s.actors)
-    const selectedActorId = useSceneStore((s) => s.selectedActorId)
+    const actors = useActors()
+    const selectedActorId = useSelectedActorId()
     const setSelectedActor = useSceneStore((s) => s.setSelectedActor)
 
     return (
-        <group>
+        <group data-testid="scene-manager">
             {actors.map((actor) => (
                 <ActorSwitch
                     key={actor.id}
                     actor={actor}
                     isSelected={actor.id === selectedActorId}
-                    onSelect={() => setSelectedActor(actor.id)}
+                    onSelect={setSelectedActor}
                 />
             ))}
         </group>
@@ -32,17 +34,17 @@ export const SceneRenderer: React.FC = () => {
 /**
  * Routes each actor to the correct renderer based on actor.type.
  */
-const ActorSwitch: React.FC<{
+const ActorSwitch = memo<{
     actor: Actor
     isSelected: boolean
-    onSelect: () => void
-}> = ({ actor, isSelected, onSelect }) => {
+    onSelect: (id: string | null) => void
+}>(({ actor, isSelected, onSelect }) => {
     if (!actor.visible) return null
 
     const commonProps = {
         actor,
         isSelected,
-        onClick: onSelect,
+        onClick: () => onSelect(actor.id),
     }
 
     switch (actor.type) {
@@ -60,7 +62,7 @@ const ActorSwitch: React.FC<{
                     position={actor.transform.position}
                     rotation={actor.transform.rotation}
                     scale={actor.transform.scale}
-                    onClick={(e) => { e.stopPropagation(); onSelect() }}
+                    onClick={(e) => { e.stopPropagation(); onSelect(actor.id) }}
                 >
                     {/* Placeholder capsule until CharacterRenderer is ready */}
                     <mesh castShadow>
@@ -77,7 +79,7 @@ const ActorSwitch: React.FC<{
                 <group
                     name={actor.id}
                     position={actor.transform.position}
-                    onClick={(e) => { e.stopPropagation(); onSelect() }}
+                    onClick={(e) => { e.stopPropagation(); onSelect(actor.id) }}
                 >
                     {/* Speaker icon placeholder */}
                     <mesh>
@@ -93,4 +95,6 @@ const ActorSwitch: React.FC<{
         default:
             return null
     }
-}
+})
+
+ActorSwitch.displayName = 'ActorSwitch'
