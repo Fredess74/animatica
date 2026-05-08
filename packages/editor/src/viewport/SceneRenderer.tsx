@@ -16,7 +16,7 @@ export const SceneRenderer: React.FC = () => {
     const setSelectedActor = useSceneStore((s) => s.setSelectedActor)
 
     return (
-        <group>
+        <group data-testid="scene-manager">
             {actors.map((actor) => (
                 <ActorSwitch
                     key={actor.id}
