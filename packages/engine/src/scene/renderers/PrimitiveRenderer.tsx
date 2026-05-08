@@ -75,7 +75,7 @@ export const PrimitiveRenderer: React.FC<PrimitiveRendererProps> = memo(({
         transparent={opacity < 1}
         wireframe={wireframe}
       />
-      {isSelected && <Edges color="yellow" threshold={15} />}
+      {isSelected && <Edges color="#22C55E" threshold={15} />}
     </mesh>
   )
 })

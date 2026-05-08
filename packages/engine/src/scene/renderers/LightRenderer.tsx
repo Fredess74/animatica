@@ -37,8 +37,8 @@ export const LightRenderer: React.FC<LightRendererProps> = memo(({
   const HelperClass = getHelperClass(lightType);
   // Pad args to constant length to satisfy React Hook rules (useHelper dependencies)
   const helperArgs = lightType === 'spot'
-    ? ['yellow', undefined]
-    : [lightType === 'directional' ? 1 : 0.5, 'yellow'];
+    ? ['#22C55E', undefined]
+    : [lightType === 'directional' ? 1 : 0.5, '#22C55E'];
 
   // useHelper expects a MutableRefObject or Object3D.
   // We cast the hook to unknown to avoid strict type checks on the helper constructor arguments
