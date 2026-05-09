@@ -1,5 +1,20 @@
+/**
+ * @vitest-environment jsdom
+ */
 import { describe, it, expect, beforeEach } from 'vitest';
-import { useSceneStore, getActorById, getActiveActors, getCurrentTime } from './sceneStore';
+import { renderHook } from '@testing-library/react';
+import {
+  useSceneStore,
+  getActorById,
+  getActiveActors,
+  getCurrentTime,
+  useEnvironment,
+  useTimeline,
+  usePlayback,
+  useMeta,
+  useLibrary,
+  useActorList,
+} from './sceneStore';
 import { PrimitiveActor } from '../types';
 
 describe('sceneStore', () => {
@@ -14,6 +29,8 @@ describe('sceneStore', () => {
           skyColor: '#87CEEB',
       },
       playback: { currentTime: 0, isPlaying: false, frameRate: 24, speed: 1.0, direction: 1, loopMode: 'none' },
+      meta: { title: 'Untitled Project', version: '1.0.0' },
+      library: { clips: [] },
     });
 
     // Clear undo history
@@ -160,5 +177,60 @@ describe('sceneStore', () => {
       const result = useSceneStore.getState().actors.filter(a => a.type === 'primitive');
       expect(result).toHaveLength(1);
       expect(result[0].id).toBe('1');
+  });
+
+  describe('Library Slice', () => {
+    it('should add a clip to the library', () => {
+      const clip = { id: 'clip-1', name: 'Test Clip' };
+      useSceneStore.getState().addClip(clip);
+      expect(useSceneStore.getState().library.clips).toHaveLength(1);
+      expect(useSceneStore.getState().library.clips[0]).toEqual(clip);
+    });
+
+    it('should remove a clip from the library by index', () => {
+      const clip1 = { id: 'clip-1', name: 'Clip 1' };
+      const clip2 = { id: 'clip-2', name: 'Clip 2' };
+      useSceneStore.getState().addClip(clip1);
+      useSceneStore.getState().addClip(clip2);
+
+      useSceneStore.getState().removeClip(0);
+      expect(useSceneStore.getState().library.clips).toHaveLength(1);
+      expect(useSceneStore.getState().library.clips[0]).toEqual(clip2);
+    });
+  });
+
+  describe('Hooks', () => {
+    it('should return environment state via useEnvironment', () => {
+      const { result } = renderHook(() => useEnvironment());
+      expect(result.current).toEqual(useSceneStore.getState().environment);
+    });
+
+    it('should return timeline state via useTimeline', () => {
+      const { result } = renderHook(() => useTimeline());
+      expect(result.current).toEqual(useSceneStore.getState().timeline);
+    });
+
+    it('should return playback state via usePlayback', () => {
+      const { result } = renderHook(() => usePlayback());
+      expect(result.current).toEqual(useSceneStore.getState().playback);
+    });
+
+    it('should return meta state via useMeta', () => {
+      const { result } = renderHook(() => useMeta());
+      expect(result.current).toEqual(useSceneStore.getState().meta);
+    });
+
+    it('should return library state via useLibrary', () => {
+      const { result } = renderHook(() => useLibrary());
+      expect(result.current).toEqual(useSceneStore.getState().library);
+    });
+
+    it('should return actor list via useActorList', () => {
+      const actor = createActor('1');
+      useSceneStore.getState().addActor(actor);
+      const { result } = renderHook(() => useActorList());
+      expect(result.current).toHaveLength(1);
+      expect(result.current[0]).toEqual(actor);
+    });
   });
 });
