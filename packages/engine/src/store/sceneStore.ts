@@ -10,6 +10,7 @@ import { createEnvironmentSlice } from './slices/environmentSlice';
 import { createTimelineSlice } from './slices/timelineSlice';
 import { createPlaybackSlice } from './slices/playbackSlice';
 import { createMetaSlice } from './slices/metaSlice';
+import { createLibrarySlice } from './slices/librarySlice';
 
 /**
  * Zustand store for managing the scene state, including actors, timeline, environment, and playback.
@@ -25,21 +26,32 @@ export const useSceneStore = create<SceneStoreState>()(
         ...createTimelineSlice(...a),
         ...createPlaybackSlice(...a),
         ...createMetaSlice(...a),
-        library: { clips: [] },
+        ...createLibrarySlice(...a),
       })),
       {
         name: 'animatica-scene',
         // Only persist project state, not playback or selection
-        partialize: (state) => {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { playback, selectedActorId, ...rest } = state;
-          return rest as unknown as SceneStoreState;
+        partialize: (state): Omit<SceneStoreState, 'playback' | 'selectedActorId'> => {
+          const {
+            actors,
+            environment,
+            timeline,
+            meta,
+            library,
+          } = state;
+          return {
+            actors,
+            environment,
+            timeline,
+            meta,
+            library,
+          };
         },
       }
     ),
     {
       // Only track undo/redo for project state
-      partialize: (state) => ({
+      partialize: (state): Partial<SceneStoreState> => ({
         actors: state.actors,
         environment: state.environment,
         timeline: state.timeline,
@@ -130,6 +142,7 @@ export const useSelectedActor = () =>
 
 /**
  * Hook to get all actors of a specific type.
+ * Optimized with useShallow as .filter() returns a new array reference.
  */
 export const useActorsByType = (type: Actor['type']) =>
   useSceneStore(useShallow((state) => state.actors.filter((a) => a.type === type)));
@@ -138,3 +151,28 @@ export const useActorsByType = (type: Actor['type']) =>
  * Hook to get the list of all actors.
  */
 export const useActorList = () => useSceneStore((state) => state.actors);
+
+/**
+ * Hook to get the scene environment.
+ */
+export const useEnvironment = () => useSceneStore((state) => state.environment);
+
+/**
+ * Hook to get the timeline configuration.
+ */
+export const useTimeline = () => useSceneStore((state) => state.timeline);
+
+/**
+ * Hook to get the playback state.
+ */
+export const usePlayback = () => useSceneStore((state) => state.playback);
+
+/**
+ * Hook to get project metadata.
+ */
+export const useMeta = () => useSceneStore((state) => state.meta);
+
+/**
+ * Hook to get the asset library.
+ */
+export const useLibrary = () => useSceneStore((state) => state.library);
