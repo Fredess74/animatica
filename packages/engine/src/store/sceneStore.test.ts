@@ -161,4 +161,14 @@ describe('sceneStore', () => {
       expect(result).toHaveLength(1);
       expect(result[0].id).toBe('1');
   });
+
+  it('should handle library clips', () => {
+      const clip = { id: 'clip-1', name: 'Test Clip' };
+      useSceneStore.getState().addClip(clip);
+      expect(useSceneStore.getState().library.clips).toHaveLength(1);
+      expect(useSceneStore.getState().library.clips[0]).toEqual(clip);
+
+      useSceneStore.getState().setLibrary({ clips: [] });
+      expect(useSceneStore.getState().library.clips).toHaveLength(0);
+  });
 });
