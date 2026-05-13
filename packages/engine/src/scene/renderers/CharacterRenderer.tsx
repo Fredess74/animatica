@@ -2,7 +2,7 @@
  * CharacterRenderer — R3F component for rendering a character actor.
  * Creates a procedural humanoid (or loads GLB), applies animation, face morphs, and eye tracking.
  */
-import React, { useEffect, useRef, useMemo } from 'react'
+import { useEffect, useRef, useMemo, memo, forwardRef, useImperativeHandle } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { createProceduralHumanoid } from '../../character/CharacterLoader'
@@ -16,8 +16,9 @@ import {
   createTalkClip,
   createWalkClip,
   createWaveClip,
+  AnimState,
 } from '../../character/CharacterAnimator'
-import { FaceMorphController } from '../../character/FaceMorphController'
+import { FaceMorphController, BlendShapeValues } from '../../character/FaceMorphController'
 import { EyeController } from '../../character/EyeController'
 import { getPreset } from '../../character/CharacterPresets'
 import type { CharacterActor } from '../../types'
@@ -28,15 +29,18 @@ interface CharacterRendererProps {
   onClick?: () => void
 }
 
-export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
+export const CharacterRenderer = memo(forwardRef<THREE.Group, CharacterRendererProps>(({
   actor,
   isSelected = false,
   onClick,
-}) => {
+}, ref) => {
   const groupRef = useRef<THREE.Group>(null)
   const animatorRef = useRef<CharacterAnimator | null>(null)
   const faceMorphRef = useRef<FaceMorphController | null>(null)
   const eyeControllerRef = useRef<EyeController | null>(null)
+
+  // Expose the group ref to parent via forwardRef
+  useImperativeHandle(ref, () => groupRef.current as THREE.Group)
 
   // Build character rig
   const rig = useMemo(() => {
@@ -48,7 +52,8 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     return createProceduralHumanoid({ skinColor, height, build })
   }, [actor.name])
 
-  // Setup animator
+  // Setup controllers (animator, face morph, eyes)
+  // This effect only runs when the rig (skeleton/mesh) changes
   useEffect(() => {
     if (!rig.root) return
 
@@ -61,7 +66,9 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     animator.registerClip('dance', createDanceClip())
     animator.registerClip('sit', createSitClip())
     animator.registerClip('jump', createJumpClip())
-    animator.play(actor.animation || 'idle')
+
+    // Play initial animation
+    animator.play((actor.animation as AnimState) || 'idle')
     animatorRef.current = animator
 
     // Setup face morph controller
@@ -75,12 +82,12 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     return () => {
       animator.dispose()
     }
-  }, [rig, actor.animation])
+  }, [rig])
 
-  // React to animation state changes
+  // React to animation state changes separately
   useEffect(() => {
     if (animatorRef.current && actor.animation) {
-      animatorRef.current.play(actor.animation as any)
+      animatorRef.current.play(actor.animation as AnimState)
     }
   }, [actor.animation])
 
@@ -94,7 +101,7 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
   // React to morph target / expression changes from CharacterPanel
   useEffect(() => {
     if (faceMorphRef.current && actor.morphTargets) {
-      faceMorphRef.current.setTarget(actor.morphTargets as any)
+      faceMorphRef.current.setTarget(actor.morphTargets as BlendShapeValues)
     }
   }, [actor.morphTargets])
 
@@ -151,4 +158,6 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       )}
     </group>
   )
-}
+}))
+
+CharacterRenderer.displayName = 'CharacterRenderer'
