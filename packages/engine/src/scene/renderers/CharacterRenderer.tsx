@@ -121,6 +121,8 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
     }
   })
 
+  if (!actor.visible) return null
+
   return (
     <group
       ref={groupRef}
@@ -128,7 +130,6 @@ export const CharacterRenderer: React.FC<CharacterRendererProps> = ({
       position={actor.transform.position}
       rotation={actor.transform.rotation}
       scale={actor.transform.scale}
-      visible={actor.visible}
       onClick={(e) => {
         e.stopPropagation()
         onClick?.()
