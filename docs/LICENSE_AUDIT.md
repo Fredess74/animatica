@@ -1,6 +1,6 @@
 # License Audit
 
-**Date:** 2026-02-25
+**Date:** 2026-05-14
 **Auditor:** Jules (License Auditor)
 
 ## Summary
@@ -27,116 +27,114 @@ Transitive dependencies: 654
 The following dependencies have non-MIT licenses:
 
 | Dependency | Version | License | Type |
-| --- | --- | --- |
+| --- | --- | --- | --- |
 | @dimforge/rapier3d-compat | 0.12.0 | Apache-2.0 | Transitive |
-| @ethereumjs/rlp | 4.0.1 | MPL-2.0 | Transitive |
-| @ethereumjs/util | 8.1.0 | MPL-2.0 | Transitive |
-| @img/sharp-libvips-linux-x64 | 1.2.4 | LGPL-3.0-or-later | Transitive |
-| @img/sharp-libvips-linuxmusl-x64 | 1.2.4 | LGPL-3.0-or-later | Transitive |
 | @img/sharp-linux-x64 | 0.34.5 | Apache-2.0 | Transitive |
 | @img/sharp-linuxmusl-x64 | 0.34.5 | Apache-2.0 | Transitive |
 | @mediapipe/tasks-vision | 0.10.17 | Apache-2.0 | Transitive |
+| @swc/helpers | 0.5.15 | Apache-2.0 | Transitive |
+| aria-query | 5.3.0 | Apache-2.0 | Transitive |
+| baseline-browser-mapping | 2.10.0 | Apache-2.0 | Transitive |
+| caseless | 0.12.0 | Apache-2.0 | Transitive |
+| detect-libc | 2.1.2 | Apache-2.0 | Transitive |
+| draco3d | 1.5.7 | Apache-2.0 | Transitive |
+| expect-type | 1.3.0 | Apache-2.0 | Transitive |
+| hls.js | 1.6.15 | Apache-2.0 | Transitive |
+| promise-worker-transferable | 1.0.4 | Apache-2.0 | Transitive |
+| sharp | 0.34.5 | Apache-2.0 | Transitive |
+| typescript | 5.9.3 | Apache-2.0 | **Direct** |
+| workerpool | 6.5.1 | Apache-2.0 | Transitive |
+| xml-name-validator | 5.0.0 | Apache-2.0 | Transitive |
+| lru-cache | 11.2.6 | BlueOak-1.0.0 | Transitive |
+| minimatch | 10.2.2 | BlueOak-1.0.0 | Transitive |
+| estraverse | 1.9.3 | BSD | Transitive |
+| parse-cache-control | 1.0.1 | BSD | Transitive |
+| source-map | 0.2.0 | BSD | Transitive |
+| entities | 6.0.1 | BSD-2-Clause | Transitive |
+| escodegen | 1.8.1 | BSD-2-Clause | Transitive |
+| esprima | 2.7.3 | BSD-2-Clause | Transitive |
+| esutils | 2.0.3 | BSD-2-Clause | Transitive |
+| uglify-js | 3.19.3 | BSD-2-Clause | Transitive |
+| webidl-conversions | 8.0.1 | BSD-2-Clause | Transitive |
 | @sentry/core | 5.30.0 | BSD-3-Clause | Transitive |
 | @sentry/hub | 5.30.0 | BSD-3-Clause | Transitive |
 | @sentry/minimal | 5.30.0 | BSD-3-Clause | Transitive |
 | @sentry/node | 5.30.0 | BSD-3-Clause | Transitive |
 | @sentry/types | 5.30.0 | BSD-3-Clause | Transitive |
 | @sentry/utils | 5.30.0 | BSD-3-Clause | Transitive |
-| @swc/helpers | 0.5.15 | Apache-2.0 | Transitive |
 | @webgpu/types | 0.1.69 | BSD-3-Clause | Transitive |
+| antlr4ts | 0.5.0-alpha.4 | BSD-3-Clause | Transitive |
+| charenc | 0.0.2 | BSD-3-Clause | Transitive |
+| crypt | 0.0.2 | BSD-3-Clause | Transitive |
+| diff | 4.0.4 | BSD-3-Clause | Transitive |
+| fast-uri | 3.1.0 | BSD-3-Clause | Transitive |
+| flat | 5.0.2 | BSD-3-Clause | Transitive |
+| ieee754 | 1.2.1 | BSD-3-Clause | Transitive |
+| ndjson | 2.0.0 | BSD-3-Clause | Transitive |
+| qs | 6.15.0 | BSD-3-Clause | Transitive |
+| sc-istanbul | 0.4.6 | BSD-3-Clause | Transitive |
+| serialize-javascript | 6.0.2 | BSD-3-Clause | Transitive |
+| sha1 | 1.1.1 | BSD-3-Clause | Transitive |
+| shelljs | 0.8.5 | BSD-3-Clause | Transitive |
+| source-map | 0.6.1 | BSD-3-Clause | Transitive |
+| source-map-js | 1.2.1 | BSD-3-Clause | Transitive |
+| sprintf-js | 1.0.3 | BSD-3-Clause | Transitive |
+| table | 6.9.0 | BSD-3-Clause | Transitive |
+| tough-cookie | 6.0.0 | BSD-3-Clause | Transitive |
+| caniuse-lite | 1.0.30001770 | CC-BY-4.0 | Transitive |
 | abbrev | 1.0.9 | ISC | Transitive |
 | ansi-align | 3.0.1 | ISC | Transitive |
-| antlr4ts | 0.5.0-alpha.4 | BSD-3-Clause | Transitive |
 | anymatch | 3.1.3 | ISC | Transitive |
-| argparse | 2.0.1 | Python-2.0 | Transitive |
-| aria-query | 5.3.0 | Apache-2.0 | Transitive |
 | at-least-node | 1.0.0 | ISC | Transitive |
-| baseline-browser-mapping | 2.10.0 | Apache-2.0 | Transitive |
 | browser-stdout | 1.3.1 | ISC | Transitive |
-| caniuse-lite | 1.0.30001770 | CC-BY-4.0 | Transitive |
-| caseless | 0.12.0 | Apache-2.0 | Transitive |
-| chai-as-promised | 7.1.2 | WTFPL | Transitive |
-| charenc | 0.0.2 | BSD-3-Clause | Transitive |
 | cliui | 7.0.4 | ISC | Transitive |
-| crypt | 0.0.2 | BSD-3-Clause | Transitive |
-| detect-libc | 2.1.2 | Apache-2.0 | Transitive |
-| diff | 4.0.4 | BSD-3-Clause | Transitive |
-| difflib | 0.2.4 | PSF | Transitive |
-| draco3d | 1.5.7 | Apache-2.0 | Transitive |
 | electron-to-chromium | 1.5.302 | ISC | Transitive |
-| entities | 6.0.1 | BSD-2-Clause | Transitive |
-| escodegen | 1.8.1 | BSD-2-Clause | Transitive |
-| esprima | 2.7.3 | BSD-2-Clause | Transitive |
-| estraverse | 1.9.3 | BSD | Transitive |
-| esutils | 2.0.3 | BSD-2-Clause | Transitive |
-| ethereumjs-util | 7.1.5 | MPL-2.0 | Transitive |
-| expect-type | 1.3.0 | Apache-2.0 | Transitive |
-| fast-uri | 3.1.0 | BSD-3-Clause | Transitive |
 | fastq | 1.20.1 | ISC | Transitive |
-| flat | 5.0.2 | BSD-3-Clause | Transitive |
 | fs.realpath | 1.0.0 | ISC | Transitive |
 | get-caller-file | 2.0.5 | ISC | Transitive |
 | ghost-testrpc | 0.0.2 | ISC | Transitive |
 | glob | 5.0.15 | ISC | Transitive |
 | glob-parent | 5.1.2 | ISC | Transitive |
 | graceful-fs | 4.2.11 | ISC | Transitive |
-| hls.js | 1.6.15 | Apache-2.0 | Transitive |
-| ieee754 | 1.2.1 | BSD-3-Clause | Transitive |
 | inflight | 1.0.6 | ISC | Transitive |
 | inherits | 2.0.4 | ISC | Transitive |
 | ini | 1.3.8 | ISC | Transitive |
 | isexe | 2.0.0 | ISC | Transitive |
 | json-stringify-safe | 5.0.1 | ISC | Transitive |
-| lightningcss | 1.31.1 | MPL-2.0 | Transitive |
-| lightningcss-linux-x64-gnu | 1.31.1 | MPL-2.0 | Transitive |
-| lightningcss-linux-x64-musl | 1.31.1 | MPL-2.0 | Transitive |
 | lru-cache | 5.1.1 | ISC | Transitive |
-| lru-cache | 11.2.6 | BlueOak-1.0.0 | Transitive |
 | lucide-react | 0.563.0 | ISC | **Direct** |
 | make-error | 1.3.6 | ISC | Transitive |
-| mdn-data | 2.12.2 | CC0-1.0 | Transitive |
 | minimalistic-assert | 1.0.1 | ISC | Transitive |
 | minimatch | 3.1.3 | ISC | Transitive |
-| minimatch | 10.2.2 | BlueOak-1.0.0 | Transitive |
-| ndjson | 2.0.0 | BSD-3-Clause | Transitive |
 | nopt | 3.0.6 | ISC | Transitive |
 | once | 1.4.0 | ISC | Transitive |
-| parse-cache-control | 1.0.1 | BSD | Transitive |
 | picocolors | 1.1.1 | ISC | Transitive |
 | potpack | 1.0.2 | ISC | Transitive |
-| promise-worker-transferable | 1.0.4 | Apache-2.0 | Transitive |
-| qs | 6.15.0 | BSD-3-Clause | Transitive |
-| rlp | 2.2.7 | MPL-2.0 | Transitive |
 | saxes | 6.0.0 | ISC | Transitive |
-| sc-istanbul | 0.4.6 | BSD-3-Clause | Transitive |
 | semver | 5.7.2 | ISC | Transitive |
-| serialize-javascript | 6.0.2 | BSD-3-Clause | Transitive |
 | setprototypeof | 1.2.0 | ISC | Transitive |
-| sha1 | 1.1.1 | BSD-3-Clause | Transitive |
-| sharp | 0.34.5 | Apache-2.0 | Transitive |
-| shelljs | 0.8.5 | BSD-3-Clause | Transitive |
 | siginfo | 2.0.0 | ISC | Transitive |
 | solidity-coverage | 0.8.17 | ISC | Transitive |
-| source-map | 0.6.1 | BSD-3-Clause | Transitive |
-| source-map | 0.2.0 | BSD | Transitive |
-| source-map-js | 1.2.1 | BSD-3-Clause | Transitive |
 | split2 | 3.2.2 | ISC | Transitive |
-| sprintf-js | 1.0.3 | BSD-3-Clause | Transitive |
-| table | 6.9.0 | BSD-3-Clause | Transitive |
-| tough-cookie | 6.0.0 | BSD-3-Clause | Transitive |
 | ts-command-line-args | 2.5.1 | ISC | Transitive |
-| tslib | 1.14.1 | 0BSD | Transitive |
-| typescript | 5.9.3 | Apache-2.0 | **Direct** |
-| uglify-js | 3.19.3 | BSD-2-Clause | Transitive |
-| web3-utils | 1.10.4 | LGPL-3.0 | Transitive |
-| webidl-conversions | 8.0.1 | BSD-2-Clause | Transitive |
 | which | 1.3.1 | ISC | Transitive |
-| workerpool | 6.5.1 | Apache-2.0 | Transitive |
 | wrappy | 1.0.2 | ISC | Transitive |
-| xml-name-validator | 5.0.0 | Apache-2.0 | Transitive |
 | y18n | 5.0.8 | ISC | Transitive |
 | yallist | 3.1.1 | ISC | Transitive |
 | yargs-parser | 20.2.9 | ISC | Transitive |
+| web3-utils | 1.10.4 | LGPL-3.0 | Transitive |
+| @img/sharp-libvips-linux-x64 | 1.2.4 | LGPL-3.0-or-later | Transitive |
+| @img/sharp-libvips-linuxmusl-x64 | 1.2.4 | LGPL-3.0-or-later | Transitive |
+| @ethereumjs/rlp | 4.0.1 | MPL-2.0 | Transitive |
+| @ethereumjs/util | 8.1.0 | MPL-2.0 | Transitive |
+| ethereumjs-util | 7.1.5 | MPL-2.0 | Transitive |
+| lightningcss | 1.31.1 | MPL-2.0 | Transitive |
+| lightningcss-linux-x64-gnu | 1.31.1 | MPL-2.0 | Transitive |
+| lightningcss-linux-x64-musl | 1.31.1 | MPL-2.0 | Transitive |
+| rlp | 2.2.7 | MPL-2.0 | Transitive |
+| difflib | 0.2.4 | PSF | Transitive |
+| argparse | 2.0.1 | Python-2.0 | Transitive |
+| chai-as-promised | 7.1.2 | WTFPL | Transitive |
 
 ## Direct Dependencies
 
@@ -144,15 +142,15 @@ The following dependencies have non-MIT licenses:
 | --- | --- | --- |
 | @nomicfoundation/hardhat-toolbox | MIT | @Animatica/contracts |
 | @openzeppelin/contracts | MIT | @Animatica/contracts |
-| @react-three/drei | MIT | @Animatica/engine |
+| @react-three/drei | MIT | @Animatica/editor, @Animatica/engine |
 | @react-three/fiber | MIT | @Animatica/editor, @Animatica/engine, @Animatica/web |
 | @tailwindcss/postcss | MIT | @Animatica/editor |
 | @testing-library/dom | MIT | @Animatica/web |
 | @testing-library/react | MIT | @Animatica/editor, @Animatica/engine, @Animatica/web |
 | @types/node | MIT | @Animatica/engine |
-| @types/react | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web |
-| @types/react-dom | MIT | @Animatica/editor, @Animatica/platform, @Animatica/web |
-| @types/three | MIT | @Animatica/engine |
+| @types/react | MIT | @Animatica/platform, @Animatica/editor, @Animatica/engine, @Animatica/web |
+| @types/react-dom | MIT | @Animatica/platform, @Animatica/editor, @Animatica/web |
+| @types/three | MIT | @Animatica/editor, @Animatica/engine |
 | @types/uuid | MIT | @Animatica/engine |
 | @vitejs/plugin-react | MIT | @Animatica/editor |
 | clsx | MIT | @Animatica/editor |
@@ -161,18 +159,18 @@ The following dependencies have non-MIT licenses:
 | jsdom | MIT | @Animatica/editor, @Animatica/engine, @Animatica/web |
 | lucide-react | ISC | @Animatica/editor, @Animatica/web |
 | next | MIT | @Animatica/web |
-| react | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web |
-| react-dom | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web |
+| react | MIT | @Animatica/platform, @Animatica/editor, @Animatica/engine, @Animatica/web |
+| react-dom | MIT | @Animatica/platform, @Animatica/editor, @Animatica/engine, @Animatica/web |
 | tailwind-merge | MIT | @Animatica/editor |
 | tailwindcss | MIT | @Animatica/editor |
 | three | MIT | @Animatica/editor, @Animatica/engine, @Animatica/web |
 | tone | MIT | @Animatica/engine |
 | turbo | MIT | Animatica |
-| typescript | Apache-2.0 | @Animatica/contracts, @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web, Animatica |
+| typescript | Apache-2.0 | @Animatica/contracts, @Animatica/platform, @Animatica/editor, @Animatica/engine, @Animatica/web, Animatica |
 | uuid | MIT | @Animatica/engine |
-| vite | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform |
-| vitest | MIT | @Animatica/editor, @Animatica/engine, @Animatica/platform, @Animatica/web |
-| zod | MIT | @Animatica/engine |
+| vite | MIT | @Animatica/platform, @Animatica/editor, @Animatica/engine |
+| vitest | MIT | @Animatica/platform, @Animatica/editor, @Animatica/engine, @Animatica/web |
+| zod | MIT | @Animatica/engine, @Animatica/web |
 | zundo | MIT | @Animatica/engine |
 | zustand | MIT | @Animatica/engine |
 
@@ -867,7 +865,7 @@ The following dependencies have non-MIT licenses:
 | yargs-unparser | 2.0.0 | MIT |
 | yn | 3.1.1 | MIT |
 | yocto-queue | 0.1.0 | MIT |
-| zod | 4.3.6 | MIT |
+| zod | 3.25.76 | MIT |
 | zundo | 2.3.0 | MIT |
 | zustand | 4.5.7 | MIT |
 
