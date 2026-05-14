@@ -10,6 +10,7 @@ import { createEnvironmentSlice } from './slices/environmentSlice';
 import { createTimelineSlice } from './slices/timelineSlice';
 import { createPlaybackSlice } from './slices/playbackSlice';
 import { createMetaSlice } from './slices/metaSlice';
+import { createLibrarySlice } from './slices/librarySlice';
 
 /**
  * Zustand store for managing the scene state, including actors, timeline, environment, and playback.
@@ -25,7 +26,7 @@ export const useSceneStore = create<SceneStoreState>()(
         ...createTimelineSlice(...a),
         ...createPlaybackSlice(...a),
         ...createMetaSlice(...a),
-        library: { clips: [] },
+        ...createLibrarySlice(...a),
       })),
       {
         name: 'animatica-scene',
@@ -91,6 +92,7 @@ export const getCurrentTime = (state: SceneStoreState): number =>
 
 /**
  * Hook to select a specific actor by ID.
+ * Optimized to only re-render if the actor object reference changes.
  */
 export const useActorById = (id: string) =>
   useSceneStore((state) => state.actors.find((a) => a.id === id));
@@ -122,6 +124,7 @@ export const useSelectedActorId = () =>
 
 /**
  * Hook to get the currently selected actor.
+ * Optimized to only re-render if the selected ID or the selected actor object changes.
  */
 export const useSelectedActor = () =>
   useSceneStore((state) =>
@@ -138,3 +141,64 @@ export const useActorsByType = (type: Actor['type']) =>
  * Hook to get the list of all actors.
  */
 export const useActorList = () => useSceneStore((state) => state.actors);
+
+/**
+ * Hook to get environment settings.
+ */
+export const useEnvironment = () => useSceneStore((state) => state.environment);
+
+/**
+ * Hook to get timeline configuration.
+ */
+export const useTimeline = () => useSceneStore((state) => state.timeline);
+
+/**
+ * Hook to get playback state.
+ */
+export const usePlaybackState = () => useSceneStore((state) => state.playback);
+
+/**
+ * Hook to get project metadata.
+ */
+export const useMeta = () => useSceneStore((state) => state.meta);
+
+/**
+ * Hook to get asset library.
+ */
+export const useLibrary = () => useSceneStore((state) => state.library);
+
+/**
+ * Hook to get all currently active (visible) actors.
+ */
+export const useActiveActors = () => useSceneStore(getActiveActors);
+
+/**
+ * Hook to access all scene store actions without subscribing to state changes.
+ */
+export const useSceneActions = () => {
+  const {
+    addActor,
+    removeActor,
+    updateActor,
+    setSelectedActor,
+    setEnvironment,
+    setTimeline,
+    setPlayback,
+    setMeta,
+    setLibrary,
+    addClip,
+  } = useSceneStore.getState();
+
+  return {
+    addActor,
+    removeActor,
+    updateActor,
+    setSelectedActor,
+    setEnvironment,
+    setTimeline,
+    setPlayback,
+    setMeta,
+    setLibrary,
+    addClip,
+  };
+};
