@@ -79,6 +79,9 @@ pnpm install
 # Run development server (starts all apps)
 pnpm run dev
 
+# Build the project
+pnpm run build
+
 # Run tests
 pnpm run test
 
