@@ -82,6 +82,34 @@ export interface MetaSlice {
 }
 
 /**
+ * Represents a library asset clip.
+ */
+export interface Clip {
+  /** Unique identifier for the clip. */
+  id: string;
+  /** Human-readable name of the clip. */
+  name: string;
+  /** Type of the clip. */
+  type: 'animation' | 'pose' | 'expression';
+  /** The clip data (e.g., keyframes or pose data). */
+  data: unknown;
+}
+
+/**
+ * Library-specific state and actions.
+ */
+export interface LibrarySlice {
+  /** Asset library containing clips. */
+  library: {
+    clips: Clip[];
+  };
+  /** Updates the entire library state. */
+  setLibrary: (library: Partial<LibrarySlice['library']>) => void;
+  /** Adds a new clip to the library. */
+  addClip: (clip: Clip) => void;
+}
+
+/**
  * Combined state and actions for the scene store.
  */
 export interface SceneStoreState extends
@@ -89,7 +117,5 @@ export interface SceneStoreState extends
   EnvironmentSlice,
   TimelineSlice,
   PlaybackSlice,
-  MetaSlice {
-  /** Asset library. */
-  library: { clips: unknown[] };
-}
+  MetaSlice,
+  LibrarySlice {}
