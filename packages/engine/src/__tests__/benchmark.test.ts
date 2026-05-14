@@ -46,7 +46,8 @@ describe('Engine Benchmarks', () => {
 
             measure('Number Interpolation (10k ops)', () => {
                 for (let i = 0; i < 10000; i++) {
-                    const t = Math.random() * 10000;
+                    // Use deterministic values
+                    const t = (i * 1.5) % 10000;
                     interpolateKeyframes(keyframes, t);
                 }
             });
@@ -64,7 +65,7 @@ describe('Engine Benchmarks', () => {
 
             measure('Vector3 Interpolation (10k ops)', () => {
                 for (let i = 0; i < 10000; i++) {
-                    const t = Math.random() * 10000;
+                    const t = (i * 1.5) % 10000;
                     interpolateKeyframes(keyframes, t);
                 }
             });
@@ -82,7 +83,7 @@ describe('Engine Benchmarks', () => {
 
             measure('Color Interpolation (10k ops)', () => {
                 for (let i = 0; i < 10000; i++) {
-                    const t = Math.random() * 10000;
+                    const t = (i * 1.5) % 10000;
                     interpolateKeyframes(keyframes, t);
                 }
             });
@@ -98,7 +99,7 @@ describe('Engine Benchmarks', () => {
                     name: `Actor ${i}`,
                     type: 'primitive',
                     transform: {
-                        position: [Math.random() * 10, 0, 0],
+                        position: [i * 0.1, 0, 0],
                         rotation: [0, 0, 0],
                         scale: [1, 1, 1],
                     },
